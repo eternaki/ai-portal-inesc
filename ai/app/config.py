@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     payload_url: str = "http://localhost:3000"
     payload_api_key: str = ""  # API-ключ сервисного пользователя (users, role=editor)
 
+    # Токен для мутирующих эндпоинтов AI-сервиса (/generate/*).
+    # Без него эти эндпоинты отключены. Генерация: openssl rand -hex 32
+    ai_service_token: str = ""
+
     # LLM: смена модели = смена этой строки (litellm-формат "провайдер/модель").
     # Ключ провайдера — в его стандартной переменной (GEMINI_API_KEY, OPENAI_API_KEY, ...)
     llm_model: str = "gemini/gemini-2.5-flash"

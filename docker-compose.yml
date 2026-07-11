@@ -13,7 +13,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mlkd}
       POSTGRES_DB: ${POSTGRES_DB:-mlkd}
     ports:
-      - '5432:5432'
+      # только localhost: наружу БД не выставляем
+      - '127.0.0.1:5432:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
@@ -41,6 +42,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-mlkd}:${POSTGRES_PASSWORD:-mlkd}@db:5432/${POSTGRES_DB:-mlkd}
       PAYLOAD_URL: http://web:3000
       PAYLOAD_API_KEY: ${PAYLOAD_API_KEY:-}
+      AI_SERVICE_TOKEN: ${AI_SERVICE_TOKEN:-}
       LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.5-flash}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
@@ -48,7 +50,8 @@ services:
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
       OPENALEX_MAILTO: ${OPENALEX_MAILTO:-mlkd-portal@example.com}
     ports:
-      - '8000:8000'
+      # только localhost: /generate/* защищён токеном, но наружу сервис не нужен
+      - '127.0.0.1:8000:8000'
     depends_on:
       db:
         condition: service_healthy
