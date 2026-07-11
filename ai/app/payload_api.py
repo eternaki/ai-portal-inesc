@@ -67,11 +67,14 @@ def upsert_publication(data: dict) -> tuple[dict, bool]:
     Возвращает (документ, created). Поля, которые человек мог править руками
     (aiSummary, verified, ...), при обновлении не трогаем.
     """
-    where: dict[str, Any] | None = None
+    # Матчим и по openalexId, и по DOI: OpenAlex иногда содержит две записи
+    # (preprint + published) с одним DOI — это одна публикация для нас.
+    conditions: list[dict[str, Any]] = []
     if data.get("openalexId"):
-        where = {"openalexId": {"equals": data["openalexId"]}}
-    elif data.get("doi"):
-        where = {"doi": {"equals": data["doi"]}}
+        conditions.append({"openalexId": {"equals": data["openalexId"]}})
+    if data.get("doi"):
+        conditions.append({"doi": {"equals": data["doi"]}})
+    where: dict[str, Any] | None = {"or": conditions} if conditions else None
 
     existing = find("publications", where, limit=1)["docs"] if where else []
     if existing:
@@ -82,4 +85,14 @@ def upsert_publication(data: dict) -> tuple[dict, bool]:
             if k in ("citationCount", "abstract", "pdfUrl", "venue", "authors")
         }
         return update("publications", doc["id"], safe_update), False
-    return create("publications", data), True
+
+    try:
+        return create("publications", data), True
+    except httpx.HTTPStatusError as err:
+        # Коллизия слага: у conference- и journal-версии статьи одинаковый заголовок.
+        # Повторяем с уникализированным слагом (хук Payload его слагифицирует).
+        if err.response.status_code == 400 and "slug" in err.response.text:
+            suffix = data.get("openalexId") or data.get("doi") or str(data.get("year") or "")
+            retry = {**data, "slug": f"{data['title']} {suffix}"}
+            return create("publications", retry), True
+        raise
