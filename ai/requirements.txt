@@ -1,0 +1,19 @@
+# Web-фреймворк
+fastapi>=0.115
+uvicorn[standard]>=0.32
+
+# LLM-обёртка: один интерфейс к OpenAI/Anthropic/Gemini/Ollama (модель задаётся в .env)
+litellm>=1.55
+
+# HTTP-клиент (OpenAlex, Payload REST)
+httpx>=0.28
+
+# Конфигурация из env
+pydantic-settings>=2.6
+
+# Postgres + pgvector (таблицы эмбеддингов)
+psycopg[binary]>=3.2
+pgvector>=0.3
+
+# Локальные эмбеддинги (тянет torch — первая установка долгая, это нормально)
+sentence-transformers>=3.3

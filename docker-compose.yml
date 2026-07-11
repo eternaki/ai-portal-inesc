@@ -1,0 +1,57 @@
+# MLKD Portal — вся система одной командой: docker compose up
+#
+# Для локальной разработки чаще удобнее поднять только БД:
+#   docker compose up -d db
+# и запускать web (pnpm dev) и ai (uvicorn) на хосте — см. README.
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mlkd}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mlkd}
+      POSTGRES_DB: ${POSTGRES_DB:-mlkd}
+    ports:
+      - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-mlkd}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: ./web
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-mlkd}:${POSTGRES_PASSWORD:-mlkd}@db:5432/${POSTGRES_DB:-mlkd}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env}
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+
+  ai:
+    build: ./ai
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-mlkd}:${POSTGRES_PASSWORD:-mlkd}@db:5432/${POSTGRES_DB:-mlkd}
+      PAYLOAD_URL: http://web:3000
+      PAYLOAD_API_KEY: ${PAYLOAD_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.5-flash}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      OPENALEX_MAILTO: ${OPENALEX_MAILTO:-mlkd-portal@example.com}
+    ports:
+      - '8000:8000'
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
