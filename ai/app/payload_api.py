@@ -15,7 +15,9 @@ from app.config import get_settings
 
 def _client() -> httpx.Client:
     settings = get_settings()
-    headers = {}
+    # Все запросы AI-сервиса помечены: Payload-хук авто-обработки их пропускает
+    # (иначе массовый ingest или запись саммари сами бы триггерили LLM-вызовы).
+    headers = {"X-Skip-Autoprocess": "1"}
     if settings.payload_api_key:
         headers["Authorization"] = f"users API-Key {settings.payload_api_key}"
     return httpx.Client(

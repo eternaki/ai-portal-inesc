@@ -61,6 +61,43 @@ def search(q: str, limit: int = 10) -> dict:
     return {"query": q, "results": results}
 
 
+class ProcessRequest(BaseModel):
+    id: int
+
+
+@router.post("/process/publication")
+def process_publication(req: ProcessRequest, x_service_token: str | None = Header(None)) -> dict:
+    """Обработать одну публикацию: саммари (если есть abstract и статус none) + эмбеддинг.
+
+    Вызывается автоматически Payload-хуком при добавлении/правке публикации.
+    Идемпотентно: не перегенерирует уже сгенерированное или отредактированное саммари.
+    """
+    require_service_token(x_service_token)
+    from app import embeddings  # ленивый импорт: тянет torch
+    from app.pipelines.summarize import summarize_publication
+
+    docs = payload_api.find("publications", where={"id": {"equals": req.id}}, limit=1)["docs"]
+    if not docs:
+        raise HTTPException(404, f"publications/{req.id} not found")
+    pub = docs[0]
+
+    summarized = False
+    if (pub.get("abstract") or "").strip() and pub.get("aiSummaryStatus") == "none":
+        summary = summarize_publication(pub)
+        payload_api.update(
+            "publications", pub["id"], {"aiSummary": summary, "aiSummaryStatus": "generated"}
+        )
+        summarized = True
+
+    embedded = False
+    text = f"{pub.get('title') or ''}\n\n{pub.get('abstract') or ''}".strip()
+    if text:
+        embeddings.upsert_publication_embeddings([(pub["id"], text)])
+        embedded = True
+
+    return {"id": req.id, "summarized": summarized, "embedded": embedded}
+
+
 class SnippetRequest(BaseModel):
     collection: str  # "publications" | "news"
     id: int

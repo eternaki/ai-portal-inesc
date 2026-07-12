@@ -2,9 +2,13 @@ import type { CollectionConfig } from 'payload'
 
 import { adminOrEditor, anyone } from '../access'
 import { slugField } from '../fields/slug'
+import { autoProcessPublication } from '../hooks/autoProcessPublication'
 
 export const Publications: CollectionConfig = {
   slug: 'publications',
+  hooks: {
+    afterChange: [autoProcessPublication],
+  },
   admin: {
     useAsTitle: 'title',
     group: 'Research',

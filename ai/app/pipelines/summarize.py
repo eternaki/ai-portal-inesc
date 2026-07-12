@@ -9,11 +9,17 @@
 
 import argparse
 import logging
+import os
+import time
 
 from app import payload_api
 from app.llm.client import complete_json, load_prompt
 
 logger = logging.getLogger(__name__)
+
+# Пауза между вызовами LLM, чтобы не упираться в rate limit бесплатных тиров.
+# Настраивается через SUMMARIZE_DELAY_SEC (по умолчанию 4с ≈ 15 запросов/мин).
+_DELAY = float(os.environ.get("SUMMARIZE_DELAY_SEC", "4"))
 
 SUMMARY_KEYS = ("tldr", "problem", "method", "results", "takeaways", "industry", "impact")
 
@@ -60,6 +66,7 @@ def run(limit: int | None = None) -> None:
         except Exception:
             failed += 1
             logger.exception("failed on publication id=%s", pub["id"])
+        time.sleep(_DELAY)
 
     logger.info("done: %s summarized, %s failed", done, failed)
 

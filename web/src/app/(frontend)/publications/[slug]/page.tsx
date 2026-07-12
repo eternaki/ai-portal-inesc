@@ -128,6 +128,20 @@ export default async function PublicationPage(props: { params: Params }) {
 
       <PubList title="References within the group" pubs={references} />
       <PubList title="Cited by (group publications)" pubs={citedBy} />
+
+      {!hasSummary && !pub.abstract && references.length === 0 && citedBy.length === 0 && (
+        <p className="pub-meta">
+          No summary or abstract available for this publication yet. See the{' '}
+          {pub.doi ? (
+            <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer">
+              original publication
+            </a>
+          ) : (
+            'original venue'
+          )}{' '}
+          for details.
+        </p>
+      )}
     </article>
   )
 }

@@ -4,6 +4,8 @@ uvicorn[standard]>=0.32
 
 # LLM-обёртка: один интерфейс к OpenAI/Anthropic/Gemini/Ollama (модель задаётся в .env)
 litellm>=1.55
+# нужен litellm для retry-логики (num_retries)
+tenacity>=8.0
 
 # HTTP-клиент (OpenAlex, Payload REST)
 httpx>=0.28
