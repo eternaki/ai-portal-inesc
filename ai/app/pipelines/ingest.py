@@ -83,6 +83,9 @@ def work_to_publication(work: dict[str, Any], member_by_author_id: dict[str, int
         "citationCount": work.get("cited_by_count"),
         "pdfUrl": (work.get("open_access") or {}).get("oa_url"),
         "authors": authors,
+        "referencedWorks": [
+            ref.rsplit("/", 1)[-1] for ref in (work.get("referenced_works") or [])
+        ],
     }
 
 

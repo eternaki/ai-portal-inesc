@@ -15,7 +15,7 @@ from app.llm.client import complete_json, load_prompt
 
 logger = logging.getLogger(__name__)
 
-SUMMARY_KEYS = ("tldr", "problem", "method", "results", "takeaways")
+SUMMARY_KEYS = ("tldr", "problem", "method", "results", "takeaways", "industry", "impact")
 
 
 def summarize_publication(pub: dict) -> dict:

@@ -286,6 +286,7 @@ export interface Publication {
   openalexId?: string | null;
   pdfUrl?: string | null;
   citationCount?: number | null;
+  referencedWorks?: string[] | null;
   /**
    * Проверено человеком (авторство/метаданные корректны)
    */
@@ -299,6 +300,14 @@ export interface Publication {
     method?: string | null;
     results?: string | null;
     takeaways?: string | null;
+    /**
+     * Нетехническое описание для индустрии
+     */
+    industry?: string | null;
+    /**
+     * Импакт-нарратив: значимость, применения
+     */
+    impact?: string | null;
   };
   aiSummaryStatus?: ('none' | 'generated' | 'edited') | null;
   /**
@@ -624,6 +633,7 @@ export interface PublicationsSelect<T extends boolean = true> {
   openalexId?: T;
   pdfUrl?: T;
   citationCount?: T;
+  referencedWorks?: T;
   verified?: T;
   aiSummary?:
     | T
@@ -633,6 +643,8 @@ export interface PublicationsSelect<T extends boolean = true> {
         method?: T;
         results?: T;
         takeaways?: T;
+        industry?: T;
+        impact?: T;
       };
   aiSummaryStatus?: T;
   socialSnippet?: T;

@@ -75,6 +75,13 @@ export const Publications: CollectionConfig = {
       ],
     },
     {
+      // OpenAlex ID работ, на которые ссылается статья — для блока related citations
+      name: 'referencedWorks',
+      type: 'text',
+      hasMany: true,
+      admin: { hidden: true },
+    },
+    {
       name: 'verified',
       type: 'checkbox',
       defaultValue: false,
@@ -94,6 +101,16 @@ export const Publications: CollectionConfig = {
         { name: 'method', type: 'textarea' },
         { name: 'results', type: 'textarea' },
         { name: 'takeaways', type: 'textarea' },
+        {
+          name: 'industry',
+          type: 'textarea',
+          admin: { description: 'Нетехническое описание для индустрии' },
+        },
+        {
+          name: 'impact',
+          type: 'textarea',
+          admin: { description: 'Импакт-нарратив: значимость, применения' },
+        },
       ],
     },
     {

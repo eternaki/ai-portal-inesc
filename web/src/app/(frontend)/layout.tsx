@@ -24,6 +24,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           <nav>
             <Link href="/publications">Publications</Link>
             <Link href="/people">People</Link>
+            <Link href="/search">Search</Link>
           </nav>
         </header>
         <main>{children}</main>

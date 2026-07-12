@@ -11,6 +11,9 @@ Write a summary in the style of alphaxiv "Blog mode". Rules:
 - Plain, clear English. No hype, no marketing language.
 - Do not invent results or numbers that are not supported by the abstract.
 - Each section is 1-3 sentences.
+- "industry" and "impact" address two beneficiaries from the brief: external
+  readers who want a non-technical description, and the person maintaining the
+  website who needs impact-oriented framing.
 
 Respond with ONLY a JSON object, no other text:
 
@@ -19,5 +22,7 @@ Respond with ONLY a JSON object, no other text:
   "problem": "what problem the paper addresses and why it matters",
   "method": "the approach, in accessible terms",
   "results": "what was achieved / found",
-  "takeaways": "why this matters, possible applications"
+  "takeaways": "the key points to remember",
+  "industry": "a non-technical description aimed at an industry audience",
+  "impact": "impact-oriented narrative: societal relevance and possible applications"
 }}

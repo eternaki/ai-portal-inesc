@@ -20,9 +20,13 @@ logger = logging.getLogger(__name__)
 PROMPTS_DIR = Path(__file__).parent / "prompts"
 
 
-def load_prompt(name: str, **variables: str) -> str:
-    """Читает промпт из prompts/<name>.md и подставляет {placeholders}."""
-    template = (PROMPTS_DIR / f"{name}.md").read_text(encoding="utf-8")
+def load_prompt(prompt_name: str, /, **variables: str) -> str:
+    """Читает промпт из prompts/<prompt_name>.md и подставляет {placeholders}.
+
+    Имя — позиционный параметр (/), чтобы не конфликтовать с переменной `name`
+    в промптах (например, bio.md использует {name}).
+    """
+    template = (PROMPTS_DIR / f"{prompt_name}.md").read_text(encoding="utf-8")
     return template.format(**variables)
 
 

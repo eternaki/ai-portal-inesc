@@ -82,7 +82,7 @@ def upsert_publication(data: dict) -> tuple[dict, bool]:
         safe_update = {
             k: v
             for k, v in data.items()
-            if k in ("citationCount", "abstract", "pdfUrl", "venue", "authors")
+            if k in ("citationCount", "abstract", "pdfUrl", "venue", "authors", "referencedWorks")
         }
         return update("publications", doc["id"], safe_update), False
 

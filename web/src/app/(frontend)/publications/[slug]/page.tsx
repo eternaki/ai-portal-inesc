@@ -1,12 +1,43 @@
 import React from 'react'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import type { Publication } from '@/payload-types'
 
 // Данные приходят из CMS — рендерим на каждый запрос, не при сборке
 export const dynamic = 'force-dynamic'
 
 type Params = Promise<{ slug: string }>
+
+function PubList({ title, pubs }: { title: string; pubs: Publication[] }) {
+  if (pubs.length === 0) return null
+  return (
+    <section>
+      <h2>{title}</h2>
+      {pubs.map((p) => (
+        <div key={p.id} className="pub-item">
+          {p.slug ? <Link href={`/publications/${p.slug}`}>{p.title}</Link> : p.title}
+          <span className="pub-meta">
+            {' '}
+            ({p.year}
+            {p.venue ? ` · ${p.venue}` : ''})
+          </span>
+        </div>
+      ))}
+    </section>
+  )
+}
+
+const SUMMARY_SECTIONS = [
+  ['tldr', 'TL;DR'],
+  ['problem', 'Problem'],
+  ['method', 'Method'],
+  ['results', 'Results'],
+  ['takeaways', 'Takeaways'],
+  ['industry', 'For industry'],
+  ['impact', 'Why it matters'],
+] as const
 
 export default async function PublicationPage(props: { params: Params }) {
   const { slug } = await props.params
@@ -26,9 +57,31 @@ export default async function PublicationPage(props: { params: Params }) {
   const hasSummary =
     pub.aiSummaryStatus !== 'none' &&
     summary &&
-    [summary.tldr, summary.problem, summary.method, summary.results, summary.takeaways].some(
-      Boolean,
-    )
+    SUMMARY_SECTIONS.some(([key]) => summary[key])
+
+  // Работы группы, на которые ссылается эта статья, и работы группы, ссылающиеся на неё
+  const [references, citedBy] = await Promise.all([
+    (pub.referencedWorks ?? []).length > 0
+      ? payload
+          .find({
+            collection: 'publications',
+            where: { openalexId: { in: pub.referencedWorks as string[] } },
+            limit: 10,
+            depth: 0,
+          })
+          .then((r) => r.docs)
+      : Promise.resolve([]),
+    pub.openalexId
+      ? payload
+          .find({
+            collection: 'publications',
+            where: { referencedWorks: { contains: pub.openalexId } },
+            limit: 10,
+            depth: 0,
+          })
+          .then((r) => r.docs)
+      : Promise.resolve([]),
+  ])
 
   return (
     <article>
@@ -56,30 +109,12 @@ export default async function PublicationPage(props: { params: Params }) {
               {pub.aiSummaryStatus === 'edited' ? 'AI-generated, human-edited' : 'AI-generated'}
             </span>
           </h2>
-          {summary.tldr && (
-            <p>
-              <strong>TL;DR:</strong> {summary.tldr}
-            </p>
-          )}
-          {summary.problem && (
-            <p>
-              <strong>Problem:</strong> {summary.problem}
-            </p>
-          )}
-          {summary.method && (
-            <p>
-              <strong>Method:</strong> {summary.method}
-            </p>
-          )}
-          {summary.results && (
-            <p>
-              <strong>Results:</strong> {summary.results}
-            </p>
-          )}
-          {summary.takeaways && (
-            <p>
-              <strong>Takeaways:</strong> {summary.takeaways}
-            </p>
+          {SUMMARY_SECTIONS.map(([key, label]) =>
+            summary[key] ? (
+              <p key={key}>
+                <strong>{label}:</strong> {summary[key]}
+              </p>
+            ) : null,
           )}
         </section>
       ) : null}
@@ -90,6 +125,9 @@ export default async function PublicationPage(props: { params: Params }) {
           <p>{pub.abstract}</p>
         </section>
       )}
+
+      <PubList title="References within the group" pubs={references} />
+      <PubList title="Cited by (group publications)" pubs={citedBy} />
     </article>
   )
 }
