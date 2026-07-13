@@ -36,6 +36,12 @@ async function runSearch(q: string): Promise<{ hits: SearchHit[]; error: string 
   }
 }
 
+const EXAMPLES = [
+  'detecting anomalies in medical images',
+  'how do transformers handle long documents',
+  'privacy-preserving machine learning',
+]
+
 export default async function SearchPage(props: { searchParams: SearchParams }) {
   const { q } = await props.searchParams
   const query = (q ?? '').trim()
@@ -44,40 +50,56 @@ export default async function SearchPage(props: { searchParams: SearchParams }) 
   return (
     <div>
       <h1>Semantic search</h1>
-      <p className="pub-meta">Search publications by meaning, not just keywords.</p>
+      <p className="pub-meta">
+        Describe a topic in your own words — results are ranked by meaning, not keywords.
+      </p>
 
-      <form method="get" className="filters">
+      <form method="get" className="search-form">
         <input
           type="search"
           name="q"
           defaultValue={query}
           placeholder="e.g. deep learning for medical imaging"
-          style={{ flex: 1, minWidth: 280, padding: '0.5rem', fontSize: '1rem' }}
+          aria-label="Search query"
         />
-        <button type="submit" style={{ padding: '0.5rem 1rem' }}>
+        <button className="btn" type="submit">
           Search
         </button>
       </form>
 
-      {query && error && (
-        <p>Search is temporarily unavailable ({error}). Please try again shortly.</p>
+      {!query && (
+        <div className="filters">
+          {EXAMPLES.map((ex) => (
+            <Link key={ex} href={`/search?q=${encodeURIComponent(ex)}`}>
+              {ex}
+            </Link>
+          ))}
+        </div>
       )}
 
-      {query && !error && hits.length === 0 && <p>No matches for “{query}”.</p>}
+      {query && error && (
+        <div className="empty">Search is temporarily unavailable ({error}). Please try again shortly.</div>
+      )}
+
+      {query && !error && hits.length === 0 && (
+        <div className="empty">No matches for “{query}”. Try rephrasing the topic.</div>
+      )}
 
       {hits.map((hit) => (
         <article key={hit.publication.id} className="pub-item">
-          <strong>
+          <div className="pub-title">
             {hit.publication.slug ? (
               <Link href={`/publications/${hit.publication.slug}`}>{hit.publication.title}</Link>
             ) : (
               hit.publication.title
             )}
-          </strong>
+          </div>
           <div className="pub-meta">
-            {hit.publication.venue ? `${hit.publication.venue} · ` : ''}
-            {hit.publication.year}
-            <span className="badge">score {hit.score.toFixed(2)}</span>
+            <span className="mono">
+              {hit.publication.year}
+              {hit.publication.venue ? ` · ${hit.publication.venue}` : ''}
+            </span>{' '}
+            <span className="badge">match {(hit.score * 100).toFixed(0)}%</span>
           </div>
         </article>
       ))}
