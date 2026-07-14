@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Publication } from '@/payload-types'
+import { PubRow } from '@/components/PubRow'
 
 // Данные приходят из CMS — рендерим на каждый запрос, не при сборке
 export const dynamic = 'force-dynamic'
@@ -16,14 +17,7 @@ function PubList({ title, pubs }: { title: string; pubs: Publication[] }) {
     <section>
       <h2>{title}</h2>
       {pubs.map((p) => (
-        <div key={p.id} className="pub-item">
-          {p.slug ? <Link href={`/publications/${p.slug}`}>{p.title}</Link> : p.title}
-          <span className="pub-meta">
-            {' '}
-            ({p.year}
-            {p.venue ? ` · ${p.venue}` : ''})
-          </span>
-        </div>
+        <PubRow key={p.id} pub={p} />
       ))}
     </section>
   )
@@ -55,9 +49,7 @@ export default async function PublicationPage(props: { params: Params }) {
 
   const summary = pub.aiSummary
   const hasSummary =
-    pub.aiSummaryStatus !== 'none' &&
-    summary &&
-    SUMMARY_SECTIONS.some(([key]) => summary[key])
+    pub.aiSummaryStatus !== 'none' && summary && SUMMARY_SECTIONS.some(([key]) => summary[key])
 
   // Работы группы, на которые ссылается эта статья, и работы группы, ссылающиеся на неё
   const [references, citedBy] = await Promise.all([
@@ -85,42 +77,54 @@ export default async function PublicationPage(props: { params: Params }) {
 
   return (
     <article>
-      <h1>{pub.title}</h1>
-      <p className="pub-meta">
-        {(pub.authors ?? []).map((a) => a.name).join(', ')}
-        <br />
-        {pub.venue ? `${pub.venue} · ` : ''}
-        {pub.year} <span className="badge">{pub.type}</span>
-        {pub.doi ? (
-          <>
-            {' · '}
-            <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer">
-              DOI
-            </a>
-          </>
-        ) : null}
-      </p>
+      <div className="article-head">
+        <div className="eyebrow">
+          {pub.type}
+          {pub.venue ? ` · ${pub.venue}` : ''} · {pub.year}
+        </div>
+        <h1>{pub.title}</h1>
+        <p className="pub-meta">
+          {(pub.authors ?? []).map((a) => a.name).join(', ')}
+          {pub.doi ? (
+            <>
+              {' · '}
+              <a className="mono" href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer">
+                doi:{pub.doi}
+              </a>
+            </>
+          ) : null}
+          {typeof pub.citationCount === 'number' ? (
+            <>
+              {' · '}
+              <span className="mono">{pub.citationCount} citations</span>
+            </>
+          ) : null}
+        </p>
+      </div>
 
       {hasSummary && summary ? (
-        <section>
+        <div className="summary-card">
           <h2>
             Summary{' '}
-            <span className="badge">
-              {pub.aiSummaryStatus === 'edited' ? 'AI-generated, human-edited' : 'AI-generated'}
+            <span className="badge badge-ai">
+              {pub.aiSummaryStatus === 'edited' ? 'AI · human-edited' : 'AI-generated'}
             </span>
           </h2>
-          {SUMMARY_SECTIONS.map(([key, label]) =>
-            summary[key] ? (
-              <p key={key}>
-                <strong>{label}:</strong> {summary[key]}
-              </p>
-            ) : null,
-          )}
-        </section>
+          <dl>
+            {SUMMARY_SECTIONS.map(([key, label]) =>
+              summary[key] ? (
+                <React.Fragment key={key}>
+                  <dt>{label}</dt>
+                  <dd>{summary[key]}</dd>
+                </React.Fragment>
+              ) : null,
+            )}
+          </dl>
+        </div>
       ) : null}
 
       {pub.abstract && (
-        <section>
+        <section className="abstract">
           <h2>Abstract</h2>
           <p>{pub.abstract}</p>
         </section>
@@ -130,7 +134,7 @@ export default async function PublicationPage(props: { params: Params }) {
       <PubList title="Cited by (group publications)" pubs={citedBy} />
 
       {!hasSummary && !pub.abstract && references.length === 0 && citedBy.length === 0 && (
-        <p className="pub-meta">
+        <div className="empty">
           No summary or abstract available for this publication yet. See the{' '}
           {pub.doi ? (
             <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer">
@@ -140,8 +144,12 @@ export default async function PublicationPage(props: { params: Params }) {
             'original venue'
           )}{' '}
           for details.
-        </p>
+        </div>
       )}
+
+      <p style={{ marginTop: '2.5rem' }}>
+        <Link href="/publications">← All publications</Link>
+      </p>
     </article>
   )
 }
