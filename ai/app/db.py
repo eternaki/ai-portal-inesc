@@ -44,3 +44,20 @@ def ensure_schema(dim: int) -> None:
             """
         )
     logger.info("pgvector schema ensured (dim=%s)", dim)
+
+
+def ensure_topic_map() -> None:
+    """Таблица карты тем: 2D-координаты и кластер каждой публикации."""
+    with psycopg.connect(get_settings().database_url, autocommit=True) as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS topic_map (
+                publication_id integer PRIMARY KEY,
+                cluster_id integer NOT NULL,
+                x real NOT NULL,
+                y real NOT NULL,
+                label text,
+                computed_at timestamptz NOT NULL DEFAULT now()
+            )
+            """
+        )

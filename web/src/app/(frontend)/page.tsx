@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Scatter } from '@/components/Scatter'
+import { JsonLd, ORGANIZATION } from '@/components/JsonLd'
 import { PubRow } from '@/components/PubRow'
 
 // Данные приходят из CMS — рендерим на каждый запрос, не при сборке
@@ -27,6 +28,7 @@ export default async function HomePage() {
 
   return (
     <div>
+      <JsonLd data={ORGANIZATION} />
       <section className="hero">
         <Scatter className="hero-scatter" />
         <div className="hero-content">

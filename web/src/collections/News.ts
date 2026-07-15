@@ -37,6 +37,13 @@ export const News: CollectionConfig = {
       hasMany: true,
     },
     {
+      name: 'generateSnippet',
+      type: 'ui',
+      admin: {
+        components: { Field: '/components/admin/GenerateSnippetButton#GenerateSnippetButton' },
+      },
+    },
+    {
       name: 'socialSnippet',
       type: 'textarea',
       admin: { description: 'Готовый текст поста для LinkedIn/X (генерируется по запросу)' },
