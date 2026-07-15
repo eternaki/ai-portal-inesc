@@ -19,3 +19,7 @@ pgvector>=0.3
 
 # Локальные эмбеддинги (тянет torch — первая установка долгая, это нормально)
 sentence-transformers>=3.3
+
+# Карта тем (pipelines/cluster.py): UMAP-проекция + HDBSCAN (sklearn) + TF-IDF метки
+umap-learn>=0.5
+scikit-learn>=1.4

@@ -5,11 +5,41 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Publication } from '@/payload-types'
 import { PubRow } from '@/components/PubRow'
+import { JsonLd } from '@/components/JsonLd'
+import { SITE_URL } from '@/lib/site'
 
 // Данные приходят из CMS — рендерим на каждый запрос, не при сборке
 export const dynamic = 'force-dynamic'
 
 type Params = Promise<{ slug: string }>
+
+async function findPublication(slug: string): Promise<Publication | null> {
+  const payload = await getPayload({ config })
+  const result = await payload.find({
+    collection: 'publications',
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 1,
+  })
+  return result.docs[0] ?? null
+}
+
+export async function generateMetadata(props: { params: Params }) {
+  const { slug } = await props.params
+  const pub = await findPublication(slug)
+  if (!pub) return {}
+  const description = (pub.aiSummary?.tldr || pub.abstract || '').slice(0, 200)
+  return {
+    title: pub.title,
+    description,
+    openGraph: {
+      title: pub.title,
+      description,
+      type: 'article',
+      url: `${SITE_URL}/publications/${pub.slug}`,
+    },
+  }
+}
 
 function PubList({ title, pubs }: { title: string; pubs: Publication[] }) {
   if (pubs.length === 0) return null
@@ -37,14 +67,7 @@ export default async function PublicationPage(props: { params: Params }) {
   const { slug } = await props.params
   const payload = await getPayload({ config })
 
-  const result = await payload.find({
-    collection: 'publications',
-    where: { slug: { equals: slug } },
-    limit: 1,
-    depth: 1,
-  })
-
-  const pub = result.docs[0]
+  const pub = await findPublication(slug)
   if (!pub) notFound()
 
   const summary = pub.aiSummary
@@ -75,8 +98,20 @@ export default async function PublicationPage(props: { params: Params }) {
       : Promise.resolve([]),
   ])
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ScholarlyArticle',
+    headline: pub.title,
+    datePublished: pub.year ? String(pub.year) : undefined,
+    author: (pub.authors ?? []).map((a) => ({ '@type': 'Person', name: a.name })),
+    ...(pub.doi ? { sameAs: `https://doi.org/${pub.doi}` } : {}),
+    ...(pub.venue ? { isPartOf: { '@type': 'Periodical', name: pub.venue } } : {}),
+    ...(pub.abstract ? { abstract: pub.abstract.slice(0, 500) } : {}),
+  }
+
   return (
     <article>
+      <JsonLd data={jsonLd} />
       <div className="article-head">
         <div className="eyebrow">
           {pub.type}

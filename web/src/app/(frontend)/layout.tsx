@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { STIX_Two_Text, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
 import './styles.css'
+import { SITE_URL, SITE_NAME } from '@/lib/site'
 
 // Типографика: STIX Two Text — шрифт научных журналов (сайт набран тем же
 // шрифтом, что и статьи, которые он индексирует); Plex Sans/Mono — UI и данные.
@@ -23,6 +24,11 @@ const mono = IBM_Plex_Mono({
 })
 
 export const metadata = {
+  metadataBase: new URL(SITE_URL),
+  openGraph: {
+    siteName: SITE_NAME,
+    type: 'website',
+  },
   title: {
     default: 'MLKD — Machine Learning and Knowledge Discovery @ INESC-ID',
     template: '%s | MLKD @ INESC-ID',
@@ -33,6 +39,7 @@ export const metadata = {
 
 const NAV = [
   { href: '/research', label: 'Research' },
+  { href: '/map', label: 'Map' },
   { href: '/publications', label: 'Publications' },
   { href: '/people', label: 'People' },
   { href: '/opportunities', label: 'Opportunities' },

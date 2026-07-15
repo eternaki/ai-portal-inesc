@@ -1,6 +1,7 @@
 import React from 'react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { JsonLd } from '@/components/JsonLd'
 
 // Данные приходят из CMS — рендерим на каждый запрос, не при сборке
 export const dynamic = 'force-dynamic'
@@ -34,8 +35,19 @@ export default async function PeoplePage() {
     depth: 0,
   })
 
+  const peopleJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': result.docs.map((m) => ({
+      '@type': 'Person',
+      name: m.name,
+      ...(m.orcid ? { sameAs: `https://orcid.org/${m.orcid}` } : {}),
+      affiliation: { '@type': 'ResearchOrganization', name: 'MLKD, INESC-ID' },
+    })),
+  }
+
   return (
     <div>
+      <JsonLd data={peopleJsonLd} />
       <h1>People</h1>
       <p className="pub-meta">
         Members edit their own profiles — <a href="/admin">sign in</a> to update yours.

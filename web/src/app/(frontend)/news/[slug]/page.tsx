@@ -6,24 +6,38 @@ import config from '@payload-config'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { PubRow } from '@/components/PubRow'
 import type { Publication } from '@/payload-types'
+import { JsonLd } from '@/components/JsonLd'
+import { SITE_URL } from '@/lib/site'
 
 // Данные приходят из CMS — рендерим на каждый запрос, не при сборке
 export const dynamic = 'force-dynamic'
 
 type Params = Promise<{ slug: string }>
 
-export default async function NewsItemPage(props: { params: Params }) {
-  const { slug } = await props.params
+async function findNews(slug: string) {
   const payload = await getPayload({ config })
-
   const result = await payload.find({
     collection: 'news',
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 1,
   })
+  return result.docs[0] ?? null
+}
 
-  const item = result.docs[0]
+export async function generateMetadata(props: { params: Params }) {
+  const { slug } = await props.params
+  const item = await findNews(slug)
+  if (!item) return {}
+  return {
+    title: item.title,
+    openGraph: { title: item.title, type: 'article', url: `${SITE_URL}/news/${item.slug}` },
+  }
+}
+
+export default async function NewsItemPage(props: { params: Params }) {
+  const { slug } = await props.params
+  const item = await findNews(slug)
   if (!item) notFound()
 
   const related = (item.relatedPublications ?? []).filter(
@@ -31,12 +45,21 @@ export default async function NewsItemPage(props: { params: Params }) {
   )
 
   // Share-интенты: media-секция живёт в CMS, соцсети получают ссылку + текст
-  const url = `https://mlkd.inesc-id.pt/news/${item.slug}` // заменить на прод-домен при деплое
+  const url = `${SITE_URL}/news/${item.slug}`
   const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`
   const shareX = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(item.title)}`
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: item.title,
+    datePublished: item.date ?? undefined,
+    publisher: { '@type': 'ResearchOrganization', name: 'MLKD, INESC-ID' },
+  }
+
   return (
     <article>
+      <JsonLd data={jsonLd} />
       <div className="article-head">
         <div className="news-date">
           {item.date

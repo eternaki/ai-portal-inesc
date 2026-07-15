@@ -61,6 +61,47 @@ def search(q: str, limit: int = 10) -> dict:
     return {"query": q, "results": results}
 
 
+@router.get("/map")
+def topic_map() -> dict:
+    """Карта тем: 2D-точки публикаций с кластерами (пайплайн cluster.py)."""
+    from app import db
+
+    try:
+        with db.connect() as conn:
+            rows = conn.execute(
+                "SELECT publication_id, cluster_id, x, y, label FROM topic_map"
+            ).fetchall()
+    except Exception:
+        rows = []
+    if not rows:
+        return {"points": [], "clusters": []}
+
+    pubs = {p["id"]: p for p in payload_api.find_all("publications")}
+    points = []
+    clusters: dict[int, dict] = {}
+    for pub_id, cluster_id, x, y, label in rows:
+        pub = pubs.get(pub_id)
+        if not pub:
+            continue
+        points.append(
+            {
+                "x": x,
+                "y": y,
+                "cluster": cluster_id,
+                "publication": {
+                    "id": pub_id,
+                    "title": pub.get("title"),
+                    "slug": pub.get("slug"),
+                    "year": pub.get("year"),
+                },
+            }
+        )
+        if cluster_id != -1:
+            entry = clusters.setdefault(cluster_id, {"id": cluster_id, "label": label, "count": 0})
+            entry["count"] += 1
+    return {"points": points, "clusters": sorted(clusters.values(), key=lambda c: -c["count"])}
+
+
 class ProcessRequest(BaseModel):
     id: int
 
