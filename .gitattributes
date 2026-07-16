@@ -1,0 +1,4 @@
+# The git hook is executed by /bin/sh — it must keep LF endings on every platform,
+# otherwise a CRLF checkout on Windows breaks it for teammates on macOS/Linux.
+.githooks/pre-commit text eol=lf
+*.sh text eol=lf

@@ -1,130 +1,132 @@
-# MLKD Portal — рабочий план команды
+# MLKD Portal — team work plan
 
-Сегодня: чт 10 июля 2026. Демо MVP: **чт 17 июля**. Цель прототипа: конец августа.
-Сентябрь — буфер (полировка, деплой, отчёт). Дедлайн практики: конец сентября.
+Today: Thu 10 July 2026. MVP demo: **Thu 17 July**. Prototype target: end of August.
+September is a buffer (polish, deploy, report). Internship deadline: end of September.
 
-Роли (из ТЗ):
-- **B** — Web Architecture & Backend Lead (Payload-коллекции, схема, API, ingest)
-- **F** — Frontend & UX Lead (дизайн, страницы, адаптив)
-- **A** — AI & Content Automation Lead (FastAPI, LiteLLM, эмбеддинги, промпты)
-- **D** — Data Integration & Visibility Lead (чистка данных, alumni, SEO, аналитика)
+Roles (from the brief):
+- **B** — Web Architecture & Backend Lead (Payload collections, schema, API, ingest)
+- **F** — Frontend & UX Lead (design, pages, responsive)
+- **A** — AI & Content Automation Lead (FastAPI, LiteLLM, embeddings, prompts)
+- **D** — Data Integration & Visibility Lead (data cleaning, alumni, SEO, analytics)
 
 ---
 
-## Спринт 1: MVP к демо (10–17 июля)
+## Sprint 1: MVP for the demo (10–17 July)
 
-Демо-сценарий (5 минут): открыли сайт → публикации **настоящие** → фильтр по
-году/автору → открыли статью → AI-саммари (Summary/Problem/Method/Results/Takeaways)
-→ зашли в `/admin` → поправили поле → на сайте обновилось → добавили нового
-члена группы за 30 секунд.
+Demo scenario (5 minutes): open the site → publications are **real** → filter by
+year/author → open a paper → AI summary (Summary/Problem/Method/Results/Takeaways)
+→ go to `/admin` → edit a field → it updates on the site → add a new group member
+in 30 seconds.
 
-### День 1–2 (чт–пт, 10–11 июля) — фундамент
-- **B:** monorepo (`web/` + `ai/`), docker-compose (postgres+pgvector), инициализация
-  Payload 3 + Next.js, коллекции `users`, `members`, `publications` (поля из
-  дизайн-дока). Критерий: `docker compose up` → админка открывается, коллекции есть.
-- **A:** FastAPI-скелет, `llm/client.py` с LiteLLM (модель из `.env`), smoke-тест
-  генерации на Gemini free tier. Первый промпт `summary.md`.
-- **D:** собрать входные данные: список членов группы, их ORCID/OpenAlex ID
-  (по фамилиям через openalex.org), проверить руками у 3–4 человек, что API
-  возвращает их реальные статьи. Результат: `data/authors.json`.
-- **F:** дизайн-направление: 2–3 референса (semanticscholar, сайты других групп),
-  выбрать шрифты/палитру, макет страниц Publications (список+карточка) и Member.
+### Days 1–2 (Thu–Fri, 10–11 July) — foundation
+- **B:** monorepo (`web/` + `ai/`), docker-compose (postgres+pgvector), initialize
+  Payload 3 + Next.js, collections `users`, `members`, `publications` (fields from
+  the design doc). Done when: `docker compose up` → admin opens, collections exist.
+- **A:** FastAPI skeleton, `llm/client.py` with LiteLLM (model from `.env`), a smoke
+  test of generation on the Gemini free tier. First prompt `summary.md`.
+- **D:** gather input data: the list of group members, their ORCID/OpenAlex IDs (by
+  name via openalex.org), verify by hand for 3–4 people that the API returns their
+  real papers. Result: `data/authors.json`.
+- **F:** design direction: 2–3 references (semanticscholar, other groups' sites),
+  pick fonts/palette, lay out the Publications (list + card) and Member pages.
 
-### День 3–4 (сб/пн, 12–14 июля) — данные и страницы
-- **B + D:** `ingest.py`: OpenAlex по authors.json → дедуп по DOI → upsert в Payload
-  через REST. Критерий: реальные публикации группы видны в админке.
-- **F:** страницы: главная (минимум), `/publications` (список, фильтры год/автор/тип),
+### Days 3–4 (Sat/Mon, 12–14 July) — data and pages
+- **B + D:** `ingest.py`: OpenAlex from authors.json → dedupe by DOI → upsert into
+  Payload via REST. Done when: the group's real publications show in the admin.
+- **F:** pages: home (minimal), `/publications` (list, filters year/author/type),
   `/publications/[slug]`, `/people` + `/people/[slug]`.
-- **A:** `summarize.py`: берёт публикации без саммари → LLM → пишет в Payload.
-  Прогнать на 5–10 статьях, отсмотреть качество, докрутить промпт.
+- **A:** `summarize.py`: take publications without a summary → LLM → write to
+  Payload. Run on 5–10 papers, review quality, tune the prompt.
 
-### День 5–6 (вт–ср, 15–16 июля) — сборка и полировка
-- **B:** роли доступа (admin/editor), сервисный ключ для FastAPI, сиды.
-- **F:** отображение AI-саммари на странице публикации (красивый блок,
-  пометка «AI-generated, edited by …»), адаптив, полировка.
-- **A:** эмбеддинги в pgvector + `GET /search` (если успеваем — поиск попадает в демо;
-  если нет — переносится в спринт 2 без драмы).
-- **D:** README (как поднять проект), проверка данных на дубли/мусор.
-- **Все:** прогон демо-сценария, фиксация багов.
+### Days 5–6 (Tue–Wed, 15–16 July) — assembly and polish
+- **B:** access roles (admin/editor), service key for FastAPI, seeds.
+- **F:** show the AI summary on the publication page (a nice block, marked
+  "AI-generated, edited by …"), responsive layout, polish.
+- **A:** embeddings in pgvector + `GET /search` (if there is time, search makes the
+  demo; if not, it moves to sprint 2 without drama).
+- **D:** README (how to bring the project up), check the data for duplicates/junk.
+- **Everyone:** run through the demo scenario, log bugs.
 
-### День 7 (чт 17 июля) — демо
-Утром финальный прогон на чистой машине (`git clone` → `docker compose up`).
-
----
-
-## Спринты 2–7 (до конца августа)
-
-**Спринт 2 (18–25 июля) — данные и поиск.**
-Полный ingest (все члены + DBLP-сверка), семантический поиск на сайте,
-страницы Projects / Software / Research Themes, self-edit профиля (member
-логинится и правит своё), сбор фидбека препода после демо → корректировка плана.
-
-**Спринт 3 (26 июля – 1 авг) — профили и opportunities.**
-AI-черновики био (пайплайн + правка владельцем), alumni-раздел с траекториями
-(D собирает данные), раздел Thesis Topics + Opportunities (CRUD в админке),
-media/news-секция + кнопка «Generate social snippet» + share в LinkedIn/X.
-
-**Спринт 4 (2–8 авг) — саммари корпуса и SEO.**
-Саммаризация всего корпуса публикаций (батч, ревью качества), «Blog mode»
-страницы, JSON-LD/sitemap/OG-теги, аналитика, sanity-check в Google Search Console.
-
-**Спринт 5 (9–15 авг) — визуализации.**
-Карта тем (UMAP/HDBSCAN → интерактивный scatter/граф, react-force-graph),
-кластеризация членов «кто работает над похожим», эволюция тем по годам
-(если успеваем).
-
-**Спринт 6 (16–22 авг) — stretch.**
-RAG чат-бот по публикациям (`/chat`), автопостинг в X (free tier),
-newsletter-генератор — в порядке приоритета, сколько успеем.
-
-**Спринт 7 (23–31 авг) — деплой и передача.**
-Деплой на сервер INESC-ID (доступ запросить в спринте 2!), cron для пайплайнов,
-бэкапы Postgres, maintenance proposal (документ), пользовательская инструкция
-для админов, техотчёт (черновик).
-
-**Сентябрь — буфер:** правки по фидбеку, финальный отчёт, презентация.
+### Day 7 (Thu 17 July) — demo
+In the morning, a final run on a clean machine (`git clone` → `docker compose up`).
 
 ---
 
-## Приоритизированный бэклог (сверка с ТЗ, 11 июля)
+## Sprints 2–7 (through end of August)
 
-Результат построчной сверки плана с PDF препода. Приоритет: P0 — до демо,
-P1 — обязательные дельиверабли, P2 — сильные плюсы, P3 — по решению препода.
+**Sprint 2 (18–25 July) — data and search.**
+Full ingest (all members + DBLP cross-check), semantic search on the site,
+Projects / Software / Research Themes pages, profile self-edit (a member logs in and
+edits their own), collect supervisor feedback after the demo → adjust the plan.
 
-### P0 — до демо 17.07
-- [ ] **LLM-ключ** от препода или бесплатный Gemini (блокер настоящих саммари)
-- [ ] Аудит текущего сайта MLKD (D; пункт 1 Technical Scope; слайд «было → стало»)
-- [ ] Мини-макеты 2–3 экранов (F; пункт «wireframes and mockups»)
-- [ ] Реальные саммари 5–10 статей (A, после ключа)
-- [ ] Блок «Related citations» на странице статьи (данные уже в OpenAlex-ответе)
-- [ ] Страница поиска `/search` на сайте (бэкенд готов, нет UI)
+**Sprint 3 (26 July – 1 Aug) — profiles and opportunities.**
+AI bio drafts (pipeline + owner edits), alumni section with trajectories (D gathers
+data), Thesis Topics + Opportunities section (CRUD in the admin), media/news section
++ "Generate social snippet" button + share to LinkedIn/X.
 
-### P1 — обязательные дельиверабли (спринты 2–4)
-- [ ] Полный ingest: OpenAlex ID всех членов + DBLP-сверка (нужны данные команды)
-- [ ] Bio-пайплайн `pipelines/bios.py` (дельиверабл «draft content for profiles»)
-- [ ] Industry- и impact-саммари: +2 поля в aiSummary и секции промпта (явная просьба препода)
-- [ ] Проверка self-edit флоу члена группы
-- [ ] UI-страницы: thesis topics/opportunities, news + share-кнопки, projects, software, themes
-- [ ] SEO: JSON-LD, sitemap, OG + аналитика (Plausible/GA — спросить препода)
-- [ ] Саммаризация всего корпуса + ревью качества
+**Sprint 4 (2–8 Aug) — corpus summaries and SEO.**
+Summarize the whole publication corpus (batch, quality review), "Blog mode" pages,
+JSON-LD/sitemap/OG tags, analytics, sanity check in Google Search Console.
 
-### P2 — сильные плюсы (спринт 5)
-- [ ] Карта тем + кластеризация членов (member_embeddings уже есть) + эволюция по годам
-- [ ] Визуализация типов данных/датасетов (поле-тэг + диаграмма)
-- [ ] Cron-автообновление ingest/summarize/embed/cluster
+**Sprint 5 (9–15 Aug) — visualizations.**
+Topic map (UMAP/HDBSCAN → interactive scatter/graph, react-force-graph), member
+clustering "who works on similar topics", theme evolution over the years (if time
+allows).
 
-### P3 — stretch / нужно решение препода
-- [ ] Чат-бот (RAG), newsletter, автопостинг X
-- [ ] Nano Banana-иллюстрации статей (спросить статью DeepMind у Andre Duarte)
-- [ ] EURAXESS: разведка API → ответ «можно/нельзя»
-- [ ] Связка тем с компаниями, поиск профессоров для Erasmus — пометить «beyond prototype»
+**Sprint 6 (16–22 Aug) — stretch.**
+RAG chatbot over publications (`/chat`), auto-posting to X (free tier), newsletter
+generator — in priority order, as far as we get.
+
+**Sprint 7 (23–31 Aug) — deploy and handover.**
+Deploy to the INESC-ID server (request access in sprint 2!), cron for the pipelines,
+Postgres backups, maintenance proposal (document), an admin user guide, technical
+report (draft).
+
+**September — buffer:** feedback fixes, final report, presentation.
 
 ---
 
-## Правила работы
+## Prioritized backlog (cross-checked against the brief, 11 July)
 
-- Ветки `feat/...`, PR + ревью одного тиммейта; main всегда поднимается
-  через `docker compose up`.
-- Понедельный чекпоинт с преподом (демо прогресса, 15 минут).
-- Всё, что просит LLM-ключи/бюджет — эскалировать преподу сразу, не в конце.
-- Приоритет при любом конфликте сроков: **ядро (дельиверабли ТЗ) > stretch**.
+Result of a line-by-line cross-check of the plan against the supervisor's PDF.
+Priority: P0 — before the demo, P1 — mandatory deliverables, P2 — strong pluses,
+P3 — supervisor's call.
+
+### P0 — before the demo 17.07
+- [ ] **LLM key** from the supervisor or free Gemini (blocks real summaries)
+- [ ] Audit of the current MLKD site (D; Technical Scope item 1; "before → after" slide)
+- [ ] Mini mockups of 2–3 screens (F; "wireframes and mockups")
+- [ ] Real summaries for 5–10 papers (A, after the key)
+- [ ] "Related citations" block on the paper page (data already in the OpenAlex response)
+- [ ] `/search` page on the site (backend ready, no UI)
+
+### P1 — mandatory deliverables (sprints 2–4)
+- [ ] Full ingest: OpenAlex IDs of all members + DBLP cross-check (needs team data)
+- [ ] Bio pipeline `pipelines/bios.py` (deliverable "draft content for profiles")
+- [ ] Industry and impact summaries: +2 fields in aiSummary and prompt sections (explicit supervisor request)
+- [ ] Verify the member self-edit flow
+- [ ] UI pages: thesis topics/opportunities, news + share buttons, projects, software, themes
+- [ ] SEO: JSON-LD, sitemap, OG + analytics (Plausible/GA — ask the supervisor)
+- [ ] Summarize the whole corpus + quality review
+
+### P2 — strong pluses (sprint 5)
+- [ ] Topic map + member clustering (member_embeddings already exist) + evolution over years
+- [ ] Visualization of data/dataset types (tag field + chart)
+- [ ] Cron auto-refresh of ingest/summarize/embed/cluster
+
+### P3 — stretch / needs supervisor's decision
+- [ ] Chatbot (RAG), newsletter, X auto-posting
+- [ ] Nano Banana paper illustrations (ask Andre Duarte for the DeepMind paper)
+- [ ] EURAXESS: API scouting → a "yes/no" answer
+- [ ] Linking themes to companies, finding professors for Erasmus — mark as "beyond prototype"
+
+---
+
+## Working agreements
+
+- Branches `feat/...`, PR + review by one teammate; main always comes up with
+  `docker compose up`.
+- Weekly checkpoint with the supervisor (progress demo, 15 minutes).
+- Anything that needs LLM keys/budget — escalate to the supervisor immediately, not
+  at the end.
+- Priority on any schedule conflict: **core (brief deliverables) > stretch**.
