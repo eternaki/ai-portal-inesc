@@ -1,6 +1,6 @@
-"""Postgres-таблицы, которыми владеет AI-сервис (эмбеддинги, карта тем).
+"""Postgres tables owned by the AI service (embeddings, topic map).
 
-Контентными таблицами владеет Payload — сюда мы их не трогаем.
+Content tables are owned by Payload — we never touch them here.
 """
 
 import logging
@@ -20,7 +20,7 @@ def connect() -> psycopg.Connection:
 
 
 def ensure_schema(dim: int) -> None:
-    """Создаёт расширение pgvector и таблицы под конкретную размерность модели."""
+    """Create the pgvector extension and tables sized to the model's dimension."""
     with psycopg.connect(get_settings().database_url, autocommit=True) as conn:
         conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
         conn.execute(
@@ -47,7 +47,7 @@ def ensure_schema(dim: int) -> None:
 
 
 def ensure_topic_map() -> None:
-    """Таблица карты тем: 2D-координаты и кластер каждой публикации."""
+    """Topic-map table: 2D coordinates and the cluster of each publication."""
     with psycopg.connect(get_settings().database_url, autocommit=True) as conn:
         conn.execute(
             """

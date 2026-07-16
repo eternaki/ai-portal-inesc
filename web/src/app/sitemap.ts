@@ -3,7 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { SITE_URL } from '@/lib/site'
 
-// Karta сайта строится из CMS на каждый запрос
+// The sitemap is built from the CMS on each request
 export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

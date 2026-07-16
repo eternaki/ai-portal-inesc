@@ -6,7 +6,7 @@ import { Scatter } from '@/components/Scatter'
 import { JsonLd, ORGANIZATION } from '@/components/JsonLd'
 import { PubRow } from '@/components/PubRow'
 
-// Данные приходят из CMS — рендерим на каждый запрос, не при сборке
+// Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {

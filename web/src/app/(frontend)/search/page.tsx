@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-// Поиск ходит в AI-сервис на каждый запрос
+// Search calls the AI service on every request
 export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'Search' }
@@ -31,7 +31,7 @@ async function runSearch(q: string): Promise<{ hits: SearchHit[]; error: string 
     const data = await res.json()
     return { hits: data.results ?? [], error: null }
   } catch {
-    // Сайт не должен падать, если AI-сервис недоступен
+    // The site must not fail if the AI service is unavailable
     return { hits: [], error: 'search service is unavailable' }
   }
 }

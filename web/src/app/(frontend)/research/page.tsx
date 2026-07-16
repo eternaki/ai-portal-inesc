@@ -5,7 +5,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import { PubRow } from '@/components/PubRow'
 import type { Member, Publication } from '@/payload-types'
 
-// Данные приходят из CMS — рендерим на каждый запрос, не при сборке
+// Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'Research' }

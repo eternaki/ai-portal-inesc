@@ -51,7 +51,7 @@ export const Publications: CollectionConfig = {
       ],
     },
     {
-      // Порядок авторов важен; внешние соавторы — просто строкой без связи
+      // Author order matters; external co-authors are just a string, unlinked
       name: 'authors',
       type: 'array',
       labels: { singular: 'Author', plural: 'Authors' },
@@ -79,7 +79,7 @@ export const Publications: CollectionConfig = {
       ],
     },
     {
-      // OpenAlex ID работ, на которые ссылается статья — для блока related citations
+      // OpenAlex IDs of works this paper references — for the related-citations block
       name: 'referencedWorks',
       type: 'text',
       hasMany: true,
@@ -91,14 +91,14 @@ export const Publications: CollectionConfig = {
       defaultValue: false,
       admin: {
         position: 'sidebar',
-        description: 'Проверено человеком (авторство/метаданные корректны)',
+        description: 'Verified by a human (authorship/metadata are correct)',
       },
     },
     {
-      // Формат alphaxiv "Blog mode"
+      // alphaxiv "Blog mode" format
       name: 'aiSummary',
       type: 'group',
-      admin: { description: 'AI-саммари; после ручной правки поставьте статус edited' },
+      admin: { description: 'AI summary; after editing by hand, set the status to edited' },
       fields: [
         { name: 'tldr', type: 'textarea', label: 'TL;DR' },
         { name: 'problem', type: 'textarea' },
@@ -108,12 +108,12 @@ export const Publications: CollectionConfig = {
         {
           name: 'industry',
           type: 'textarea',
-          admin: { description: 'Нетехническое описание для индустрии' },
+          admin: { description: 'Non-technical description for industry' },
         },
         {
           name: 'impact',
           type: 'textarea',
-          admin: { description: 'Импакт-нарратив: значимость, применения' },
+          admin: { description: 'Impact narrative: significance, applications' },
         },
       ],
     },
@@ -123,9 +123,9 @@ export const Publications: CollectionConfig = {
       defaultValue: 'none',
       index: true,
       options: [
-        { label: 'Нет саммари', value: 'none' },
-        { label: 'Сгенерировано AI', value: 'generated' },
-        { label: 'Отредактировано человеком', value: 'edited' },
+        { label: 'No summary', value: 'none' },
+        { label: 'AI-generated', value: 'generated' },
+        { label: 'Edited by a human', value: 'edited' },
       ],
       admin: { position: 'sidebar' },
     },
@@ -139,7 +139,7 @@ export const Publications: CollectionConfig = {
     {
       name: 'socialSnippet',
       type: 'textarea',
-      admin: { description: 'Готовый текст поста для LinkedIn/X (генерируется по запросу)' },
+      admin: { description: 'Ready-to-post text for LinkedIn/X (generated on demand)' },
     },
   ],
 }

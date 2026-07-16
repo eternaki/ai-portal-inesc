@@ -1,7 +1,7 @@
-"""Локальные эмбеддинги (sentence-transformers) + запись в pgvector.
+"""Local embeddings (sentence-transformers) written to pgvector.
 
-Модель загружается лениво: импорт torch тяжёлый, и он не нужен, если сервис
-запущен только ради генерации сниппетов.
+The model loads lazily: importing torch is heavy and unnecessary when the
+service is running only to generate snippets.
 """
 
 import logging
@@ -31,7 +31,7 @@ def embedding_dim() -> int:
 
 
 def upsert_publication_embeddings(items: list[tuple[int, str]]) -> None:
-    """items: [(publication_id, text)] — считает и сохраняет эмбеддинги."""
+    """items: [(publication_id, text)] — compute and store the embeddings."""
     if not items:
         return
     model_name = get_settings().embedding_model
@@ -54,7 +54,7 @@ def upsert_publication_embeddings(items: list[tuple[int, str]]) -> None:
 
 
 def search_publications(query: str, *, limit: int = 10) -> list[tuple[int, float]]:
-    """Семантический поиск: [(publication_id, score)], score — косинусная близость."""
+    """Semantic search: [(publication_id, score)], score is cosine similarity."""
     vec = embed_texts([query])[0]
     with db.connect() as conn:
         rows = conn.execute(

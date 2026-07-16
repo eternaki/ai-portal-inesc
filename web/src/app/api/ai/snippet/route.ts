@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
-// Прокси из админки к AI-сервису: аутентификация — сессия Payload (editor+),
-// сервисный токен AI не покидает сервер.
+// Proxy from the admin to the AI service: auth is the Payload session (editor+),
+// and the AI service token never leaves the server.
 export async function POST(req: NextRequest) {
   const payload = await getPayload({ config })
   const { user } = await payload.auth({ headers: req.headers })

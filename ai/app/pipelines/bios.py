@@ -1,10 +1,11 @@
-"""Генерация AI-черновиков био для членов группы.
+"""Generate AI bio drafts for group members.
 
-Запуск:  python -m app.pipelines.bios [--limit N] [--force]
+Run:  python -m app.pipelines.bios [--limit N] [--force]
 
-Для членов без bioAiDraft собирает их публикации (по связи authors.member),
-генерирует черновик и пишет его в поле bioAiDraft. Владелец профиля потом
-переносит нужное в поле bio сам — черновик не трогает основной текст.
+For members without a bioAiDraft, gathers their publications (via the
+authors.member relation), generates a draft and writes it to the bioAiDraft
+field. The profile owner later moves what they want into the bio field — the
+draft never touches the main text.
 """
 
 import argparse
@@ -73,6 +74,6 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     parser = argparse.ArgumentParser()
     parser.add_argument("--limit", type=int, default=None)
-    parser.add_argument("--force", action="store_true", help="перегенерировать даже если черновик есть")
+    parser.add_argument("--force", action="store_true", help="regenerate even if a draft exists")
     args = parser.parse_args()
     run(args.limit, args.force)

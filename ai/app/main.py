@@ -1,6 +1,6 @@
-"""MLKD AI service — FastAPI-приложение.
+"""MLKD AI service — FastAPI application.
 
-Запуск для разработки:  uvicorn app.main:app --reload --port 8000
+Run for development:  uvicorn app.main:app --reload --port 8000
 """
 
 import logging
@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(messag
 
 app = FastAPI(
     title="MLKD AI Service",
-    description="Семантический поиск, саммаризация и генерация контента для портала MLKD",
+    description="Semantic search, summarization and content generation for the MLKD portal",
     version="0.1.0",
 )
 

@@ -1,8 +1,8 @@
 import React from 'react'
 
-// Структурированные данные schema.org (пункт E ТЗ: structured metadata).
-// Контент приходит из CMS/OpenAlex (недоверенный) — экранируем `<`, чтобы
-// строка вроде "</script>" в заголовке статьи не вырвалась из тега (XSS).
+// schema.org structured data (brief section E: structured metadata).
+// Content comes from the CMS/OpenAlex (untrusted) — escape `<` so a string like
+// "</script>" in a paper title cannot break out of the tag (XSS).
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
   const json = JSON.stringify(data).replace(/</g, '\\u003c')
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />

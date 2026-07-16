@@ -1,6 +1,6 @@
-"""Пересчёт эмбеддингов публикаций для семантического поиска.
+"""Recompute publication embeddings for semantic search.
 
-Запуск:  python -m app.pipelines.embed
+Run:  python -m app.pipelines.embed
 """
 
 import logging

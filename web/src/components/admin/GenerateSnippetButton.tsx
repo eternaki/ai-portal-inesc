@@ -3,15 +3,15 @@
 import React, { useState } from 'react'
 import { Button, useDocumentInfo } from '@payloadcms/ui'
 
-// Кнопка в админке: сгенерировать текст поста для LinkedIn/X по текущему
-// документу (publications | news). Результат сохраняется в socialSnippet —
-// после генерации нужно перезагрузить документ, чтобы увидеть поле.
+// Admin button: generate LinkedIn/X post text for the current document
+// (publications | news). The result is saved to socialSnippet — reload the
+// document after generating to see the field.
 export const GenerateSnippetButton: React.FC = () => {
   const { id, collectionSlug } = useDocumentInfo()
   const [state, setState] = useState<'idle' | 'busy' | 'done' | 'error'>('idle')
   const [message, setMessage] = useState('')
 
-  if (!id) return null // документ ещё не сохранён
+  if (!id) return null // document not saved yet
 
   const generate = async () => {
     setState('busy')

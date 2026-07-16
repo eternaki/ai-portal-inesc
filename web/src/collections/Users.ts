@@ -6,14 +6,14 @@ export const Users: CollectionConfig = {
   slug: 'users',
   admin: {
     useAsTitle: 'email',
-    group: 'Система',
+    group: 'System',
   },
-  // useAPIKey: сервисный аккаунт AI-пайплайнов ходит в REST API по ключу
+  // useAPIKey: the AI pipelines' service account calls the REST API with a key
   auth: {
     useAPIKey: true,
   },
   access: {
-    // Аккаунты создаёт/удаляет только админ; свой профиль пользователь читает и правит сам
+    // Only an admin creates/deletes accounts; a user reads and edits only their own
     create: adminOnly,
     delete: adminOnly,
     read: ({ req: { user } }) => {
@@ -42,7 +42,7 @@ export const Users: CollectionConfig = {
         { label: 'Editor', value: 'editor' },
         { label: 'Member', value: 'member' },
       ],
-      // Роли раздаёт только админ — иначе member повысил бы сам себя
+      // Only an admin assigns roles — otherwise a member could promote themselves
       access: {
         create: adminOnlyField,
         update: adminOnlyField,

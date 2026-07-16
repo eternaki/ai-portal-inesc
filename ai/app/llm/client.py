@@ -1,9 +1,9 @@
-"""Единственное место в проекте, где вызывается LLM.
+"""The only place in the project where an LLM is called.
 
-Требование ТЗ: «the code should be structured such that it should be relatively
-straightforward to swap the underlying LLMs»; «all API calls should be
-appropriately wrapped». Меняете LLM_MODEL в .env — меняется модель во всех
-пайплайнах, код не трогается.
+Brief requirement: "the code should be structured such that it should be
+relatively straightforward to swap the underlying LLMs"; "all API calls should
+be appropriately wrapped". Change LLM_MODEL in .env and the model changes across
+every pipeline — no code is touched.
 """
 
 import json
@@ -21,17 +21,17 @@ PROMPTS_DIR = Path(__file__).parent / "prompts"
 
 
 def load_prompt(prompt_name: str, /, **variables: str) -> str:
-    """Читает промпт из prompts/<prompt_name>.md и подставляет {placeholders}.
+    """Read the prompt from prompts/<prompt_name>.md and fill in {placeholders}.
 
-    Имя — позиционный параметр (/), чтобы не конфликтовать с переменной `name`
-    в промптах (например, bio.md использует {name}).
+    The name is positional-only (/) so it does not clash with a `name` variable
+    used inside prompts (e.g. bio.md uses {name}).
     """
     template = (PROMPTS_DIR / f"{prompt_name}.md").read_text(encoding="utf-8")
     return template.format(**variables)
 
 
 def complete(prompt: str, *, system: str | None = None) -> str:
-    """Один вызов LLM. Модель, температура и лимит токенов — из конфига."""
+    """A single LLM call. Model, temperature and token limit come from config."""
     settings = get_settings()
     messages: list[dict[str, str]] = []
     if system:
@@ -58,15 +58,15 @@ def complete(prompt: str, *, system: str | None = None) -> str:
 
 
 def complete_json(prompt: str, *, system: str | None = None) -> dict:
-    """Вызов LLM с ожиданием JSON-ответа. Терпимо относится к ```json-обёрткам."""
+    """An LLM call expecting a JSON response. Tolerates ```json fences."""
     raw = complete(prompt, system=system)
     text = raw.strip()
-    # Модели любят заворачивать JSON в markdown-блок — снимаем
+    # Models like to wrap JSON in a markdown block — strip it
     fence = re.search(r"```(?:json)?\s*(.*?)```", text, flags=re.DOTALL)
     if fence:
         text = fence.group(1).strip()
     try:
         return json.loads(text)
     except json.JSONDecodeError as err:
-        logger.error("LLM вернул не-JSON: %s", raw[:500])
+        logger.error("LLM returned non-JSON: %s", raw[:500])
         raise ValueError("LLM response is not valid JSON") from err

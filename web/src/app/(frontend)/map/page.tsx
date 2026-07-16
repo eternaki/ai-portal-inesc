@@ -1,6 +1,6 @@
 import React from 'react'
 
-// Карта тем строится AI-сервисом (UMAP+HDBSCAN) — рендерим на каждый запрос
+// The topic map is built by the AI service (UMAP+HDBSCAN) — render on each request
 export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'Research map' }
@@ -15,7 +15,7 @@ type MapPoint = {
 }
 type MapCluster = { id: number; label: string | null; count: number }
 
-// Палитра кластеров — производные от кобальта/янтаря, различимые на бумаге
+// Cluster palette — derived from cobalt/amber, distinguishable in print
 const COLORS = [
   '#2553a5', '#b97a10', '#2a7f62', '#8c3fa8', '#c04b3d',
   '#1b7f9e', '#6b6f2a', '#a83f68', '#4a5fc4', '#7a5230',

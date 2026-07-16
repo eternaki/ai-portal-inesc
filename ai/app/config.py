@@ -1,4 +1,4 @@
-"""Конфигурация сервиса. Все значения берутся из переменных окружения / .env."""
+"""Service configuration. Every value comes from environment variables / .env."""
 
 from functools import lru_cache
 
@@ -8,27 +8,27 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    # Postgres (тот же инстанс, что у Payload; свои таблицы — ai_*)
+    # Postgres (same instance as Payload; the AI service has its own tables)
     database_url: str = "postgresql://mlkd:mlkd@localhost:5432/mlkd"
 
     # Payload CMS REST API
     payload_url: str = "http://localhost:3000"
-    payload_api_key: str = ""  # API-ключ сервисного пользователя (users, role=editor)
+    payload_api_key: str = ""  # service user's API key (users, role=editor)
 
-    # Токен для мутирующих эндпоинтов AI-сервиса (/generate/*).
-    # Без него эти эндпоинты отключены. Генерация: openssl rand -hex 32
+    # Token for the AI service's mutating endpoints (/generate/*).
+    # Without it those endpoints are disabled. Generate with: openssl rand -hex 32
     ai_service_token: str = ""
 
-    # LLM: смена модели = смена этой строки (litellm-формат "провайдер/модель").
-    # Ключ провайдера — в его стандартной переменной (GEMINI_API_KEY, OPENAI_API_KEY, ...)
+    # LLM: swapping models = changing this one line (litellm "provider/model" format).
+    # The provider key lives in its standard variable (GEMINI_API_KEY, OPENAI_API_KEY, ...)
     llm_model: str = "gemini/gemini-2.5-flash"
     llm_temperature: float = 0.3
     llm_max_tokens: int = 2048
 
-    # Локальная модель эмбеддингов (sentence-transformers)
+    # Local embedding model (sentence-transformers)
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
 
-    # OpenAlex "polite pool": укажите реальный email команды
+    # OpenAlex "polite pool": set the team's real email
     openalex_mailto: str = "mlkd-portal@example.com"
 
 

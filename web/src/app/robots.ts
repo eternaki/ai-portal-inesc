@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      // Админка и API не для индексации
+      // Admin and API are not for indexing
       disallow: ['/admin', '/api/'],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,

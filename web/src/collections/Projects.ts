@@ -37,7 +37,7 @@ export const Projects: CollectionConfig = {
         { name: 'yearEnd', type: 'number', admin: { width: '33%' } },
       ],
     },
-    { name: 'funding', type: 'text', admin: { description: 'Источник финансирования / грант' } },
+    { name: 'funding', type: 'text', admin: { description: 'Funding source / grant' } },
     { name: 'url', type: 'text' },
     { name: 'description', type: 'richText' },
     { name: 'members', type: 'relationship', relationTo: 'members', hasMany: true },

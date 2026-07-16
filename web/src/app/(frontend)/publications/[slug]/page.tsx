@@ -8,7 +8,7 @@ import { PubRow } from '@/components/PubRow'
 import { JsonLd } from '@/components/JsonLd'
 import { SITE_URL } from '@/lib/site'
 
-// Данные приходят из CMS — рендерим на каждый запрос, не при сборке
+// Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
 
 type Params = Promise<{ slug: string }>
@@ -74,7 +74,7 @@ export default async function PublicationPage(props: { params: Params }) {
   const hasSummary =
     pub.aiSummaryStatus !== 'none' && summary && SUMMARY_SECTIONS.some(([key]) => summary[key])
 
-  // Работы группы, на которые ссылается эта статья, и работы группы, ссылающиеся на неё
+  // Group works this paper references, and group works that cite this paper
   const [references, citedBy] = await Promise.all([
     (pub.referencedWorks ?? []).length > 0
       ? payload

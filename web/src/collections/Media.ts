@@ -5,7 +5,7 @@ import { adminOrEditor } from '../access'
 export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
-    group: 'Контент',
+    group: 'Content',
   },
   access: {
     read: () => true,

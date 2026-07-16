@@ -1,8 +1,8 @@
 import React from 'react'
 
-// Фирменный элемент: публикации как точки в embedding-пространстве.
-// Детерминированный PRNG (mulberry32) — один и тот же «созвездие» при каждом
-// рендере, никаких Math.random (и никакого мерцания при гидрации).
+// Signature element: publications as points in embedding space.
+// A deterministic PRNG (mulberry32) — the same "constellation" on every render,
+// no Math.random (and no flicker on hydration).
 function mulberry32(seed: number) {
   let a = seed
   return () => {
@@ -42,7 +42,7 @@ export function Scatter({
     }
   })
 
-  // Несколько тонких рёбер между соседями — намёк на граф цитирований
+  // A few thin edges between neighbors — a hint of a citation graph
   const edges: Array<[Dot, Dot]> = []
   for (let i = 0; i < dots.length && edges.length < 14; i += 7) {
     const a = dots[i]

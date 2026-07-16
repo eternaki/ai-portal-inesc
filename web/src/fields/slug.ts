@@ -8,7 +8,7 @@ const slugify = (value: string): string =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)+/g, '')
 
-// Слаг для URL: генерируется из поля `from`, если не задан вручную.
+// URL slug: generated from the `from` field unless set by hand.
 export const slugField = (from: string): Field => ({
   name: 'slug',
   type: 'text',
@@ -16,7 +16,7 @@ export const slugField = (from: string): Field => ({
   index: true,
   admin: {
     position: 'sidebar',
-    description: 'URL-идентификатор; создаётся автоматически, можно поправить вручную',
+    description: 'URL identifier; created automatically, can be edited by hand',
   },
   hooks: {
     beforeValidate: [

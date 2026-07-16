@@ -2,7 +2,7 @@ import React from 'react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
-// Данные приходят из CMS — рендерим на каждый запрос, не при сборке
+// Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'Software & Datasets' }

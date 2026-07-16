@@ -1,8 +1,8 @@
-"""Клиент Payload REST API.
+"""Payload REST API client.
 
-Правило архитектуры: AI-сервис НЕ пишет в контентные таблицы Payload напрямую —
-только через REST. Так саммари/био попадают в админку и остаются редактируемыми.
-Аутентификация — API-ключ сервисного пользователя (коллекция users, role=editor).
+Architecture rule: the AI service does NOT write to Payload content tables
+directly — only through REST. That is how summaries/bios reach the admin and
+stay editable. Auth is the service user's API key (users collection, role=editor).
 """
 
 import json
@@ -15,8 +15,8 @@ from app.config import get_settings
 
 def _client() -> httpx.Client:
     settings = get_settings()
-    # Все запросы AI-сервиса помечены: Payload-хук авто-обработки их пропускает
-    # (иначе массовый ingest или запись саммари сами бы триггерили LLM-вызовы).
+    # Every AI-service request is tagged so the Payload auto-process hook skips it
+    # (otherwise a bulk ingest or a summary write would trigger LLM calls itself).
     headers = {"X-Skip-Autoprocess": "1"}
     if settings.payload_api_key:
         headers["Authorization"] = f"users API-Key {settings.payload_api_key}"
@@ -38,7 +38,7 @@ def find(collection: str, where: dict[str, Any] | None = None, *, limit: int = 1
 
 
 def find_all(collection: str, where: dict[str, Any] | None = None, *, depth: int = 0) -> list[dict]:
-    """Все документы коллекции с пагинацией."""
+    """Every document in the collection, paginated."""
     docs: list[dict] = []
     page = 1
     while True:
@@ -64,13 +64,13 @@ def update(collection: str, doc_id: int | str, data: dict) -> dict:
 
 
 def upsert_publication(data: dict) -> tuple[dict, bool]:
-    """Создать или обновить публикацию. Матчинг: openalexId, затем DOI.
+    """Create or update a publication. Matching: openalexId, then DOI.
 
-    Возвращает (документ, created). Поля, которые человек мог править руками
-    (aiSummary, verified, ...), при обновлении не трогаем.
+    Returns (document, created). Fields a human may have edited by hand
+    (aiSummary, verified, ...) are left untouched on update.
     """
-    # Матчим и по openalexId, и по DOI: OpenAlex иногда содержит две записи
-    # (preprint + published) с одним DOI — это одна публикация для нас.
+    # Match on both openalexId and DOI: OpenAlex sometimes has two records
+    # (preprint + published) sharing one DOI — for us that is one publication.
     conditions: list[dict[str, Any]] = []
     if data.get("openalexId"):
         conditions.append({"openalexId": {"equals": data["openalexId"]}})
@@ -91,8 +91,8 @@ def upsert_publication(data: dict) -> tuple[dict, bool]:
     try:
         return create("publications", data), True
     except httpx.HTTPStatusError as err:
-        # Коллизия слага: у conference- и journal-версии статьи одинаковый заголовок.
-        # Повторяем с уникализированным слагом (хук Payload его слагифицирует).
+        # Slug collision: the conference and journal versions share one title.
+        # Retry with a uniquified slug (the Payload hook slugifies it).
         if err.response.status_code == 400 and "slug" in err.response.text:
             suffix = data.get("openalexId") or data.get("doi") or str(data.get("year") or "")
             retry = {**data, "slug": f"{data['title']} {suffix}"}
