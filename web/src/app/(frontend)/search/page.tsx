@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import { getDictionary } from '@/i18n/server'
 
 // Search calls the AI service on every request
 export const dynamic = 'force-dynamic'
@@ -36,40 +37,33 @@ async function runSearch(q: string): Promise<{ hits: SearchHit[]; error: string 
   }
 }
 
-const EXAMPLES = [
-  'detecting anomalies in medical images',
-  'how do transformers handle long documents',
-  'privacy-preserving machine learning',
-]
-
 export default async function SearchPage(props: { searchParams: SearchParams }) {
   const { q } = await props.searchParams
   const query = (q ?? '').trim()
   const { hits, error } = query ? await runSearch(query) : { hits: [], error: null }
+  const t = await getDictionary()
 
   return (
     <div>
-      <h1>Semantic search</h1>
-      <p className="pub-meta">
-        Describe a topic in your own words — results are ranked by meaning, not keywords.
-      </p>
+      <h1>{t.search.title}</h1>
+      <p className="pub-meta">{t.search.meta}</p>
 
       <form method="get" className="search-form">
         <input
           type="search"
           name="q"
           defaultValue={query}
-          placeholder="e.g. deep learning for medical imaging"
-          aria-label="Search query"
+          placeholder={t.search.placeholder}
+          aria-label={t.search.ariaQuery}
         />
         <button className="btn" type="submit">
-          Search
+          {t.search.button}
         </button>
       </form>
 
       {!query && (
         <div className="filters">
-          {EXAMPLES.map((ex) => (
+          {t.search.examples.map((ex) => (
             <Link key={ex} href={`/search?q=${encodeURIComponent(ex)}`}>
               {ex}
             </Link>
@@ -78,11 +72,19 @@ export default async function SearchPage(props: { searchParams: SearchParams }) 
       )}
 
       {query && error && (
-        <div className="empty">Search is temporarily unavailable ({error}). Please try again shortly.</div>
+        <div className="empty">
+          {t.search.unavailableBefore}
+          {error}
+          {t.search.unavailableAfter}
+        </div>
       )}
 
       {query && !error && hits.length === 0 && (
-        <div className="empty">No matches for “{query}”. Try rephrasing the topic.</div>
+        <div className="empty">
+          {t.search.noMatchesBefore}
+          {query}
+          {t.search.noMatchesAfter}
+        </div>
       )}
 
       {hits.map((hit) => (
@@ -99,7 +101,7 @@ export default async function SearchPage(props: { searchParams: SearchParams }) 
               {hit.publication.year}
               {hit.publication.venue ? ` · ${hit.publication.venue}` : ''}
             </span>{' '}
-            <span className="badge">match {(hit.score * 100).toFixed(0)}%</span>
+            <span className="badge">{t.search.match} {(hit.score * 100).toFixed(0)}%</span>
           </div>
         </article>
       ))}

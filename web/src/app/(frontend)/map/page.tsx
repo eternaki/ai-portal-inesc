@@ -1,4 +1,5 @@
 import React from 'react'
+import { getDictionary } from '@/i18n/server'
 
 // The topic map is built by the AI service (UMAP+HDBSCAN) — render on each request
 export const dynamic = 'force-dynamic'
@@ -33,14 +34,16 @@ async function fetchMap(): Promise<{ points: MapPoint[]; clusters: MapCluster[] 
 
 export default async function MapPage() {
   const data = await fetchMap()
+  const t = await getDictionary()
 
   if (!data || data.points.length === 0) {
     return (
       <div>
-        <h1>Research map</h1>
+        <h1>{t.map.title}</h1>
         <div className="empty">
-          The topic map has not been computed yet — run the clustering pipeline
-          (<code>python -m app.pipelines.cluster</code>) after ingesting publications.
+          {t.map.emptyBefore}
+          <code>python -m app.pipelines.cluster</code>
+          {t.map.emptyAfter}
         </div>
       </div>
     )
@@ -61,17 +64,13 @@ export default async function MapPage() {
 
   return (
     <div>
-      <h1>Research map</h1>
-      <p className="pub-meta" style={{ maxWidth: '60ch' }}>
-        Every dot is a publication, placed by the meaning of its text (UMAP projection of
-        embeddings). Colours are topic clusters found automatically; grey dots don’t belong
-        to a stable cluster. Hover a dot for the title, click to open.
-      </p>
+      <h1>{t.map.title}</h1>
+      <p className="pub-meta" style={{ maxWidth: '60ch' }}>{t.map.meta}</p>
 
       <div className="filters">
         {clusters.map((c) => (
           <span key={c.id} className="badge" style={{ borderColor: color(c.id), color: color(c.id) }}>
-            {c.label ?? `cluster ${c.id}`} ({c.count})
+            {c.label ?? `${t.map.cluster} ${c.id}`} ({c.count})
           </span>
         ))}
       </div>
@@ -79,7 +78,7 @@ export default async function MapPage() {
       <svg
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label="Scatter map of publications grouped by topic"
+        aria-label={t.map.svgAria}
         style={{ width: '100%', height: 'auto', background: 'var(--card)', border: '1px solid var(--ink-12)', borderRadius: 'var(--radius)' }}
       >
         {points.map((p) => {

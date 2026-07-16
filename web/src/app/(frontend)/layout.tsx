@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { STIX_Two_Text, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
 import './styles.css'
 import { SITE_URL, SITE_NAME } from '@/lib/site'
+import { getDictionary, getLocale } from '@/i18n/server'
+import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 
 // Typography: STIX Two Text — the typeface of scientific journals (the site is
 // set in the same font as the papers it indexes); Plex Sans/Mono — UI and data.
@@ -38,20 +40,22 @@ export const metadata = {
 }
 
 const NAV = [
-  { href: '/research', label: 'Research' },
-  { href: '/map', label: 'Map' },
-  { href: '/publications', label: 'Publications' },
-  { href: '/people', label: 'People' },
-  { href: '/opportunities', label: 'Opportunities' },
-  { href: '/news', label: 'News' },
-  { href: '/search', label: 'Search' },
-]
+  { href: '/research', key: 'research' },
+  { href: '/map', key: 'map' },
+  { href: '/publications', key: 'publications' },
+  { href: '/people', key: 'people' },
+  { href: '/opportunities', key: 'opportunities' },
+  { href: '/news', key: 'news' },
+  { href: '/search', key: 'search' },
+] as const
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props
+  const locale = await getLocale()
+  const t = await getDictionary()
 
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang={locale} className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
       <body>
         <header className="site-header">
           <div className="site-header-inner">
@@ -72,9 +76,10 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             <nav className="site-nav">
               {NAV.map((item) => (
                 <Link key={item.href} href={item.href}>
-                  {item.label}
+                  {t.nav[item.key]}
                 </Link>
               ))}
+              <LocaleSwitcher current={locale} />
             </nav>
           </div>
         </header>
@@ -86,9 +91,9 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
               <p>INESC-ID · Rua Alves Redol 9, 1000-029 Lisboa, Portugal</p>
             </div>
             <div className="site-footer-links">
-              <Link href="/publications">Publications</Link>
-              <Link href="/opportunities">Open thesis topics</Link>
-              <a href="/admin">Member sign in</a>
+              <Link href="/publications">{t.nav.publications}</Link>
+              <Link href="/opportunities">{t.footer.openThesis}</Link>
+              <a href="/admin">{t.footer.signIn}</a>
             </div>
           </div>
         </footer>

@@ -43,6 +43,23 @@ architecture, global rules). This file covers only the `web/` specifics.
   via `src/components/JsonLd.tsx`.
 - Keep collection files focused; a growing file is a signal to split.
 
+## Internationalization (i18n)
+
+The public UI is bilingual **English + Português** (no Russian, ever). Approach:
+
+- **Strings** live in `src/i18n/messages.ts` (`en` is the source of the `Dictionary`
+  type; `pt` must define the same keys — TypeScript enforces it). Never hardcode a
+  visible string in a page/component — add a key and use the dictionary.
+- **Active locale** is a `NEXT_LOCALE` cookie, read per request by
+  `getLocale()` / `getDictionary()` in `src/i18n/server.ts` (Server Components only).
+- **Switcher**: `src/components/LocaleSwitcher.tsx` (client) sets the cookie and
+  calls `router.refresh()`. It lives in the header (`layout.tsx`).
+- In a page: `const t = await getDictionary()`, then `t.<area>.<key>`. For dates use
+  `dateLocale[locale]` from `src/i18n/config.ts`.
+- **Not translated**: bibliographic content from OpenAlex (titles, abstracts, author
+  names) and static `<title>` metadata exports.
+- Watch for shadowing: don't name a `.map()` item `t` — it hides the dictionary.
+
 ## Commands
 
 - `pnpm dev` — dev server (http://localhost:3000, admin `/admin`)

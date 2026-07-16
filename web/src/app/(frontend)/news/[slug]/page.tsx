@@ -8,6 +8,8 @@ import { PubRow } from '@/components/PubRow'
 import type { Publication } from '@/payload-types'
 import { JsonLd } from '@/components/JsonLd'
 import { SITE_URL } from '@/lib/site'
+import { getDictionary, getLocale } from '@/i18n/server'
+import { dateLocale } from '@/i18n/config'
 
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
@@ -40,6 +42,9 @@ export default async function NewsItemPage(props: { params: Params }) {
   const item = await findNews(slug)
   if (!item) notFound()
 
+  const t = await getDictionary()
+  const locale = await getLocale()
+
   const related = (item.relatedPublications ?? []).filter(
     (p): p is Publication => typeof p === 'object',
   )
@@ -63,7 +68,7 @@ export default async function NewsItemPage(props: { params: Params }) {
       <div className="article-head">
         <div className="news-date">
           {item.date
-            ? new Date(item.date).toLocaleDateString('en-GB', {
+            ? new Date(item.date).toLocaleDateString(dateLocale[locale], {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric',
@@ -81,16 +86,16 @@ export default async function NewsItemPage(props: { params: Params }) {
 
       <div className="share-row">
         <a className="btn btn-quiet" href={shareLinkedIn} target="_blank" rel="noreferrer">
-          Share on LinkedIn
+          {t.newsItem.shareLinkedIn}
         </a>
         <a className="btn btn-quiet" href={shareX} target="_blank" rel="noreferrer">
-          Share on X
+          {t.newsItem.shareX}
         </a>
       </div>
 
       {related.length > 0 && (
         <section>
-          <h2>Related publications</h2>
+          <h2>{t.newsItem.related}</h2>
           {related.map((p) => (
             <PubRow key={p.id} pub={p} />
           ))}
@@ -98,7 +103,7 @@ export default async function NewsItemPage(props: { params: Params }) {
       )}
 
       <p style={{ marginTop: '2.5rem' }}>
-        <Link href="/news">← All news</Link>
+        <Link href="/news">{t.newsItem.back}</Link>
       </p>
     </article>
   )

@@ -1,8 +1,11 @@
 import React from 'react'
 import Link from 'next/link'
 import type { Publication } from '@/payload-types'
+import { getDictionary } from '@/i18n/server'
 
-export function PubRow({ pub }: { pub: Publication }) {
+// Server component: reads the active locale so the "summary" badge is localized.
+export async function PubRow({ pub }: { pub: Publication }) {
+  const t = await getDictionary()
   const hasAiSummary = pub.aiSummaryStatus && pub.aiSummaryStatus !== 'none'
   return (
     <article className="pub-item">
@@ -16,7 +19,7 @@ export function PubRow({ pub }: { pub: Publication }) {
           {pub.venue ? ` · ${pub.venue}` : ''}
         </span>{' '}
         <span className="badge">{pub.type}</span>{' '}
-        {hasAiSummary ? <span className="badge badge-ai">summary</span> : null}
+        {hasAiSummary ? <span className="badge badge-ai">{t.pubRow.summary}</span> : null}
         {pub.doi ? (
           <>
             {' '}
