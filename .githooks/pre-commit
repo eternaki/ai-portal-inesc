@@ -1,0 +1,6 @@
+#!/bin/sh
+# Refresh the auto-generated Project map in the root CLAUDE.md, then stage it so
+# the map never drifts from the code. Deterministic and offline — the heavy,
+# prose parts of CLAUDE.md are NOT touched (see CLAUDE.md section 7).
+node scripts/gen-claude-map.mjs || exit 1
+git add CLAUDE.md

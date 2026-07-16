@@ -13,7 +13,9 @@
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "claude:map": "node ../scripts/gen-claude-map.mjs",
+    "prepare": "node ../scripts/setup-hooks.mjs"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.86.0",
