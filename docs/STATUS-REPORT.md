@@ -1,114 +1,81 @@
-# MLKD Portal — отчёт о состоянии (к презентации)
+# MLKD Portal — Status Report
 
-Проект: AI-Enhanced Web Platform for Research Group Visibility and Impact (MLKD, INESC-ID).
+Project: AI-Enhanced Web Platform for Research Group Visibility and Impact (MLKD, INESC-ID).
+Repository: https://github.com/eternaki/ai-portal-inesc
 
-## 1. Что это и как устроено
+## What we built
 
-Три сервиса, поднимаются одной командой (`docker compose up`):
+A new website for the MLKD research group where all publications are collected
+automatically, summarised by AI into plain language, searchable by meaning, and
+easy to edit for non-technical people through a simple admin panel.
 
-```
-┌──────────────────────────────────────────────────────────┐
-│  web (Next.js 16 + Payload CMS 3, TypeScript)            │
-│   • публичный сайт (SSR, SEO)                            │
-│   • /admin — CMS с логином, ролями, медиатекой          │
-│                    │ REST                                │
-│  ai (Python FastAPI + LiteLLM)                          │
-│   • пайплайны: ingest, summarize, embed, bios, cluster  │
-│   • эндпоинты: /search, /map, /process, /generate       │
-│                    │                                     │
-│  db (PostgreSQL 16 + pgvector) — реляционка + векторы   │
-└──────────────────────────────────────────────────────────┘
-```
+## What we used (tech stack)
 
-**Ключевое архитектурное решение:** LLM — это офлайн-пайплайн, а не рантайм-зависимость.
-Саммари и другой AI-контент генерируются заранее и хранятся в CMS. Сайт полностью
-работает, даже если AI-сервис или LLM недоступны (единственное живое обращение к
-эмбеддингам — семантический поиск, и он тоже без LLM).
-
-**Разделение ответственности:** контентом владеет Payload (люди правят через админку);
-AI-сервис пишет в контент только через REST API — поэтому саммари/био остаются
-редактируемыми человеком. Эмбеддинги и карта тем — отдельные таблицы AI-сервиса.
-
-**Стек и почему он (замена WordPress):** админка Payload закрывает боль заказчика
-«легко обновлять людей/публикации/темы»; Postgres+pgvector — одна БД и для данных, и
-для векторного поиска; Python/FastAPI+LiteLLM — «смена LLM = смена одной строки в .env».
-
-## 2. Что сделано против ТЗ
-
-| Раздел ТЗ | Статус | Где смотреть |
+| Part | Technology | Why |
 |---|---|---|
-| A. Research Discovery Portal (searchable БД публикаций) | ✅ | /publications, фильтры по годам |
-| A. Фильтры topic/year/author/venue | ✅ | /publications |
-| A. Keyword semantic search | ✅ | /search (эмбеддинги + pgvector) |
-| A. Интеграция DBLP/ORCID/Scholar | ✅ OpenAlex + ORCID | пайплайн ingest |
-| A. Visual summaries / topic clusters | ✅ | /map (UMAP+HDBSCAN) |
-| B. AI-саммари публикаций (alphaxiv «Blog mode») | ✅ | страница статьи |
-| B. Non-technical + impact описания | ✅ | секции «For industry», «Why it matters» |
-| B. Сниппеты для соцсетей | ✅ | кнопка в админке → LinkedIn/X |
-| B. Связь с LinkedIn/Twitter | ✅ share + генерация | новости, публикации |
-| C. Профили members/alumni | ✅ | /people |
-| C. AI-черновики био (правит владелец) | ✅ | пайплайн bios, поле bioAiDraft |
-| C. Обязательная связь LinkedIn/Técnico | ✅ | поля профиля |
-| C. Внутренний логин для правки профиля | ✅ | self-edit (проверено) |
-| D. Open thesis topics + challenges | ✅ | /opportunities |
-| E. SEO / structured metadata | ✅ | JSON-LD, sitemap, robots, OG |
-| E. News & blog секция | ✅ | /news |
-| Deliverable: структурированная схема БД | ✅ | 9 коллекций |
-| Deliverable: proposal по поддержке | ✅ частично | Docker + миграции + автоген |
+| Website + admin panel | **Next.js + Payload CMS** (TypeScript) | Modern site with good SEO; the admin panel replaces WordPress — log in, edit a field, done |
+| AI service | **Python + FastAPI + LiteLLM** | All AI logic in one service; switching to another LLM = changing one line in config |
+| Database | **PostgreSQL + pgvector** | One database for both regular data and vector search — no extra services |
+| Publication data | **OpenAlex API** (+ ORCID ids) | Free, official, has abstracts and citations. Google Scholar has no API, so we don't scrape it |
+| LLM | **Gemini** (free tier for now) | Generates summaries; any provider works via LiteLLM |
+| Embeddings | **sentence-transformers** (local, free) | Powers semantic search — no API costs |
+| Deployment | **Docker Compose** | The whole system starts with one command |
 
-**Stretch (по ТЗ необязательное), пока не делали:** чат-бот (RAG), генератор
-newsletter, автопостинг в X, иллюстрации статей (Nano Banana). Требуют решений
-препода — см. раздел 5.
+## What is done
 
-## 3. Цифры (на текущий момент, живые данные)
+- **252 real publications** imported automatically from OpenAlex (prof. Arlindo Oliveira)
+- **AI summaries** in 7 sections (TL;DR, Problem, Method, Results, Takeaways,
+  For industry, Why it matters) — 15 done with the real model, the rest are limited
+  only by the free API quota (~20/day)
+- **Semantic search** — type a topic in your own words, results are ranked by meaning
+- **Research map** — all publications as dots on a 2D map, clustered into 6 topics
+  automatically (UMAP + HDBSCAN)
+- **Auto-generation** — when someone adds or edits a publication in the admin panel,
+  the summary and search index update by themselves
+- **People profiles** with self-edit: each member can log in and edit only their own
+  profile (verified: own = allowed, others = forbidden)
+- **AI bio drafts** — a pipeline drafts a short bio from a member's publications;
+  the member edits it before publishing
+- **Opportunities page** — open MSc/PhD thesis topics to attract students
+- **News section** with share buttons and a one-click AI-generated social media post
+  (LinkedIn + X) in the admin panel
+- **SEO package** — structured metadata (schema.org), sitemap (262 URLs), robots.txt,
+  OpenGraph tags
+- **Custom design** — "map of knowledge" concept: publications as points in embedding
+  space; cobalt = navigation, amber = AI-generated content; STIX typeface (the font
+  of scientific journals)
 
-- **252 публикации** реально загружены из OpenAlex (проф. Arlindo Oliveira, id `A5001327675`)
-- **252 эмбеддинга** в pgvector (модель all-MiniLM-L6-v2, 384-мерные) → семантический поиск
-- **6 тематических кластеров** на карте тем (haplotype inference, coronary segmentation,
-  gene regulation, compressed data structures, RTL testability, intelligent systems)
-- **15 публикаций с полными AI-саммари** (7 секций каждая, реальная модель Gemini)
-- 4 темы, 2 открытые темы тезисов, демо-новость
-- 12 коммитов в `main`, всё через PR
+## How it works (simple)
 
-> Почему саммари только у 15, а не у всех 252: бесплатный ключ Gemini имеет лимит
-> ~20 запросов/день. Остальные догенерируются автоматически (см. ниже) при platnom
-> ключе или за несколько дней. Это внешнее ограничение ключа, не код.
+```
+OpenAlex ──> ingest pipeline ──> CMS (Payload) ──> website pages
+                                   │    ▲
+                embeddings ────────┘    │ AI writes summaries back
+                (pgvector)          LLM (Gemini via LiteLLM)
+```
 
-## 4. Что показать на демо (сценарий, ~5 минут)
+The key decision: **the LLM works offline, not at page load.** Summaries are
+generated in advance and stored in the CMS. The website works fully even if the
+AI service or the LLM provider is down. People can always edit AI output by hand —
+edited text is never overwritten.
 
-1. **Главная** — hero с «картой знаний» (публикации как точки), живые счётчики из CMS.
-2. **Publications** → фильтр по году → открыть статью с саммари → показать 7 секций
-   (TL;DR / Problem / Method / Results / Takeaways / For industry / Why it matters)
-   с пометкой «AI-generated», блок related citations.
-3. **Search** — ввести запрос своими словами («detecting anomalies in medical images»),
-   показать что ранжирует по смыслу, а не по словам.
-4. **Map** — карта тем: точки-публикации, раскрашенные по кластерам, клик ведёт на статью.
-5. **Admin** (главный аргумент про поддержку): залогиниться → создать/поправить
-   публикацию → показать, что саммари генерируется **само** (кнопка + автохук) → на
-   сайте обновилось. Это ответ на «главную боль заказчика» из ТЗ.
-6. **Opportunities** — открытые темы тезисов (то, ради чего портал привлекает студентов).
+## Security basics
 
-## 5. Что осталось и требует решений (для слайда «дальше»)
+Roles (admin / editor / member); members can only edit their own profile;
+AI endpoints protected by tokens; database not exposed to the network;
+untrusted external data is escaped before rendering.
 
-- **Полный прогон саммари по всем 252** — нужен платный ключ Gemini (билинг) или
-  другой провайдер; код готов, меняется одна строка в .env.
-- **Данные остальных членов группы** — сейчас в системе 1 профиль (Arlindo для демо);
-  нужны OpenAlex ID/ORCID остальных от команды.
-- **Аналитика** (Plausible/GA) — выбрать с преподом.
-- **Stretch по решению препода:** чат-бот, EURAXESS-интеграция, Nano Banana-иллюстрации,
-  связка тем с компаниями/Erasmus — оценены как «beyond prototype».
-- **Деплой на сервер INESC-ID** — миграции БД готовы (`payload migrate`), нужен доступ
-  к серверу.
+## Next steps
 
-## 6. Технические факты для вопросов
+1. **Add all group members** — we need their OpenAlex/ORCID ids (currently 1 profile for the demo)
+2. **Summaries for the full corpus** — needs a paid LLM key (cents) or a few days of free quota
+3. **Deploy to the INESC-ID server** — DB migrations are ready, we need server access
+4. **Analytics** (Plausible or Google Analytics) — to be chosen with the supervisor
+5. Stretch goals from the brief, pending supervisor's priorities: RAG chatbot over
+   publications, newsletter generator, auto-posting to X, AI figure generation,
+   EURAXESS integration
 
-- **Автогенерация:** Payload afterChange-хук на публикациях → вызывает AI-сервис
-  (fire-and-forget). Массовый ingest помечен `X-Skip-Autoprocess`, чтобы не устроить
-  всплеск LLM-вызовов. Батч-пайплайны — отдельный путь.
-- **Безопасность:** роли admin/editor/member; member правит только свой профиль
-  (проверено: своё 200, чужое 403, эскалация роли блокируется); мутирующие AI-эндпоинты
-  за токеном; порты БД/AI слушают только localhost; JSON-LD экранирует недоверенные данные.
-- **Библиография:** OpenAlex как основной источник (есть abstracts, цитирования),
-  DBLP как контроль. Google Scholar сознательно НЕ используем — у него нет API,
-  скрейпинг против ToS и хрупок.
-- **Репозиторий:** github.com/eternaki/ai-portal-inesc, ветка → PR → main.
+## Team roles (as in the brief)
+
+Backend/architecture · Frontend/UX · AI & automation · Data & visibility —
+the codebase is split accordingly: `web/` (site+CMS), `ai/` (pipelines), `docs/` (plans).
