@@ -1,6 +1,7 @@
 import React from 'react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { getDictionary } from '@/i18n/server'
 
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
@@ -9,6 +10,7 @@ export const metadata = { title: 'Software & Datasets' }
 
 export default async function SoftwarePage() {
   const payload = await getPayload({ config })
+  const t = await getDictionary()
   const items = await payload.find({
     collection: 'software',
     sort: 'name',
@@ -18,12 +20,10 @@ export default async function SoftwarePage() {
 
   return (
     <div>
-      <h1>Software &amp; Datasets</h1>
-      <p className="pub-meta">Tools and datasets released by the group.</p>
+      <h1>{t.software.title}</h1>
+      <p className="pub-meta">{t.software.meta}</p>
 
-      {items.docs.length === 0 && (
-        <div className="empty">Releases are being catalogued — check back soon.</div>
-      )}
+      {items.docs.length === 0 && <div className="empty">{t.software.empty}</div>}
 
       <div className="card-grid">
         {items.docs.map((s) => (

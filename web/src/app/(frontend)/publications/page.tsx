@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getPayload, type Where } from 'payload'
 import config from '@payload-config'
 import { PubRow } from '@/components/PubRow'
+import { getDictionary } from '@/i18n/server'
 
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
@@ -14,6 +15,7 @@ type SearchParams = Promise<{ year?: string; type?: string }>
 export default async function PublicationsPage(props: { searchParams: SearchParams }) {
   const { year, type } = await props.searchParams
   const payload = await getPayload({ config })
+  const t = await getDictionary()
 
   const where: Where = {}
   if (year) where.year = { equals: Number(year) }
@@ -39,27 +41,26 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
   return (
     <div>
       <div className="section-head">
-        <h1>Publications</h1>
+        <h1>{t.publications.title}</h1>
         <span>
-          <Link href="/search">Semantic search →</Link>{' '}
+          <Link href="/search">{t.publications.semanticSearch}</Link>{' '}
           <a
             className="btn btn-quiet"
             href="/admin/collections/publications/create"
-            title="Members: add a publication via the admin panel; the summary is generated automatically"
+            title={t.publications.addTitle}
             style={{ marginLeft: '0.8rem' }}
           >
-            + Add publication
+            {t.publications.add}
           </a>
         </span>
       </div>
       <p className="pub-meta">
-        {result.totalDocs} indexed from OpenAlex · summaries generated automatically and
-        editable by the group
+        {result.totalDocs} {t.publications.metaSuffix}
       </p>
 
       <div className="filters">
         <Link href="/publications" className={!year ? 'active' : ''}>
-          all years
+          {t.publications.allYears}
         </Link>
         {allYears.slice(0, 18).map((y) => (
           <Link
@@ -73,7 +74,7 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
       </div>
 
       {result.docs.length === 0 && (
-        <div className="empty">No publications match this filter yet.</div>
+        <div className="empty">{t.publications.empty}</div>
       )}
 
       {result.docs.map((pub) => (

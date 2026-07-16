@@ -2,6 +2,7 @@ import React from 'react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Member } from '@/payload-types'
+import { getDictionary } from '@/i18n/server'
 
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
@@ -10,6 +11,7 @@ export const metadata = { title: 'Projects' }
 
 export default async function ProjectsPage() {
   const payload = await getPayload({ config })
+  const t = await getDictionary()
   const projects = await payload.find({
     collection: 'projects',
     sort: '-yearStart',
@@ -19,12 +21,10 @@ export default async function ProjectsPage() {
 
   return (
     <div>
-      <h1>Projects</h1>
-      <p className="pub-meta">National, international and industry research projects.</p>
+      <h1>{t.projects.title}</h1>
+      <p className="pub-meta">{t.projects.meta}</p>
 
-      {projects.docs.length === 0 && (
-        <div className="empty">Project pages are on their way — check back soon.</div>
-      )}
+      {projects.docs.length === 0 && <div className="empty">{t.projects.empty}</div>}
 
       <div className="card-grid">
         {projects.docs.map((p) => {
@@ -39,7 +39,7 @@ export default async function ProjectsPage() {
                   {p.yearEnd ? `–${p.yearEnd}` : p.yearStart ? '–' : ''}
                 </span>
               </div>
-              {p.funding && <div className="pub-meta">Funding: {p.funding}</div>}
+              {p.funding && <div className="pub-meta">{t.projects.funding} {p.funding}</div>}
               {members.length > 0 && (
                 <div className="card-foot">{members.map((m) => m.name).join(', ')}</div>
               )}

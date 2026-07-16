@@ -121,11 +121,16 @@ So you don't grep the whole repo:
 | Add / change an **LLM prompt** | `ai/app/llm/prompts/<name>.md` — prompts are files, reviewed like code |
 | Add a **site page** | `web/src/app/(frontend)/<route>/page.tsx` |
 | Change **permissions / roles** | `web/src/access/index.ts` (roles: `admin` / `editor` / `member`) |
+| Add / translate a **UI string** | `web/src/i18n/messages.ts` — add the key to **both** `en` and `pt` |
 
 ## 6. Global rules
 
 1. **Site languages: English + Português only.** No Russian may ever appear in the
-   UI or any user-facing content. All labels, content fields and copy are en/pt.
+   UI or any user-facing content. The UI is localized via a `NEXT_LOCALE` cookie and
+   `web/src/i18n/messages.ts`; a header toggle (`LocaleSwitcher`) switches languages.
+   Every user-facing string goes through the dictionary in **both** locales — never
+   hardcode visible copy. Bibliographic data from OpenAlex (paper titles, abstracts)
+   is not translated. See `web/CLAUDE.md`.
 2. **Code, comments, docs and commit messages: English.** (The older Russian docs
    under `docs/` are legacy — do not add new Russian anywhere.)
 3. **Comments explain *what*, *why*, and *why this way*** — the intent and the

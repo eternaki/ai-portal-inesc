@@ -579,3 +579,36 @@ main {
     gap: 1.4rem;
   }
 }
+
+/* ── language switcher (en/pt) ── */
+
+.locale-switcher {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 0.4rem;
+  padding: 2px;
+  border: 1px solid var(--ink-12);
+  border-radius: 999px;
+}
+
+.locale-switcher button {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.5rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-40);
+  cursor: pointer;
+}
+
+.locale-switcher button:hover {
+  color: var(--cobalt);
+}
+
+.locale-switcher button.active {
+  background: var(--cobalt);
+  color: #fff;
+  cursor: default;
+}

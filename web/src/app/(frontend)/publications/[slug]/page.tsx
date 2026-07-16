@@ -7,6 +7,7 @@ import type { Publication } from '@/payload-types'
 import { PubRow } from '@/components/PubRow'
 import { JsonLd } from '@/components/JsonLd'
 import { SITE_URL } from '@/lib/site'
+import { getDictionary } from '@/i18n/server'
 
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
@@ -53,26 +54,37 @@ function PubList({ title, pubs }: { title: string; pubs: Publication[] }) {
   )
 }
 
-const SUMMARY_SECTIONS = [
-  ['tldr', 'TL;DR'],
-  ['problem', 'Problem'],
-  ['method', 'Method'],
-  ['results', 'Results'],
-  ['takeaways', 'Takeaways'],
-  ['industry', 'For industry'],
-  ['impact', 'Why it matters'],
+const SUMMARY_KEYS = [
+  'tldr',
+  'problem',
+  'method',
+  'results',
+  'takeaways',
+  'industry',
+  'impact',
 ] as const
 
 export default async function PublicationPage(props: { params: Params }) {
   const { slug } = await props.params
   const payload = await getPayload({ config })
+  const t = await getDictionary()
 
   const pub = await findPublication(slug)
   if (!pub) notFound()
 
   const summary = pub.aiSummary
   const hasSummary =
-    pub.aiSummaryStatus !== 'none' && summary && SUMMARY_SECTIONS.some(([key]) => summary[key])
+    pub.aiSummaryStatus !== 'none' && summary && SUMMARY_KEYS.some((key) => summary[key])
+
+  const sectionLabels: Record<(typeof SUMMARY_KEYS)[number], string> = {
+    tldr: t.pub.sectionTldr,
+    problem: t.pub.sectionProblem,
+    method: t.pub.sectionMethod,
+    results: t.pub.sectionResults,
+    takeaways: t.pub.sectionTakeaways,
+    industry: t.pub.sectionIndustry,
+    impact: t.pub.sectionImpact,
+  }
 
   // Group works this paper references, and group works that cite this paper
   const [references, citedBy] = await Promise.all([
@@ -131,7 +143,7 @@ export default async function PublicationPage(props: { params: Params }) {
           {typeof pub.citationCount === 'number' ? (
             <>
               {' · '}
-              <span className="mono">{pub.citationCount} citations</span>
+              <span className="mono">{pub.citationCount} {t.pub.citations}</span>
             </>
           ) : null}
         </p>
@@ -140,16 +152,16 @@ export default async function PublicationPage(props: { params: Params }) {
       {hasSummary && summary ? (
         <div className="summary-card">
           <h2>
-            Summary{' '}
+            {t.pub.summary}{' '}
             <span className="badge badge-ai">
-              {pub.aiSummaryStatus === 'edited' ? 'AI · human-edited' : 'AI-generated'}
+              {pub.aiSummaryStatus === 'edited' ? t.pub.aiEdited : t.pub.aiGenerated}
             </span>
           </h2>
           <dl>
-            {SUMMARY_SECTIONS.map(([key, label]) =>
+            {SUMMARY_KEYS.map((key) =>
               summary[key] ? (
                 <React.Fragment key={key}>
-                  <dt>{label}</dt>
+                  <dt>{sectionLabels[key]}</dt>
                   <dd>{summary[key]}</dd>
                 </React.Fragment>
               ) : null,
@@ -160,30 +172,30 @@ export default async function PublicationPage(props: { params: Params }) {
 
       {pub.abstract && (
         <section className="abstract">
-          <h2>Abstract</h2>
+          <h2>{t.pub.abstract}</h2>
           <p>{pub.abstract}</p>
         </section>
       )}
 
-      <PubList title="References within the group" pubs={references} />
-      <PubList title="Cited by (group publications)" pubs={citedBy} />
+      <PubList title={t.pub.referencesWithin} pubs={references} />
+      <PubList title={t.pub.citedBy} pubs={citedBy} />
 
       {!hasSummary && !pub.abstract && references.length === 0 && citedBy.length === 0 && (
         <div className="empty">
-          No summary or abstract available for this publication yet. See the{' '}
+          {t.pub.emptyBefore}
           {pub.doi ? (
             <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer">
-              original publication
+              {t.pub.originalPublication}
             </a>
           ) : (
-            'original venue'
-          )}{' '}
-          for details.
+            t.pub.originalVenue
+          )}
+          {t.pub.emptyAfter}
         </div>
       )}
 
       <p style={{ marginTop: '2.5rem' }}>
-        <Link href="/publications">← All publications</Link>
+        <Link href="/publications">{t.pub.back}</Link>
       </p>
     </article>
   )
