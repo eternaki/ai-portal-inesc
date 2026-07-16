@@ -1,13 +1,13 @@
 import type { CollectionAfterChangeHook } from 'payload'
 
-// После сохранения публикации в админке — попросить AI-сервис сгенерировать
-// саммари и эмбеддинг. Fire-and-forget: сайт и админка не должны зависеть от
-// доступности AI-сервиса, поэтому ошибки только логируются.
+// After a publication is saved in the admin — ask the AI service to generate the
+// summary and embedding. Fire-and-forget: the site and admin must not depend on
+// the AI service being available, so errors are only logged.
 //
-// Пропускается, если запрос помечен X-Skip-Autoprocess — так помечены все
-// запросы самого AI-сервиса (ingest, запись саммари), чтобы массовый ingest
-// не устроил всплеск LLM-вызовов. Батч-пайплайны (summarize/embed) обрабатывают
-// массовые загрузки отдельно.
+// Skipped when the request is tagged X-Skip-Autoprocess — every request from the
+// AI service itself (ingest, writing summaries) is tagged that way so a bulk
+// ingest does not cause a spike of LLM calls. The batch pipelines (summarize/embed)
+// handle bulk loads separately.
 export const autoProcessPublication: CollectionAfterChangeHook = async ({ doc, req }) => {
   const aiUrl = process.env.AI_SERVICE_URL
   const token = process.env.AI_SERVICE_TOKEN
@@ -15,11 +15,12 @@ export const autoProcessPublication: CollectionAfterChangeHook = async ({ doc, r
 
   if (req?.headers?.get('x-skip-autoprocess')) return doc
 
-  // Генерим только когда есть что суммировать и саммари ещё нет
+  // Only generate when there is something to summarize and no summary yet
   if (!doc?.abstract || doc?.aiSummaryStatus !== 'none') return doc
 
-  // Fire-and-forget: не блокируем сохранение — AI-сервис обработает фоном,
-  // саммари появится через несколько секунд. Сайт не зависит от AI-сервиса.
+  // Fire-and-forget: do not block the save — the AI service processes in the
+  // background and the summary appears a few seconds later. The site does not
+  // depend on the AI service.
   void fetch(`${aiUrl}/process/publication`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Service-Token': token },

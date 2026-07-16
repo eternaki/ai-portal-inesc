@@ -1,11 +1,11 @@
-"""Карта тем: UMAP-проекция эмбеддингов публикаций + HDBSCAN-кластеры.
+"""Topic map: UMAP projection of publication embeddings + HDBSCAN clusters.
 
-Запуск:  python -m app.pipelines.cluster
+Run:  python -m app.pipelines.cluster
 
-Из ТЗ (раздел A/E): «visual summaries (research areas map, topic clusters)» +
-«AI-powered algorithm to periodically re-generate the visuals». Пайплайн
-детерминирован (random_state) и запускается заново после каждого ingest/embed.
-Метки кластеров — топ-термины TF-IDF по заголовкам и abstract (без LLM-вызовов).
+From the brief (sections A/E): "visual summaries (research areas map, topic
+clusters)" + "AI-powered algorithm to periodically re-generate the visuals". The
+pipeline is deterministic (random_state) and re-runs after each ingest/embed.
+Cluster labels are top TF-IDF terms over titles and abstracts (no LLM calls).
 """
 
 import logging
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 def _cluster_labels(texts_by_cluster: dict[int, list[str]]) -> dict[int, str]:
-    """Топ-3 TF-IDF термина на кластер — быстрые и бесплатные метки."""
+    """Top-3 TF-IDF terms per cluster — fast, free labels."""
     from sklearn.feature_extraction.text import TfidfVectorizer
 
     cluster_ids = sorted(texts_by_cluster)
@@ -46,7 +46,7 @@ def run() -> None:
         return
 
     ids = [r[0] for r in rows]
-    # pgvector отдаёт объект Vector — приводим к numpy
+    # pgvector returns a Vector object — convert it to numpy
     X = np.array(
         [
             r[1].to_numpy() if hasattr(r[1], "to_numpy") else np.asarray(r[1].to_list())
@@ -56,23 +56,23 @@ def run() -> None:
     )
     logger.info("clustering %s publications (dim=%s)", X.shape[0], X.shape[1])
 
-    # Кластеры — на исходных нормированных эмбеддингах (евклид ≈ косинус)
+    # Cluster on the original normalized embeddings (euclidean ≈ cosine)
     from sklearn.cluster import HDBSCAN
 
     cluster_ids = HDBSCAN(min_cluster_size=6).fit_predict(X)
 
-    # 2D-проекция для отображения
+    # 2D projection for display
     import umap
 
     coords = umap.UMAP(
         n_components=2, n_neighbors=15, min_dist=0.15, metric="cosine", random_state=42
     ).fit_transform(X)
 
-    # Метки кластеров по текстам публикаций
+    # Cluster labels from the publications' texts
     pubs = {p["id"]: p for p in payload_api.find_all("publications")}
     texts_by_cluster: dict[int, list[str]] = {}
     for pub_id, cluster in zip(ids, cluster_ids):
-        if cluster == -1:  # шум HDBSCAN — без метки
+        if cluster == -1:  # HDBSCAN noise — no label
             continue
         pub = pubs.get(pub_id)
         if pub:

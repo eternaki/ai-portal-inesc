@@ -4,7 +4,7 @@ import config from '@payload-config'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { Member } from '@/payload-types'
 
-// Данные приходят из CMS — рендерим на каждый запрос, не при сборке
+// Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'Opportunities' }

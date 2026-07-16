@@ -1,10 +1,10 @@
-"""Батч-саммаризация публикаций (alphaxiv "Blog mode").
+"""Batch summarization of publications (alphaxiv "Blog mode").
 
-Запуск:  python -m app.pipelines.summarize [--limit N]
+Run:  python -m app.pipelines.summarize [--limit N]
 
-Берёт публикации с aiSummaryStatus=none и непустым abstract, генерирует саммари
-и пишет обратно в Payload со статусом generated. Публикации со статусом edited
-не трогаются никогда — ручная правка приоритетнее.
+Takes publications with aiSummaryStatus=none and a non-empty abstract, generates
+a summary and writes it back to Payload with status generated. Publications with
+status edited are never touched — manual edits take priority.
 """
 
 import argparse
@@ -17,8 +17,8 @@ from app.llm.client import complete_json, load_prompt
 
 logger = logging.getLogger(__name__)
 
-# Пауза между вызовами LLM, чтобы не упираться в rate limit бесплатных тиров.
-# Настраивается через SUMMARIZE_DELAY_SEC (по умолчанию 4с ≈ 15 запросов/мин).
+# Pause between LLM calls to avoid hitting free-tier rate limits.
+# Configurable via SUMMARIZE_DELAY_SEC (default 4s ≈ 15 requests/min).
 _DELAY = float(os.environ.get("SUMMARIZE_DELAY_SEC", "4"))
 
 SUMMARY_KEYS = ("tldr", "problem", "method", "results", "takeaways", "industry", "impact")

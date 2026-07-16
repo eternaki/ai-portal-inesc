@@ -8,7 +8,7 @@ export const News: CollectionConfig = {
   labels: { singular: 'News item', plural: 'News & Media' },
   admin: {
     useAsTitle: 'title',
-    group: 'Контент',
+    group: 'Content',
     defaultColumns: ['title', 'date'],
   },
   access: {
@@ -46,7 +46,7 @@ export const News: CollectionConfig = {
     {
       name: 'socialSnippet',
       type: 'textarea',
-      admin: { description: 'Готовый текст поста для LinkedIn/X (генерируется по запросу)' },
+      admin: { description: 'Ready-to-post text for LinkedIn/X (generated on demand)' },
     },
   ],
 }

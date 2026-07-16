@@ -1,8 +1,8 @@
 /* ── MLKD design tokens ──────────────────────────────────────────
-   Концепция: «карта знаний» — публикации как точки в векторном
-   пространстве. Кобальт (азулежу) = навигация и человеческое;
-   янтарный = сгенерированное AI. Serif = STIX (шрифт научных
-   журналов); mono = метаданные («данные как данные»). */
+   Concept: a "map of knowledge" — publications as points in vector
+   space. Cobalt (azulejo) = navigation and the human; amber =
+   AI-generated. Serif = STIX (the typeface of scientific journals);
+   mono = metadata ("data as data"). */
 
 :root {
   --ink: #1b2a41;
@@ -207,7 +207,7 @@ main {
   gap: 0.35rem;
 }
 
-/* ── hero (главная) ── */
+/* ── hero (home) ── */
 
 .hero {
   position: relative;
@@ -268,7 +268,7 @@ main {
   color: var(--ink-40);
 }
 
-/* ── общие блоки ── */
+/* ── shared blocks ── */
 
 .section-head {
   display: flex;
@@ -351,7 +351,7 @@ main {
   background: var(--card);
 }
 
-/* ── публикации ── */
+/* ── publications ── */
 
 .pub-item {
   padding: 1.05rem 0;
@@ -423,7 +423,7 @@ main {
   color: var(--ink);
 }
 
-/* ── страница статьи ── */
+/* ── article page ── */
 
 .article-head {
   max-width: 760px;
@@ -466,7 +466,7 @@ main {
   color: var(--ink-70);
 }
 
-/* ── люди ── */
+/* ── people ── */
 
 .people-grid {
   display: grid;
@@ -507,7 +507,7 @@ main {
   font-size: 0.82rem;
 }
 
-/* ── карточки разделов (themes, projects, topics…) ── */
+/* ── section cards (themes, projects, topics…) ── */
 
 .card-grid {
   display: grid;
@@ -541,7 +541,7 @@ main {
   color: var(--ink-40);
 }
 
-/* ── список новостей ── */
+/* ── news list ── */
 
 .news-item {
   max-width: 760px;

@@ -1,7 +1,7 @@
-"""HTTP-эндпоинты AI-сервиса.
+"""HTTP endpoints of the AI service.
 
-Рантайм-зависимость сайта от LLM минимальна: /search работает только на
-pgvector (LLM не вызывается); /generate/* вызываются вручную из админки.
+The site's runtime dependency on the LLM is minimal: /search runs on pgvector
+only (no LLM call); /generate/* are triggered manually from the admin.
 """
 
 import logging
@@ -20,9 +20,10 @@ router = APIRouter()
 
 
 def require_service_token(x_service_token: str | None) -> None:
-    """Мутирующие эндпоинты (LLM-вызовы за деньги + запись в CMS) требуют токен.
+    """Mutating endpoints (paid LLM calls + CMS writes) require a token.
 
-    AI_SERVICE_TOKEN обязателен: без него в конфиге мутирующие эндпоинты отключены.
+    AI_SERVICE_TOKEN is mandatory: without it in the config, mutating endpoints
+    are disabled.
     """
     expected = get_settings().ai_service_token
     if not expected:
@@ -38,11 +39,11 @@ def health() -> dict:
 
 @router.get("/search")
 def search(q: str, limit: int = 10) -> dict:
-    """Семантический поиск по публикациям (эмбеддинги, без LLM)."""
+    """Semantic search over publications (embeddings, no LLM)."""
     if len(q) > 500 or not q.strip():
         raise HTTPException(400, "query must be 1..500 chars")
     limit = max(1, min(limit, 50))
-    from app import embeddings  # ленивый импорт: тянет torch
+    from app import embeddings  # lazy import: pulls in torch
 
     hits = embeddings.search_publications(q, limit=limit)
     if not hits:
@@ -63,7 +64,7 @@ def search(q: str, limit: int = 10) -> dict:
 
 @router.get("/map")
 def topic_map() -> dict:
-    """Карта тем: 2D-точки публикаций с кластерами (пайплайн cluster.py)."""
+    """Topic map: 2D publication points with clusters (cluster.py pipeline)."""
     from app import db
 
     try:
@@ -108,13 +109,13 @@ class ProcessRequest(BaseModel):
 
 @router.post("/process/publication")
 def process_publication(req: ProcessRequest, x_service_token: str | None = Header(None)) -> dict:
-    """Обработать одну публикацию: саммари (если есть abstract и статус none) + эмбеддинг.
+    """Process one publication: summary (if it has an abstract and status none) + embedding.
 
-    Вызывается автоматически Payload-хуком при добавлении/правке публикации.
-    Идемпотентно: не перегенерирует уже сгенерированное или отредактированное саммари.
+    Called automatically by the Payload hook when a publication is added/edited.
+    Idempotent: does not regenerate an already generated or edited summary.
     """
     require_service_token(x_service_token)
-    from app import embeddings  # ленивый импорт: тянет torch
+    from app import embeddings  # lazy import: pulls in torch
     from app.pipelines.summarize import summarize_publication
 
     docs = payload_api.find("publications", where={"id": {"equals": req.id}}, limit=1)["docs"]
@@ -147,7 +148,7 @@ class SnippetRequest(BaseModel):
 
 @router.post("/generate/snippet")
 def generate_snippet(req: SnippetRequest, x_service_token: str | None = Header(None)) -> dict:
-    """Генерирует текст поста для LinkedIn/X по публикации или новости."""
+    """Generate LinkedIn/X post text for a publication or news item."""
     require_service_token(x_service_token)
     if req.collection not in ("publications", "news"):
         raise HTTPException(400, "collection must be 'publications' or 'news'")
@@ -167,8 +168,8 @@ def generate_snippet(req: SnippetRequest, x_service_token: str | None = Header(N
     data = complete_json(
         load_prompt("snippet", kind=kind, title=doc.get("title") or "", details=details[:2000])
     )
-    # LLM-вывод строится на внешних данных (OpenAlex abstracts) — считаем его
-    # недоверенным: храним как plain text и ограничиваем длину
+    # The LLM output is built on external data (OpenAlex abstracts), so we treat
+    # it as untrusted: store as plain text and cap the length
     linkedin = str(data.get("linkedin", ""))[:1500]
     x_post = str(data.get("x", ""))[:300]
     snippet = f"LinkedIn:\n{linkedin}\n\nX:\n{x_post}"

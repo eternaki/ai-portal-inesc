@@ -1,10 +1,10 @@
-"""Ingest публикаций из OpenAlex в Payload.
+"""Ingest publications from OpenAlex into Payload.
 
-Запуск:  python -m app.pipelines.ingest data/authors.json
+Run:  python -m app.pipelines.ingest data/authors.json
 
 authors.json: [{"name": "...", "openalexId": "A5012345678", "memberId": 1}, ...]
-memberId (id документа members в Payload) — опционален; если задан, авторы
-публикаций связываются с профилями.
+memberId (the Payload members document id) is optional; when set, publication
+authors are linked to profiles.
 """
 
 import json
@@ -22,9 +22,9 @@ logger = logging.getLogger(__name__)
 
 OPENALEX = "https://api.openalex.org"
 
-# OpenAlex work.type → наш select
+# OpenAlex work.type → our select value
 TYPE_MAP = {
-    "article": "conference",  # уточняется ниже по source.type
+    "article": "conference",  # refined below using source.type
     "book-chapter": "book",
     "book": "book",
     "preprint": "preprint",
@@ -32,7 +32,7 @@ TYPE_MAP = {
 
 
 def _reconstruct_abstract(inverted: dict[str, list[int]] | None) -> str | None:
-    """OpenAlex отдаёт abstract как inverted index — собираем обратно в текст."""
+    """OpenAlex returns the abstract as an inverted index — rebuild it into text."""
     if not inverted:
         return None
     positions: list[tuple[int, str]] = []
@@ -90,7 +90,7 @@ def work_to_publication(work: dict[str, Any], member_by_author_id: dict[str, int
 
 
 def fetch_author_works(author_id: str) -> list[dict]:
-    """Все работы автора (cursor-пагинация OpenAlex)."""
+    """Every work by an author (OpenAlex cursor pagination)."""
     works: list[dict] = []
     cursor = "*"
     params_base = {
@@ -105,7 +105,7 @@ def fetch_author_works(author_id: str) -> list[dict]:
             data = resp.json()
             works.extend(data["results"])
             cursor = data.get("meta", {}).get("next_cursor")
-            time.sleep(0.2)  # вежливость к бесплатному API
+            time.sleep(0.2)  # be polite to the free API
     return works
 
 
@@ -123,7 +123,7 @@ def run(authors_file: str) -> None:
         logger.info("fetching works for %s (%s)", author["name"], author["openalexId"])
         for work in fetch_author_works(author["openalexId"]):
             openalex_id = _short_openalex_id(work)
-            if openalex_id in seen:  # одна статья у нескольких членов группы
+            if openalex_id in seen:  # one paper shared by several group members
                 continue
             seen.add(openalex_id)
             pub = work_to_publication(work, member_by_author_id)

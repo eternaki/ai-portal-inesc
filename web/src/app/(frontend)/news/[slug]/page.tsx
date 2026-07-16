@@ -9,7 +9,7 @@ import type { Publication } from '@/payload-types'
 import { JsonLd } from '@/components/JsonLd'
 import { SITE_URL } from '@/lib/site'
 
-// Данные приходят из CMS — рендерим на каждый запрос, не при сборке
+// Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
 
 type Params = Promise<{ slug: string }>
@@ -44,7 +44,7 @@ export default async function NewsItemPage(props: { params: Params }) {
     (p): p is Publication => typeof p === 'object',
   )
 
-  // Share-интенты: media-секция живёт в CMS, соцсети получают ссылку + текст
+  // Share intents: the media section lives in the CMS, socials get a link + text
   const url = `${SITE_URL}/news/${item.slug}`
   const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`
   const shareX = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(item.title)}`

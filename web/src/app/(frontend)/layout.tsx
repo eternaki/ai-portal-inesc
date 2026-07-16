@@ -4,8 +4,8 @@ import { STIX_Two_Text, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
 import './styles.css'
 import { SITE_URL, SITE_NAME } from '@/lib/site'
 
-// Типографика: STIX Two Text — шрифт научных журналов (сайт набран тем же
-// шрифтом, что и статьи, которые он индексирует); Plex Sans/Mono — UI и данные.
+// Typography: STIX Two Text — the typeface of scientific journals (the site is
+// set in the same font as the papers it indexes); Plex Sans/Mono — UI and data.
 const serif = STIX_Two_Text({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
