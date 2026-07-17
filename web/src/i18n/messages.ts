@@ -85,6 +85,7 @@ const en = {
     emptyAfter: '.',
     people: 'People:',
     keyPublications: 'Key publications',
+    relatedPublications: 'Related publications',
   },
   projects: {
     title: 'Projects',
@@ -265,6 +266,7 @@ const pt: Dictionary = {
     emptyAfter: '.',
     people: 'Pessoas:',
     keyPublications: 'Publicações principais',
+    relatedPublications: 'Publicações relacionadas',
   },
   projects: {
     title: 'Projetos',
