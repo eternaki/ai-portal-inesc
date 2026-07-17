@@ -6,6 +6,7 @@ import config from '@payload-config'
 import type { Publication } from '@/payload-types'
 import { PubRow } from '@/components/PubRow'
 import { JsonLd } from '@/components/JsonLd'
+import { Attachments } from '@/components/Attachments'
 import { SITE_URL } from '@/lib/site'
 import { getDictionary } from '@/i18n/server'
 
@@ -147,6 +148,16 @@ export default async function PublicationPage(props: { params: Params }) {
             </>
           ) : null}
         </p>
+        {(() => {
+          const original = pub.originalUrl || (pub.doi ? `https://doi.org/${pub.doi}` : pub.pdfUrl)
+          return original ? (
+            <p>
+              <a className="btn" href={original} target="_blank" rel="noreferrer">
+                {t.pub.viewOriginal} →
+              </a>
+            </p>
+          ) : null
+        })()}
       </div>
 
       {hasSummary && summary ? (
@@ -176,6 +187,18 @@ export default async function PublicationPage(props: { params: Params }) {
           <p>{pub.abstract}</p>
         </section>
       )}
+
+      <Attachments
+        items={pub.attachments ?? []}
+        heading={t.pub.materials}
+        labels={{
+          materials: t.pub.materials,
+          download: t.pub.download,
+          openFile: t.pub.openFile,
+          viewCode: t.pub.viewCode,
+          open: t.pub.open,
+        }}
+      />
 
       <PubList title={t.pub.referencesWithin} pubs={references} />
       <PubList title={t.pub.citedBy} pubs={citedBy} />

@@ -15,6 +15,7 @@ const en = {
     people: 'People',
     opportunities: 'Opportunities',
     news: 'News',
+    events: 'Events',
     search: 'Search',
   },
   footer: {
@@ -128,6 +129,12 @@ const en = {
   },
   pub: {
     citations: 'citations',
+    viewOriginal: 'View original publication',
+    materials: 'Materials',
+    download: 'Download',
+    openFile: 'Open',
+    viewCode: 'View code',
+    open: 'open',
     summary: 'Summary',
     aiEdited: 'AI · human-edited',
     aiGenerated: 'AI-generated',
@@ -170,6 +177,12 @@ const en = {
     aiNote: 'AI-generated answers, may contain mistakes',
     close: 'Close chat',
   },
+  events: {
+    title: 'Events',
+    empty: 'No events yet — check back soon.',
+    upcoming: 'Upcoming',
+    past: 'Past events',
+  },
 }
 
 export type Dictionary = typeof en
@@ -182,6 +195,7 @@ const pt: Dictionary = {
     people: 'Pessoas',
     opportunities: 'Oportunidades',
     news: 'Notícias',
+    events: 'Eventos',
     search: 'Pesquisa',
   },
   footer: {
@@ -296,6 +310,12 @@ const pt: Dictionary = {
   },
   pub: {
     citations: 'citações',
+    viewOriginal: 'Ver publicação original',
+    materials: 'Materiais',
+    download: 'Descarregar',
+    openFile: 'Abrir',
+    viewCode: 'Ver código',
+    open: 'abrir',
     summary: 'Resumo',
     aiEdited: 'IA · editado por humano',
     aiGenerated: 'Gerado por IA',
@@ -336,6 +356,12 @@ const pt: Dictionary = {
     sources: 'Fontes',
     aiNote: 'Respostas geradas por IA, podem conter erros',
     close: 'Fechar chat',
+  },
+  events: {
+    title: 'Eventos',
+    empty: 'Ainda não há eventos — volte em breve.',
+    upcoming: 'Próximos',
+    past: 'Eventos anteriores',
   },
 }
 

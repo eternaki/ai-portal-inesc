@@ -72,10 +72,60 @@ export const Publications: CollectionConfig = {
       ],
     },
     {
+      // Landing page of the original publication (arXiv / journal / DOI page).
+      // Filled from OpenAlex on ingest; falls back to DOI / PDF on the page.
+      name: 'originalUrl',
+      type: 'text',
+      admin: { description: 'Link to the original publication (arXiv / journal / DOI page)' },
+    },
+    {
       type: 'row',
       fields: [
         { name: 'pdfUrl', type: 'text', admin: { width: '70%' } },
         { name: 'citationCount', type: 'number', admin: { width: '30%' } },
+      ],
+    },
+    {
+      // Materials attached to the paper: code, documents, images, data, links.
+      // Each item is either an uploaded file (image/pdf/doc) or an external URL
+      // (e.g. a GitHub repo). Shown with previews on the publication page.
+      name: 'attachments',
+      type: 'array',
+      labels: { singular: 'Attachment', plural: 'Attachments' },
+      admin: { description: 'Code, documents, images, datasets or links for this publication' },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'label', type: 'text', required: true, admin: { width: '55%' } },
+            {
+              name: 'kind',
+              type: 'select',
+              required: true,
+              defaultValue: 'file',
+              options: [
+                { label: 'Code (repo)', value: 'code' },
+                { label: 'Document', value: 'document' },
+                { label: 'Image / Figure', value: 'image' },
+                { label: 'Dataset', value: 'dataset' },
+                { label: 'File', value: 'file' },
+                { label: 'Link', value: 'link' },
+              ],
+              admin: { width: '45%' },
+            },
+          ],
+        },
+        {
+          name: 'file',
+          type: 'upload',
+          relationTo: 'media',
+          admin: { description: 'Upload a file, or leave empty and use an external URL below' },
+        },
+        {
+          name: 'url',
+          type: 'text',
+          admin: { description: 'External URL (e.g. GitHub repo) — used when no file is uploaded' },
+        },
       ],
     },
     {
