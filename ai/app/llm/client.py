@@ -9,8 +9,10 @@ every pipeline — no code is touched.
 import json
 import logging
 import re
+import time
 from pathlib import Path
 
+import httpx
 import litellm
 
 from app.config import get_settings
@@ -18,6 +20,29 @@ from app.config import get_settings
 logger = logging.getLogger(__name__)
 
 PROMPTS_DIR = Path(__file__).parent / "prompts"
+
+# The admin can switch the model at runtime via the Payload global "ai-settings"
+# (customModel > llmModel > LLM_MODEL env). Cached briefly; any failure falls
+# back to env so the AI service never depends on the CMS being up.
+_MODEL_CACHE: dict = {"value": None, "at": 0.0}
+_MODEL_CACHE_TTL = 60.0
+
+
+def resolve_model() -> str:
+    settings = get_settings()
+    now = time.monotonic()
+    if _MODEL_CACHE["value"] is not None and now - _MODEL_CACHE["at"] < _MODEL_CACHE_TTL:
+        return _MODEL_CACHE["value"] or settings.llm_model
+    model = ""
+    try:
+        resp = httpx.get(f"{settings.payload_url}/api/globals/ai-settings", timeout=5.0)
+        if resp.status_code == 200:
+            data = resp.json()
+            model = (data.get("customModel") or data.get("llmModel") or "").strip()
+    except Exception:
+        logger.debug("ai-settings global unavailable, using env model")
+    _MODEL_CACHE.update(value=model, at=now)
+    return model or settings.llm_model
 
 
 def load_prompt(prompt_name: str, /, **variables: str) -> str:
@@ -33,13 +58,14 @@ def load_prompt(prompt_name: str, /, **variables: str) -> str:
 def complete(prompt: str, *, system: str | None = None) -> str:
     """A single LLM call. Model, temperature and token limit come from config."""
     settings = get_settings()
+    model = resolve_model()
     messages: list[dict[str, str]] = []
     if system:
         messages.append({"role": "system", "content": system})
     messages.append({"role": "user", "content": prompt})
 
     response = litellm.completion(
-        model=settings.llm_model,
+        model=model,
         messages=messages,
         temperature=settings.llm_temperature,
         max_tokens=settings.llm_max_tokens,
@@ -50,7 +76,7 @@ def complete(prompt: str, *, system: str | None = None) -> str:
     if usage:
         logger.info(
             "llm call: model=%s in=%s out=%s",
-            settings.llm_model,
+            model,
             usage.prompt_tokens,
             usage.completion_tokens,
         )

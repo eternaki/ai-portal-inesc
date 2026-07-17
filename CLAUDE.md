@@ -91,6 +91,7 @@ regenerated on every commit (see section 7).
 
 ### Web API routes — `web/src/app/api/`
 - `/api/ai/snippet`
+- `/api/chat`
 
 ### AI pipelines — `ai/app/pipelines/`
 - `bios.py`
@@ -103,6 +104,7 @@ regenerated on every commit (see section 7).
 - `GET /health`
 - `GET /map`
 - `GET /search`
+- `POST /chat`
 - `POST /generate/snippet`
 - `POST /process/publication`
 

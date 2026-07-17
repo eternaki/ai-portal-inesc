@@ -101,8 +101,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'ai-settings': AiSetting;
+  };
+  globalsSelect: {
+    'ai-settings': AiSettingsSelect<false> | AiSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -835,6 +839,44 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-settings".
+ */
+export interface AiSetting {
+  id: number;
+  /**
+   * Model used by all AI features (summaries, chat, snippets). The provider API key must be set in the AI service .env (GROQ_API_KEY, GEMINI_API_KEY, …).
+   */
+  llmModel?:
+    | (
+        | ''
+        | 'groq/llama-3.3-70b-versatile'
+        | 'groq/llama-3.1-8b-instant'
+        | 'gemini/gemini-flash-lite-latest'
+        | 'gemini/gemini-flash-latest'
+        | 'mistral/mistral-small-latest'
+        | 'cerebras/gpt-oss-120b'
+      )
+    | null;
+  /**
+   * Optional. Any LiteLLM model id (provider/model), overrides the dropdown. Example: ollama/llama3.1
+   */
+  customModel?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-settings_select".
+ */
+export interface AiSettingsSelect<T extends boolean = true> {
+  llmModel?: T;
+  customModel?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
