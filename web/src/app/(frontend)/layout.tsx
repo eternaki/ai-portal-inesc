@@ -5,6 +5,7 @@ import './styles.css'
 import { SITE_URL, SITE_NAME } from '@/lib/site'
 import { getDictionary, getLocale } from '@/i18n/server'
 import { LocaleSwitcher } from '@/components/LocaleSwitcher'
+import { ChatWidget } from '@/components/ChatWidget'
 
 // Typography: STIX Two Text — the typeface of scientific journals (the site is
 // set in the same font as the papers it indexes); Plex Sans/Mono — UI and data.
@@ -97,6 +98,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             </div>
           </div>
         </footer>
+        <ChatWidget t={t.chat} />
       </body>
     </html>
   )

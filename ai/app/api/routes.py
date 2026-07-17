@@ -6,17 +6,36 @@ only (no LLM call); /generate/* are triggered manually from the admin.
 
 import logging
 import secrets
+import time
+from collections import defaultdict, deque
 
 from fastapi import APIRouter, Header, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app import payload_api
 from app.config import get_settings
-from app.llm.client import complete_json, load_prompt
+from app.llm.client import complete, complete_json, load_prompt
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+# Per-IP rate limit for the public /chat endpoint (the only public LLM surface).
+# In-memory is fine for a single-process service; free-tier LLM quotas are the
+# real budget being protected here.
+_CHAT_WINDOW_SEC = 60
+_CHAT_MAX_PER_WINDOW = 8
+_chat_hits: dict[str, deque] = defaultdict(deque)
+
+
+def check_chat_rate_limit(client_ip: str) -> None:
+    now = time.monotonic()
+    hits = _chat_hits[client_ip]
+    while hits and now - hits[0] > _CHAT_WINDOW_SEC:
+        hits.popleft()
+    if len(hits) >= _CHAT_MAX_PER_WINDOW:
+        raise HTTPException(429, "too many messages, please slow down")
+    hits.append(now)
 
 
 def require_service_token(x_service_token: str | None) -> None:
@@ -101,6 +120,60 @@ def topic_map() -> dict:
             entry = clusters.setdefault(cluster_id, {"id": cluster_id, "label": label, "count": 0})
             entry["count"] += 1
     return {"points": points, "clusters": sorted(clusters.values(), key=lambda c: -c["count"])}
+
+
+class ChatTurn(BaseModel):
+    role: str  # "user" | "assistant"
+    content: str = Field(max_length=2000)
+
+
+class ChatRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=500)
+    history: list[ChatTurn] = Field(default_factory=list, max_length=6)
+
+
+@router.post("/chat")
+def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
+    """RAG chatbot over the group's publications (brief: section A/D chatbot)."""
+    check_chat_rate_limit(x_client_ip or "unknown")
+
+    from app import embeddings  # lazy import: pulls in torch
+
+    hits = embeddings.search_publications(req.message, limit=6)
+    ids = [pub_id for pub_id, _ in hits]
+    docs = (
+        payload_api.find("publications", where={"id": {"in": ids}}, limit=len(ids))["docs"]
+        if ids
+        else []
+    )
+    by_id = {d["id"]: d for d in docs}
+    sources = []
+    context_lines = []
+    for n, (pub_id, _score) in enumerate(hits, start=1):
+        pub = by_id.get(pub_id)
+        if not pub:
+            continue
+        summary = (pub.get("aiSummary") or {}).get("tldr") or (pub.get("abstract") or "")[:400]
+        context_lines.append(f"[{n}] {pub.get('title')} ({pub.get('year')}). {summary}")
+        sources.append(
+            {"n": n, "title": pub.get("title"), "slug": pub.get("slug"), "year": pub.get("year")}
+        )
+
+    history_text = "\n".join(
+        f"{'Visitor' if t.role == 'user' else 'Assistant'}: {t.content[:300]}"
+        for t in req.history[-6:]
+    ) or "(start of conversation)"
+
+    answer = complete(
+        load_prompt(
+            "chat",
+            context="\n".join(context_lines) or "(no relevant publications found)",
+            history=history_text,
+            question=req.message,
+        )
+    )
+    # LLM output over untrusted inputs — plain text, capped
+    return {"answer": str(answer)[:3000], "sources": sources}
 
 
 class ProcessRequest(BaseModel):

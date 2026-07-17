@@ -14,6 +14,7 @@ import { Projects } from './collections/Projects'
 import { Software } from './collections/Software'
 import { ThesisTopics } from './collections/ThesisTopics'
 import { News } from './collections/News'
+import { AiSettings } from './globals/AiSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -36,6 +37,7 @@ export default buildConfig({
     Media,
     Users,
   ],
+  globals: [AiSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

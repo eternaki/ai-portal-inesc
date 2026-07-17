@@ -157,6 +157,19 @@ const en = {
   pubRow: {
     summary: 'summary',
   },
+  chat: {
+    open: 'Ask about our research',
+    title: 'Research assistant',
+    intro: 'Ask me anything about the group’s publications — I answer with references.',
+    placeholder: 'e.g. What have you published on medical imaging?',
+    send: 'Send',
+    thinking: 'Thinking…',
+    error: 'Something went wrong — please try again.',
+    rateLimited: 'Too many messages — please wait a minute.',
+    sources: 'Sources',
+    aiNote: 'AI-generated answers, may contain mistakes',
+    close: 'Close chat',
+  },
 }
 
 export type Dictionary = typeof en
@@ -310,6 +323,19 @@ const pt: Dictionary = {
   },
   pubRow: {
     summary: 'resumo',
+  },
+  chat: {
+    open: 'Pergunte sobre a nossa investigação',
+    title: 'Assistente de investigação',
+    intro: 'Pergunte o que quiser sobre as publicações do grupo — respondo com referências.',
+    placeholder: 'ex.: O que publicaram sobre imagem médica?',
+    send: 'Enviar',
+    thinking: 'A pensar…',
+    error: 'Algo correu mal — tente novamente.',
+    rateLimited: 'Demasiadas mensagens — aguarde um minuto.',
+    sources: 'Fontes',
+    aiNote: 'Respostas geradas por IA, podem conter erros',
+    close: 'Fechar chat',
   },
 }
 
