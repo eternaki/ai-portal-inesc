@@ -1,6 +1,12 @@
+import path from 'path'
 import type { CollectionConfig } from 'payload'
 
 import { adminOrEditor } from '../access'
+
+// Upload dir. Defaults to <cwd>/media (works for `pnpm dev`). For the standalone
+// production server (cwd is .next/standalone) and Docker, set MEDIA_DIR to an
+// absolute path on a persistent volume so uploads survive rebuilds.
+const MEDIA_DIR = process.env.MEDIA_DIR || path.resolve(process.cwd(), 'media')
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -21,6 +27,7 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
+    staticDir: MEDIA_DIR,
     imageSizes: [
       { name: 'thumbnail', width: 300, height: 300, position: 'centre' },
       { name: 'card', width: 800, height: undefined },
