@@ -744,61 +744,6 @@ main {
   }
 }
 
-/* ── вложения публикации (материалы) ── */
-
-.attach-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.attach-card {
-  border: 1px solid var(--ink-12);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--card);
-}
-
-.attach-card img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  display: block;
-}
-
-.attach-pdf {
-  width: 100%;
-  height: 220px;
-  border: none;
-  display: block;
-  background: var(--paper);
-}
-
-.attach-card figcaption,
-.attach-foot {
-  margin: 0;
-  padding: 0.55rem 0.7rem;
-  font-size: 0.85rem;
-  border-top: 1px solid var(--ink-12);
-}
-
-.attach-row {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.7rem 0.9rem;
-  border: 1px solid var(--ink-12);
-  border-radius: var(--radius);
-  background: var(--card);
-}
-
-.attach-label {
-  flex: 1;
-  font-weight: 500;
-}
-
 /* ── страница Research: карточки тем ── */
 
 .theme-list {
@@ -851,4 +796,88 @@ main {
   height: 5px;
   border-radius: 50%;
   background: var(--ink-40);
+}
+
+/* ── вложения публикации (материалы) ── */
+
+.attach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.attach-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ink-12);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--card);
+  min-height: 190px;
+}
+
+.attach-card-link {
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.attach-card-link:hover {
+  border-color: var(--cobalt);
+  text-decoration: none;
+}
+
+.attach-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+  background: var(--paper);
+}
+
+.attach-pdf {
+  width: 100%;
+  height: 150px;
+  border: none;
+  display: block;
+  background: var(--paper);
+}
+
+/* icon tile for code/link/file cards — same height as an image thumbnail */
+.attach-icon {
+  height: 150px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 2rem;
+  color: var(--cobalt);
+  background: var(--cobalt-wash);
+}
+
+.attach-card-plain .attach-icon {
+  background: var(--paper);
+  color: var(--ink-40);
+}
+
+.attach-foot {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 0.75rem;
+  border-top: 1px solid var(--ink-12);
+  font-size: 0.85rem;
+  margin-top: auto;
+}
+
+.attach-label {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+}
+
+.attach-action {
+  color: var(--cobalt);
+  white-space: nowrap;
 }
