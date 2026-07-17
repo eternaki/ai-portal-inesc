@@ -74,6 +74,7 @@ export interface Config {
     software: Software;
     'thesis-topics': ThesisTopic;
     news: News;
+    events: Event;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -90,6 +91,7 @@ export interface Config {
     software: SoftwareSelect<false> | SoftwareSelect<true>;
     'thesis-topics': ThesisTopicsSelect<false> | ThesisTopicsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -233,7 +235,7 @@ export interface User {
  */
 export interface Media {
   id: number;
-  alt: string;
+  alt?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -288,8 +290,30 @@ export interface Publication {
   abstract?: string | null;
   doi?: string | null;
   openalexId?: string | null;
+  /**
+   * Link to the original publication (arXiv / journal / DOI page)
+   */
+  originalUrl?: string | null;
   pdfUrl?: string | null;
   citationCount?: number | null;
+  /**
+   * Code, documents, images, datasets or links for this publication
+   */
+  attachments?:
+    | {
+        label: string;
+        kind: 'code' | 'document' | 'image' | 'dataset' | 'file' | 'link';
+        /**
+         * Upload a file, or leave empty and use an external URL below
+         */
+        file?: (number | null) | Media;
+        /**
+         * External URL (e.g. GitHub repo) — used when no file is uploaded
+         */
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   referencedWorks?: string[] | null;
   /**
    * Verified by a human (authorship/metadata are correct)
@@ -484,6 +508,45 @@ export interface News {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  /**
+   * URL identifier; created automatically, can be edited by hand
+   */
+  slug?: string | null;
+  date: string;
+  location?: string | null;
+  /**
+   * Speaker / organiser (optional)
+   */
+  speaker?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * External link (registration, recording…)
+   */
+  link?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -533,6 +596,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'news';
         value: number | News;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
       } | null)
     | ({
         relationTo: 'media';
@@ -635,8 +702,18 @@ export interface PublicationsSelect<T extends boolean = true> {
   abstract?: T;
   doi?: T;
   openalexId?: T;
+  originalUrl?: T;
   pdfUrl?: T;
   citationCount?: T;
+  attachments?:
+    | T
+    | {
+        label?: T;
+        kind?: T;
+        file?: T;
+        url?: T;
+        id?: T;
+      };
   referencedWorks?: T;
   verified?: T;
   aiSummary?:
@@ -728,6 +805,21 @@ export interface NewsSelect<T extends boolean = true> {
   body?: T;
   relatedPublications?: T;
   socialSnippet?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  date?: T;
+  location?: T;
+  speaker?: T;
+  description?: T;
+  link?: T;
   updatedAt?: T;
   createdAt?: T;
 }

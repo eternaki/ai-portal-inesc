@@ -16,8 +16,8 @@ export const Media: CollectionConfig = {
   fields: [
     {
       name: 'alt',
+      // Required for images (accessibility); optional for documents/code/data
       type: 'text',
-      required: true,
     },
   ],
   upload: {
@@ -25,6 +25,20 @@ export const Media: CollectionConfig = {
       { name: 'thumbnail', width: 300, height: 300, position: 'centre' },
       { name: 'card', width: 800, height: undefined },
     ],
-    mimeTypes: ['image/*', 'application/pdf'],
+    // Publication attachments: images, PDFs, documents, code, and data files
+    mimeTypes: [
+      'image/*',
+      'application/pdf',
+      'text/*',
+      'application/zip',
+      'application/json',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/octet-stream',
+    ],
   },
 }

@@ -82,6 +82,10 @@ def work_to_publication(work: dict[str, Any], member_by_author_id: dict[str, int
         "abstract": _reconstruct_abstract(work.get("abstract_inverted_index")),
         "citationCount": work.get("cited_by_count"),
         "pdfUrl": (work.get("open_access") or {}).get("oa_url"),
+        "originalUrl": (
+            (work.get("primary_location") or {}).get("landing_page_url")
+            or (f"https://doi.org/{_short_doi(work)}" if _short_doi(work) else None)
+        ),
         "authors": authors,
         "referencedWorks": [
             ref.rsplit("/", 1)[-1] for ref in (work.get("referenced_works") or [])

@@ -14,6 +14,7 @@ import { Projects } from './collections/Projects'
 import { Software } from './collections/Software'
 import { ThesisTopics } from './collections/ThesisTopics'
 import { News } from './collections/News'
+import { Events } from './collections/Events'
 import { AiSettings } from './globals/AiSettings'
 
 const filename = fileURLToPath(import.meta.url)
@@ -34,6 +35,7 @@ export default buildConfig({
     Software,
     ThesisTopics,
     News,
+    Events,
     Media,
     Users,
   ],
