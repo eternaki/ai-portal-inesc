@@ -6,7 +6,8 @@ service is running only to generate snippets.
 
 import hashlib
 import logging
-from functools import lru_cache
+import os
+import threading
 
 from app import db
 from app.config import get_settings
@@ -19,13 +20,29 @@ def _content_hash(text: str, model: str) -> str:
 logger = logging.getLogger(__name__)
 
 
-@lru_cache
-def _model():
-    from sentence_transformers import SentenceTransformer
+# Load the model exactly once, guarded by a lock. Under concurrent first requests,
+# lru_cache alone lets several threads enter the loader at once; two parallel
+# torch/MPS(Metal) inits segfault the process (EXC_BAD_ACCESS in libtorch/Metal).
+# A double-checked lock serializes the first load; later calls hit the singleton.
+_model_instance = None
+_model_lock = threading.Lock()
 
-    name = get_settings().embedding_model
-    logger.info("loading embedding model %s", name)
-    return SentenceTransformer(name)
+
+def _model():
+    global _model_instance
+    if _model_instance is None:
+        with _model_lock:
+            if _model_instance is None:
+                from sentence_transformers import SentenceTransformer
+
+                name = get_settings().embedding_model
+                # Default to CPU: MiniLM is tiny, CPU is fast enough, and it avoids
+                # the flaky Metal/MPS path that segfaults here. Set EMBEDDING_DEVICE
+                # to "mps"/"cuda" to opt back in.
+                device = os.getenv("EMBEDDING_DEVICE", "cpu")
+                logger.info("loading embedding model %s on %s", name, device)
+                _model_instance = SentenceTransformer(name, device=device)
+    return _model_instance
 
 
 def embed_texts(texts: list[str]) -> list[list[float]]:
