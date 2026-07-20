@@ -119,3 +119,84 @@ def search_publications(query: str, *, limit: int = 10) -> list[tuple[int, float
             (vec, vec, limit),
         ).fetchall()
     return [(row[0], float(row[1])) for row in rows]
+
+
+def upsert_entity_embeddings(
+    entity_type: str, items: list[tuple[int, str]], *, force: bool = False
+) -> int:
+    """Embed + store entities of one type into the unified store. Returns rows written.
+
+    Generic version of upsert_publication_embeddings: same content_hash skip, keyed
+    by (entity_type, entity_id). Powers the multi-entity pipeline (embed_entities).
+    """
+    if not items:
+        return 0
+    model_name = get_settings().embedding_model
+    db.ensure_schema(embedding_dim())
+
+    with db.connect() as conn:
+        existing = {
+            row[0]: row[1]
+            for row in conn.execute(
+                "SELECT entity_id, content_hash FROM entity_embeddings "
+                "WHERE entity_type = %s AND entity_id = ANY(%s)",
+                (entity_type, [eid for eid, _ in items]),
+            ).fetchall()
+        }
+    todo = [
+        (eid, text, _content_hash(text, model_name))
+        for eid, text in items
+        if force or existing.get(eid) != _content_hash(text, model_name)
+    ]
+    if not todo:
+        logger.info("entity_embeddings[%s] up to date (%s items)", entity_type, len(items))
+        return 0
+
+    vectors = embed_texts([text for _, text, _ in todo])
+    with db.connect() as conn:
+        for (eid, _, chash), vec in zip(todo, vectors):
+            conn.execute(
+                """
+                INSERT INTO entity_embeddings (entity_type, entity_id, model, embedding, content_hash, updated_at)
+                VALUES (%s, %s, %s, %s, %s, now())
+                ON CONFLICT (entity_type, entity_id)
+                DO UPDATE SET model = EXCLUDED.model,
+                              embedding = EXCLUDED.embedding,
+                              content_hash = EXCLUDED.content_hash,
+                              updated_at = now()
+                """,
+                (entity_type, eid, model_name, vec, chash),
+            )
+    logger.info(
+        "entity_embeddings[%s]: %s upserted (%s skipped)",
+        entity_type,
+        len(todo),
+        len(items) - len(todo),
+    )
+    return len(todo)
+
+
+def search_entities(
+    query: str, *, types: list[str] | None = None, limit: int = 10
+) -> list[tuple[str, int, float]]:
+    """Cross-entity semantic search → [(entity_type, entity_id, score)].
+
+    Searches the unified store; optionally restrict to given entity types.
+    """
+    vec = embed_texts([query])[0]
+    sql = """
+        SELECT entity_type, entity_id, 1 - (embedding <=> %s::vector) AS score
+        FROM entity_embeddings
+        {type_filter}
+        ORDER BY embedding <=> %s::vector
+        LIMIT %s
+    """
+    params: list = [vec]
+    type_filter = ""
+    if types:
+        type_filter = "WHERE entity_type = ANY(%s)"
+        params.append(types)
+    params += [vec, limit]
+    with db.connect() as conn:
+        rows = conn.execute(sql.format(type_filter=type_filter), tuple(params)).fetchall()
+    return [(row[0], row[1], float(row[2])) for row in rows]

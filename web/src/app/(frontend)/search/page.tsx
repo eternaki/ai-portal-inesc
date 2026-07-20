@@ -27,6 +27,30 @@ type SearchHit = {
   }
 }
 
+// Cross-entity semantic search (people, projects, thesis topics). These live on
+// section pages (no per-item route), so we link to the relevant section.
+type EntityHit = { entity_type: string; id: number; title: string | null; score: number }
+
+const ENTITY_LINK: Record<string, string> = {
+  members: '/people',
+  projects: '/projects',
+  'thesis-topics': '/opportunities',
+}
+
+async function runEntitySearch(q: string): Promise<EntityHit[]> {
+  try {
+    const res = await fetch(
+      `${AI_URL}/search/all?q=${encodeURIComponent(q)}&limit=6&types=members,projects,thesis-topics`,
+      { cache: 'no-store', signal: AbortSignal.timeout(15000) },
+    )
+    if (!res.ok) return []
+    const data = await res.json()
+    return (data.results ?? []) as EntityHit[]
+  } catch {
+    return []
+  }
+}
+
 // Textual fallback: when the AI service (hybrid search) is unavailable, still
 // return keyword matches straight from the CMS so search never goes fully dark.
 async function textualFallback(q: string, type?: string): Promise<SearchHit[]> {
@@ -76,9 +100,9 @@ export default async function SearchPage(props: { searchParams: SearchParams }) 
   const { q, type } = await props.searchParams
   const query = (q ?? '').trim()
   const activeType = PUB_TYPES.includes(type as (typeof PUB_TYPES)[number]) ? type : undefined
-  const { hits, error, fallback } = query
-    ? await runSearch(query, activeType)
-    : { hits: [], error: null, fallback: false }
+  const [{ hits, error, fallback }, entityHits] = query
+    ? await Promise.all([runSearch(query, activeType), runEntitySearch(query)])
+    : [{ hits: [] as SearchHit[], error: null, fallback: false }, [] as EntityHit[]]
   const t = await getDictionary()
 
   const typeHref = (ty?: string) => {
@@ -168,6 +192,25 @@ export default async function SearchPage(props: { searchParams: SearchParams }) 
           </div>
         </article>
       ))}
+
+      {entityHits.length > 0 && (
+        <section style={{ marginTop: '2rem' }}>
+          <h2>{t.search.otherResults}</h2>
+          {entityHits.map((e) => (
+            <article key={`${e.entity_type}-${e.id}`} className="pub-item">
+              <div className="pub-title">
+                <Link href={ENTITY_LINK[e.entity_type] ?? '/'}>{e.title}</Link>
+              </div>
+              <div className="pub-meta">
+                <span className="badge">
+                  {t.search.entityTypes[e.entity_type as keyof typeof t.search.entityTypes] ??
+                    e.entity_type}
+                </span>
+              </div>
+            </article>
+          ))}
+        </section>
+      )}
     </div>
   )
 }

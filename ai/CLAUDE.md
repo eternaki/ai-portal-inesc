@@ -12,8 +12,11 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 - `app/llm/client.py` — **the only place that calls an LLM.** Public helpers:
   `complete`, `complete_json`, `load_prompt`.
 - `app/llm/prompts/*.md` — prompt templates (files, reviewed like code).
-- `app/pipelines/` — batch jobs: `ingest`, `embed`, `summarize`, `cluster`, `bios`,
-  `maintenance` (data-health report), `benchmark` (search metrics: P@5/Recall@10/MRR).
+- `app/pipelines/` — batch jobs: `ingest`, `embed`, `embed_entities` (multi-entity
+  vectors), `summarize`, `cluster`, `bios`, `maintenance` (data-health report),
+  `benchmark` (search metrics: P@5/Recall@10/MRR).
+- `app/entities.py` — entity → embedding-text adapters (publications, members,
+  projects, thesis topics). The ONLY type-specific code for the unified pipeline.
 - `app/search.py` — hybrid search: pgvector semantic + Postgres full-text, fused
   (RRF). Reads the content table READ-ONLY for ranking; still writes nothing.
 - `app/settings_cache.py` — cached read of the `ai-settings` global (model +

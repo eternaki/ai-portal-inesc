@@ -49,6 +49,26 @@ def ensure_schema(dim: int) -> None:
             )
             """
         )
+        # Unified vector store for the multi-entity embedding pipeline: one space
+        # for publications, members, projects, thesis topics — so semantic search
+        # can span entity types. (entity_type, entity_id) is the Payload
+        # collection slug + document id. content_hash skips unchanged re-embeds.
+        conn.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS entity_embeddings (
+                entity_type text NOT NULL,
+                entity_id integer NOT NULL,
+                model text NOT NULL,
+                embedding vector({dim}) NOT NULL,
+                content_hash text,
+                updated_at timestamptz NOT NULL DEFAULT now(),
+                PRIMARY KEY (entity_type, entity_id)
+            )
+            """
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS entity_embeddings_type_idx ON entity_embeddings (entity_type)"
+        )
     logger.info("pgvector schema ensured (dim=%s)", dim)
 
 
