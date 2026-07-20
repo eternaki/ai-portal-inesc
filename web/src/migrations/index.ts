@@ -2,6 +2,7 @@ import * as migration_20260713_211902_initial from './20260713_211902_initial';
 import * as migration_20260717_123832_ai_settings from './20260717_123832_ai_settings';
 import * as migration_20260717_160000_attachments_events from './20260717_160000_attachments_events';
 import * as migration_20260720_120000_editorial_workflow from './20260720_120000_editorial_workflow';
+import * as migration_20260720_150000_summary_limitations_applications from './20260720_150000_summary_limitations_applications';
 
 export const migrations = [
   {
@@ -23,5 +24,10 @@ export const migrations = [
     up: migration_20260720_120000_editorial_workflow.up,
     down: migration_20260720_120000_editorial_workflow.down,
     name: '20260720_120000_editorial_workflow'
+  },
+  {
+    up: migration_20260720_150000_summary_limitations_applications.up,
+    down: migration_20260720_150000_summary_limitations_applications.down,
+    name: '20260720_150000_summary_limitations_applications'
   },
 ];
