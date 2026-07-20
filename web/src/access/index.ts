@@ -16,3 +16,12 @@ export const adminEditorOrSelf: Access = ({ req: { user } }) => {
 }
 
 export const adminOnlyField: FieldAccess = ({ req: { user } }) => user?.role === 'admin'
+
+// Public read of reviewable content: everyone sees only `published`; admin/editor
+// see every editorial state (so the review queue works). Defense-in-depth for the
+// REST/GraphQL API — the frontend also filters explicitly, but this guards direct
+// API access. Members are group members, not reviewers, so they see published only.
+export const publishedOrPrivileged: Access = ({ req: { user } }) => {
+  if (user?.role === 'admin' || user?.role === 'editor') return true
+  return { status: { equals: 'published' } }
+}

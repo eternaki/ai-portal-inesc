@@ -39,6 +39,18 @@ architecture, global rules). This file covers only the `web/` specifics.
   `editor` (all content), `member` (own profile only, via `adminEditorOrSelf`).
 - **Human edits win.** AI-written fields carry a status (e.g. `aiSummaryStatus`);
   never overwrite a value marked `edited`.
+- **Editorial workflow.** Publications carry an editorial `status` (`editorialFields`
+  in `src/fields/editorial.ts`); only `published` is public. Filter every public
+  publication query with `PUBLISHED`/`published()` from `src/lib/queries.ts`, and
+  use the `publishedOrPrivileged` read access. Status changes are logged by the
+  `recordEditorialDecision` hook. Nothing auto-publishes — ingest/import make drafts.
+- **Admin custom UI** lives in `src/components/admin/` (client components, referenced
+  by `path#Export`): `ImportPublicationPanel` (DOI/URL/title import, on the
+  Publications list) and `MaintenancePanel` (data-health, on the dashboard). After
+  adding one, run `pnpm generate:importmap`.
+- **Feature flags** are in the `ai-settings` global (`features` group):
+  `enableChatbot`, `enableSemanticSearch`, `enableSummaries`. The layout hides the
+  chat widget when off; the AI service enforces the rest.
 - Public pages are **Server Components** by default (SSR/SEO). Emit structured data
   via `src/components/JsonLd.tsx`.
 - Keep collection files focused; a growing file is a signal to split.

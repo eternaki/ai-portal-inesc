@@ -1,6 +1,9 @@
 import React from 'react'
 import Link from 'next/link'
+import { getPayload, type Where } from 'payload'
+import config from '@payload-config'
 import { getDictionary } from '@/i18n/server'
+import { published } from '@/lib/queries'
 
 // Search calls the AI service on every request
 export const dynamic = 'force-dynamic'
@@ -9,7 +12,9 @@ export const metadata = { title: 'Search' }
 
 const AI_URL = process.env.AI_SERVICE_URL || 'http://localhost:8000'
 
-type SearchParams = Promise<{ q?: string }>
+const PUB_TYPES = ['journal', 'conference', 'workshop', 'book', 'preprint', 'other'] as const
+
+type SearchParams = Promise<{ q?: string; type?: string }>
 
 type SearchHit = {
   score: number
@@ -22,26 +27,66 @@ type SearchHit = {
   }
 }
 
-async function runSearch(q: string): Promise<{ hits: SearchHit[]; error: string | null }> {
+// Textual fallback: when the AI service (hybrid search) is unavailable, still
+// return keyword matches straight from the CMS so search never goes fully dark.
+async function textualFallback(q: string, type?: string): Promise<SearchHit[]> {
   try {
-    const res = await fetch(`${AI_URL}/search?q=${encodeURIComponent(q)}&limit=20`, {
+    const payload = await getPayload({ config })
+    const filter: Where = {
+      or: [{ title: { like: q } }, { abstract: { like: q } }, { venue: { like: q } }],
+    }
+    if (type) filter.type = { equals: type }
+    const res = await payload.find({
+      collection: 'publications',
+      where: published(filter),
+      sort: '-year',
+      limit: 20,
+      depth: 0,
+    })
+    return res.docs.map((p) => ({ score: 0, publication: p as SearchHit['publication'] }))
+  } catch {
+    return []
+  }
+}
+
+async function runSearch(
+  q: string,
+  type?: string,
+): Promise<{ hits: SearchHit[]; error: string | null; fallback: boolean }> {
+  const params = new URLSearchParams({ q, limit: '20' })
+  if (type) params.set('type', type)
+  try {
+    const res = await fetch(`${AI_URL}/search?${params.toString()}`, {
       cache: 'no-store',
       signal: AbortSignal.timeout(20000),
     })
-    if (!res.ok) return { hits: [], error: `search service returned ${res.status}` }
+    if (!res.ok) {
+      // Degrade to keyword search rather than showing nothing.
+      return { hits: await textualFallback(q, type), error: null, fallback: true }
+    }
     const data = await res.json()
-    return { hits: data.results ?? [], error: null }
+    return { hits: data.results ?? [], error: null, fallback: false }
   } catch {
     // The site must not fail if the AI service is unavailable
-    return { hits: [], error: 'search service is unavailable' }
+    return { hits: await textualFallback(q, type), error: null, fallback: true }
   }
 }
 
 export default async function SearchPage(props: { searchParams: SearchParams }) {
-  const { q } = await props.searchParams
+  const { q, type } = await props.searchParams
   const query = (q ?? '').trim()
-  const { hits, error } = query ? await runSearch(query) : { hits: [], error: null }
+  const activeType = PUB_TYPES.includes(type as (typeof PUB_TYPES)[number]) ? type : undefined
+  const { hits, error, fallback } = query
+    ? await runSearch(query, activeType)
+    : { hits: [], error: null, fallback: false }
   const t = await getDictionary()
+
+  const typeHref = (ty?: string) => {
+    const p = new URLSearchParams()
+    if (query) p.set('q', query)
+    if (ty) p.set('type', ty)
+    return `/search?${p.toString()}`
+  }
 
   return (
     <div>
@@ -56,10 +101,24 @@ export default async function SearchPage(props: { searchParams: SearchParams }) 
           placeholder={t.search.placeholder}
           aria-label={t.search.ariaQuery}
         />
+        {activeType && <input type="hidden" name="type" value={activeType} />}
         <button className="btn" type="submit">
           {t.search.button}
         </button>
       </form>
+
+      {query && (
+        <div className="filters">
+          <Link href={typeHref(undefined)} className={!activeType ? 'active' : ''}>
+            {t.search.allTypes}
+          </Link>
+          {PUB_TYPES.map((ty) => (
+            <Link key={ty} href={typeHref(ty)} className={activeType === ty ? 'active' : ''}>
+              {t.search.types[ty]}
+            </Link>
+          ))}
+        </div>
+      )}
 
       {!query && (
         <div className="filters">
@@ -101,7 +160,11 @@ export default async function SearchPage(props: { searchParams: SearchParams }) 
               {hit.publication.year}
               {hit.publication.venue ? ` · ${hit.publication.venue}` : ''}
             </span>{' '}
-            <span className="badge">{t.search.match} {(hit.score * 100).toFixed(0)}%</span>
+            {!fallback && hit.score > 0 && (
+              <span className="badge">
+                {t.search.match} {(hit.score * 100).toFixed(0)}%
+              </span>
+            )}
           </div>
         </article>
       ))}

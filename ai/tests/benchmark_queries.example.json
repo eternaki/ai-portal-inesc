@@ -1,0 +1,15 @@
+[
+  {
+    "query": "privacy preserving machine learning",
+    "relevant": [],
+    "_note": "Fill `relevant` with the publication ids a human judged relevant for this query. Copy this file to benchmark_queries.json and curate it — relevance must not be fabricated."
+  },
+  {
+    "query": "anomaly detection in medical images",
+    "relevant": []
+  },
+  {
+    "query": "transformers for long documents",
+    "relevant": []
+  }
+]

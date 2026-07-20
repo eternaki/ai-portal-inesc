@@ -1,22 +1,30 @@
 import type { CollectionConfig } from 'payload'
 
-import { adminOrEditor, anyone } from '../access'
+import { adminOrEditor, publishedOrPrivileged } from '../access'
+import { editorialFields } from '../fields/editorial'
 import { slugField } from '../fields/slug'
 import { autoProcessPublication } from '../hooks/autoProcessPublication'
+import { recordEditorialDecision } from '../hooks/recordEditorialDecision'
 
 export const Publications: CollectionConfig = {
   slug: 'publications',
   hooks: {
+    beforeChange: [recordEditorialDecision],
     afterChange: [autoProcessPublication],
   },
   admin: {
     useAsTitle: 'title',
     group: 'Research',
-    defaultColumns: ['title', 'year', 'venue', 'type', 'aiSummaryStatus'],
+    defaultColumns: ['title', 'year', 'venue', 'status', 'aiSummaryStatus'],
     listSearchableFields: ['title', 'venue', 'doi'],
+    components: {
+      // DOI/URL/title importer with preview + approval, above the list.
+      beforeListTable: ['/components/admin/ImportPublicationForm#ImportPublicationPanel'],
+    },
   },
   access: {
-    read: anyone,
+    // Public sees only published; admin/editor see every editorial state.
+    read: publishedOrPrivileged,
     create: adminOrEditor,
     update: adminOrEditor,
     delete: adminOrEditor,
@@ -144,6 +152,8 @@ export const Publications: CollectionConfig = {
         description: 'Verified by a human (authorship/metadata are correct)',
       },
     },
+    // Editorial workflow: status / reviewer / decision history (sidebar).
+    ...editorialFields,
     {
       // alphaxiv "Blog mode" format
       name: 'aiSummary',

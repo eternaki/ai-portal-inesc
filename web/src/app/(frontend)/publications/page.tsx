@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getPayload, type Where } from 'payload'
 import config from '@payload-config'
 import { PubRow } from '@/components/PubRow'
+import { published, PUBLISHED } from '@/lib/queries'
 import { getDictionary } from '@/i18n/server'
 
 // Data comes from the CMS — render on each request, not at build time
@@ -17,20 +18,20 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
   const payload = await getPayload({ config })
   const t = await getDictionary()
 
-  const where: Where = {}
-  if (year) where.year = { equals: Number(year) }
-  if (type) where.type = { equals: type }
+  const filter: Where = {}
+  if (year) filter.year = { equals: Number(year) }
+  if (type) filter.type = { equals: type }
 
   const [result, allYears] = await Promise.all([
     payload.find({
       collection: 'publications',
-      where,
+      where: published(filter),
       sort: '-year',
       limit: 100,
       depth: 0,
     }),
     payload
-      .find({ collection: 'publications', limit: 1000, depth: 0, select: { year: true } })
+      .find({ collection: 'publications', where: PUBLISHED, limit: 1000, depth: 0, select: { year: true } })
       .then((r) =>
         Array.from(new Set(r.docs.map((d) => d.year).filter(Boolean))).sort(
           (a, b) => Number(b) - Number(a),

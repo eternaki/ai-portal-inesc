@@ -26,6 +26,10 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      // Maintenance agent report (data-health) at the top of the dashboard.
+      beforeDashboard: ['/components/admin/MaintenancePanel#MaintenancePanel'],
+    },
   },
   collections: [
     Members,

@@ -29,9 +29,15 @@ def ensure_schema(dim: int) -> None:
                 publication_id integer PRIMARY KEY,
                 model text NOT NULL,
                 embedding vector({dim}) NOT NULL,
+                content_hash text,
                 updated_at timestamptz NOT NULL DEFAULT now()
             )
             """
+        )
+        # Track the hashed source text + model so we re-embed only on change
+        # (idempotent pipeline; cheap incremental re-runs).
+        conn.execute(
+            "ALTER TABLE publication_embeddings ADD COLUMN IF NOT EXISTS content_hash text"
         )
         conn.execute(
             f"""

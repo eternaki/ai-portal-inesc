@@ -122,6 +122,15 @@ const en = {
     noMatchesBefore: 'No matches for “',
     noMatchesAfter: '”. Try rephrasing the topic.',
     match: 'match',
+    allTypes: 'all types',
+    types: {
+      journal: 'Journal',
+      conference: 'Conference',
+      workshop: 'Workshop',
+      book: 'Book',
+      preprint: 'Preprint',
+      other: 'Other',
+    },
     examples: [
       'detecting anomalies in medical images',
       'how do transformers handle long documents',
@@ -304,6 +313,15 @@ const pt: Dictionary = {
     noMatchesBefore: 'Sem resultados para “',
     noMatchesAfter: '”. Tente reformular o tema.',
     match: 'correspondência',
+    allTypes: 'todos os tipos',
+    types: {
+      journal: 'Revista',
+      conference: 'Conferência',
+      workshop: 'Workshop',
+      book: 'Livro',
+      preprint: 'Preprint',
+      other: 'Outro',
+    },
     examples: [
       'detetar anomalias em imagens médicas',
       'como lidam os transformers com documentos longos',

@@ -12,10 +12,17 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 - `app/llm/client.py` — **the only place that calls an LLM.** Public helpers:
   `complete`, `complete_json`, `load_prompt`.
 - `app/llm/prompts/*.md` — prompt templates (files, reviewed like code).
-- `app/pipelines/` — batch jobs: `ingest`, `embed`, `summarize`, `cluster`, `bios`.
-- `app/embeddings.py` — sentence-transformers + pgvector search.
+- `app/pipelines/` — batch jobs: `ingest`, `embed`, `summarize`, `cluster`, `bios`,
+  `maintenance` (data-health report), `benchmark` (search metrics: P@5/Recall@10/MRR).
+- `app/search.py` — hybrid search: pgvector semantic + Postgres full-text, fused
+  (RRF). Reads the content table READ-ONLY for ranking; still writes nothing.
+- `app/settings_cache.py` — cached read of the `ai-settings` global (model +
+  feature flags). `feature_enabled(name)` gates chat/search/summary endpoints.
+- `app/embeddings.py` — sentence-transformers + pgvector search. Tracks a
+  `content_hash` so re-embedding is skipped when content is unchanged.
 - `app/db.py` — Postgres connection for **AI-owned tables only**.
 - `app/payload_api.py` — Payload REST client; the **only** way to write content back.
+  Ingest creates drafts (`status=pending_review`); never publishes automatically.
 
 ## Hard rules
 

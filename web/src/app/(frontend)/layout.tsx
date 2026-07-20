@@ -1,5 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
+import { getPayload } from 'payload'
+import config from '@payload-config'
 import { STIX_Two_Text, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
 import './styles.css'
 import { SITE_URL, SITE_NAME } from '@/lib/site'
@@ -56,6 +58,11 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const locale = await getLocale()
   const t = await getDictionary()
 
+  // Feature flag: the chatbot can be turned off from the admin (ai-settings).
+  const payload = await getPayload({ config })
+  const aiSettings = await payload.findGlobal({ slug: 'ai-settings' }).catch(() => null)
+  const chatEnabled = aiSettings?.features?.enableChatbot !== false
+
   return (
     <html lang={locale} className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
       <body>
@@ -99,7 +106,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             </div>
           </div>
         </footer>
-        <ChatWidget t={t.chat} />
+        {chatEnabled && <ChatWidget t={t.chat} />}
       </body>
     </html>
   )
