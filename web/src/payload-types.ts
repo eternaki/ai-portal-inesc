@@ -320,6 +320,30 @@ export interface Publication {
    */
   verified?: boolean | null;
   /**
+   * Editorial state. Only "Published" is visible on the public site.
+   */
+  status: 'imported' | 'pending_review' | 'approved' | 'published' | 'rejected' | 'failed';
+  /**
+   * Last reviewer (set automatically on status change).
+   */
+  reviewer?: (number | null) | User;
+  /**
+   * Reason for the current decision (e.g. why rejected). Recorded in history.
+   */
+  reviewNote?: string | null;
+  /**
+   * Automatic audit trail of editorial decisions.
+   */
+  reviewHistory?:
+    | {
+        status?: string | null;
+        note?: string | null;
+        reviewer?: string | null;
+        at?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * AI summary; after editing by hand, set the status to edited
    */
   aiSummary?: {
@@ -716,6 +740,18 @@ export interface PublicationsSelect<T extends boolean = true> {
       };
   referencedWorks?: T;
   verified?: T;
+  status?: T;
+  reviewer?: T;
+  reviewNote?: T;
+  reviewHistory?:
+    | T
+    | {
+        status?: T;
+        note?: T;
+        reviewer?: T;
+        at?: T;
+        id?: T;
+      };
   aiSummary?:
     | T
     | {
@@ -956,6 +992,23 @@ export interface AiSetting {
    * Optional. Any LiteLLM model id (provider/model), overrides the dropdown. Example: ollama/llama3.1
    */
   customModel?: string | null;
+  /**
+   * Enable or disable AI features site-wide.
+   */
+  features?: {
+    /**
+     * Show the RAG chatbot on public pages.
+     */
+    enableChatbot?: boolean | null;
+    /**
+     * Use embeddings in search. Off = keyword search only.
+     */
+    enableSemanticSearch?: boolean | null;
+    /**
+     * Auto-generate AI summaries when a publication is saved.
+     */
+    enableSummaries?: boolean | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -966,6 +1019,13 @@ export interface AiSetting {
 export interface AiSettingsSelect<T extends boolean = true> {
   llmModel?: T;
   customModel?: T;
+  features?:
+    | T
+    | {
+        enableChatbot?: T;
+        enableSemanticSearch?: T;
+        enableSummaries?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

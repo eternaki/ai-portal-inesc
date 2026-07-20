@@ -57,26 +57,55 @@ def health() -> dict:
 
 
 @router.get("/search")
-def search(q: str, limit: int = 10) -> dict:
-    """Semantic search over publications (embeddings, no LLM)."""
+def search(
+    q: str,
+    limit: int = 10,
+    type: str | None = None,
+    year_from: int | None = None,
+    year_to: int | None = None,
+    author: str | None = None,
+) -> dict:
+    """Hybrid search: full-text + semantic, fused (RRF). Optional filters.
+
+    No LLM call. Works (as pure full-text) even if the embedding path is down.
+    """
     if len(q) > 500 or not q.strip():
         raise HTTPException(400, "query must be 1..500 chars")
     limit = max(1, min(limit, 50))
-    from app import embeddings  # lazy import: pulls in torch
+    from app import search as search_mod
+    from app.settings_cache import feature_enabled
 
-    hits = embeddings.search_publications(q, limit=limit)
-    if not hits:
+    # Over-fetch fused candidates so filters still leave a full page of results.
+    ranked_ids = search_mod.hybrid_search(
+        q, limit=limit * 4, semantic_limit=40, use_semantic=feature_enabled("enableSemanticSearch")
+    )
+    if not ranked_ids:
         return {"query": q, "results": []}
 
-    ids = [pub_id for pub_id, _ in hits]
+    # Resolve + enforce published + apply filters via Payload (single query).
+    conditions: list[dict] = [
+        {"id": {"in": ranked_ids}},
+        {"status": {"equals": "published"}},
+    ]
+    if type:
+        conditions.append({"type": {"equals": type}})
+    if year_from is not None:
+        conditions.append({"year": {"greater_than_equal": year_from}})
+    if year_to is not None:
+        conditions.append({"year": {"less_than_equal": year_to}})
+    if author:
+        conditions.append({"authors.name": {"like": author}})
+
     docs = payload_api.find(
-        "publications", where={"id": {"in": ids}}, limit=len(ids)
+        "publications", where={"and": conditions}, limit=len(ranked_ids)
     )["docs"]
     by_id = {doc["id"]: doc for doc in docs}
+
+    # Preserve fused order; attach a descending rank score for the UI.
+    ordered = [pid for pid in ranked_ids if pid in by_id][:limit]
     results = [
-        {"score": round(score, 4), "publication": by_id[pub_id]}
-        for pub_id, score in hits
-        if pub_id in by_id
+        {"score": round(1.0 - i / max(len(ordered), 1), 4), "publication": by_id[pid]}
+        for i, pid in enumerate(ordered)
     ]
     return {"query": q, "results": results}
 
@@ -96,7 +125,11 @@ def topic_map() -> dict:
     if not rows:
         return {"points": [], "clusters": []}
 
-    pubs = {p["id"]: p for p in payload_api.find_all("publications")}
+    # Map shows only published papers (drafts/imported stay off the public map).
+    pubs = {
+        p["id"]: p
+        for p in payload_api.find_all("publications", where={"status": {"equals": "published"}})
+    }
     points = []
     clusters: dict[int, dict] = {}
     for pub_id, cluster_id, x, y, label in rows:
@@ -135,14 +168,23 @@ class ChatRequest(BaseModel):
 @router.post("/chat")
 def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
     """RAG chatbot over the group's publications (brief: section A/D chatbot)."""
+    from app.settings_cache import feature_enabled
+
+    if not feature_enabled("enableChatbot"):
+        raise HTTPException(503, "the chatbot is currently disabled")
     check_chat_rate_limit(x_client_ip or "unknown")
 
     from app import embeddings  # lazy import: pulls in torch
 
     hits = embeddings.search_publications(req.message, limit=6)
     ids = [pub_id for pub_id, _ in hits]
+    # Ground the chatbot only in published papers (never leak drafts/imported).
     docs = (
-        payload_api.find("publications", where={"id": {"in": ids}}, limit=len(ids))["docs"]
+        payload_api.find(
+            "publications",
+            where={"and": [{"id": {"in": ids}}, {"status": {"equals": "published"}}]},
+            limit=len(ids),
+        )["docs"]
         if ids
         else []
     )
@@ -190,6 +232,7 @@ def process_publication(req: ProcessRequest, x_service_token: str | None = Heade
     require_service_token(x_service_token)
     from app import embeddings  # lazy import: pulls in torch
     from app.pipelines.summarize import summarize_publication
+    from app.settings_cache import feature_enabled
 
     docs = payload_api.find("publications", where={"id": {"equals": req.id}}, limit=1)["docs"]
     if not docs:
@@ -197,7 +240,11 @@ def process_publication(req: ProcessRequest, x_service_token: str | None = Heade
     pub = docs[0]
 
     summarized = False
-    if (pub.get("abstract") or "").strip() and pub.get("aiSummaryStatus") == "none":
+    if (
+        feature_enabled("enableSummaries")
+        and (pub.get("abstract") or "").strip()
+        and pub.get("aiSummaryStatus") == "none"
+    ):
         summary = summarize_publication(pub)
         payload_api.update(
             "publications", pub["id"], {"aiSummary": summary, "aiSummaryStatus": "generated"}
@@ -251,3 +298,72 @@ def generate_snippet(req: SnippetRequest, x_service_token: str | None = Header(N
         payload_api.update(req.collection, req.id, {"socialSnippet": snippet})
 
     return {"snippet": snippet, **data}
+
+
+class IngestLookupRequest(BaseModel):
+    # DOI, DOI URL, OpenAlex work id/URL, landing URL, or a plain title.
+    identifier: str = Field(min_length=3, max_length=500)
+
+
+@router.post("/ingest/lookup")
+def ingest_lookup(req: IngestLookupRequest, x_service_token: str | None = Header(None)) -> dict:
+    """Resolve an identifier to a publication preview WITHOUT creating anything.
+
+    Powers the admin "Import publication" form: paste a DOI/URL/title, see a
+    preview + a duplicate warning, then decide. Human-in-the-loop by design.
+    """
+    require_service_token(x_service_token)
+    from app.pipelines.ingest import resolve_publication
+
+    pub, duplicate = resolve_publication(req.identifier)
+    if not pub:
+        return {"found": False, "publication": None, "duplicate": None}
+    dup = (
+        {
+            "id": duplicate["id"],
+            "title": duplicate.get("title"),
+            "status": duplicate.get("status"),
+            "slug": duplicate.get("slug"),
+        }
+        if duplicate
+        else None
+    )
+    return {"found": True, "publication": pub, "duplicate": dup}
+
+
+@router.post("/ingest/create")
+def ingest_create(req: IngestLookupRequest, x_service_token: str | None = Header(None)) -> dict:
+    """Create a draft publication (status pending_review) from an identifier.
+
+    Called after a human approves the preview. Never publishes — the new paper
+    enters the editorial review queue (see upsert_publication).
+    """
+    require_service_token(x_service_token)
+    from app.pipelines.ingest import resolve_publication
+
+    pub, duplicate = resolve_publication(req.identifier)
+    if not pub:
+        raise HTTPException(404, "no publication found for that identifier")
+
+    doc, created = payload_api.upsert_publication(pub)
+    return {
+        "id": doc["id"],
+        "slug": doc.get("slug"),
+        "status": doc.get("status"),
+        "created": created,
+        "duplicateOf": duplicate["id"] if duplicate and not created else None,
+    }
+
+
+@router.get("/maintenance/report")
+def maintenance_report(
+    check_links: bool = False, x_service_token: str | None = Header(None)
+) -> dict:
+    """Data-health report for admins (missing embeddings, duplicates, broken links…).
+
+    Read-only: it never edits content. Link-checking is opt-in (slow, network).
+    """
+    require_service_token(x_service_token)
+    from app.pipelines.maintenance import run_checks
+
+    return run_checks(check_links=check_links)

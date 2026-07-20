@@ -81,6 +81,8 @@ def upsert_publication(data: dict) -> tuple[dict, bool]:
     existing = find("publications", where, limit=1)["docs"] if where else []
     if existing:
         doc = existing[0]
+        # Never touch the editorial `status` on update — a human owns that decision
+        # (approved/published papers must not silently revert to a draft on re-ingest).
         safe_update = {
             k: v
             for k, v in data.items()
@@ -89,13 +91,16 @@ def upsert_publication(data: dict) -> tuple[dict, bool]:
         }
         return update("publications", doc["id"], safe_update), False
 
+    # New ingested paper enters the editorial queue as a draft — nothing an
+    # automated pipeline creates is published without human approval.
+    create_data = {"status": "pending_review", **data}
     try:
-        return create("publications", data), True
+        return create("publications", create_data), True
     except httpx.HTTPStatusError as err:
         # Slug collision: the conference and journal versions share one title.
         # Retry with a uniquified slug (the Payload hook slugifies it).
         if err.response.status_code == 400 and "slug" in err.response.text:
             suffix = data.get("openalexId") or data.get("doi") or str(data.get("year") or "")
-            retry = {**data, "slug": f"{data['title']} {suffix}"}
+            retry = {**create_data, "slug": f"{data['title']} {suffix}"}
             return create("publications", retry), True
         raise

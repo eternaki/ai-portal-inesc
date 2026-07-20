@@ -5,6 +5,7 @@ import config from '@payload-config'
 import { Scatter } from '@/components/Scatter'
 import { JsonLd, ORGANIZATION } from '@/components/JsonLd'
 import { PubRow } from '@/components/PubRow'
+import { PUBLISHED } from '@/lib/queries'
 import { getDictionary, getLocale } from '@/i18n/server'
 import { dateLocale } from '@/i18n/config'
 
@@ -17,9 +18,9 @@ export default async function HomePage() {
   const locale = await getLocale()
 
   const [pubCount, memberCount, recentPubs, themes, openTopics, news] = await Promise.all([
-    payload.count({ collection: 'publications' }),
+    payload.count({ collection: 'publications', where: PUBLISHED }),
     payload.count({ collection: 'members' }),
-    payload.find({ collection: 'publications', sort: '-year', limit: 5, depth: 0 }),
+    payload.find({ collection: 'publications', where: PUBLISHED, sort: '-year', limit: 5, depth: 0 }),
     payload.find({ collection: 'research-themes', limit: 6, depth: 0 }),
     payload.count({ collection: 'thesis-topics', where: { status: { equals: 'open' } } }),
     payload.find({ collection: 'news', sort: '-date', limit: 2, depth: 0 }),
@@ -27,7 +28,7 @@ export default async function HomePage() {
 
   const years = recentPubs.docs.map((d) => d.year).filter(Boolean) as number[]
   const minYear = await payload
-    .find({ collection: 'publications', sort: 'year', limit: 1, depth: 0 })
+    .find({ collection: 'publications', where: PUBLISHED, sort: 'year', limit: 1, depth: 0 })
     .then((r) => r.docs[0]?.year ?? (years.length ? Math.min(...years) : null))
 
   return (

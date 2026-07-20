@@ -94,20 +94,27 @@ regenerated on every commit (see section 7).
 ### Web API routes — `web/src/app/api/`
 - `/api/ai/snippet`
 - `/api/chat`
+- `/api/ingest`
+- `/api/maintenance`
 
 ### AI pipelines — `ai/app/pipelines/`
+- `benchmark.py`
 - `bios.py`
 - `cluster.py`
 - `embed.py`
 - `ingest.py`
+- `maintenance.py`
 - `summarize.py`
 
 ### AI HTTP endpoints — `ai/app/api/routes.py`
 - `GET /health`
+- `GET /maintenance/report`
 - `GET /map`
 - `GET /search`
 - `POST /chat`
 - `POST /generate/snippet`
+- `POST /ingest/create`
+- `POST /ingest/lookup`
 - `POST /process/publication`
 
 <!-- AUTO-GEN:map END -->

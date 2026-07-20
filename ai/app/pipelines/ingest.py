@@ -93,6 +93,81 @@ def work_to_publication(work: dict[str, Any], member_by_author_id: dict[str, int
     }
 
 
+def _normalize_identifier(identifier: str) -> tuple[str, str]:
+    """Classify a free-form identifier into an OpenAlex lookup.
+
+    Accepts a DOI, a DOI URL, an OpenAlex work id/URL, an arbitrary landing URL,
+    or a plain title. Returns (kind, value) where kind is 'openalex' | 'doi' |
+    'title' — used to build the right OpenAlex query. A landing URL we cannot map
+    to a DOI/OpenAlex id falls back to a title search on the raw string.
+    """
+    s = identifier.strip()
+    low = s.lower()
+
+    # OpenAlex work id, possibly as a URL
+    tail = s.rsplit("/", 1)[-1]
+    if tail[:1] in ("W", "w") and tail[1:].isdigit():
+        return "openalex", tail.upper()
+
+    # DOI, bare or as a doi.org URL
+    if "doi.org/" in low:
+        return "doi", s.split("doi.org/", 1)[1].strip()
+    if low.startswith("doi:"):
+        return "doi", s[4:].strip()
+    if low.startswith("10.") and "/" in s:
+        return "doi", s
+
+    return "title", s
+
+
+def fetch_work_by_identifier(identifier: str) -> dict | None:
+    """Resolve one OpenAlex work from a DOI / OpenAlex id / URL / title."""
+    kind, value = _normalize_identifier(identifier)
+    mailto = get_settings().openalex_mailto
+    with httpx.Client(base_url=OPENALEX, timeout=60.0) as client:
+        if kind == "openalex":
+            resp = client.get(f"/works/{value}", params={"mailto": mailto})
+        elif kind == "doi":
+            resp = client.get(f"/works/doi:{value}", params={"mailto": mailto})
+        else:
+            resp = client.get(
+                "/works",
+                params={"filter": f"title.search:{value}", "per-page": 1, "mailto": mailto},
+            )
+            resp.raise_for_status()
+            results = resp.json().get("results") or []
+            return results[0] if results else None
+
+        if resp.status_code == 404:
+            return None
+        resp.raise_for_status()
+        return resp.json()
+
+
+def resolve_publication(identifier: str) -> tuple[dict | None, dict | None]:
+    """Look up a publication for admin preview: returns (publication, duplicate).
+
+    `publication` is the normalized draft (not yet created). `duplicate` is an
+    existing Payload publication with the same openalexId/doi, or None. Nothing is
+    written — creation happens only after a human approves (editorial workflow).
+    """
+    work = fetch_work_by_identifier(identifier)
+    if not work:
+        return None, None
+    pub = work_to_publication(work, {})
+
+    conditions: list[dict[str, Any]] = []
+    if pub.get("openalexId"):
+        conditions.append({"openalexId": {"equals": pub["openalexId"]}})
+    if pub.get("doi"):
+        conditions.append({"doi": {"equals": pub["doi"]}})
+    duplicate = None
+    if conditions:
+        existing = payload_api.find("publications", {"or": conditions}, limit=1)["docs"]
+        duplicate = existing[0] if existing else None
+    return pub, duplicate
+
+
 def fetch_author_works(author_id: str) -> list[dict]:
     """Every work by an author (OpenAlex cursor pagination)."""
     works: list[dict] = []

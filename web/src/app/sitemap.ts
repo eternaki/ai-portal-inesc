@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { SITE_URL } from '@/lib/site'
+import { PUBLISHED } from '@/lib/queries'
 
 // The sitemap is built from the CMS on each request
 export const dynamic = 'force-dynamic'
@@ -12,6 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [pubs, news] = await Promise.all([
     payload.find({
       collection: 'publications',
+      where: PUBLISHED,
       limit: 2000,
       depth: 0,
       select: { slug: true, updatedAt: true },

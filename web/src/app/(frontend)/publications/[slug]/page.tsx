@@ -8,6 +8,7 @@ import { PubRow } from '@/components/PubRow'
 import { JsonLd } from '@/components/JsonLd'
 import { Attachments } from '@/components/Attachments'
 import { SITE_URL } from '@/lib/site'
+import { published, PUBLISHED } from '@/lib/queries'
 import { getDictionary } from '@/i18n/server'
 
 // Data comes from the CMS — render on each request, not at build time
@@ -19,7 +20,7 @@ async function findPublication(slug: string): Promise<Publication | null> {
   const payload = await getPayload({ config })
   const result = await payload.find({
     collection: 'publications',
-    where: { slug: { equals: slug } },
+    where: published({ slug: { equals: slug } }),
     limit: 1,
     depth: 1,
   })
@@ -93,7 +94,7 @@ export default async function PublicationPage(props: { params: Params }) {
       ? payload
           .find({
             collection: 'publications',
-            where: { openalexId: { in: pub.referencedWorks as string[] } },
+            where: published({ openalexId: { in: pub.referencedWorks as string[] } }),
             limit: 10,
             depth: 0,
           })
@@ -103,7 +104,7 @@ export default async function PublicationPage(props: { params: Params }) {
       ? payload
           .find({
             collection: 'publications',
-            where: { referencedWorks: { contains: pub.openalexId } },
+            where: published({ referencedWorks: { contains: pub.openalexId } }),
             limit: 10,
             depth: 0,
           })

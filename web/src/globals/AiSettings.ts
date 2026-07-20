@@ -44,5 +44,33 @@ export const AiSettings: GlobalConfig = {
           'Optional. Any LiteLLM model id (provider/model), overrides the dropdown. Example: ollama/llama3.1',
       },
     },
+    {
+      // Feature flags: turn AI features off without a redeploy. Read by the web
+      // app (chat widget) and the AI service (chat/search/summary endpoints).
+      name: 'features',
+      type: 'group',
+      label: 'Feature flags',
+      admin: { description: 'Enable or disable AI features site-wide.' },
+      fields: [
+        {
+          name: 'enableChatbot',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { description: 'Show the RAG chatbot on public pages.' },
+        },
+        {
+          name: 'enableSemanticSearch',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { description: 'Use embeddings in search. Off = keyword search only.' },
+        },
+        {
+          name: 'enableSummaries',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { description: 'Auto-generate AI summaries when a publication is saved.' },
+        },
+      ],
+    },
   ],
 }

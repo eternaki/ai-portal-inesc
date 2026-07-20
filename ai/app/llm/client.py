@@ -9,10 +9,8 @@ every pipeline — no code is touched.
 import json
 import logging
 import re
-import time
 from pathlib import Path
 
-import httpx
 import litellm
 
 from app.config import get_settings
@@ -21,28 +19,17 @@ logger = logging.getLogger(__name__)
 
 PROMPTS_DIR = Path(__file__).parent / "prompts"
 
-# The admin can switch the model at runtime via the Payload global "ai-settings"
-# (customModel > llmModel > LLM_MODEL env). Cached briefly; any failure falls
-# back to env so the AI service never depends on the CMS being up.
-_MODEL_CACHE: dict = {"value": None, "at": 0.0}
-_MODEL_CACHE_TTL = 60.0
-
-
 def resolve_model() -> str:
-    settings = get_settings()
-    now = time.monotonic()
-    if _MODEL_CACHE["value"] is not None and now - _MODEL_CACHE["at"] < _MODEL_CACHE_TTL:
-        return _MODEL_CACHE["value"] or settings.llm_model
-    model = ""
-    try:
-        resp = httpx.get(f"{settings.payload_url}/api/globals/ai-settings", timeout=5.0)
-        if resp.status_code == 200:
-            data = resp.json()
-            model = (data.get("customModel") or data.get("llmModel") or "").strip()
-    except Exception:
-        logger.debug("ai-settings global unavailable, using env model")
-    _MODEL_CACHE.update(value=model, at=now)
-    return model or settings.llm_model
+    """Runtime model: customModel > llmModel (ai-settings global) > LLM_MODEL env.
+
+    The admin can switch the model without a redeploy. Reads the cached global;
+    any failure falls back to env so the AI service never depends on the CMS.
+    """
+    from app.settings_cache import ai_settings
+
+    data = ai_settings()
+    model = (data.get("customModel") or data.get("llmModel") or "").strip()
+    return model or get_settings().llm_model
 
 
 def load_prompt(prompt_name: str, /, **variables: str) -> str:
