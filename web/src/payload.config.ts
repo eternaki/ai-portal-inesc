@@ -28,8 +28,11 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     components: {
-      // Maintenance agent report (data-health) at the top of the dashboard.
-      beforeDashboard: ['/components/admin/MaintenancePanel#MaintenancePanel'],
+      // Maintenance report and admin-only RAG workbench at the top of the dashboard.
+      beforeDashboard: [
+        '/components/admin/MaintenancePanel#MaintenancePanel',
+        '/components/admin/RagWorkbench#RagWorkbench',
+      ],
     },
   },
   collections: [

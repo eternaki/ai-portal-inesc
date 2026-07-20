@@ -96,6 +96,7 @@ regenerated on every commit (see section 7).
 - `/api/chat`
 - `/api/ingest`
 - `/api/maintenance`
+- `/api/rag`
 
 ### AI pipelines — `ai/app/pipelines/`
 - `benchmark.py`
@@ -116,6 +117,7 @@ regenerated on every commit (see section 7).
 - `POST /ingest/create`
 - `POST /ingest/lookup`
 - `POST /process/publication`
+- `POST /rag/answer`
 
 <!-- AUTO-GEN:map END -->
 

@@ -24,6 +24,7 @@ import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { GenerateSnippetButton as GenerateSnippetButton_dcb089909e9090db5e60569773d770ab } from '../../../components/admin/GenerateSnippetButton'
 import { ImportPublicationPanel as ImportPublicationPanel_13e7797d2ccbf93a8725229ad473d4c0 } from '../../../components/admin/ImportPublicationForm'
 import { MaintenancePanel as MaintenancePanel_71f7d34178f9252bcb754cb7adbe9128 } from '../../../components/admin/MaintenancePanel'
+import { RagWorkbench as RagWorkbench_8103a32c69e7ba4fa2dce31c7d4dc105 } from '../../../components/admin/RagWorkbench'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -54,5 +55,6 @@ export const importMap = {
   "/components/admin/GenerateSnippetButton#GenerateSnippetButton": GenerateSnippetButton_dcb089909e9090db5e60569773d770ab,
   "/components/admin/ImportPublicationForm#ImportPublicationPanel": ImportPublicationPanel_13e7797d2ccbf93a8725229ad473d4c0,
   "/components/admin/MaintenancePanel#MaintenancePanel": MaintenancePanel_71f7d34178f9252bcb754cb7adbe9128,
+  "/components/admin/RagWorkbench#RagWorkbench": RagWorkbench_8103a32c69e7ba4fa2dce31c7d4dc105,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

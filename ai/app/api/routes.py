@@ -15,6 +15,8 @@ from pydantic import BaseModel, Field
 from app import payload_api
 from app.config import get_settings
 from app.llm.client import complete, complete_json, load_prompt
+from app.rag.models import RagRequest
+from app.rag.service import answer_question
 
 logger = logging.getLogger(__name__)
 
@@ -367,3 +369,13 @@ def maintenance_report(
     from app.pipelines.maintenance import run_checks
 
     return run_checks(check_links=check_links)
+
+
+@router.post("/rag/answer")
+def rag_answer(req: RagRequest, x_service_token: str | None = Header(None)) -> dict:
+    """Admin-only RAG endpoint.
+
+    Frontend/admin code should use the Next.js facade at /api/rag.
+    """
+    require_service_token(x_service_token)
+    return answer_question(req).model_dump()

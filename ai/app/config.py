@@ -25,6 +25,15 @@ class Settings(BaseSettings):
     llm_temperature: float = 0.3
     llm_max_tokens: int = 2048
 
+    # Admin RAG. Disabled by default so it can be introduced behind a flag.
+    rag_enabled: bool = False
+    rag_max_sources: int = 8
+    rag_max_question_chars: int = 500
+    rag_max_context_chars: int = 12000
+    rag_timeout_seconds: float = 60.0
+    rag_min_evidence_sources: int = 2
+    rag_min_source_score: float = 0.05
+
     # Local embedding model (sentence-transformers)
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
 

@@ -164,7 +164,17 @@ export const Publications: CollectionConfig = {
         { name: 'problem', type: 'textarea' },
         { name: 'method', type: 'textarea' },
         { name: 'results', type: 'textarea' },
+        {
+          name: 'limitations',
+          type: 'textarea',
+          admin: { description: 'Known limitations stated or implied by the source abstract' },
+        },
         { name: 'takeaways', type: 'textarea' },
+        {
+          name: 'applications',
+          type: 'textarea',
+          admin: { description: 'Concrete applications supported by the source abstract' },
+        },
         {
           name: 'industry',
           type: 'textarea',

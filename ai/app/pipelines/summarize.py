@@ -21,7 +21,17 @@ logger = logging.getLogger(__name__)
 # Configurable via SUMMARIZE_DELAY_SEC (default 4s ≈ 15 requests/min).
 _DELAY = float(os.environ.get("SUMMARIZE_DELAY_SEC", "4"))
 
-SUMMARY_KEYS = ("tldr", "problem", "method", "results", "takeaways", "industry", "impact")
+SUMMARY_KEYS = (
+    "tldr",
+    "problem",
+    "method",
+    "results",
+    "limitations",
+    "takeaways",
+    "applications",
+    "industry",
+    "impact",
+)
 
 
 def summarize_publication(pub: dict) -> dict:

@@ -351,7 +351,15 @@ export interface Publication {
     problem?: string | null;
     method?: string | null;
     results?: string | null;
+    /**
+     * Known limitations stated or implied by the source abstract
+     */
+    limitations?: string | null;
     takeaways?: string | null;
+    /**
+     * Concrete applications supported by the source abstract
+     */
+    applications?: string | null;
     /**
      * Non-technical description for industry
      */
@@ -759,7 +767,9 @@ export interface PublicationsSelect<T extends boolean = true> {
         problem?: T;
         method?: T;
         results?: T;
+        limitations?: T;
         takeaways?: T;
+        applications?: T;
         industry?: T;
         impact?: T;
       };

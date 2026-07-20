@@ -69,6 +69,35 @@ curl 'http://localhost:8000/search?q=semantic+search+in+biomedical+texts'
 An author's OpenAlex ID can be found at https://openalex.org (author page, the
 `A...` in the URL).
 
+## Admin RAG
+
+RAG is admin-only and disabled until explicitly enabled:
+
+```bash
+RAG_ENABLED=true
+AI_SERVICE_TOKEN=replace-with-a-long-random-token
+```
+
+The admin dashboard shows an **Admin RAG** workbench. It asks over CMS content
+through the stable Next.js facade:
+
+```text
+POST /api/rag
+```
+
+Next.js authenticates the Payload admin/editor session and calls the internal AI
+service endpoint:
+
+```text
+POST /rag/answer
+```
+
+The response is structured for the frontend: status, executive summary, evidence,
+limitations, citations, warnings, and model metadata. If the selected CMS sources
+do not provide enough evidence, the assistant returns `insufficient_evidence`
+instead of guessing. Model comparison is available only when requested from the
+admin workbench.
+
 ## Swapping the LLM
 
 One line in `.env`: `LLM_MODEL=provider/model` (litellm format), plus the
