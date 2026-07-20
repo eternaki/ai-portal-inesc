@@ -17,6 +17,10 @@ services:
       - '127.0.0.1:5432:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
+      # Seed the DB on FIRST init (empty volume): 252 publications + embeddings +
+      # topic map + admin user. Postgres runs *.sql.gz in this dir automatically,
+      # so a fresh `docker compose up` gives everyone a working site with data.
+      - ./db/seed:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-mlkd}']
       interval: 5s
@@ -29,6 +33,9 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-mlkd}:${POSTGRES_PASSWORD:-mlkd}@db:5432/${POSTGRES_DB:-mlkd}
       PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env}
+      # Reach the AI service (search/chat/import/maintenance) inside the network.
+      AI_SERVICE_URL: http://ai:8000
+      AI_SERVICE_TOKEN: ${AI_SERVICE_TOKEN:-}
     ports:
       - '3000:3000'
     depends_on:
@@ -43,11 +50,13 @@ services:
       PAYLOAD_URL: http://web:3000
       PAYLOAD_API_KEY: ${PAYLOAD_API_KEY:-}
       AI_SERVICE_TOKEN: ${AI_SERVICE_TOKEN:-}
-      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.5-flash}
+      LLM_MODEL: ${LLM_MODEL:-groq/llama-3.3-70b-versatile}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      EMBEDDING_DEVICE: ${EMBEDDING_DEVICE:-cpu}
       OPENALEX_MAILTO: ${OPENALEX_MAILTO:-mlkd-portal@example.com}
     ports:
       # только localhost: /generate/* защищён токеном, но наружу сервис не нужен
