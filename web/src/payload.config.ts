@@ -1,5 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -53,7 +54,25 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    // Schema is applied via migrations (or the seed dump) — NOT auto-push.
+    // Dev push would see the AI-owned tables (publication_embeddings, topic_map)
+    // as "extra" and try to DROP them; disabling it protects that data. Opt in
+    // with PAYLOAD_DB_PUSH=true on a throwaway DB if you really want push.
+    push: process.env.PAYLOAD_DB_PUSH === 'true',
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    // On Vercel the filesystem is ephemeral/read-only, so uploaded media must go
+    // to blob storage. Enabled only when a token is present — local dev keeps
+    // using the on-disk MEDIA_DIR (see Media.ts).
+    ...(process.env.BLOB_READ_WRITE_TOKEN
+      ? [
+          vercelBlobStorage({
+            enabled: true,
+            collections: { media: true },
+            token: process.env.BLOB_READ_WRITE_TOKEN,
+          }),
+        ]
+      : []),
+  ],
 })
