@@ -8,11 +8,86 @@ Docs: [design](docs/plans/2026-07-10-mlkd-portal-design.md) ·
 ## Structure
 
 ```
-web/   Next.js 15 + Payload CMS 3 (TypeScript) — public site + admin (/admin)
+web/   Next.js 16 + Payload CMS 3 (TypeScript) — public site + admin (/admin)
 ai/    Python FastAPI — LiteLLM wrapper, OpenAlex ingest, summaries, embeddings, search
 docs/  design doc and plan
 docker-compose.yml — Postgres+pgvector, web, ai
 ```
+
+## Architecture
+
+The portal is split into three services with clear ownership boundaries:
+
+```text
+Browser / admin user
+        |
+        v
+web: Next.js + Payload CMS
+  - public SSR pages
+  - Payload admin UI
+  - authenticated API facades (/api/chat, /api/ingest, /api/rag, /api/maintenance)
+        |
+        | HTTP, service token
+        v
+ai: FastAPI service
+  - OpenAlex ingest
+  - LLM summaries, bios, snippets
+  - embeddings, hybrid search, topic map
+  - admin RAG
+        |
+        v
+db: PostgreSQL 16 + pgvector
+  - Payload content tables
+  - AI-owned embedding and topic-map tables
+```
+
+### Ownership rules
+
+- Payload owns content: publications, members, projects, news, software, thesis
+  topics, media, users, and AI settings.
+- FastAPI owns AI data: publication embeddings and topic-map projections.
+- The AI service never writes directly to Payload content tables. It writes CMS
+  content only through the Payload REST API using `PAYLOAD_API_KEY`.
+- Next.js reads CMS content through the Payload Local API and calls FastAPI only
+  for AI/search workflows.
+- LLM output is always stored as editable CMS fields or returned to an admin
+  workflow; human-edited summaries are protected by `aiSummaryStatus=edited`.
+
+### Main flows
+
+Public pages:
+
+```text
+Browser -> Next.js SSR -> Payload Local API -> PostgreSQL
+```
+
+Publication ingest:
+
+```text
+Admin -> /api/ingest -> FastAPI -> OpenAlex -> Payload REST -> PostgreSQL
+```
+
+Publication processing:
+
+```text
+Admin/batch -> FastAPI -> LiteLLM + sentence-transformers -> Payload REST + pgvector
+```
+
+Search and topic map:
+
+```text
+Browser -> Next.js page -> FastAPI /search or /map -> pgvector + Payload REST
+```
+
+Admin RAG:
+
+```text
+Admin -> /api/rag -> FastAPI /rag/answer -> Payload REST -> LiteLLM -> structured answer
+```
+
+This keeps the public site resilient: regular pages and CMS editing continue to
+work even if an LLM provider is unavailable. AI features are isolated behind
+feature flags, service tokens, and admin/editor authentication where needed.
 
 ## Quick start (local development)
 
