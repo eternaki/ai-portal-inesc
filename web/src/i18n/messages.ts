@@ -123,6 +123,12 @@ const en = {
     noMatchesAfter: '”. Try rephrasing the topic.',
     match: 'match',
     allTypes: 'all types',
+    otherResults: 'People, projects & topics',
+    entityTypes: {
+      members: 'Person',
+      projects: 'Project',
+      'thesis-topics': 'Thesis topic',
+    },
     types: {
       journal: 'Journal',
       conference: 'Conference',
@@ -314,6 +320,12 @@ const pt: Dictionary = {
     noMatchesAfter: '”. Tente reformular o tema.',
     match: 'correspondência',
     allTypes: 'todos os tipos',
+    otherResults: 'Pessoas, projetos e tópicos',
+    entityTypes: {
+      members: 'Pessoa',
+      projects: 'Projeto',
+      'thesis-topics': 'Tópico de tese',
+    },
     types: {
       journal: 'Revista',
       conference: 'Conferência',

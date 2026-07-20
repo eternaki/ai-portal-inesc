@@ -101,6 +101,16 @@ Filters: type, year range, author. Degrades gracefully — if embeddings are dis
 service is down, the site falls back to a CMS keyword query, so search never goes
 dark. No LLM call is involved in search.
 
+**Multi-entity semantic search.** A unified embedding pipeline
+(`ai/app/pipelines/embed_entities.py`) vectorizes *several entity types* —
+publications, members, projects, thesis topics — into one shared vector space
+(`entity_embeddings`). Each type has a small "entity → text" adapter
+(`ai/app/entities.py`); short entities (a person's name) are enriched with their
+bio / interests / description so the vector carries real signal. `GET /search/all`
+searches across types (optionally filtered), and the search page surfaces a
+"People, projects & topics" section alongside publication results. Re-embedding is
+idempotent (content hash), so the pipeline is cheap to re-run.
+
 ---
 
 ## 5. AI & operations

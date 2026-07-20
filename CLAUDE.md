@@ -103,6 +103,7 @@ regenerated on every commit (see section 7).
 - `bios.py`
 - `cluster.py`
 - `embed.py`
+- `embed_entities.py`
 - `ingest.py`
 - `maintenance.py`
 - `summarize.py`
@@ -111,6 +112,7 @@ regenerated on every commit (see section 7).
 - `GET /health`
 - `GET /maintenance/report`
 - `GET /map`
+- `GET /search/all`
 - `GET /search`
 - `POST /chat`
 - `POST /generate/snippet`

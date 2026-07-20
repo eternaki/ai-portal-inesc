@@ -112,6 +112,58 @@ def search(
     return {"query": q, "results": results}
 
 
+@router.get("/search/all")
+def search_all(q: str, limit: int = 10, types: str | None = None) -> dict:
+    """Cross-entity semantic search over publications, members, projects, theses.
+
+    The multi-entity pipeline embeds every type into one space; this searches it
+    and returns typed results. Publications are still filtered to `published`.
+    """
+    if len(q) > 500 or not q.strip():
+        raise HTTPException(400, "query must be 1..500 chars")
+    limit = max(1, min(limit, 50))
+    from app import embeddings as emb
+    from app.entities import ENTITY_ADAPTERS, PUBLISHED_ONLY
+
+    type_list = None
+    if types:
+        type_list = [t for t in types.split(",") if t in ENTITY_ADAPTERS]
+
+    hits = emb.search_entities(q, types=type_list, limit=limit * 3)
+    if not hits:
+        return {"query": q, "results": []}
+
+    # Resolve documents per entity type (one query each), enforcing visibility.
+    by_type: dict[str, list[int]] = {}
+    for etype, eid, _ in hits:
+        by_type.setdefault(etype, []).append(eid)
+
+    resolved: dict[tuple[str, int], dict] = {}
+    for etype, ids in by_type.items():
+        conditions: list[dict] = [{"id": {"in": ids}}]
+        if etype in PUBLISHED_ONLY:
+            conditions.append({"status": {"equals": "published"}})
+        where = {"and": conditions} if len(conditions) > 1 else conditions[0]
+        docs = payload_api.find(etype, where=where, limit=len(ids))["docs"]
+        for d in docs:
+            resolved[(etype, d["id"])] = {
+                "entity_type": etype,
+                "id": d["id"],
+                # Publications/projects/theses use `title`; members use `name`.
+                "title": d.get("title") or d.get("name"),
+                "slug": d.get("slug"),
+            }
+
+    results = []
+    for etype, eid, score in hits:
+        item = resolved.get((etype, eid))
+        if item:
+            results.append({"score": round(score, 4), **item})
+        if len(results) >= limit:
+            break
+    return {"query": q, "results": results}
+
+
 @router.get("/map")
 def topic_map() -> dict:
     """Topic map: 2D publication points with clusters (cluster.py pipeline)."""
