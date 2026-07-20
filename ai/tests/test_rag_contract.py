@@ -117,6 +117,108 @@ class RagContractTest(unittest.TestCase):
         self.assertEqual(response.metadata.model, "gemini/test")
         self.assertEqual(response.metadata.tokens["total"], 30)
 
+    def test_service_returns_insufficient_when_model_provides_no_evidence(self):
+        source = RagSource(
+            id=1,
+            type="publication",
+            title="Semantic Search for Biomedical Texts",
+            text="Semantic search improves retrieval over biomedical publications.",
+            url="/publications/semantic-search",
+            year=2024,
+        )
+        fake_response = SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    message=SimpleNamespace(
+                        content=(
+                            '{"executiveSummary":"Maybe semantic search is represented.",'
+                            '"evidence":[],'
+                            '"limitations":["No source-backed evidence was returned."],'
+                            '"suggestedReadings":[]}'
+                        )
+                    )
+                )
+            ],
+            usage=None,
+        )
+        settings = SimpleNamespace(
+            rag_enabled=True,
+            rag_max_question_chars=500,
+            rag_timeout_seconds=60,
+            rag_max_context_chars=12000,
+            rag_min_evidence_sources=1,
+        )
+
+        with (
+            patch("app.rag.service.get_settings", return_value=settings),
+            patch("app.rag.service.retrieve_sources", return_value=([source], [])),
+            patch("app.rag.service.resolve_model", return_value="gemini/test"),
+            patch("app.rag.service.complete_response", return_value=fake_response),
+        ):
+            response = answer_question(RagRequest(question="semantic search", scope=["publications"]))
+
+        self.assertEqual(response.status, "insufficient_evidence")
+        self.assertIsNone(response.answer)
+        self.assertEqual(response.citations, [])
+        self.assertEqual(response.metadata.sourceCount, 1)
+
+    def test_model_comparison_failure_preserves_primary_answer(self):
+        source = RagSource(
+            id=1,
+            type="publication",
+            title="Semantic Search for Biomedical Texts",
+            text="Semantic search improves retrieval over biomedical publications.",
+            url="/publications/semantic-search",
+            year=2024,
+        )
+        primary_response = SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    message=SimpleNamespace(
+                        content=(
+                            '{"executiveSummary":"Semantic search is represented.",'
+                            '"evidence":["The source discusses semantic search."],'
+                            '"limitations":[],'
+                            '"suggestedReadings":[]}'
+                        )
+                    )
+                )
+            ],
+            usage=None,
+        )
+        settings = SimpleNamespace(
+            rag_enabled=True,
+            rag_max_question_chars=500,
+            rag_timeout_seconds=60,
+            rag_max_context_chars=12000,
+            rag_min_evidence_sources=1,
+        )
+
+        def fake_complete_response(*args, **kwargs):
+            if kwargs.get("model") == "bad/model":
+                raise RuntimeError("missing provider key")
+            return primary_response
+
+        with (
+            patch("app.rag.service.get_settings", return_value=settings),
+            patch("app.rag.service.retrieve_sources", return_value=([source], [])),
+            patch("app.rag.service.resolve_model", return_value="gemini/test"),
+            patch("app.rag.service.complete_response", side_effect=fake_complete_response),
+        ):
+            response = answer_question(
+                RagRequest(
+                    question="semantic search",
+                    scope=["publications"],
+                    compareModels=True,
+                    comparisonModels=["bad/model"],
+                )
+            )
+
+        self.assertEqual(response.status, "answered")
+        self.assertEqual(response.answer.executiveSummary, "Semantic search is represented.")
+        self.assertEqual(response.modelComparisons, [])
+        self.assertIn("Model comparison failed for bad/model.", response.warnings)
+
 
 if __name__ == "__main__":
     unittest.main()

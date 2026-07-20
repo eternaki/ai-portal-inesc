@@ -1,7 +1,5 @@
 import math
 import re
-from collections.abc import Iterable
-
 from app import payload_api
 from app.config import get_settings
 from app.rag.models import RagSource
@@ -28,7 +26,8 @@ def retrieve_sources(question: str, scope: list[str], limit: int | None = None) 
     warnings: list[str] = []
     sources: list[RagSource] = []
     for collection in clean_scope:
-        for doc in payload_api.find_all(collection, depth=0):
+        where = {"status": {"equals": "published"}} if collection == "publications" else None
+        for doc in payload_api.find_all(collection, where=where, depth=0):
             source = _source_from_doc(collection, doc)
             if not source:
                 continue

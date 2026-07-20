@@ -39,20 +39,32 @@ def answer_question(request: RagRequest) -> RagResponse:
 
     selected_model = resolve_model()
     answer, metadata = _run_model(question, sources, selected_model, start)
+    if not answer.evidence:
+        return _insufficient(
+            "The model did not return source-backed evidence for this question.",
+            start,
+            warnings,
+            source_count=len(sources),
+        )
+
     comparisons: list[RagModelComparison] = []
     if request.compareModels:
         for model in request.comparisonModels[:3]:
             if model and model != selected_model:
                 model_start = time.monotonic()
-                comparison_answer, _ = _run_model(question, sources, model, model_start)
-                comparisons.append(
-                    RagModelComparison(
-                        provider=_provider(model),
-                        model=model,
-                        answer=comparison_answer,
-                        latencyMs=int((time.monotonic() - model_start) * 1000),
+                try:
+                    comparison_answer, _ = _run_model(question, sources, model, model_start)
+                    comparisons.append(
+                        RagModelComparison(
+                            provider=_provider(model),
+                            model=model,
+                            answer=comparison_answer,
+                            latencyMs=int((time.monotonic() - model_start) * 1000),
+                        )
                     )
-                )
+                except Exception as err:
+                    logger.warning("rag model comparison failed: model=%s error=%s", model, err)
+                    warnings.append(f"Model comparison failed for {model}.")
 
     logger.info(
         "rag answer: status=answered model=%s sources=%s latency_ms=%s question=%r",
@@ -129,12 +141,18 @@ def _build_prompt(question: str, sources: list[RagSource]) -> str:
 def _answer_from_data(data: dict[str, Any]) -> RagAnswer:
     return RagAnswer(
         executiveSummary=str(data.get("executiveSummary") or "").strip(),
-        evidence=[str(item).strip() for item in data.get("evidence") or [] if str(item).strip()],
-        limitations=[str(item).strip() for item in data.get("limitations") or [] if str(item).strip()],
+        evidence=_clean_string_list(data.get("evidence")),
+        limitations=_clean_string_list(data.get("limitations")),
         suggestedReadings=[
             item for item in data.get("suggestedReadings") or [] if isinstance(item, dict) and item.get("title") and item.get("url")
         ],
     )
+
+
+def _clean_string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
 
 
 def _insufficient(message: str, start: float, warnings: list[str], source_count: int = 0) -> RagResponse:
