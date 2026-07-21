@@ -8,7 +8,7 @@ export const Members: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'People',
-    defaultColumns: ['name', 'role', 'orcid'],
+    defaultColumns: ['name', 'role', 'orcid', 'cienciaId'],
   },
   access: {
     read: anyone,
@@ -75,9 +75,11 @@ export const Members: CollectionConfig = {
     {
       type: 'row',
       fields: [
-        { name: 'orcid', type: 'text', admin: { width: '33%' } },
-        { name: 'openalexId', type: 'text', admin: { width: '33%' } },
-        { name: 'dblpKey', type: 'text', admin: { width: '33%' } },
+        { name: 'orcid', type: 'text', unique: true, index: true, admin: { width: '20%' } },
+        { name: 'cienciaId', type: 'text', unique: true, index: true, admin: { width: '20%' } },
+        { name: 'openalexId', type: 'text', unique: true, index: true, admin: { width: '20%' } },
+        { name: 'dblpKey', type: 'text', unique: true, index: true, admin: { width: '20%' } },
+        { name: 'tecnicoId', type: 'text', unique: true, index: true, admin: { width: '20%' } },
       ],
     },
     {
@@ -103,7 +105,115 @@ export const Members: CollectionConfig = {
       name: 'showEmail',
       type: 'checkbox',
       defaultValue: false,
-      admin: { description: 'Show the email on the site (owner opt-in)' },
+      admin: { description: 'Show the email on the site.' },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'showLinkedIn',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { width: '33%', description: 'Show LinkedIn on the public profile.' },
+        },
+        {
+          name: 'showGitHub',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { width: '33%', description: 'Show GitHub on the public profile.' },
+        },
+        {
+          name: 'showORCID',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { width: '33%', description: 'Show ORCID on the public profile.' },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'showCienciaId',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { width: '33%', description: 'Show Ciência Vitae on the public profile.' },
+        },
+        {
+          name: 'showDBLP',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { width: '33%', description: 'Show DBLP on the public profile.' },
+        },
+        {
+          name: 'showTecnicoPage',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { width: '33%', description: 'Show Técnico page when explicitly stored.' },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'showPersonalPage',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { width: '50%', description: 'Show personal website on the public profile.' },
+        },
+        {
+          name: 'showGoogleScholar',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: { width: '50%', description: 'Show Google Scholar on the public profile.' },
+        },
+      ],
+    },
+    {
+      name: 'contactsSource',
+      type: 'text',
+      admin: {
+        description: 'Internal provenance for imported contact data. Not rendered publicly.',
+      },
+    },
+    {
+      name: 'contactsVerifiedAt',
+      type: 'date',
+      admin: {
+        description: 'When contact data was imported or last reviewed.',
+      },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'identifiersVerified',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: { width: '25%' },
+        },
+        {
+          name: 'identifiersConfidence',
+          type: 'select',
+          options: [
+            { label: 'High', value: 'high' },
+            { label: 'Medium', value: 'medium' },
+            { label: 'Low', value: 'low' },
+          ],
+          admin: { width: '25%' },
+        },
+        {
+          name: 'identifiersSource',
+          type: 'text',
+          admin: { width: '25%' },
+        },
+        {
+          name: 'identifiersVerifiedAt',
+          type: 'date',
+          admin: { width: '25%' },
+        },
+      ],
     },
     {
       name: 'careerTrajectory',

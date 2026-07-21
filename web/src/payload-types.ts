@@ -175,8 +175,10 @@ export interface Member {
   bioAiDraft?: string | null;
   researchInterests?: string[] | null;
   orcid?: string | null;
+  cienciaId?: string | null;
   openalexId?: string | null;
   dblpKey?: string | null;
+  tecnicoId?: string | null;
   links?: {
     /**
      * LinkedIn or Técnico page — required by the brief
@@ -189,9 +191,53 @@ export interface Member {
   };
   email?: string | null;
   /**
-   * Show the email on the site (owner opt-in)
+   * Show the email on the site.
    */
   showEmail?: boolean | null;
+  /**
+   * Show LinkedIn on the public profile.
+   */
+  showLinkedIn?: boolean | null;
+  /**
+   * Show GitHub on the public profile.
+   */
+  showGitHub?: boolean | null;
+  /**
+   * Show ORCID on the public profile.
+   */
+  showORCID?: boolean | null;
+  /**
+   * Show Ciência Vitae on the public profile.
+   */
+  showCienciaId?: boolean | null;
+  /**
+   * Show DBLP on the public profile.
+   */
+  showDBLP?: boolean | null;
+  /**
+   * Show Técnico page when explicitly stored.
+   */
+  showTecnicoPage?: boolean | null;
+  /**
+   * Show personal website on the public profile.
+   */
+  showPersonalPage?: boolean | null;
+  /**
+   * Show Google Scholar on the public profile.
+   */
+  showGoogleScholar?: boolean | null;
+  /**
+   * Internal provenance for imported contact data. Not rendered publicly.
+   */
+  contactsSource?: string | null;
+  /**
+   * When contact data was imported or last reviewed.
+   */
+  contactsVerifiedAt?: string | null;
+  identifiersVerified?: boolean | null;
+  identifiersConfidence?: ('high' | 'medium' | 'low') | null;
+  identifiersSource?: string | null;
+  identifiersVerifiedAt?: string | null;
   /**
    * Career trajectory (for alumni)
    */
@@ -708,8 +754,10 @@ export interface MembersSelect<T extends boolean = true> {
   bioAiDraft?: T;
   researchInterests?: T;
   orcid?: T;
+  cienciaId?: T;
   openalexId?: T;
   dblpKey?: T;
+  tecnicoId?: T;
   links?:
     | T
     | {
@@ -721,6 +769,20 @@ export interface MembersSelect<T extends boolean = true> {
       };
   email?: T;
   showEmail?: T;
+  showLinkedIn?: T;
+  showGitHub?: T;
+  showORCID?: T;
+  showCienciaId?: T;
+  showDBLP?: T;
+  showTecnicoPage?: T;
+  showPersonalPage?: T;
+  showGoogleScholar?: T;
+  contactsSource?: T;
+  contactsVerifiedAt?: T;
+  identifiersVerified?: T;
+  identifiersConfidence?: T;
+  identifiersSource?: T;
+  identifiersVerifiedAt?: T;
   careerTrajectory?: T;
   updatedAt?: T;
   createdAt?: T;

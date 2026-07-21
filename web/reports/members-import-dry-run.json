@@ -1,0 +1,1370 @@
+{
+  "mode": "dry-run",
+  "payloadUrl": null,
+  "offline": true,
+  "totalInputMembers": 59,
+  "existingMembers": 0,
+  "created": [
+    {
+      "name": "Arlindo Oliveira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId",
+        "dblpKey",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "Beatriz Vieira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "André Duarte",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId",
+        "dblpKey"
+      ]
+    },
+    {
+      "name": "João Marques",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "Inês Duarte",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "Duarte Boto",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "Helder Dias",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "Francisco Guedes",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "Vitória Cruz",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "Dominika Dlugosz",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "Mohamed Elbawab",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "André Carneiro",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "João Cardoso",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "Ricardo Almeida",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "Ruxandra Barbulescu",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "David Calhas",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "dblpKey"
+      ]
+    },
+    {
+      "name": "João Silva",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId",
+        "dblpKey"
+      ]
+    },
+    {
+      "name": "Alexandre Borges",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "Miguel Freire",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "Gonçalo Oliveira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "Manuel Goulão",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "dblpKey"
+      ]
+    },
+    {
+      "name": "Guilherme Costa",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "Lucas Piper",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "João Amoroso",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "João Meneses",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "João Teixeira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "Clara Pereira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "Mariana Serrão",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "Miguel Vicente",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "Gonçalo Goulart Oliveira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "José Carreira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email"
+      ]
+    },
+    {
+      "name": "Tomás Nunes",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "Vicente Silvestre",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email"
+      ]
+    },
+    {
+      "name": "Pedro Henriques",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email"
+      ]
+    },
+    {
+      "name": "Francisco Honório",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "José Cunha",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email"
+      ]
+    },
+    {
+      "name": "Miguel Ferreira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email"
+      ]
+    },
+    {
+      "name": "Martim Afonso",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "cienciaId"
+      ]
+    },
+    {
+      "name": "Ana Alves",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "Miguel Amaral",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "João Novo",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "Lourenço Tourais",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "Manuel Coimbra",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "Tiago Oliveira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "cienciaId",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "André Leite",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "Oleksandr Stopchak",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "José Martinho",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "José Pereira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email"
+      ]
+    },
+    {
+      "name": "António Pereira",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email"
+      ]
+    },
+    {
+      "name": "João Pedro",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "email"
+      ]
+    },
+    {
+      "name": "Rafael Pedro",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "Ricardo Diniz",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "Filipa Marques",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links"
+      ]
+    },
+    {
+      "name": "Dinis Rodrigues",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "dblpKey",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "André Veríssimo",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid"
+      ]
+    },
+    {
+      "name": "Pedro Gonçalves",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "André Cavalheiro",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "Xavier Dias",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "tecnicoId"
+      ]
+    },
+    {
+      "name": "Miguel Monteiro",
+      "fields": [
+        "contactsSource",
+        "contactsVerifiedAt",
+        "showEmail",
+        "showLinkedIn",
+        "showGitHub",
+        "showORCID",
+        "showCienciaId",
+        "showDBLP",
+        "showTecnicoPage",
+        "showPersonalPage",
+        "showGoogleScholar",
+        "links",
+        "identifiersVerified",
+        "identifiersConfidence",
+        "identifiersSource",
+        "identifiersVerifiedAt",
+        "orcid",
+        "dblpKey"
+      ]
+    }
+  ],
+  "updated": [],
+  "unchanged": [],
+  "ambiguous": [],
+  "conflicts": [],
+  "invalidValues": [],
+  "identifiersSkipped": [
+    {
+      "name": "Vitória Cruz",
+      "status": "not_found"
+    },
+    {
+      "name": "Alexandre Borges",
+      "status": "not_found"
+    },
+    {
+      "name": "Miguel Freire",
+      "status": "not_found"
+    },
+    {
+      "name": "Gonçalo Oliveira",
+      "status": "not_found"
+    },
+    {
+      "name": "João Meneses",
+      "status": "ambiguous"
+    },
+    {
+      "name": "José Carreira",
+      "status": "not_found"
+    },
+    {
+      "name": "Vicente Silvestre",
+      "status": "not_found"
+    },
+    {
+      "name": "Pedro Henriques",
+      "status": "not_found"
+    },
+    {
+      "name": "Francisco Honório",
+      "status": "not_found"
+    },
+    {
+      "name": "José Cunha",
+      "status": "not_found"
+    },
+    {
+      "name": "Miguel Ferreira",
+      "status": "not_found"
+    },
+    {
+      "name": "Miguel Amaral",
+      "status": "not_found"
+    },
+    {
+      "name": "João Novo",
+      "status": "not_found"
+    },
+    {
+      "name": "Lourenço Tourais",
+      "status": "not_found"
+    },
+    {
+      "name": "Manuel Coimbra",
+      "status": "not_found"
+    },
+    {
+      "name": "André Leite",
+      "status": "not_found"
+    },
+    {
+      "name": "José Pereira",
+      "status": "not_found"
+    },
+    {
+      "name": "António Pereira",
+      "status": "not_found"
+    },
+    {
+      "name": "João Pedro",
+      "status": "ambiguous"
+    },
+    {
+      "name": "Rafael Pedro",
+      "status": "not_found"
+    },
+    {
+      "name": "Filipa Marques",
+      "status": "not_found"
+    }
+  ],
+  "privateFieldsStored": [
+    {
+      "name": "Mohamed Elbawab",
+      "field": "email",
+      "public": true
+    },
+    {
+      "name": "João Cardoso",
+      "field": "email",
+      "public": true
+    },
+    {
+      "name": "Gonçalo Goulart Oliveira",
+      "field": "email",
+      "public": true
+    },
+    {
+      "name": "José Carreira",
+      "field": "email",
+      "public": true
+    },
+    {
+      "name": "Vicente Silvestre",
+      "field": "email",
+      "public": true
+    },
+    {
+      "name": "Pedro Henriques",
+      "field": "email",
+      "public": true
+    },
+    {
+      "name": "José Cunha",
+      "field": "email",
+      "public": true
+    },
+    {
+      "name": "Miguel Ferreira",
+      "field": "email",
+      "public": true
+    },
+    {
+      "name": "José Pereira",
+      "field": "email",
+      "public": true
+    },
+    {
+      "name": "António Pereira",
+      "field": "email",
+      "public": true
+    },
+    {
+      "name": "João Pedro",
+      "field": "email",
+      "public": true
+    }
+  ]
+}
