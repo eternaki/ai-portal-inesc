@@ -24,9 +24,15 @@ class RagCitation(BaseModel):
     openalexId: str | None = None
 
 
+class RagGroundedEvidence(BaseModel):
+    claim: str
+    sourceIds: list[str] = Field(default_factory=list)
+
+
 class RagAnswer(BaseModel):
     executiveSummary: str
     evidence: list[str]
+    groundedEvidence: list[RagGroundedEvidence] = Field(default_factory=list)
     limitations: list[str]
     suggestedReadings: list[dict[str, Any]]
 
@@ -67,6 +73,9 @@ class RagSource(BaseModel):
     doi: str | None = None
     openalexId: str | None = None
     score: float = 0.0
+
+    def source_id(self) -> str:
+        return f"{self.type}:{self.id}"
 
     def citation(self) -> RagCitation:
         return RagCitation(

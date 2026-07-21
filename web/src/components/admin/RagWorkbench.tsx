@@ -8,6 +8,7 @@ type RagResponse = {
   answer: null | {
     executiveSummary: string
     evidence: string[]
+    groundedEvidence?: Array<{ claim: string; sourceIds: string[] }>
     limitations: string[]
     suggestedReadings: Array<{ title: string; url: string; year?: number | null }>
   }
@@ -91,7 +92,12 @@ const ResultView: React.FC<{ result: RagResponse }> = ({ result }) => (
         <h3>Executive summary</h3>
         <p>{result.answer.executiveSummary}</p>
         <h3>Evidence</h3>
-        <ul>{result.answer.evidence.map((item) => <li key={item}>{item}</li>)}</ul>
+        <ul>
+          {(result.answer.groundedEvidence?.length
+            ? result.answer.groundedEvidence.map((item) => `${item.claim} [${item.sourceIds.join(', ')}]`)
+            : result.answer.evidence
+          ).map((item) => <li key={item}>{item}</li>)}
+        </ul>
         <h3>Limitations</h3>
         <ul>{result.answer.limitations.map((item) => <li key={item}>{item}</li>)}</ul>
       </>

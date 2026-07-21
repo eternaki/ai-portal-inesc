@@ -5,7 +5,7 @@ from typing import Any
 
 from app.config import get_settings
 from app.llm.client import complete_response, parse_json_response, resolve_model
-from app.rag.models import RagAnswer, RagMetadata, RagModelComparison, RagRequest, RagResponse, RagSource
+from app.rag.models import RagAnswer, RagGroundedEvidence, RagMetadata, RagModelComparison, RagRequest, RagResponse, RagSource
 from app.rag.retriever import retrieve_sources
 
 logger = logging.getLogger(__name__)
@@ -93,7 +93,7 @@ def _run_model(question: str, sources: list[RagSource], model: str, start: float
     )
     content = response.choices[0].message.content or ""
     data = parse_json_response(content)
-    answer = _answer_from_data(data)
+    answer = _answer_from_data(data, sources)
     usage = getattr(response, "usage", None)
     metadata = RagMetadata(
         provider=_provider(model),
@@ -113,7 +113,10 @@ def _build_prompt(question: str, sources: list[RagSource]) -> str:
     remaining = settings.rag_max_context_chars
     for index, source in enumerate(sources, start=1):
         block = (
-            f"[{index}] {source.type}: {source.title}\n"
+            f"[{index}] sourceId: {source.source_id()}\n"
+            f"type: {source.type}\n"
+            f"title: {source.title}\n"
+            f"score: {source.score:.4f}\n"
             f"year: {source.year or ''}\n"
             f"doi: {source.doi or ''}\n"
             f"openalexId: {source.openalexId or ''}\n"
@@ -128,24 +131,39 @@ def _build_prompt(question: str, sources: list[RagSource]) -> str:
     schema = {
         "executiveSummary": "short admin-facing answer",
         "evidence": ["evidence statements supported by sources"],
+        "groundedEvidence": [{"claim": "source-backed claim", "sourceIds": ["publication:123"]}],
         "limitations": ["what the sources do not prove"],
         "suggestedReadings": [{"title": "source title", "url": "/internal-url", "year": 2024}],
     }
     return (
         f"Question:\n{question}\n\n"
         f"Sources:\n{''.join(context)}\n\n"
+        "Every evidence claim must be grounded in one or more provided sourceId values. "
+        "Do not cite sourceIds that are not listed above. "
         f"Return JSON with exactly this shape:\n{json.dumps(schema)}"
     )
 
 
-def _answer_from_data(data: dict[str, Any]) -> RagAnswer:
+def _answer_from_data(data: dict[str, Any], sources: list[RagSource]) -> RagAnswer:
+    source_ids = {source.source_id() for source in sources}
+    source_urls = {source.url for source in sources}
+    raw_grounded = data.get("groundedEvidence")
+    grounded = _clean_grounded_evidence(raw_grounded, source_ids)
+    evidence = _clean_string_list(data.get("evidence"))
+    if grounded and not evidence:
+        evidence = [item.claim for item in grounded]
+    if isinstance(raw_grounded, list) and not grounded:
+        evidence = []
+    elif evidence and not grounded and source_ids:
+        # Backward-compatible fallback for models that follow the old contract.
+        grounded = [RagGroundedEvidence(claim=claim, sourceIds=sorted(source_ids)) for claim in evidence]
+
     return RagAnswer(
         executiveSummary=str(data.get("executiveSummary") or "").strip(),
-        evidence=_clean_string_list(data.get("evidence")),
+        evidence=evidence,
+        groundedEvidence=grounded,
         limitations=_clean_string_list(data.get("limitations")),
-        suggestedReadings=[
-            item for item in data.get("suggestedReadings") or [] if isinstance(item, dict) and item.get("title") and item.get("url")
-        ],
+        suggestedReadings=_clean_suggested_readings(data.get("suggestedReadings"), source_urls),
     )
 
 
@@ -153,6 +171,36 @@ def _clean_string_list(value: Any) -> list[str]:
     if not isinstance(value, list):
         return []
     return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _clean_grounded_evidence(value: Any, valid_source_ids: set[str]) -> list[RagGroundedEvidence]:
+    if not isinstance(value, list):
+        return []
+    grounded: list[RagGroundedEvidence] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        claim = str(item.get("claim") or "").strip()
+        source_ids = [
+            str(source_id).strip()
+            for source_id in item.get("sourceIds") or []
+            if str(source_id).strip() in valid_source_ids
+        ]
+        if claim and source_ids:
+            grounded.append(RagGroundedEvidence(claim=claim, sourceIds=source_ids))
+    return grounded
+
+
+def _clean_suggested_readings(value: Any, valid_urls: set[str]) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    readings = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        if item.get("title") and item.get("url") in valid_urls:
+            readings.append(item)
+    return readings
 
 
 def _insufficient(message: str, start: float, warnings: list[str], source_count: int = 0) -> RagResponse:

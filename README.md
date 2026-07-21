@@ -167,11 +167,14 @@ service endpoint:
 POST /rag/answer
 ```
 
-The response is structured for the frontend: status, executive summary, evidence,
-limitations, citations, warnings, and model metadata. If the selected CMS sources
-do not provide enough evidence, the assistant returns `insufficient_evidence`
-instead of guessing. Model comparison is available only when requested from the
-admin workbench.
+The response is structured for the frontend: status, executive summary, grounded
+evidence, limitations, citations, warnings, and model metadata. The admin RAG
+retriever uses the multi-entity `entity_embeddings` index first (publications,
+members, projects, thesis topics), then falls back to lexical retrieval with a
+warning if the semantic index is unavailable. If the selected CMS sources do not
+provide enough evidence, the assistant returns `insufficient_evidence` instead of
+guessing. Model comparison is available only when requested from the admin
+workbench.
 
 ## Swapping the LLM
 

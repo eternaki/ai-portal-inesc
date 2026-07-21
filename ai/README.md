@@ -35,6 +35,7 @@ uvicorn app.main:app --reload --port 8000   # docs at http://localhost:8000/docs
 | `GROQ_API_KEY` / `GEMINI_API_KEY` | Provider key for the chosen model |
 | `OPENALEX_MAILTO` | Email for the OpenAlex polite pool |
 | `EMBEDDING_DEVICE` | `cpu` (default) — Spaces are CPU-only |
+| `RAG_MIN_SEMANTIC_SCORE` | Minimum semantic score for admin RAG evidence (default `0.25`) |
 
 The architecture keeps the LLM offline: the website works fully even if this service
 is down (search degrades to keyword-only, the chatbot is hidden).

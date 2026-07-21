@@ -1,11 +1,14 @@
+import logging
 import math
 import re
+
 from app import payload_api
 from app.config import get_settings
+from app.entities import ENTITY_ADAPTERS, PUBLISHED_ONLY
 from app.rag.models import RagSource
 from app.rag.safety import detect_prompt_injection, sanitize_text
 
-DEFAULT_SCOPE = ["publications", "members", "projects", "news", "software", "thesisTopics"]
+DEFAULT_SCOPE = ["publications", "members", "projects", "thesisTopics"]
 SCOPE_MAP = {
     "publications": "publications",
     "members": "members",
@@ -15,6 +18,7 @@ SCOPE_MAP = {
     "thesisTopics": "thesis-topics",
     "thesis-topics": "thesis-topics",
 }
+logger = logging.getLogger(__name__)
 
 
 def retrieve_sources(question: str, scope: list[str], limit: int | None = None) -> tuple[list[RagSource], list[str]]:
@@ -23,22 +27,91 @@ def retrieve_sources(question: str, scope: list[str], limit: int | None = None) 
     if not clean_scope:
         clean_scope = [SCOPE_MAP[item] for item in DEFAULT_SCOPE]
 
+    max_sources = max(1, min(limit or settings.rag_max_sources, settings.rag_max_sources))
+    warnings: list[str] = []
+
+    semantic_scope = [item for item in clean_scope if item in ENTITY_ADAPTERS]
+    if semantic_scope:
+        try:
+            sources, semantic_warnings = _retrieve_semantic(question, semantic_scope, max_sources)
+            warnings.extend(semantic_warnings)
+            if sources:
+                return sources, warnings
+            warnings.append("Semantic entity search returned no usable sources; lexical fallback was used.")
+        except Exception as err:
+            warnings.append("Semantic entity search unavailable; lexical fallback was used.")
+            logger.warning("rag semantic retrieval failed: %s", err)
+
+    sources, lexical_warnings = _retrieve_lexical(question, clean_scope, max_sources)
+    warnings.extend(lexical_warnings)
+    return sources, warnings
+
+
+def _retrieve_semantic(question: str, scope: list[str], max_sources: int) -> tuple[list[RagSource], list[str]]:
+    from app import embeddings
+
+    settings = get_settings()
+    min_score = getattr(settings, "rag_min_semantic_score", 0.25)
+    hits = embeddings.search_entities(question, types=scope, limit=max_sources * 4)
+    hits = [(etype, eid, score) for etype, eid, score in hits if score >= min_score]
+    if not hits:
+        return [], []
+
+    ids_by_type: dict[str, list[int]] = {}
+    for entity_type, entity_id, _score in hits:
+        ids_by_type.setdefault(entity_type, []).append(entity_id)
+
+    docs_by_key: dict[tuple[str, int], dict] = {}
+    for entity_type, ids in ids_by_type.items():
+        conditions: list[dict] = [{"id": {"in": ids}}]
+        if entity_type in PUBLISHED_ONLY:
+            conditions.append({"status": {"equals": "published"}})
+        where = {"and": conditions} if len(conditions) > 1 else conditions[0]
+        for doc in payload_api.find(entity_type, where=where, limit=len(ids), depth=0)["docs"]:
+            docs_by_key[(entity_type, doc["id"])] = doc
+
     warnings: list[str] = []
     sources: list[RagSource] = []
-    for collection in clean_scope:
+    seen: set[str] = set()
+    for entity_type, entity_id, score in hits:
+        doc = docs_by_key.get((entity_type, entity_id))
+        if not doc:
+            continue
+        source = _source_from_doc(entity_type, doc)
+        if not source:
+            continue
+        source.score = float(score)
+        if detect_prompt_injection(source.text):
+            warnings.append(f"Potential prompt injection pattern found in {entity_type}/{source.id}; source excluded.")
+            continue
+        if source.source_id() in seen:
+            continue
+        seen.add(source.source_id())
+        sources.append(source)
+        if len(sources) >= max_sources:
+            break
+    return sources, warnings
+
+
+def _retrieve_lexical(question: str, scope: list[str], max_sources: int) -> tuple[list[RagSource], list[str]]:
+    settings = get_settings()
+    warnings: list[str] = []
+    sources: list[RagSource] = []
+    for collection in scope:
         where = {"status": {"equals": "published"}} if collection == "publications" else None
         for doc in payload_api.find_all(collection, where=where, depth=0):
             source = _source_from_doc(collection, doc)
             if not source:
                 continue
             if detect_prompt_injection(source.text):
-                warnings.append(f"Potential prompt injection pattern found in {collection}/{source.id}.")
+                warnings.append(f"Potential prompt injection pattern found in {collection}/{source.id}; source excluded.")
+                continue
             source.score = lexical_score(question, source)
             if source.score >= settings.rag_min_source_score:
                 sources.append(source)
 
     sources.sort(key=lambda item: (-item.score, item.year is None, -(item.year or 0), item.title))
-    return sources[: max(1, min(limit or settings.rag_max_sources, settings.rag_max_sources))], warnings
+    return sources[:max_sources], warnings
 
 
 def lexical_score(question: str, source: RagSource) -> float:

@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     rag_timeout_seconds: float = 60.0
     rag_min_evidence_sources: int = 2
     rag_min_source_score: float = 0.05
+    rag_min_semantic_score: float = 0.25
 
     # Local embedding model (sentence-transformers)
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
