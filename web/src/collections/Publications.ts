@@ -165,6 +165,11 @@ export const Publications: CollectionConfig = {
         { name: 'method', type: 'textarea' },
         { name: 'results', type: 'textarea' },
         {
+          name: 'contributions',
+          type: 'textarea',
+          admin: { description: 'Main contributions supported by the source abstract' },
+        },
+        {
           name: 'limitations',
           type: 'textarea',
           admin: { description: 'Known limitations stated or implied by the source abstract' },
@@ -174,6 +179,11 @@ export const Publications: CollectionConfig = {
           name: 'applications',
           type: 'textarea',
           admin: { description: 'Concrete applications supported by the source abstract' },
+        },
+        {
+          name: 'topics',
+          type: 'textarea',
+          admin: { description: 'Research topics or keywords supported by title and abstract' },
         },
         {
           name: 'industry',
@@ -198,6 +208,21 @@ export const Publications: CollectionConfig = {
         { label: 'Edited by a human', value: 'edited' },
       ],
       admin: { position: 'sidebar' },
+    },
+    {
+      name: 'aiSummaryModel',
+      type: 'text',
+      admin: { position: 'sidebar', readOnly: true },
+    },
+    {
+      name: 'aiSummaryPromptVersion',
+      type: 'text',
+      admin: { position: 'sidebar', readOnly: true },
+    },
+    {
+      name: 'aiSummaryGeneratedAt',
+      type: 'date',
+      admin: { position: 'sidebar', readOnly: true },
     },
     {
       name: 'generateSnippet',

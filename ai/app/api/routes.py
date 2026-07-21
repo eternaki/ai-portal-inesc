@@ -285,7 +285,7 @@ def process_publication(req: ProcessRequest, x_service_token: str | None = Heade
     """
     require_service_token(x_service_token)
     from app import embeddings  # lazy import: pulls in torch
-    from app.pipelines.summarize import summarize_publication
+    from app.pipelines.summarize import summarize_publication_result
     from app.settings_cache import feature_enabled
 
     docs = payload_api.find("publications", where={"id": {"equals": req.id}}, limit=1)["docs"]
@@ -299,9 +299,9 @@ def process_publication(req: ProcessRequest, x_service_token: str | None = Heade
         and (pub.get("abstract") or "").strip()
         and pub.get("aiSummaryStatus") == "none"
     ):
-        summary = summarize_publication(pub)
+        update_data = summarize_publication_result(pub)
         payload_api.update(
-            "publications", pub["id"], {"aiSummary": summary, "aiSummaryStatus": "generated"}
+            "publications", pub["id"], {**update_data, "aiSummaryStatus": "generated"}
         )
         summarized = True
 

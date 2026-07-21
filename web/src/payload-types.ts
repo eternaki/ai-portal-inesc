@@ -352,6 +352,10 @@ export interface Publication {
     method?: string | null;
     results?: string | null;
     /**
+     * Main contributions supported by the source abstract
+     */
+    contributions?: string | null;
+    /**
      * Known limitations stated or implied by the source abstract
      */
     limitations?: string | null;
@@ -360,6 +364,10 @@ export interface Publication {
      * Concrete applications supported by the source abstract
      */
     applications?: string | null;
+    /**
+     * Research topics or keywords supported by title and abstract
+     */
+    topics?: string | null;
     /**
      * Non-technical description for industry
      */
@@ -370,6 +378,9 @@ export interface Publication {
     impact?: string | null;
   };
   aiSummaryStatus?: ('none' | 'generated' | 'edited') | null;
+  aiSummaryModel?: string | null;
+  aiSummaryPromptVersion?: string | null;
+  aiSummaryGeneratedAt?: string | null;
   /**
    * Ready-to-post text for LinkedIn/X (generated on demand)
    */
@@ -767,13 +778,18 @@ export interface PublicationsSelect<T extends boolean = true> {
         problem?: T;
         method?: T;
         results?: T;
+        contributions?: T;
         limitations?: T;
         takeaways?: T;
         applications?: T;
+        topics?: T;
         industry?: T;
         impact?: T;
       };
   aiSummaryStatus?: T;
+  aiSummaryModel?: T;
+  aiSummaryPromptVersion?: T;
+  aiSummaryGeneratedAt?: T;
   socialSnippet?: T;
   updatedAt?: T;
   createdAt?: T;

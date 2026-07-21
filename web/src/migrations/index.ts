@@ -3,6 +3,7 @@ import * as migration_20260717_123832_ai_settings from './20260717_123832_ai_set
 import * as migration_20260717_160000_attachments_events from './20260717_160000_attachments_events';
 import * as migration_20260720_120000_editorial_workflow from './20260720_120000_editorial_workflow';
 import * as migration_20260720_150000_summary_limitations_applications from './20260720_150000_summary_limitations_applications';
+import * as migration_20260721_110000_summary_contributions_topics_metadata from './20260721_110000_summary_contributions_topics_metadata';
 
 export const migrations = [
   {
@@ -29,5 +30,10 @@ export const migrations = [
     up: migration_20260720_150000_summary_limitations_applications.up,
     down: migration_20260720_150000_summary_limitations_applications.down,
     name: '20260720_150000_summary_limitations_applications'
+  },
+  {
+    up: migration_20260721_110000_summary_contributions_topics_metadata.up,
+    down: migration_20260721_110000_summary_contributions_topics_metadata.down,
+    name: '20260721_110000_summary_contributions_topics_metadata'
   },
 ];

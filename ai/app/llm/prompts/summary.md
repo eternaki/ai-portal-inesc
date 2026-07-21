@@ -10,8 +10,8 @@ Paper metadata:
 Write a summary in the style of alphaxiv "Blog mode". Rules:
 - Plain, clear English. No hype, no marketing language.
 - Do not invent results or numbers that are not supported by the abstract.
-- If the abstract does not state limitations or applications clearly, say that
-  they are not specified in the abstract.
+- If the abstract does not state a requested section clearly, write:
+  "Not specified in the abstract."
 - Each section is 1-3 sentences.
 - "industry" and "impact" address two beneficiaries from the brief: external
   readers who want a non-technical description, and the person maintaining the
@@ -24,9 +24,11 @@ Respond with ONLY a JSON object, no other text:
   "problem": "what problem the paper addresses and why it matters",
   "method": "the approach, in accessible terms",
   "results": "what was achieved / found",
+  "contributions": "main contributions supported by the abstract",
   "limitations": "limitations stated in the abstract, or that they are not specified",
   "takeaways": "the key points to remember",
   "applications": "practical applications supported by the abstract",
+  "topics": "research topics or keywords supported by the title and abstract",
   "industry": "a non-technical description aimed at an industry audience",
   "impact": "impact-oriented narrative: societal relevance and possible applications"
 }}

@@ -61,7 +61,11 @@ const SUMMARY_KEYS = [
   'problem',
   'method',
   'results',
+  'contributions',
+  'limitations',
   'takeaways',
+  'applications',
+  'topics',
   'industry',
   'impact',
 ] as const
@@ -83,7 +87,11 @@ export default async function PublicationPage(props: { params: Params }) {
     problem: t.pub.sectionProblem,
     method: t.pub.sectionMethod,
     results: t.pub.sectionResults,
+    contributions: t.pub.sectionContributions,
+    limitations: t.pub.sectionLimitations,
     takeaways: t.pub.sectionTakeaways,
+    applications: t.pub.sectionApplications,
+    topics: t.pub.sectionTopics,
     industry: t.pub.sectionIndustry,
     impact: t.pub.sectionImpact,
   }

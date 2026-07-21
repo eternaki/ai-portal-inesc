@@ -11,30 +11,41 @@ import argparse
 import logging
 import os
 import time
+from datetime import datetime, timezone
+from typing import Any
 
 from app import payload_api
-from app.llm.client import complete_json, load_prompt
+from app.llm.client import complete_response, load_prompt, parse_json_response, resolve_model
 
 logger = logging.getLogger(__name__)
 
 # Pause between LLM calls to avoid hitting free-tier rate limits.
 # Configurable via SUMMARIZE_DELAY_SEC (default 4s ≈ 15 requests/min).
 _DELAY = float(os.environ.get("SUMMARIZE_DELAY_SEC", "4"))
+PROMPT_VERSION = "summary-v2"
+_NOT_SPECIFIED = "Not specified in the abstract."
 
 SUMMARY_KEYS = (
     "tldr",
     "problem",
     "method",
     "results",
+    "contributions",
     "limitations",
     "takeaways",
     "applications",
+    "topics",
     "industry",
     "impact",
 )
 
 
 def summarize_publication(pub: dict) -> dict:
+    result = summarize_publication_result(pub)
+    return result["aiSummary"]
+
+
+def summarize_publication_result(pub: dict) -> dict:
     prompt = load_prompt(
         "summary",
         title=pub.get("title") or "",
@@ -42,8 +53,28 @@ def summarize_publication(pub: dict) -> dict:
         year=str(pub.get("year") or ""),
         abstract=pub.get("abstract") or "",
     )
-    data = complete_json(prompt)
-    return {key: str(data.get(key, "")).strip() for key in SUMMARY_KEYS}
+    model = resolve_model()
+    response = complete_response(prompt, model=model)
+    raw = response.choices[0].message.content or ""
+    data = parse_json_response(raw)
+    return {
+        "aiSummary": normalize_summary(data),
+        "aiSummaryModel": model,
+        "aiSummaryPromptVersion": PROMPT_VERSION,
+        "aiSummaryGeneratedAt": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def normalize_summary(data: dict[str, Any]) -> dict[str, str]:
+    summary: dict[str, str] = {}
+    for key in SUMMARY_KEYS:
+        value = data.get(key)
+        if isinstance(value, list):
+            text = "; ".join(str(item).strip() for item in value if str(item).strip())
+        else:
+            text = str(value or "").strip()
+        summary[key] = text or _NOT_SPECIFIED
+    return summary
 
 
 def run(limit: int | None = None) -> None:
@@ -65,11 +96,11 @@ def run(limit: int | None = None) -> None:
         if not (pub.get("abstract") or "").strip():
             continue
         try:
-            summary = summarize_publication(pub)
+            update_data = summarize_publication_result(pub)
             payload_api.update(
                 "publications",
                 pub["id"],
-                {"aiSummary": summary, "aiSummaryStatus": "generated"},
+                {**update_data, "aiSummaryStatus": "generated"},
             )
             done += 1
             logger.info("summarized: %s", pub["title"][:80])
