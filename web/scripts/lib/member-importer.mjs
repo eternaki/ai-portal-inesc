@@ -90,6 +90,11 @@ function equalValue(path, existing, incoming) {
 function addFieldChange({ existing, patch, report, member, path, value }) {
   if (value == null || value === '') return
   const current = getField(existing, path)
+  if (path === 'identifiersVerified' && current !== value) {
+    setField(patch, path, value)
+    report.fieldUpdates.push(path)
+    return
+  }
   if (current == null || current === '') {
     setField(patch, path, value)
     report.fieldUpdates.push(path)

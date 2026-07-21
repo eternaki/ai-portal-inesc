@@ -25,6 +25,9 @@ const reportPath = reportArg
 
 const payloadUrl = (process.env.PAYLOAD_URL ?? 'http://localhost:3000').replace(/\/+$/, '')
 const apiKey = process.env.PAYLOAD_API_KEY
+const payloadEmail = process.env.PAYLOAD_EMAIL
+const payloadPassword = process.env.PAYLOAD_PASSWORD
+let sessionCookie = ''
 
 function headers() {
   const headers = {
@@ -32,6 +35,7 @@ function headers() {
     'X-Skip-Autoprocess': '1',
   }
   if (apiKey) headers.Authorization = `users API-Key ${apiKey}`
+  if (sessionCookie) headers.Cookie = sessionCookie
   return headers
 }
 
@@ -45,6 +49,24 @@ async function payloadRequest(pathname, options = {}) {
     throw new Error(`${options.method ?? 'GET'} ${pathname} failed: ${response.status} ${text}`)
   }
   return response.json()
+}
+
+async function loginIfConfigured() {
+  if (!payloadEmail || !payloadPassword) return
+  const response = await fetch(`${payloadUrl}/api/users/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: payloadEmail, password: payloadPassword }),
+  })
+  if (!response.ok) {
+    const text = await response.text()
+    throw new Error(`POST /users/login failed: ${response.status} ${text}`)
+  }
+
+  const getSetCookie = response.headers.getSetCookie?.() ?? []
+  const cookies = getSetCookie.length ? getSetCookie : [response.headers.get('set-cookie')].filter(Boolean)
+  sessionCookie = cookies.map((cookie) => cookie.split(';')[0]).join('; ')
+  if (!sessionCookie) throw new Error('Payload login succeeded but no session cookie was returned.')
 }
 
 async function fetchAllMembers() {
@@ -87,6 +109,7 @@ if (invalidValues.length) {
   console.error(`Invalid dataset values. Report written to ${reportPath}`)
   process.exitCode = 1
 } else {
+  await loginIfConfigured()
   const existingMembers = offline ? [] : await fetchAllMembers()
   const indexes = buildIndexes(existingMembers)
   const now = new Date().toISOString()
