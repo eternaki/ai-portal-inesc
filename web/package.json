@@ -13,6 +13,7 @@
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "members:import": "node scripts/import-members.mjs --dry-run",
     "members:import:apply": "node scripts/import-members.mjs --apply",
+    "members:import:db": "node scripts/import-members-db.mjs --apply",
     "members:import:offline": "node scripts/import-members.mjs --dry-run --offline",
     "members:import:test": "node --test scripts/tests/member-importer.test.mjs",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",

@@ -139,6 +139,21 @@ topic-map data, and local users. Postgres applies this seed only when the databa
 volume is created for the first time. If an old Docker volume already exists, the
 site may come up empty.
 
+On Windows, the recommended one-command setup is:
+
+```powershell
+scripts\local-setup.bat
+```
+
+Useful variants:
+
+```powershell
+scripts\local-setup.bat --start-web      # also starts http://localhost:3000
+scripts\local-setup.bat --start-ai       # also starts http://localhost:8000/docs
+scripts\local-setup.bat --reset-db       # recreates the local DB volume
+scripts\local-setup.bat --reset-db --yes # same, without confirmation prompt
+```
+
 Quick check:
 
 ```bash
