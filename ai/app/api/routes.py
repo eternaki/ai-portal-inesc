@@ -5,6 +5,7 @@ only (no LLM call); /generate/* are triggered manually from the admin.
 """
 
 import logging
+import re
 import secrets
 import time
 import uuid
@@ -127,24 +128,29 @@ def search(
 
 @router.get("/search/all")
 def search_all(q: str, limit: int = 10, types: str | None = None) -> dict:
-    """Cross-entity semantic search over publications, members, projects, theses.
+    """Cross-entity public search over CMS entities.
 
-    The multi-entity pipeline embeds every type into one space; this searches it
-    and returns typed results. Publications are still filtered to `published`.
+    Uses multi-entity semantic search where embeddings exist, then fills gaps with
+    lexical matching so newer entity types remain searchable before reindexing.
     """
     if len(q) > 500 or not q.strip():
         raise HTTPException(400, "query must be 1..500 chars")
     limit = max(1, min(limit, 50))
     from app import embeddings as emb
-    from app.entities import ENTITY_ADAPTERS, PUBLISHED_ONLY
+    from app.entities import ENTITY_ADAPTERS, PUBLISHED_ONLY, lexical_to_text
+
+    allowed_types = set(ENTITY_ADAPTERS)
 
     type_list = None
     if types:
-        type_list = [t for t in types.split(",") if t in ENTITY_ADAPTERS]
+        type_list = [t for t in types.split(",") if t in allowed_types]
 
-    hits = emb.search_entities(q, types=type_list, limit=limit * 3)
-    if not hits:
-        return {"query": q, "results": []}
+    selected_types = type_list or sorted(allowed_types)
+    hits = []
+    try:
+        hits = emb.search_entities(q, types=selected_types, limit=limit * 4)
+    except Exception as err:
+        logger.warning("cross-entity semantic search failed: %s", err)
 
     # Resolve documents per entity type (one query each), enforcing visibility.
     by_type: dict[str, list[int]] = {}
@@ -168,13 +174,93 @@ def search_all(q: str, limit: int = 10, types: str | None = None) -> dict:
             }
 
     results = []
+    seen: set[tuple[str, int]] = set()
     for etype, eid, score in hits:
         item = resolved.get((etype, eid))
         if item:
-            results.append({"score": round(score, 4), **item})
+            key = (etype, eid)
+            seen.add(key)
+            results.append({"score": round(score, 4), "source": "semantic", **item})
         if len(results) >= limit:
             break
+
+    if len(results) < limit:
+        for item in _lexical_entity_results(q, selected_types, limit * 3, lexical_to_text):
+            key = (item["entity_type"], item["id"])
+            if key in seen:
+                continue
+            seen.add(key)
+            results.append(item)
+            if len(results) >= limit:
+                break
     return {"query": q, "results": results}
+
+
+def _lexical_entity_results(q: str, entity_types: list[str], limit: int, lexical_to_text) -> list[dict]:
+    tokens = [token for token in re.findall(r"[\w\-]+", q.lower()) if len(token) > 2]
+    if not tokens:
+        return []
+
+    results = []
+    for entity_type in entity_types:
+        where = {"status": {"equals": "published"}} if entity_type == "publications" else None
+        try:
+            docs = payload_api.find_all(entity_type, where=where, depth=0)
+        except Exception as err:
+            logger.warning("lexical entity search failed: type=%s error=%s", entity_type, err)
+            continue
+        for doc in docs:
+            item = _entity_result_doc(entity_type, doc, lexical_to_text)
+            if not item:
+                continue
+            haystack = f"{item.get('title') or ''} {item.get('description') or ''}".lower()
+            matched = sum(1 for token in tokens if token in haystack)
+            if matched == 0:
+                continue
+            score = min(0.99, matched / max(len(tokens), 1))
+            results.append({"score": round(score, 4), "source": "lexical", **item})
+
+    results.sort(key=lambda item: (-item["score"], item["entity_type"], item["title"] or ""))
+    return results[:limit]
+
+
+def _entity_result_doc(entity_type: str, doc: dict, lexical_to_text) -> dict | None:
+    title = doc.get("title") or doc.get("name")
+    if not title:
+        return None
+    description = ""
+    if entity_type == "publications":
+        description = doc.get("abstract") or doc.get("venue") or ""
+    elif entity_type == "members":
+        interests = doc.get("researchInterests") or []
+        description = ", ".join(interests) if isinstance(interests, list) else str(interests or "")
+    elif entity_type == "projects":
+        description = lexical_to_text(doc.get("description"))
+    elif entity_type == "thesis-topics":
+        description = lexical_to_text(doc.get("description"))
+    elif entity_type == "software":
+        description = doc.get("description") or doc.get("kind") or ""
+    elif entity_type == "news":
+        description = lexical_to_text(doc.get("body")) or doc.get("socialSnippet") or ""
+    elif entity_type == "events":
+        description = lexical_to_text(doc.get("description")) or doc.get("speaker") or doc.get("location") or ""
+    return {
+        "entity_type": entity_type,
+        "id": doc["id"],
+        "title": title,
+        "slug": doc.get("slug"),
+        "description": description[:240] if description else None,
+        "year": doc.get("year") or _year(doc.get("date")),
+    }
+
+
+def _year(value: object) -> int | None:
+    if not isinstance(value, str) or len(value) < 4:
+        return None
+    try:
+        return int(value[:4])
+    except ValueError:
+        return None
 
 
 @router.get("/map")

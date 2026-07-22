@@ -3,6 +3,18 @@ import Link from 'next/link'
 import type { Publication } from '@/payload-types'
 import { getDictionary } from '@/i18n/server'
 
+function AuthorName({ author }: { author: NonNullable<Publication['authors']>[number] }) {
+  const member = typeof author.member === 'object' ? author.member : null
+  if (member?.slug) {
+    return (
+      <Link className="author-member-link" href={`/people#${member.slug}`}>
+        {author.name}
+      </Link>
+    )
+  }
+  return <>{author.name}</>
+}
+
 // Server component: reads the active locale so the "summary" badge is localized.
 export async function PubRow({ pub }: { pub: Publication }) {
   const t = await getDictionary()
@@ -12,7 +24,14 @@ export async function PubRow({ pub }: { pub: Publication }) {
       <div className="pub-title">
         {pub.slug ? <Link href={`/publications/${pub.slug}`}>{pub.title}</Link> : pub.title}
       </div>
-      <div className="pub-meta">{(pub.authors ?? []).map((a) => a.name).join(', ')}</div>
+      <div className="pub-meta">
+        {(pub.authors ?? []).map((author, index) => (
+          <React.Fragment key={`${author.name}-${index}`}>
+            {index > 0 ? ', ' : ''}
+            <AuthorName author={author} />
+          </React.Fragment>
+        ))}
+      </div>
       <div className="pub-meta">
         <span className="mono">
           {pub.year}

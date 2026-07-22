@@ -4,7 +4,8 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { JsonLd } from '@/components/JsonLd'
 import { getDictionary } from '@/i18n/server'
-import type { Member } from '@/payload-types'
+import { PUBLISHED } from '@/lib/queries'
+import type { Member, Publication } from '@/payload-types'
 
 // Data comes from the CMS; render on each request, not at build time.
 export const dynamic = 'force-dynamic'
@@ -101,16 +102,40 @@ function PersonLinks({ member, emailLabel, websiteLabel }: { member: Member; ema
   )
 }
 
+function memberPublicationMap(publications: Publication[]) {
+  const map = new Map<number, Publication[]>()
+  for (const publication of publications) {
+    for (const author of publication.authors ?? []) {
+      const member = author.member
+      const memberId = member && typeof member === 'object' ? member.id : member
+      if (typeof memberId !== 'number') continue
+      if (!map.has(memberId)) map.set(memberId, [])
+      map.get(memberId)?.push(publication)
+    }
+  }
+  return map
+}
+
 export default async function PeoplePage() {
   const payload = await getPayload({ config })
   const t = await getDictionary()
 
-  const result = await payload.find({
-    collection: 'members',
-    sort: 'name',
-    limit: 500,
-    depth: 0,
-  })
+  const [result, publicationsResult] = await Promise.all([
+    payload.find({
+      collection: 'members',
+      sort: 'name',
+      limit: 500,
+      depth: 0,
+    }),
+    payload.find({
+      collection: 'publications',
+      where: PUBLISHED,
+      sort: '-year',
+      limit: 1000,
+      depth: 1,
+    }),
+  ])
+  const publicationsByMember = memberPublicationMap(publicationsResult.docs)
 
   const peopleJsonLd = {
     '@context': 'https://schema.org',
@@ -142,13 +167,39 @@ export default async function PeoplePage() {
             <h2>{t.people[key]}</h2>
             <div className="people-grid">
               {group.map((member) => (
-                <div key={member.id} className="person-card">
+                <div key={member.id} id={member.slug ?? `member-${member.id}`} className="person-card">
                   <div className="person-avatar">{initials(member.name)}</div>
                   <strong>{member.name}</strong>
                   {(member.researchInterests ?? []).length > 0 && (
                     <div className="pub-meta">{(member.researchInterests ?? []).join(' · ')}</div>
                   )}
                   <PersonLinks member={member} emailLabel={t.people.email} websiteLabel={t.people.website} />
+                  {(() => {
+                    const publications = publicationsByMember.get(member.id) ?? []
+                    if (publications.length === 0) return null
+                    return (
+                      <div className="person-publications">
+                        <div className="person-publications-head">
+                          <span>Recent publications</span>
+                          <span className="badge">{publications.length}</span>
+                        </div>
+                        <ul>
+                          {publications.slice(0, 3).map((publication) => (
+                            <li key={publication.id}>
+                              <span>
+                                {publication.slug ? (
+                                  <Link href={`/publications/${publication.slug}`}>{publication.title}</Link>
+                                ) : (
+                                  publication.title
+                                )}
+                              </span>
+                              {publication.year ? <span className="mono">{publication.year}</span> : null}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )
+                  })()}
                 </div>
               ))}
             </div>

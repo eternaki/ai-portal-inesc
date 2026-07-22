@@ -197,6 +197,11 @@ try {
   if ($LASTEXITCODE -ne 0) {
     Fail 'Member DB import failed.'
   }
+  Info 'Linking publication authors to member profiles...'
+  node scripts/link-publication-members-db.mjs --apply
+  if ($LASTEXITCODE -ne 0) {
+    Fail 'Publication/member link backfill failed.'
+  }
 } finally {
   Pop-Location
 }

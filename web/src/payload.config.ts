@@ -30,6 +30,7 @@ export default buildConfig({
     components: {
       // Maintenance report and admin-only RAG workbench at the top of the dashboard.
       beforeDashboard: [
+        '/components/admin/HealthDashboard#HealthDashboard',
         '/components/admin/MaintenancePanel#MaintenancePanel',
         '/components/admin/RagWorkbench#RagWorkbench',
       ],

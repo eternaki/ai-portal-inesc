@@ -8,7 +8,7 @@ import { PubRow } from '@/components/PubRow'
 import { JsonLd } from '@/components/JsonLd'
 import { Attachments } from '@/components/Attachments'
 import { SITE_URL } from '@/lib/site'
-import { published, PUBLISHED } from '@/lib/queries'
+import { published } from '@/lib/queries'
 import { getDictionary } from '@/i18n/server'
 
 // Data comes from the CMS — render on each request, not at build time
@@ -54,6 +54,18 @@ function PubList({ title, pubs }: { title: string; pubs: Publication[] }) {
       ))}
     </section>
   )
+}
+
+function AuthorName({ author }: { author: NonNullable<Publication['authors']>[number] }) {
+  const member = typeof author.member === 'object' ? author.member : null
+  if (member?.slug) {
+    return (
+      <Link className="author-member-link" href={`/people#${member.slug}`}>
+        {author.name}
+      </Link>
+    )
+  }
+  return <>{author.name}</>
 }
 
 const SUMMARY_KEYS = [
@@ -141,7 +153,12 @@ export default async function PublicationPage(props: { params: Params }) {
         </div>
         <h1>{pub.title}</h1>
         <p className="pub-meta">
-          {(pub.authors ?? []).map((a) => a.name).join(', ')}
+          {(pub.authors ?? []).map((author, index) => (
+            <React.Fragment key={`${author.name}-${index}`}>
+              {index > 0 ? ', ' : ''}
+              <AuthorName author={author} />
+            </React.Fragment>
+          ))}
           {pub.doi ? (
             <>
               {' · '}

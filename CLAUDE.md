@@ -94,6 +94,7 @@ regenerated on every commit (see section 7).
 ### Web API routes — `web/src/app/api/`
 - `/api/ai/snippet`
 - `/api/chat`
+- `/api/health/admin`
 - `/api/ingest`
 - `/api/maintenance`
 - `/api/rag`

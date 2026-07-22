@@ -104,6 +104,17 @@ For normal environments the importer should use Payload authentication. For loca
 seed recovery, `web/scripts/import-members-db.mjs` can populate the local database
 directly after restoring the seed.
 
+Publication/member links:
+
+```text
+Publication author names -> safe member alias matcher -> publications.authors[].member
+```
+
+Run `npm --prefix web run publications:link-members` for a dry run and
+`npm --prefix web run publications:link-members:apply` to backfill the database.
+The command is idempotent, preserves existing author links, and reports ambiguous
+names instead of guessing.
+
 This keeps the public site resilient: regular pages and CMS editing continue to
 work even if an LLM provider is unavailable. AI features are isolated behind
 feature flags, service tokens, and admin/editor authentication where needed.

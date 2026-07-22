@@ -1,0 +1,244 @@
+{
+  "mode": "dry-run",
+  "totalAuthorRows": 1126,
+  "alreadyLinked": 321,
+  "linkableRows": 0,
+  "updatedRows": [],
+  "publicationsTouched": [],
+  "ambiguous": [
+    {
+      "authorRowId": "6a555677ee890b3b93afbe8b",
+      "publicationId": 37,
+      "authorName": "Gonçalo Oliveira",
+      "reason": "multiple members share this author alias",
+      "candidates": [
+        {
+          "id": 21,
+          "name": "Gonçalo Oliveira"
+        },
+        {
+          "id": 31,
+          "name": "Gonçalo Goulart Oliveira"
+        }
+      ]
+    },
+    {
+      "authorRowId": "6a55567aee890b3b93afc039",
+      "publicationId": 160,
+      "authorName": "Gonçalo Oliveira",
+      "reason": "multiple members share this author alias",
+      "candidates": [
+        {
+          "id": 21,
+          "name": "Gonçalo Oliveira"
+        },
+        {
+          "id": 31,
+          "name": "Gonçalo Goulart Oliveira"
+        }
+      ]
+    }
+  ],
+  "unmatchedTop": [
+    {
+      "name": "Ana T. Freitas",
+      "count": 28
+    },
+    {
+      "name": "Alexandre P. Francisco",
+      "count": 14
+    },
+    {
+      "name": "Luís M. S.​Russo",
+      "count": 14
+    },
+    {
+      "name": "Fausto J. Pinto",
+      "count": 13
+    },
+    {
+      "name": "Miguel Nobre Menezes",
+      "count": 13
+    },
+    {
+      "name": "Inês Lynce",
+      "count": 11
+    },
+    {
+      "name": "Isabel Sá‐Correia",
+      "count": 11
+    },
+    {
+      "name": "João Marques‐Silva",
+      "count": 11
+    },
+    {
+      "name": "Sara C. Madeira",
+      "count": 11
+    },
+    {
+      "name": "Susana Vinga",
+      "count": 11
+    },
+    {
+      "name": "Ana Graça",
+      "count": 10
+    },
+    {
+      "name": "Miguel C. Teixeira",
+      "count": 10
+    },
+    {
+      "name": "Alberto Sangiovanni‐Vincentelli",
+      "count": 9
+    },
+    {
+      "name": "Alexandra M. Carvalho",
+      "count": 9
+    },
+    {
+      "name": "Mário A. T. Figueiredo",
+      "count": 9
+    },
+    {
+      "name": "Pedro T. Monteiro",
+      "count": 8
+    },
+    {
+      "name": "Tiago Rodrigues",
+      "count": 8
+    },
+    {
+      "name": "Gonzalo Navarro",
+      "count": 7
+    },
+    {
+      "name": "José Monteiro",
+      "count": 7
+    },
+    {
+      "name": "Artur Ferreira",
+      "count": 6
+    },
+    {
+      "name": "Cláudia Antunes",
+      "count": 6
+    },
+    {
+      "name": "João Silva Marques",
+      "count": 6
+    },
+    {
+      "name": "Lei Li",
+      "count": 6
+    },
+    {
+      "name": "Marcelino Santos",
+      "count": 6
+    },
+    {
+      "name": "Marie‐France Sagot",
+      "count": 6
+    },
+    {
+      "name": "Beatríz Silva",
+      "count": 5
+    },
+    {
+      "name": "J.P. Teixeira",
+      "count": 5
+    },
+    {
+      "name": "Jonas S. Almeida",
+      "count": 5
+    },
+    {
+      "name": "Paulo Jorge Dias",
+      "count": 5
+    },
+    {
+      "name": "Tiago Marques",
+      "count": 5
+    },
+    {
+      "name": "Ana Cardoso-Cachopo",
+      "count": 4
+    },
+    {
+      "name": "Ana Catarina Fonseca",
+      "count": 4
+    },
+    {
+      "name": "Bruno Martins",
+      "count": 4
+    },
+    {
+      "name": "José M. Ferro",
+      "count": 4
+    },
+    {
+      "name": "L. Miguel Silveira",
+      "count": 4
+    },
+    {
+      "name": "Nuno P. Mira",
+      "count": 4
+    },
+    {
+      "name": "Alberto H. F. Laender",
+      "count": 3
+    },
+    {
+      "name": "Ana Casimiro",
+      "count": 3
+    },
+    {
+      "name": "Ana Rita Francisco",
+      "count": 3
+    },
+    {
+      "name": "André L. Martins",
+      "count": 3
+    },
+    {
+      "name": "Beatriz Silva",
+      "count": 3
+    },
+    {
+      "name": "C.F.B. Almeida",
+      "count": 3
+    },
+    {
+      "name": "Chitin Hon",
+      "count": 3
+    },
+    {
+      "name": "Cláudio Guerreiro",
+      "count": 3
+    },
+    {
+      "name": "D. Russ",
+      "count": 3
+    },
+    {
+      "name": "Delphine Ropers",
+      "count": 3
+    },
+    {
+      "name": "H. Sofia Pinto",
+      "count": 3
+    },
+    {
+      "name": "Helio Pais",
+      "count": 3
+    },
+    {
+      "name": "Inge Jonassen",
+      "count": 3
+    },
+    {
+      "name": "J Guedes",
+      "count": 3
+    }
+  ]
+}
