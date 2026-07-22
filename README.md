@@ -39,6 +39,10 @@ ai: FastAPI service
 db: PostgreSQL 16 + pgvector
   - Payload content tables
   - AI-owned embedding and topic-map tables
+
+curated member dataset + importers
+  - reviewed contacts and academic identifiers
+  - reproducible updates for local/staging data
 ```
 
 ### Ownership rules
@@ -52,6 +56,10 @@ db: PostgreSQL 16 + pgvector
   for AI/search workflows.
 - LLM output is always stored as editable CMS fields or returned to an admin
   workflow; human-edited summaries are protected by `aiSummaryStatus=edited`.
+- Member contacts and academic identifiers are curated in
+  `web/data/mlkd-members-update.json` and imported through explicit scripts. Public
+  visibility is controlled per channel in Payload (`showEmail`, `showLinkedIn`,
+  `showORCID`, etc.).
 
 ### Main flows
 
@@ -85,6 +93,16 @@ Admin RAG:
 Admin -> /api/rag -> FastAPI /rag/answer -> Payload REST -> LiteLLM -> structured answer
 ```
 
+Member contacts and identifiers:
+
+```text
+Curated JSON dataset -> member importer -> Payload members -> /people
+```
+
+For normal environments the importer should use Payload authentication. For local
+seed recovery, `web/scripts/import-members-db.mjs` can populate the local database
+directly after restoring the seed.
+
 This keeps the public site resilient: regular pages and CMS editing continue to
 work even if an LLM provider is unavailable. AI features are isolated behind
 feature flags, service tokens, and admin/editor authentication where needed.
@@ -113,6 +131,38 @@ uvicorn app.main:app --reload --port 8000   # http://localhost:8000/docs
 
 The first visit to `/admin` prompts you to create the first user (they become the
 admin — set the role in the profile).
+
+### Local seed and member data
+
+The repository includes `db/seed/mlkd-seed.sql.gz` with publications, embeddings,
+topic-map data, and local users. Postgres applies this seed only when the database
+volume is created for the first time. If an old Docker volume already exists, the
+site may come up empty.
+
+Quick check:
+
+```bash
+docker exec ai-portal-inesc-db-1 psql -U mlkd -d mlkd \
+  -c "select 'members' as table, count(*) from members union all select 'publications', count(*) from publications;"
+```
+
+Expected local data after setup:
+
+- 59 members
+- 252 publications
+- 252 publication embeddings
+
+If the database is empty, restore the seed or recreate the volume, then import the
+curated member dataset:
+
+```bash
+cd web
+DATABASE_URL=postgresql://mlkd:mlkd@localhost:5432/mlkd \
+  node scripts/import-members-db.mjs --apply
+```
+
+The importer reads `web/data/mlkd-members-update.json`, creates missing members,
+fills empty contact/identifier fields, and reports conflicts instead of guessing.
 
 ## Everything in Docker (prod-like)
 

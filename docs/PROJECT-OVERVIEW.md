@@ -59,6 +59,10 @@ Three containers, one `docker compose up`: **web**, **ai**, **db**.
   feature flags — no redeploy.
 - **Generate social snippet** — one-click LinkedIn/X post text for a publication or
   news item.
+- **Member contact curation** — members store public professional links and
+  academic identifiers (LinkedIn, GitHub, ORCID, Ciencia Vitae, DBLP), with a
+  visibility toggle per channel so maintainers can hide any contact without
+  deleting it.
 
 ---
 
@@ -130,6 +134,11 @@ idempotent (content hash), so the pipeline is cheap to re-run.
   problems; it never edits data.
 - **Testing:** unit tests for the search metrics (`pytest`), plus a search benchmark
   reporting **Precision@5, Recall@10, MRR, and latency** over a curated query set.
+- **Curated member dataset:** `web/data/mlkd-members-update.json` is the
+  reproducible source for member contacts and academic identifiers. The standard
+  importer uses Payload; the local recovery importer
+  (`web/scripts/import-members-db.mjs`) can repopulate a development database after
+  restoring the seed.
 
 ---
 
@@ -169,6 +178,11 @@ The repository ships a **seed database** (`db/seed/mlkd-seed.sql.gz`): 252 real
 publications from OpenAlex + their embeddings + the topic map + the admin user.
 Postgres loads it automatically the first time the `db` volume is created, so a
 fresh clone comes up **with data and a working login** — no ingest needed.
+
+The complete member directory is maintained separately as curated data in
+`web/data/mlkd-members-update.json`. After restoring or reseeding a local database,
+run the member importer to ensure all 59 members and their contact/identifier
+fields are present.
 
 ### Option A — full stack in Docker (simplest, one command)
 
@@ -212,6 +226,9 @@ So the site is fully browsable and searchable out of the box. Get a free Groq ke
 ### Notes
 - The seed loads **only on a fresh volume**. To reseed from scratch:
   `docker compose down -v && docker compose up` (⚠️ wipes local DB changes).
+- If a local database was already created and appears empty, restore/recreate the
+  seed and run:
+  `cd web && DATABASE_URL=postgresql://mlkd:mlkd@localhost:5432/mlkd node scripts/import-members-db.mjs --apply`.
 - To (re)generate the seed from your own DB:
   `docker exec <pg> pg_dump -U mlkd -d mlkd --no-owner --no-privileges | gzip > db/seed/mlkd-seed.sql.gz`
 - To pull more publications, add authors to `ai/data/authors.json` and run
