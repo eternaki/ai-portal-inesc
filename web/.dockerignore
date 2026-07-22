@@ -1,0 +1,11 @@
+.env
+.env.*
+.next
+node_modules
+coverage
+reports
+*.log
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+.vscode
