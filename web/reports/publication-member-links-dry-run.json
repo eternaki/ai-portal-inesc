@@ -1,7 +1,7 @@
 {
   "mode": "dry-run",
   "totalAuthorRows": 1126,
-  "alreadyLinked": 321,
+  "alreadyLinked": 394,
   "linkableRows": 0,
   "updatedRows": [],
   "publicationsTouched": [],
@@ -41,10 +41,6 @@
   ],
   "unmatchedTop": [
     {
-      "name": "Ana T. Freitas",
-      "count": 28
-    },
-    {
       "name": "Alexandre P. Francisco",
       "count": 14
     },
@@ -54,10 +50,6 @@
     },
     {
       "name": "Fausto J. Pinto",
-      "count": 13
-    },
-    {
-      "name": "Miguel Nobre Menezes",
       "count": 13
     },
     {
@@ -79,10 +71,6 @@
     {
       "name": "Susana Vinga",
       "count": 11
-    },
-    {
-      "name": "Ana Graça",
-      "count": 10
     },
     {
       "name": "Miguel C. Teixeira",
@@ -118,10 +106,6 @@
     },
     {
       "name": "Artur Ferreira",
-      "count": 6
-    },
-    {
-      "name": "Cláudia Antunes",
       "count": 6
     },
     {
@@ -189,10 +173,6 @@
       "count": 3
     },
     {
-      "name": "Ana Casimiro",
-      "count": 3
-    },
-    {
       "name": "Ana Rita Francisco",
       "count": 3
     },
@@ -238,6 +218,26 @@
     },
     {
       "name": "J Guedes",
+      "count": 3
+    },
+    {
+      "name": "J. Fernandes",
+      "count": 3
+    },
+    {
+      "name": "J.A. Gracio",
+      "count": 3
+    },
+    {
+      "name": "Jeya Balaji Balasubramanian",
+      "count": 3
+    },
+    {
+      "name": "Joana P. Gonçalves",
+      "count": 3
+    },
+    {
+      "name": "Lee Mason",
       "count": 3
     }
   ]

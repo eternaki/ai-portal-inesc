@@ -6,6 +6,7 @@ import * as migration_20260720_150000_summary_limitations_applications from './2
 import * as migration_20260721_110000_summary_contributions_topics_metadata from './20260721_110000_summary_contributions_topics_metadata';
 import * as migration_20260721_130000_member_contacts_identifiers from './20260721_130000_member_contacts_identifiers';
 import * as migration_20260721_140000_member_toggle_column_names from './20260721_140000_member_toggle_column_names';
+import * as migration_20260722_100000_member_status_contact_review from './20260722_100000_member_status_contact_review';
 
 export const migrations = [
   {
@@ -47,5 +48,10 @@ export const migrations = [
     up: migration_20260721_140000_member_toggle_column_names.up,
     down: migration_20260721_140000_member_toggle_column_names.down,
     name: '20260721_140000_member_toggle_column_names'
+  },
+  {
+    up: migration_20260722_100000_member_status_contact_review.up,
+    down: migration_20260722_100000_member_status_contact_review.down,
+    name: '20260722_100000_member_status_contact_review'
   },
 ];

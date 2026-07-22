@@ -197,6 +197,10 @@ try {
   if ($LASTEXITCODE -ne 0) {
     Fail 'Member DB import failed.'
   }
+  node scripts/import-members-db.mjs --apply --data=data/mlkd-members-roster-update.json --report=reports/members-roster-import-db-apply.json
+  if ($LASTEXITCODE -ne 0) {
+    Fail 'Member roster DB import failed.'
+  }
   Info 'Linking publication authors to member profiles...'
   node scripts/link-publication-members-db.mjs --apply
   if ($LASTEXITCODE -ne 0) {

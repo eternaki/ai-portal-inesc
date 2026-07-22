@@ -153,6 +153,10 @@ export interface Member {
    */
   user?: (number | null) | User;
   role: 'faculty' | 'researcher' | 'phd' | 'msc' | 'alumni';
+  /**
+   * Current relationship with the MLKD group or project.
+   */
+  membershipStatus: 'active' | 'suspended' | 'completed';
   photo?: (number | null) | Media;
   bio?: {
     root: {
@@ -234,6 +238,10 @@ export interface Member {
    * When contact data was imported or last reviewed.
    */
   contactsVerifiedAt?: string | null;
+  /**
+   * Contact information is missing or needs manual confirmation.
+   */
+  needsContactReview?: boolean | null;
   identifiersVerified?: boolean | null;
   identifiersConfidence?: ('high' | 'medium' | 'low') | null;
   identifiersSource?: string | null;
@@ -749,6 +757,7 @@ export interface MembersSelect<T extends boolean = true> {
   slug?: T;
   user?: T;
   role?: T;
+  membershipStatus?: T;
   photo?: T;
   bio?: T;
   bioAiDraft?: T;
@@ -779,6 +788,7 @@ export interface MembersSelect<T extends boolean = true> {
   showGoogleScholar?: T;
   contactsSource?: T;
   contactsVerifiedAt?: T;
+  needsContactReview?: T;
   identifiersVerified?: T;
   identifiersConfidence?: T;
   identifiersSource?: T;

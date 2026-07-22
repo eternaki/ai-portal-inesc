@@ -1,566 +1,606 @@
 {
   "mode": "apply",
   "totalAuthorRows": 1126,
-  "alreadyLinked": 252,
-  "linkableRows": 69,
+  "alreadyLinked": 321,
+  "linkableRows": 73,
   "updatedRows": [
     {
-      "authorRowId": "6a555676ee890b3b93afbdcb",
-      "publicationId": 5,
-      "publicationTitle": "ISLES 2016 and 2017-Benchmarking Ischemic Stroke Lesion Outcome Prediction Based on Multispectral MRI",
-      "authorName": "Miguel Monteiro",
-      "memberId": 60,
-      "memberName": "Miguel Monteiro"
+      "authorRowId": "6a555676ee890b3b93afbda6",
+      "publicationId": 2,
+      "publicationTitle": "The YEASTRACT database: an upgraded information system for the analysis of gene and genomic transcription regulation in<i>Saccharomyces cerevisiae</i>",
+      "authorName": "Ana Teresa Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
     },
     {
-      "authorRowId": "6a555676ee890b3b93afbdeb",
+      "authorRowId": "6a555676ee890b3b93afbdb4",
+      "publicationId": 3,
+      "publicationTitle": "YEASTRACT: providing a programmatic access to curated transcriptional regulatory associations in Saccharomyces cerevisiae through a web services interface",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a555676ee890b3b93afbdc1",
+      "publicationId": 4,
+      "publicationTitle": "YEASTRACT-DISCOVERER: new tools to improve the analysis of transcriptional regulatory associations in Saccharomyces cerevisiae",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a555676ee890b3b93afbded",
       "publicationId": 8,
       "publicationTitle": "Using Machine Learning to Improve the Prediction of Functional Outcome in Ischemic Stroke Patients",
-      "authorName": "Miguel Monteiro",
-      "memberId": 60,
-      "memberName": "Miguel Monteiro"
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
     },
     {
-      "authorRowId": "6a555676ee890b3b93afbe17",
+      "authorRowId": "6a555676ee890b3b93afbe18",
       "publicationId": 10,
       "publicationTitle": "Artificial intelligence-based diagnosis of acute pulmonary embolism: Development of a machine learning model using 12-lead electrocardiogram",
-      "authorName": "João Marques",
-      "memberId": 5,
-      "memberName": "João Marques"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a555676ee890b3b93afbe1b",
-      "publicationId": 11,
-      "publicationTitle": "LumberChunker: Long-Form Narrative Document Segmentation",
-      "authorName": "André V. Duarte",
-      "memberId": 4,
-      "memberName": "André Duarte"
+      "authorRowId": "6a555676ee890b3b93afbe2b",
+      "publicationId": 15,
+      "publicationTitle": "Generalization of Pattern-Growth Methods for Sequential Pattern Mining with Gap Constraints",
+      "authorName": "Cláudia Antunes",
+      "memberId": 113,
+      "memberName": "Cláudia Antunes"
     },
     {
-      "authorRowId": "6a555676ee890b3b93afbe1c",
-      "publicationId": 11,
-      "publicationTitle": "LumberChunker: Long-Form Narrative Document Segmentation",
-      "authorName": "João Marques",
-      "memberId": 5,
-      "memberName": "João Marques"
+      "authorRowId": "6a555676ee890b3b93afbe2e",
+      "publicationId": 17,
+      "publicationTitle": "Prime implicant computation using satisfiability algorithms",
+      "authorName": "Vasco Manquinho",
+      "memberId": 105,
+      "memberName": "Vasco Manquinho"
     },
     {
-      "authorRowId": "6a555676ee890b3b93afbe1e",
-      "publicationId": 11,
-      "publicationTitle": "LumberChunker: Long-Form Narrative Document Segmentation",
-      "authorName": "Miguel Freire",
-      "memberId": 20,
-      "memberName": "Miguel Freire"
+      "authorRowId": "6a555676ee890b3b93afbe37",
+      "publicationId": 20,
+      "publicationTitle": "An Efficient Algorithm for the Identification of Structured Motifs in DNA Promoter Sequences",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
     },
     {
-      "authorRowId": "6a555677ee890b3b93afbe4d",
-      "publicationId": 26,
-      "publicationTitle": "DegreeCox – a network-based regularization method for survival analysis",
-      "authorName": "André Veríssimo",
-      "memberId": 56,
-      "memberName": "André Veríssimo"
+      "authorRowId": "6a555676ee890b3b93afbe3e",
+      "publicationId": 22,
+      "publicationTitle": "A Data Mining Approach for the Detection of High-Risk Breast Cancer Groups",
+      "authorName": "Orlando Anunciação",
+      "memberId": 91,
+      "memberName": "Orlando Anunciação"
     },
     {
-      "authorRowId": "6a555677ee890b3b93afbe52",
+      "authorRowId": "6a555676ee890b3b93afbe4a",
+      "publicationId": 25,
+      "publicationTitle": "Apt-pbo",
+      "authorName": "Paulo Trezentos",
+      "memberId": 94,
+      "memberName": "Paulo Trezentos"
+    },
+    {
+      "authorRowId": "6a555677ee890b3b93afbe51",
       "publicationId": 27,
       "publicationTitle": "Coronary X-ray angiography segmentation using Artificial Intelligence: a multicentric validation study of a deep learning model",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a555677ee890b3b93afbe7c",
-      "publicationId": 33,
-      "publicationTitle": "Assessing the Impact of Attention and Self-Attention Mechanisms on the Classification of Skin Lesions",
-      "authorName": "Rafael Pedro",
-      "memberId": 52,
-      "memberName": "Rafael Pedro"
+      "authorRowId": "6a555677ee890b3b93afbe6a",
+      "publicationId": 30,
+      "publicationTitle": "Development of deep learning segmentation models for coronary X-ray angiography: Quality assessment by a new global segmentation score and comparison with human performance",
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a555677ee890b3b93afbe7e",
-      "publicationId": 34,
-      "publicationTitle": "Learning the dynamics of realistic models of C. elegans nervous system with recurrent neural networks",
-      "authorName": "Ruxandra Bărbulescu",
-      "memberId": 16,
-      "memberName": "Ruxandra Barbulescu"
+      "authorRowId": "6a555677ee890b3b93afbe78",
+      "publicationId": 32,
+      "publicationTitle": "Haplotype inference with pseudo-Boolean optimization",
+      "authorName": "Ana Graça",
+      "memberId": 108,
+      "memberName": "Ana Sofia Graça"
     },
     {
-      "authorRowId": "6a555677ee890b3b93afbe82",
-      "publicationId": 35,
-      "publicationTitle": "Training environmental sound classification models for real-world deployment in edge devices",
-      "authorName": "Manuel Goulão",
-      "memberId": 22,
-      "memberName": "Manuel Goulão"
+      "authorRowId": "6a555677ee890b3b93afbea5",
+      "publicationId": 44,
+      "publicationTitle": "Inference of regular languages using state merging algorithms with search",
+      "authorName": "Miguel Bugalho",
+      "memberId": 88,
+      "memberName": "Miguel Bugalho"
     },
     {
-      "authorRowId": "6a555677ee890b3b93afbe86",
-      "publicationId": 36,
-      "publicationTitle": "Multiple Instance Learning for WSI: A comparative analysis of attention-based approaches",
-      "authorName": "Martim Afonso",
-      "memberId": 39,
-      "memberName": "Martim Afonso"
+      "authorRowId": "6a555677ee890b3b93afbea8",
+      "publicationId": 45,
+      "publicationTitle": "A HIGHLY SCALABLE ALGORITHM FOR THE EXTRACTION OF CIS-REGULATORY REGIONS",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
     },
     {
-      "authorRowId": "6a555677ee890b3b93afbece",
+      "authorRowId": "6a555677ee890b3b93afbeb7",
+      "publicationId": 49,
+      "publicationTitle": "Sequential Pattern Mining Algorithms: Trade-offs between Speed and Memory",
+      "authorName": "Cláudia Antunes",
+      "memberId": 113,
+      "memberName": "Cláudia Antunes"
+    },
+    {
+      "authorRowId": "6a555677ee890b3b93afbebb",
+      "publicationId": 50,
+      "publicationTitle": "A parallel algorithm for the extraction of structured motifs",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a555677ee890b3b93afbec4",
+      "publicationId": 53,
+      "publicationTitle": "MUSA: a parameter free algorithm for the identification of biologically significant motifs",
+      "authorName": "Ana Casimiro",
+      "memberId": 62,
+      "memberName": "Ana Casimiro"
+    },
+    {
+      "authorRowId": "6a555677ee890b3b93afbec8",
+      "publicationId": 53,
+      "publicationTitle": "MUSA: a parameter free algorithm for the identification of biologically significant motifs",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a555677ee890b3b93afbecf",
       "publicationId": 56,
       "publicationTitle": "Encoder-Decoder Architectures for Clinically Relevant Coronary Artery Segmentation",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a555677ee890b3b93afbed8",
+      "authorRowId": "6a555677ee890b3b93afbed7",
       "publicationId": 59,
       "publicationTitle": "Modeling the Geospatial Evolution of COVID-19 using Spatio-temporal Convolutional Sequence-to-sequence Neural Networks",
-      "authorName": "André Cavalheiro",
-      "memberId": 58,
-      "memberName": "André Cavalheiro"
+      "authorName": "Mário Cardoso",
+      "memberId": 89,
+      "memberName": "Mário Cardoso"
     },
     {
-      "authorRowId": "6a555677ee890b3b93afbed9",
-      "publicationId": 59,
-      "publicationTitle": "Modeling the Geospatial Evolution of COVID-19 using Spatio-temporal Convolutional Sequence-to-sequence Neural Networks",
-      "authorName": "Alexandre Borges",
-      "memberId": 19,
-      "memberName": "Alexandre Borges"
-    },
-    {
-      "authorRowId": "6a555677ee890b3b93afbee1",
-      "publicationId": 61,
-      "publicationTitle": "Using Soft Labels to Model Uncertainty in Medical Image Segmentation",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
-    },
-    {
-      "authorRowId": "6a555677ee890b3b93afbee5",
+      "authorRowId": "6a555677ee890b3b93afbee3",
       "publicationId": 62,
       "publicationTitle": "Segmentation of X‐ray coronary angiography with an artificial intelligence deep learning model: Impact in operator visual assessment of coronary stenosis severity",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a555677ee890b3b93afbf02",
+      "authorRowId": "6a555677ee890b3b93afbeed",
+      "publicationId": 63,
+      "publicationTitle": "Haplotype Inference by Pure Parsimony: A Survey",
+      "authorName": "Ana Graça",
+      "memberId": 108,
+      "memberName": "Ana Sofia Graça"
+    },
+    {
+      "authorRowId": "6a555677ee890b3b93afbf01",
       "publicationId": 65,
       "publicationTitle": "Coronary Physiology Instantaneous Wave-Free Ratio (iFR) Derived From X-Ray Angiography Using Artificial Intelligence Deep Learning Models: A Pilot Study",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a555678ee890b3b93afbf12",
+      "authorRowId": "6a555678ee890b3b93afbf15",
       "publicationId": 67,
       "publicationTitle": "Non-invasive derivation of instantaneous free-wave ratio from invasive coronary angiography using a new deep learning artificial intelligence model and comparison with human operators’ performance",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a555678ee890b3b93afbf4d",
+      "authorRowId": "6a555678ee890b3b93afbf1e",
+      "publicationId": 71,
+      "publicationTitle": "Efficient and Accurate Haplotype Inference by Combining Parsimony and Pedigree Information",
+      "authorName": "Ana Graça",
+      "memberId": 108,
+      "memberName": "Ana Sofia Graça"
+    },
+    {
+      "authorRowId": "6a555678ee890b3b93afbf29",
+      "publicationId": 73,
+      "publicationTitle": "Refining current knowledge on the yeast <i>FLR1</i> regulatory network by combined experimental and computational approaches",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a555678ee890b3b93afbf41",
+      "publicationId": 77,
+      "publicationTitle": "Efficient alignment of pyrosequencing reads for re-sequencing applications",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a555678ee890b3b93afbf4b",
+      "publicationId": 79,
+      "publicationTitle": "Qualitative modelling and formal verification of the FLR1 gene mancozeb response in <i>Saccharomyces cerevisiae</i>",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a555678ee890b3b93afbf4f",
       "publicationId": 80,
       "publicationTitle": "Stenosis Detection in X-ray Coronary Angiography with Deep Neural Networks Leveraged by Attention Mechanisms",
-      "authorName": "Dinis L. Rodrigues",
-      "memberId": 55,
-      "memberName": "Dinis Rodrigues"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a555679ee890b3b93afbf9c",
-      "publicationId": 109,
-      "publicationTitle": "Pretraining the Vision Transformer Using Self-Supervised Methods for Vision Based Deep Reinforcement Learning",
-      "authorName": "Manuel Goulão",
-      "memberId": 22,
-      "memberName": "Manuel Goulão"
+      "authorRowId": "6a555678ee890b3b93afbf55",
+      "publicationId": 83,
+      "publicationTitle": "Efficient Haplotype Inference with Pseudo-boolean Optimization",
+      "authorName": "Ana Graça",
+      "memberId": 108,
+      "memberName": "Ana Sofia Graça"
     },
     {
-      "authorRowId": "6a555679ee890b3b93afbf9e",
-      "publicationId": 110,
-      "publicationTitle": "Improving Address Matching Using Siamese Transformer Networks",
-      "authorName": "André V. Duarte",
-      "memberId": 4,
-      "memberName": "André Duarte"
+      "authorRowId": "6a555678ee890b3b93afbf63",
+      "publicationId": 87,
+      "publicationTitle": "An analysis of the positional distribution of DNA motifs in promoter regions and its biological relevance",
+      "authorName": "Ana Casimiro",
+      "memberId": 62,
+      "memberName": "Ana Casimiro"
     },
     {
-      "authorRowId": "6a555679ee890b3b93afbfa4",
-      "publicationId": 112,
-      "publicationTitle": "A probabilistic method for the computation of testability of RTL constructs",
-      "authorName": "João Teixeira",
-      "memberId": 27,
-      "memberName": "João Teixeira"
+      "authorRowId": "6a555678ee890b3b93afbf65",
+      "publicationId": 87,
+      "publicationTitle": "An analysis of the positional distribution of DNA motifs in promoter regions and its biological relevance",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
     },
     {
-      "authorRowId": "6a555679ee890b3b93afbfad",
-      "publicationId": 116,
-      "publicationTitle": "Using a Siamese Network to Accurately Detect Ischemic Stroke in Computed Tomography Scans",
-      "authorName": "Ana Beatriz Vieira",
-      "memberId": 3,
-      "memberName": "Beatriz Vieira"
+      "authorRowId": "6a555678ee890b3b93afbf6e",
+      "publicationId": 91,
+      "publicationTitle": "Efficient Extraction of Structured Motifs Using Box-Links",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
     },
     {
-      "authorRowId": "6a555679ee890b3b93afbfb1",
-      "publicationId": 117,
-      "publicationTitle": "Improving Embeddings for High-Accuracy Transformer-Based Address Matching Using a Multiple in-Batch Negatives Loss",
-      "authorName": "André V. Duarte",
-      "memberId": 4,
-      "memberName": "André Duarte"
+      "authorRowId": "6a555678ee890b3b93afbf73",
+      "publicationId": 93,
+      "publicationTitle": "On the Complexity of Power Estimation Problems",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
     },
     {
-      "authorRowId": "6a555679ee890b3b93afbfb3",
-      "publicationId": 118,
-      "publicationTitle": "Augmentation-Based Approaches for Overcoming Low Visibility in Street Object Detection",
-      "authorName": "João Pedro Novo",
-      "memberId": 42,
-      "memberName": "João Novo"
+      "authorRowId": "6a555678ee890b3b93afbf76",
+      "publicationId": 94,
+      "publicationTitle": "SEQUENTIAL PATTERN MINING WITH APPROXIMATED CONSTRAINTS",
+      "authorName": "Cláudia Antunes",
+      "memberId": 113,
+      "memberName": "Cláudia Antunes"
     },
     {
-      "authorRowId": "6a555679ee890b3b93afbfb4",
-      "publicationId": 118,
-      "publicationTitle": "Augmentation-Based Approaches for Overcoming Low Visibility in Street Object Detection",
-      "authorName": "Manuel Goulão",
-      "memberId": 22,
-      "memberName": "Manuel Goulão"
+      "authorRowId": "6a555678ee890b3b93afbf7f",
+      "publicationId": 98,
+      "publicationTitle": "Dotted Suffix Trees A Structure for Approximate Text Indexing",
+      "authorName": "Luís Pedro Coelho",
+      "memberId": 85,
+      "memberName": "Luís Pedro Coelho"
     },
     {
-      "authorRowId": "6a555679ee890b3b93afbfba",
+      "authorRowId": "6a555678ee890b3b93afbf83",
+      "publicationId": 100,
+      "publicationTitle": "Inference of Sequential Association Rules Guided by Context-Free Grammars",
+      "authorName": "Cláudia Antunes",
+      "memberId": 113,
+      "memberName": "Cláudia Antunes"
+    },
+    {
+      "authorRowId": "6a555678ee890b3b93afbf8b",
+      "publicationId": 103,
+      "publicationTitle": "Models and Algorithms for Computing Minimum-Size Prime Implicants",
+      "authorName": "Vasco Manquinho",
+      "memberId": 105,
+      "memberName": "Vasco Manquinho"
+    },
+    {
+      "authorRowId": "6a555678ee890b3b93afbf8e",
+      "publicationId": 104,
+      "publicationTitle": "Using Information Interaction to Discover Epistatic Effects in Complex Diseases",
+      "authorName": "Orlando Anunciação",
+      "memberId": 91,
+      "memberName": "Orlando Anunciação"
+    },
+    {
+      "authorRowId": "6a555679ee890b3b93afbfb8",
       "publicationId": 119,
       "publicationTitle": "Old Habits Die Hard",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a555679ee890b3b93afbfe1",
-      "publicationId": 130,
-      "publicationTitle": "A probabilistic method for the computation of testability of RTL constructs",
-      "authorName": "João Teixeira",
-      "memberId": 27,
-      "memberName": "João Teixeira"
+      "authorRowId": "6a555679ee890b3b93afbfca",
+      "publicationId": 123,
+      "publicationTitle": "Implicit Resolution of the Chapman-Kolmogorov Equations for Sequential Circuits: An Application in Power Estimation",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
     },
     {
-      "authorRowId": "6a55567aee890b3b93afc00c",
-      "publicationId": 145,
-      "publicationTitle": "Probabilistic Testability Analysis and DFT Methods at RTL",
-      "authorName": "João Teixeira",
-      "memberId": 27,
-      "memberName": "João Teixeira"
+      "authorRowId": "6a555679ee890b3b93afbfcc",
+      "publicationId": 124,
+      "publicationTitle": "Constraint Relaxations for Discovering Unknown Sequential Patterns",
+      "authorName": "Cláudia Antunes",
+      "memberId": 113,
+      "memberName": "Cláudia Antunes"
     },
     {
-      "authorRowId": "6a55567aee890b3b93afc03d",
-      "publicationId": 161,
-      "publicationTitle": "Conditional Random Fields as Recurrent Neural Networks for 3D Medical Imaging Segmentation",
-      "authorName": "Miguel Monteiro",
-      "memberId": 60,
-      "memberName": "Miguel Monteiro"
+      "authorRowId": "6a555679ee890b3b93afbfce",
+      "publicationId": 125,
+      "publicationTitle": "Efficient Haplotype Inference with Combined CP and OR Techniques",
+      "authorName": "Ana Graça",
+      "memberId": 108,
+      "memberName": "Ana Sofia Graça"
     },
     {
-      "authorRowId": "6a55567aee890b3b93afc046",
-      "publicationId": 163,
-      "publicationTitle": "Sparse network-based regularization for the analysis of patientomics high-dimensional survival data",
-      "authorName": "André Veríssimo",
-      "memberId": 56,
-      "memberName": "André Veríssimo"
+      "authorRowId": "6a555679ee890b3b93afbfd8",
+      "publicationId": 128,
+      "publicationTitle": "Efficient and tight upper bounds for haplotype inference by pure parsimony using delayed haplotype selection",
+      "authorName": "Ana Graça",
+      "memberId": 108,
+      "memberName": "Ana Sofia Graça"
     },
     {
-      "authorRowId": "6a55567aee890b3b93afc04c",
+      "authorRowId": "6a555679ee890b3b93afbff2",
+      "publicationId": 137,
+      "publicationTitle": "Implicit resolution of the Chapman-Kolmogorov equations for sequential circuits: an application in power estimation",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a555679ee890b3b93afbff7",
+      "publicationId": 139,
+      "publicationTitle": "Circuit partitioning techniques for power estimation using the full set of input correlations",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567aee890b3b93afbfff",
+      "publicationId": 141,
+      "publicationTitle": "Efficient and Tight Upper Bounds for Haplotype Inference by Pure Parsimony Using Delayed Haplotype Selection",
+      "authorName": "Ana Graça",
+      "memberId": 108,
+      "memberName": "Ana Sofia Graça"
+    },
+    {
+      "authorRowId": "6a55567aee890b3b93afc00d",
+      "publicationId": 146,
+      "publicationTitle": "Mining Patterns Using Relaxations of User Defined Constraints",
+      "authorName": "Cláudia Antunes",
+      "memberId": 113,
+      "memberName": "Cláudia Antunes"
+    },
+    {
+      "authorRowId": "6a55567aee890b3b93afc012",
+      "publicationId": 147,
+      "publicationTitle": "QUANTITATIVE MODELING OF THE<i>SACCHAROMYCES CEREVISIAE</i>FLR1 REGULATORY NETWORK USING AN S-SYSTEM FORMALISM",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567aee890b3b93afc027",
+      "publicationId": 151,
+      "publicationTitle": "Using systems biology approaches to study a multidrug resistance network",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567aee890b3b93afc028",
+      "publicationId": 152,
+      "publicationTitle": "CONSTANT TIME CLASH DETECTION IN PROTEIN FOLDING",
+      "authorName": "Miguel Bugalho",
+      "memberId": 88,
+      "memberName": "Miguel Bugalho"
+    },
+    {
+      "authorRowId": "6a55567aee890b3b93afc04d",
       "publicationId": 164,
       "publicationTitle": "Automated Detection of Coronary Artery Stenosis in X-ray Angiography using Deep Neural Networks",
-      "authorName": "Dinis L. Rodrigues",
-      "memberId": 55,
-      "memberName": "Dinis Rodrigues"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a55567aee890b3b93afc091",
-      "publicationId": 168,
-      "publicationTitle": "QUBIQ: Uncertainty Quantification for Biomedical Image Segmentation Challenge",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
+      "authorRowId": "6a55567aee890b3b93afc0c2",
+      "publicationId": 175,
+      "publicationTitle": "Haplotype Inference with Boolean Constraint Solving: An Overview",
+      "authorName": "Ana Graça",
+      "memberId": 108,
+      "memberName": "Ana Sofia Graça"
     },
     {
-      "authorRowId": "6a55567aee890b3b93afc0c9",
-      "publicationId": 178,
-      "publicationTitle": "DE-COP: Detecting Copyrighted Content in Language Models Training Data",
-      "authorName": "André V. Duarte",
-      "memberId": 4,
-      "memberName": "André Duarte"
+      "authorRowId": "6a55567bee890b3b93afc0d1",
+      "publicationId": 180,
+      "publicationTitle": "Efficient and Tight Upper Bounds for Haplotype Inference by Pure Parsimony",
+      "authorName": "Ana Graça",
+      "memberId": 108,
+      "memberName": "Ana Sofia Graça"
     },
     {
-      "authorRowId": "6a55567bee890b3b93afc0d9",
+      "authorRowId": "6a55567bee890b3b93afc0da",
       "publicationId": 182,
       "publicationTitle": "Encoder-Decoder Architectures for Clinically Relevant Coronary Artery Segmentation",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a55567bee890b3b93afc0ee",
-      "publicationId": 189,
-      "publicationTitle": "Assessing the Impact of Attention and Self-Attention Mechanisms on the Classification of Skin Lesions",
-      "authorName": "Rafael Pedro",
-      "memberId": 52,
-      "memberName": "Rafael Pedro"
+      "authorRowId": "6a55567bee890b3b93afc0df",
+      "publicationId": 183,
+      "publicationTitle": "Metrics for Grid Applicability: A Distributed Elliptic Curve Platform Assessment",
+      "authorName": "Paulo Trezentos",
+      "memberId": 94,
+      "memberName": "Paulo Trezentos"
     },
     {
-      "authorRowId": "6a55567bee890b3b93afc15c",
-      "publicationId": 190,
-      "publicationTitle": "Modelling Neuronal Behaviour with Time Series Regression: Recurrent\\n Neural Networks on C. Elegans Data",
-      "authorName": "Ruxandra Bărbulescu",
-      "memberId": 16,
-      "memberName": "Ruxandra Barbulescu"
+      "authorRowId": "6a55567bee890b3b93afc0e1",
+      "publicationId": 184,
+      "publicationTitle": "An Evaluation of the Impact of Side Chain Positioning on the Accuracy of Discrete Models of Protein Structures",
+      "authorName": "Miguel Bugalho",
+      "memberId": 88,
+      "memberName": "Miguel Bugalho"
     },
     {
-      "authorRowId": "6a55567bee890b3b93afc154",
-      "publicationId": 191,
-      "publicationTitle": "Combining Off and On-Policy Training in Model-Based Reinforcement\\n Learning",
-      "authorName": "Alexandre Borges",
-      "memberId": 19,
-      "memberName": "Alexandre Borges"
+      "authorRowId": "6a55567bee890b3b93afc0e7",
+      "publicationId": 186,
+      "publicationTitle": "Bioinformatics: A New Approach for the Challenges of Molecular Biology",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
     },
     {
-      "authorRowId": "6a55567bee890b3b93afc130",
-      "publicationId": 208,
-      "publicationTitle": "ELIXIR in a Business Model Canvas",
-      "authorName": "João Cardoso",
-      "memberId": 14,
-      "memberName": "João Cardoso"
+      "authorRowId": "6a55567bee890b3b93afc0f6",
+      "publicationId": 192,
+      "publicationTitle": "Generic ILP vs Specialized 0-1 ILP for Haplotype Inference",
+      "authorName": "Ana Graça",
+      "memberId": 108,
+      "memberName": "Ana Sofia Graça"
     },
     {
-      "authorRowId": "6a55567cee890b3b93afc17a",
-      "publicationId": 233,
-      "publicationTitle": "Using Soft Labels to Model Uncertainty in Medical Image Segmentation",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
+      "authorRowId": "6a55567bee890b3b93afc0fc",
+      "publicationId": 194,
+      "publicationTitle": "Additional materials and results for MUSA",
+      "authorName": "Ana Casimiro",
+      "memberId": 62,
+      "memberName": "Ana Casimiro"
     },
     {
-      "authorRowId": "6a55567cee890b3b93afc186",
+      "authorRowId": "6a55567bee890b3b93afc0ff",
+      "publicationId": 194,
+      "publicationTitle": "Additional materials and results for MUSA",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567bee890b3b93afc108",
+      "publicationId": 197,
+      "publicationTitle": "Identification of Transcription Factor Binding Sites in Promoter Regions by Modularity Analysis of the Motif Co-occurrence Graph",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567bee890b3b93afc114",
+      "publicationId": 201,
+      "publicationTitle": "Quantitative Modeling the Saccharomyces cerevisiae FLR1 Regulatory Network Using an S-System Formalism",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567bee890b3b93afc125",
+      "publicationId": 205,
+      "publicationTitle": "TAPYR: An efficient high-throughput sequence aligner for re-sequencing applications",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567bee890b3b93afc128",
+      "publicationId": 206,
+      "publicationTitle": "Using graph modularity analysis to identify transcription factor binding sites",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567bee890b3b93afc12d",
+      "publicationId": 207,
+      "publicationTitle": "Improved Model Checking Techniques for State Space Analysis of Gene Regulatory Networks",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567bee890b3b93afc142",
+      "publicationId": 210,
+      "publicationTitle": "The regulatory network underlying the transcriptional up-regulation of the FRL1 gene in mancozeb stressed yeast cells: qualitative modeling and simulation",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567bee890b3b93afc153",
+      "publicationId": 213,
+      "publicationTitle": "Computational modeling and analysis of the yeast FLR1 regulatory network in mancozeb-challenged cells",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567cee890b3b93afc172",
+      "publicationId": 227,
+      "publicationTitle": "Improved Model Checking Techniques for State Space Analysis of Gene Regulatory Networks",
+      "authorName": "Ana T. Freitas",
+      "memberId": 114,
+      "memberName": "Ana Teresa Freitas"
+    },
+    {
+      "authorRowId": "6a55567cee890b3b93afc185",
       "publicationId": 235,
       "publicationTitle": "Modeling the geospatial evolution of COVID-19 using spatio-temporal convolutional sequence-to-sequence neural networks",
-      "authorName": "André Cavalheiro",
-      "memberId": 58,
-      "memberName": "André Cavalheiro"
+      "authorName": "Mário Cardoso",
+      "memberId": 89,
+      "memberName": "Mário Cardoso"
     },
     {
-      "authorRowId": "6a55567cee890b3b93afc191",
-      "publicationId": 238,
-      "publicationTitle": "Pretraining the Vision Transformer using self-supervised methods for vision based Deep Reinforcement Learning",
-      "authorName": "Manuel Goulão",
-      "memberId": 22,
-      "memberName": "Manuel Goulão"
+      "authorRowId": "6a55567cee890b3b93afc1ad",
+      "publicationId": 247,
+      "publicationTitle": "Development of a machine learning model using 12-lead ECG to improve acute dianosis of pulmonary embolism",
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     },
     {
-      "authorRowId": "6a55567cee890b3b93afc1a1",
-      "publicationId": 243,
-      "publicationTitle": "Connecting metrics for shape-texture knowledge in computer vision",
-      "authorName": "Tiago Oliveira",
-      "memberId": 45,
-      "memberName": "Tiago Oliveira"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc1a6",
-      "publicationId": 245,
-      "publicationTitle": "Improving Address Matching using Siamese Transformer Networks",
-      "authorName": "André V. Duarte",
-      "memberId": 4,
-      "memberName": "André Duarte"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc1a8",
-      "publicationId": 246,
-      "publicationTitle": "Matching the Neuronal Representations of V1 is Necessary to Improve Robustness in CNNs with V1-like Front-ends",
-      "authorName": "Ruxandra Bărbulescu",
-      "memberId": 16,
-      "memberName": "Ruxandra Barbulescu"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc1b4",
-      "publicationId": 249,
-      "publicationTitle": "Finding Regions of Interest in Whole Slide Images Using Multiple Instance Learning",
-      "authorName": "Martim Afonso",
-      "memberId": 39,
-      "memberName": "Martim Afonso"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc1cc",
-      "publicationId": 252,
-      "publicationTitle": "LumberChunker: Long-Form Narrative Document Segmentation",
-      "authorName": "André V. Duarte",
-      "memberId": 4,
-      "memberName": "André Duarte"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc1cf",
-      "publicationId": 252,
-      "publicationTitle": "LumberChunker: Long-Form Narrative Document Segmentation",
-      "authorName": "Miguel Freire",
-      "memberId": 20,
-      "memberName": "Miguel Freire"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc1d2",
-      "publicationId": 253,
-      "publicationTitle": "Contribution of V1 Receptive Field Properties to Corruption Robustness in CNNs",
-      "authorName": "Ruxandra Bărbulescu",
-      "memberId": 16,
-      "memberName": "Ruxandra Barbulescu"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc1ec",
+      "authorRowId": "6a55567cee890b3b93afc1ef",
       "publicationId": 256,
       "publicationTitle": "Non-invasive derivation of instantaneous free-wave ratio from Invasive Coronary Angiography using a new Deep Learning Artificial Intelligence model and comparison with Human operators’ performance",
-      "authorName": "João Lourenço Silva",
-      "memberId": 18,
-      "memberName": "João Silva"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc1f0",
-      "publicationId": 257,
-      "publicationTitle": "The Role of Recurrency in Image Segmentation for Noisy and Limited Sample Settings",
-      "authorName": "David Calhas",
-      "memberId": 17,
-      "memberName": "David Calhas"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc1f1",
-      "publicationId": 257,
-      "publicationTitle": "The Role of Recurrency in Image Segmentation for Noisy and Limited Sample Settings",
-      "authorName": "João Marques",
-      "memberId": 5,
-      "memberName": "João Marques"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc1f4",
-      "publicationId": 258,
-      "publicationTitle": "The role of positional encodings in the ARC benchmark",
-      "authorName": "Miguel Freire",
-      "memberId": 20,
-      "memberName": "Miguel Freire"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc202",
-      "publicationId": 261,
-      "publicationTitle": "Deep Recurrence for Dynamical Segmentation Models",
-      "authorName": "David Calhas",
-      "memberId": 17,
-      "memberName": "David Calhas"
-    },
-    {
-      "authorRowId": "6a55567cee890b3b93afc204",
-      "publicationId": 262,
-      "publicationTitle": "Deep Feedback Models",
-      "authorName": "David Calhas",
-      "memberId": 17,
-      "memberName": "David Calhas"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc209",
-      "publicationId": 264,
-      "publicationTitle": "DIS-CO: Discovering Copyrighted Content in VLMs Training Data",
-      "authorName": "André V. Duarte",
-      "memberId": 4,
-      "memberName": "André Duarte"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc20d",
-      "publicationId": 265,
-      "publicationTitle": "Leveraging LLMs to Streamline the Review of Public Funding Applications",
-      "authorName": "João Marques",
-      "memberId": 5,
-      "memberName": "João Marques"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc20e",
-      "publicationId": 265,
-      "publicationTitle": "Leveraging LLMs to Streamline the Review of Public Funding Applications",
-      "authorName": "Andre Vicente Duarte",
-      "memberId": 4,
-      "memberName": "André Duarte"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc213",
-      "publicationId": 266,
-      "publicationTitle": "CountPath: Automating Fragment Counting in Digital Pathology",
-      "authorName": "Ana Beatriz Vieira",
-      "memberId": 3,
-      "memberName": "Beatriz Vieira"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc221",
-      "publicationId": 267,
-      "publicationTitle": "Fractal Language Modelling by Universal Sequence Maps (USM)",
-      "authorName": "Inês Duarte",
-      "memberId": 6,
-      "memberName": "Inês Duarte"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc232",
-      "publicationId": 269,
-      "publicationTitle": "CountPath: Automating Fragment Counting in Digital Pathology",
-      "authorName": "Ana Beatriz Vieira",
-      "memberId": 3,
-      "memberName": "Beatriz Vieira"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc23d",
-      "publicationId": 270,
-      "publicationTitle": "ADAPT: Hybrid Prompt Optimization for LLM Feature Visualization",
-      "authorName": "João N. Cardoso",
-      "memberId": 14,
-      "memberName": "João Cardoso"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc243",
-      "publicationId": 272,
-      "publicationTitle": "ADAPT: Hybrid Prompt Optimization for LLM Feature Visualization",
-      "authorName": "João N. Cardoso",
-      "memberId": 14,
-      "memberName": "João Cardoso"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc246",
-      "publicationId": 273,
-      "publicationTitle": "Engineering FAIR Privacy-preserving Applications that Learn Histories of Disease",
-      "authorName": "Ines N. Duarte",
-      "memberId": 6,
-      "memberName": "Inês Duarte"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc254",
-      "publicationId": 275,
-      "publicationTitle": "Engineering FAIR Privacy-preserving Applications that Learn Histories of Disease",
-      "authorName": "Ines N. Duarte",
-      "memberId": 6,
-      "memberName": "Inês Duarte"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc267",
-      "publicationId": 277,
-      "publicationTitle": "Sem-Detect: Semantic Level Detection of AI Generated Peer-Reviews",
-      "authorName": "André V. Duarte",
-      "memberId": 4,
-      "memberName": "André Duarte"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc273",
-      "publicationId": 279,
-      "publicationTitle": "Sem-Detect: Semantic Level Detection of AI Generated Peer-Reviews",
-      "authorName": "André V. Duarte",
-      "memberId": 4,
-      "memberName": "André Duarte"
-    },
-    {
-      "authorRowId": "6a55567dee890b3b93afc279",
-      "publicationId": 280,
-      "publicationTitle": "Are ECGs Enough? Deep Learning Classification of Pulmonary Embolism Using Electrocardiograms",
-      "authorName": "João D. S. Marques",
-      "memberId": 5,
-      "memberName": "João Marques"
+      "authorName": "Miguel Nobre Menezes",
+      "memberId": 107,
+      "memberName": "Miguel Nobre Menezes"
     }
   ],
   "publicationsTouched": [
     {
-      "id": 5,
-      "title": "ISLES 2016 and 2017-Benchmarking Ischemic Stroke Lesion Outcome Prediction Based on Multispectral MRI"
+      "id": 2,
+      "title": "The YEASTRACT database: an upgraded information system for the analysis of gene and genomic transcription regulation in<i>Saccharomyces cerevisiae</i>"
+    },
+    {
+      "id": 3,
+      "title": "YEASTRACT: providing a programmatic access to curated transcriptional regulatory associations in Saccharomyces cerevisiae through a web services interface"
+    },
+    {
+      "id": 4,
+      "title": "YEASTRACT-DISCOVERER: new tools to improve the analysis of transcriptional regulatory associations in Saccharomyces cerevisiae"
     },
     {
       "id": 8,
@@ -571,32 +611,56 @@
       "title": "Artificial intelligence-based diagnosis of acute pulmonary embolism: Development of a machine learning model using 12-lead electrocardiogram"
     },
     {
-      "id": 11,
-      "title": "LumberChunker: Long-Form Narrative Document Segmentation"
+      "id": 15,
+      "title": "Generalization of Pattern-Growth Methods for Sequential Pattern Mining with Gap Constraints"
     },
     {
-      "id": 26,
-      "title": "DegreeCox – a network-based regularization method for survival analysis"
+      "id": 17,
+      "title": "Prime implicant computation using satisfiability algorithms"
+    },
+    {
+      "id": 20,
+      "title": "An Efficient Algorithm for the Identification of Structured Motifs in DNA Promoter Sequences"
+    },
+    {
+      "id": 22,
+      "title": "A Data Mining Approach for the Detection of High-Risk Breast Cancer Groups"
+    },
+    {
+      "id": 25,
+      "title": "Apt-pbo"
     },
     {
       "id": 27,
       "title": "Coronary X-ray angiography segmentation using Artificial Intelligence: a multicentric validation study of a deep learning model"
     },
     {
-      "id": 33,
-      "title": "Assessing the Impact of Attention and Self-Attention Mechanisms on the Classification of Skin Lesions"
+      "id": 30,
+      "title": "Development of deep learning segmentation models for coronary X-ray angiography: Quality assessment by a new global segmentation score and comparison with human performance"
     },
     {
-      "id": 34,
-      "title": "Learning the dynamics of realistic models of C. elegans nervous system with recurrent neural networks"
+      "id": 32,
+      "title": "Haplotype inference with pseudo-Boolean optimization"
     },
     {
-      "id": 35,
-      "title": "Training environmental sound classification models for real-world deployment in edge devices"
+      "id": 44,
+      "title": "Inference of regular languages using state merging algorithms with search"
     },
     {
-      "id": 36,
-      "title": "Multiple Instance Learning for WSI: A comparative analysis of attention-based approaches"
+      "id": 45,
+      "title": "A HIGHLY SCALABLE ALGORITHM FOR THE EXTRACTION OF CIS-REGULATORY REGIONS"
+    },
+    {
+      "id": 49,
+      "title": "Sequential Pattern Mining Algorithms: Trade-offs between Speed and Memory"
+    },
+    {
+      "id": 50,
+      "title": "A parallel algorithm for the extraction of structured motifs"
+    },
+    {
+      "id": 53,
+      "title": "MUSA: a parameter free algorithm for the identification of biologically significant motifs"
     },
     {
       "id": 56,
@@ -607,12 +671,12 @@
       "title": "Modeling the Geospatial Evolution of COVID-19 using Spatio-temporal Convolutional Sequence-to-sequence Neural Networks"
     },
     {
-      "id": 61,
-      "title": "Using Soft Labels to Model Uncertainty in Medical Image Segmentation"
-    },
-    {
       "id": 62,
       "title": "Segmentation of X‐ray coronary angiography with an artificial intelligence deep learning model: Impact in operator visual assessment of coronary stenosis severity"
+    },
+    {
+      "id": 63,
+      "title": "Haplotype Inference by Pure Parsimony: A Survey"
     },
     {
       "id": 65,
@@ -623,188 +687,188 @@
       "title": "Non-invasive derivation of instantaneous free-wave ratio from invasive coronary angiography using a new deep learning artificial intelligence model and comparison with human operators’ performance"
     },
     {
+      "id": 71,
+      "title": "Efficient and Accurate Haplotype Inference by Combining Parsimony and Pedigree Information"
+    },
+    {
+      "id": 73,
+      "title": "Refining current knowledge on the yeast <i>FLR1</i> regulatory network by combined experimental and computational approaches"
+    },
+    {
+      "id": 77,
+      "title": "Efficient alignment of pyrosequencing reads for re-sequencing applications"
+    },
+    {
+      "id": 79,
+      "title": "Qualitative modelling and formal verification of the FLR1 gene mancozeb response in <i>Saccharomyces cerevisiae</i>"
+    },
+    {
       "id": 80,
       "title": "Stenosis Detection in X-ray Coronary Angiography with Deep Neural Networks Leveraged by Attention Mechanisms"
     },
     {
-      "id": 109,
-      "title": "Pretraining the Vision Transformer Using Self-Supervised Methods for Vision Based Deep Reinforcement Learning"
+      "id": 83,
+      "title": "Efficient Haplotype Inference with Pseudo-boolean Optimization"
     },
     {
-      "id": 110,
-      "title": "Improving Address Matching Using Siamese Transformer Networks"
+      "id": 87,
+      "title": "An analysis of the positional distribution of DNA motifs in promoter regions and its biological relevance"
     },
     {
-      "id": 112,
-      "title": "A probabilistic method for the computation of testability of RTL constructs"
+      "id": 91,
+      "title": "Efficient Extraction of Structured Motifs Using Box-Links"
     },
     {
-      "id": 116,
-      "title": "Using a Siamese Network to Accurately Detect Ischemic Stroke in Computed Tomography Scans"
+      "id": 93,
+      "title": "On the Complexity of Power Estimation Problems"
     },
     {
-      "id": 117,
-      "title": "Improving Embeddings for High-Accuracy Transformer-Based Address Matching Using a Multiple in-Batch Negatives Loss"
+      "id": 94,
+      "title": "SEQUENTIAL PATTERN MINING WITH APPROXIMATED CONSTRAINTS"
     },
     {
-      "id": 118,
-      "title": "Augmentation-Based Approaches for Overcoming Low Visibility in Street Object Detection"
+      "id": 98,
+      "title": "Dotted Suffix Trees A Structure for Approximate Text Indexing"
+    },
+    {
+      "id": 100,
+      "title": "Inference of Sequential Association Rules Guided by Context-Free Grammars"
+    },
+    {
+      "id": 103,
+      "title": "Models and Algorithms for Computing Minimum-Size Prime Implicants"
+    },
+    {
+      "id": 104,
+      "title": "Using Information Interaction to Discover Epistatic Effects in Complex Diseases"
     },
     {
       "id": 119,
       "title": "Old Habits Die Hard"
     },
     {
-      "id": 130,
-      "title": "A probabilistic method for the computation of testability of RTL constructs"
+      "id": 123,
+      "title": "Implicit Resolution of the Chapman-Kolmogorov Equations for Sequential Circuits: An Application in Power Estimation"
     },
     {
-      "id": 145,
-      "title": "Probabilistic Testability Analysis and DFT Methods at RTL"
+      "id": 124,
+      "title": "Constraint Relaxations for Discovering Unknown Sequential Patterns"
     },
     {
-      "id": 161,
-      "title": "Conditional Random Fields as Recurrent Neural Networks for 3D Medical Imaging Segmentation"
+      "id": 125,
+      "title": "Efficient Haplotype Inference with Combined CP and OR Techniques"
     },
     {
-      "id": 163,
-      "title": "Sparse network-based regularization for the analysis of patientomics high-dimensional survival data"
+      "id": 128,
+      "title": "Efficient and tight upper bounds for haplotype inference by pure parsimony using delayed haplotype selection"
+    },
+    {
+      "id": 137,
+      "title": "Implicit resolution of the Chapman-Kolmogorov equations for sequential circuits: an application in power estimation"
+    },
+    {
+      "id": 139,
+      "title": "Circuit partitioning techniques for power estimation using the full set of input correlations"
+    },
+    {
+      "id": 141,
+      "title": "Efficient and Tight Upper Bounds for Haplotype Inference by Pure Parsimony Using Delayed Haplotype Selection"
+    },
+    {
+      "id": 146,
+      "title": "Mining Patterns Using Relaxations of User Defined Constraints"
+    },
+    {
+      "id": 147,
+      "title": "QUANTITATIVE MODELING OF THE<i>SACCHAROMYCES CEREVISIAE</i>FLR1 REGULATORY NETWORK USING AN S-SYSTEM FORMALISM"
+    },
+    {
+      "id": 151,
+      "title": "Using systems biology approaches to study a multidrug resistance network"
+    },
+    {
+      "id": 152,
+      "title": "CONSTANT TIME CLASH DETECTION IN PROTEIN FOLDING"
     },
     {
       "id": 164,
       "title": "Automated Detection of Coronary Artery Stenosis in X-ray Angiography using Deep Neural Networks"
     },
     {
-      "id": 168,
-      "title": "QUBIQ: Uncertainty Quantification for Biomedical Image Segmentation Challenge"
+      "id": 175,
+      "title": "Haplotype Inference with Boolean Constraint Solving: An Overview"
     },
     {
-      "id": 178,
-      "title": "DE-COP: Detecting Copyrighted Content in Language Models Training Data"
+      "id": 180,
+      "title": "Efficient and Tight Upper Bounds for Haplotype Inference by Pure Parsimony"
     },
     {
       "id": 182,
       "title": "Encoder-Decoder Architectures for Clinically Relevant Coronary Artery Segmentation"
     },
     {
-      "id": 189,
-      "title": "Assessing the Impact of Attention and Self-Attention Mechanisms on the Classification of Skin Lesions"
+      "id": 183,
+      "title": "Metrics for Grid Applicability: A Distributed Elliptic Curve Platform Assessment"
     },
     {
-      "id": 190,
-      "title": "Modelling Neuronal Behaviour with Time Series Regression: Recurrent\\n Neural Networks on C. Elegans Data"
+      "id": 184,
+      "title": "An Evaluation of the Impact of Side Chain Positioning on the Accuracy of Discrete Models of Protein Structures"
     },
     {
-      "id": 191,
-      "title": "Combining Off and On-Policy Training in Model-Based Reinforcement\\n Learning"
+      "id": 186,
+      "title": "Bioinformatics: A New Approach for the Challenges of Molecular Biology"
     },
     {
-      "id": 208,
-      "title": "ELIXIR in a Business Model Canvas"
+      "id": 192,
+      "title": "Generic ILP vs Specialized 0-1 ILP for Haplotype Inference"
     },
     {
-      "id": 233,
-      "title": "Using Soft Labels to Model Uncertainty in Medical Image Segmentation"
+      "id": 194,
+      "title": "Additional materials and results for MUSA"
+    },
+    {
+      "id": 197,
+      "title": "Identification of Transcription Factor Binding Sites in Promoter Regions by Modularity Analysis of the Motif Co-occurrence Graph"
+    },
+    {
+      "id": 201,
+      "title": "Quantitative Modeling the Saccharomyces cerevisiae FLR1 Regulatory Network Using an S-System Formalism"
+    },
+    {
+      "id": 205,
+      "title": "TAPYR: An efficient high-throughput sequence aligner for re-sequencing applications"
+    },
+    {
+      "id": 206,
+      "title": "Using graph modularity analysis to identify transcription factor binding sites"
+    },
+    {
+      "id": 207,
+      "title": "Improved Model Checking Techniques for State Space Analysis of Gene Regulatory Networks"
+    },
+    {
+      "id": 210,
+      "title": "The regulatory network underlying the transcriptional up-regulation of the FRL1 gene in mancozeb stressed yeast cells: qualitative modeling and simulation"
+    },
+    {
+      "id": 213,
+      "title": "Computational modeling and analysis of the yeast FLR1 regulatory network in mancozeb-challenged cells"
+    },
+    {
+      "id": 227,
+      "title": "Improved Model Checking Techniques for State Space Analysis of Gene Regulatory Networks"
     },
     {
       "id": 235,
       "title": "Modeling the geospatial evolution of COVID-19 using spatio-temporal convolutional sequence-to-sequence neural networks"
     },
     {
-      "id": 238,
-      "title": "Pretraining the Vision Transformer using self-supervised methods for vision based Deep Reinforcement Learning"
-    },
-    {
-      "id": 243,
-      "title": "Connecting metrics for shape-texture knowledge in computer vision"
-    },
-    {
-      "id": 245,
-      "title": "Improving Address Matching using Siamese Transformer Networks"
-    },
-    {
-      "id": 246,
-      "title": "Matching the Neuronal Representations of V1 is Necessary to Improve Robustness in CNNs with V1-like Front-ends"
-    },
-    {
-      "id": 249,
-      "title": "Finding Regions of Interest in Whole Slide Images Using Multiple Instance Learning"
-    },
-    {
-      "id": 252,
-      "title": "LumberChunker: Long-Form Narrative Document Segmentation"
-    },
-    {
-      "id": 253,
-      "title": "Contribution of V1 Receptive Field Properties to Corruption Robustness in CNNs"
+      "id": 247,
+      "title": "Development of a machine learning model using 12-lead ECG to improve acute dianosis of pulmonary embolism"
     },
     {
       "id": 256,
       "title": "Non-invasive derivation of instantaneous free-wave ratio from Invasive Coronary Angiography using a new Deep Learning Artificial Intelligence model and comparison with Human operators’ performance"
-    },
-    {
-      "id": 257,
-      "title": "The Role of Recurrency in Image Segmentation for Noisy and Limited Sample Settings"
-    },
-    {
-      "id": 258,
-      "title": "The role of positional encodings in the ARC benchmark"
-    },
-    {
-      "id": 261,
-      "title": "Deep Recurrence for Dynamical Segmentation Models"
-    },
-    {
-      "id": 262,
-      "title": "Deep Feedback Models"
-    },
-    {
-      "id": 264,
-      "title": "DIS-CO: Discovering Copyrighted Content in VLMs Training Data"
-    },
-    {
-      "id": 265,
-      "title": "Leveraging LLMs to Streamline the Review of Public Funding Applications"
-    },
-    {
-      "id": 266,
-      "title": "CountPath: Automating Fragment Counting in Digital Pathology"
-    },
-    {
-      "id": 267,
-      "title": "Fractal Language Modelling by Universal Sequence Maps (USM)"
-    },
-    {
-      "id": 269,
-      "title": "CountPath: Automating Fragment Counting in Digital Pathology"
-    },
-    {
-      "id": 270,
-      "title": "ADAPT: Hybrid Prompt Optimization for LLM Feature Visualization"
-    },
-    {
-      "id": 272,
-      "title": "ADAPT: Hybrid Prompt Optimization for LLM Feature Visualization"
-    },
-    {
-      "id": 273,
-      "title": "Engineering FAIR Privacy-preserving Applications that Learn Histories of Disease"
-    },
-    {
-      "id": 275,
-      "title": "Engineering FAIR Privacy-preserving Applications that Learn Histories of Disease"
-    },
-    {
-      "id": 277,
-      "title": "Sem-Detect: Semantic Level Detection of AI Generated Peer-Reviews"
-    },
-    {
-      "id": 279,
-      "title": "Sem-Detect: Semantic Level Detection of AI Generated Peer-Reviews"
-    },
-    {
-      "id": 280,
-      "title": "Are ECGs Enough? Deep Learning Classification of Pulmonary Embolism Using Electrocardiograms"
     }
   ],
   "ambiguous": [
@@ -843,10 +907,6 @@
   ],
   "unmatchedTop": [
     {
-      "name": "Ana T. Freitas",
-      "count": 28
-    },
-    {
       "name": "Alexandre P. Francisco",
       "count": 14
     },
@@ -856,10 +916,6 @@
     },
     {
       "name": "Fausto J. Pinto",
-      "count": 13
-    },
-    {
-      "name": "Miguel Nobre Menezes",
       "count": 13
     },
     {
@@ -881,10 +937,6 @@
     {
       "name": "Susana Vinga",
       "count": 11
-    },
-    {
-      "name": "Ana Graça",
-      "count": 10
     },
     {
       "name": "Miguel C. Teixeira",
@@ -920,10 +972,6 @@
     },
     {
       "name": "Artur Ferreira",
-      "count": 6
-    },
-    {
-      "name": "Cláudia Antunes",
       "count": 6
     },
     {
@@ -991,10 +1039,6 @@
       "count": 3
     },
     {
-      "name": "Ana Casimiro",
-      "count": 3
-    },
-    {
       "name": "Ana Rita Francisco",
       "count": 3
     },
@@ -1040,6 +1084,26 @@
     },
     {
       "name": "J Guedes",
+      "count": 3
+    },
+    {
+      "name": "J. Fernandes",
+      "count": 3
+    },
+    {
+      "name": "J.A. Gracio",
+      "count": 3
+    },
+    {
+      "name": "Jeya Balaji Balasubramanian",
+      "count": 3
+    },
+    {
+      "name": "Joana P. Gonçalves",
+      "count": 3
+    },
+    {
+      "name": "Lee Mason",
       "count": 3
     }
   ]

@@ -502,6 +502,12 @@ main {
   margin-bottom: 0.6rem;
 }
 
+.person-avatar--photo {
+  display: block;
+  object-fit: cover;
+  background: var(--ink-8);
+}
+
 .person-card strong {
   font-family: var(--font-serif, georgia, serif);
   font-size: 1.05rem;

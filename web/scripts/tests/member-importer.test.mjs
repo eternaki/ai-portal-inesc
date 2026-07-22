@@ -60,6 +60,34 @@ test('does not overwrite conflicting non-empty identifiers', () => {
   assert.equal(fieldUpdates.includes('orcid'), false)
 })
 
+test('updates approved roster status fields and controlled contact replacements', () => {
+  const existing = {
+    id: 1,
+    name: 'João Meneses',
+    role: 'msc',
+    membershipStatus: 'active',
+    links: { linkedin: 'https://www.linkedin.com/in/old-profile/' },
+  }
+  const { patch, fieldUpdates, conflicts } = buildUpdatePayload(
+    existing,
+    {
+      name: 'João Meneses Santos',
+      role: 'phd',
+      membershipStatus: 'completed',
+      replaceContact: true,
+      contact: { type: 'linkedin', value: 'https://pt.linkedin.com/in/new-profile/' },
+    },
+    '2026-07-22T00:00:00.000Z',
+  )
+
+  assert.equal(patch.role, 'phd')
+  assert.equal(patch.membershipStatus, 'completed')
+  assert.equal(patch.links.linkedin, 'https://www.linkedin.com/in/new-profile')
+  assert.equal(fieldUpdates.includes('role'), true)
+  assert.equal(fieldUpdates.includes('membershipStatus'), true)
+  assert.equal(conflicts.length, 0)
+})
+
 test('skips invalid dataset values before import', () => {
   const invalid = validateDataset({
     schemaVersion: '1.0',

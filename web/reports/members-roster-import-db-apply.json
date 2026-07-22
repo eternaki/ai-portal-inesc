@@ -1,0 +1,400 @@
+{
+  "mode": "direct-db-apply",
+  "totalInputMembers": 110,
+  "existingMembers": 59,
+  "created": [
+    {
+      "name": "Alexandra Carvalho",
+      "memberId": 61
+    },
+    {
+      "name": "Ana Casimiro",
+      "memberId": 62
+    },
+    {
+      "name": "André Martins",
+      "memberId": 63
+    },
+    {
+      "name": "António Mota",
+      "memberId": 64
+    },
+    {
+      "name": "Artur Krystopchuk",
+      "memberId": 65
+    },
+    {
+      "name": "Daniela Campos",
+      "memberId": 66
+    },
+    {
+      "name": "Daniela Carvalho",
+      "memberId": 67
+    },
+    {
+      "name": "Diana Neves",
+      "memberId": 68
+    },
+    {
+      "name": "Diogo Araújo",
+      "memberId": 69
+    },
+    {
+      "name": "Diogo Branco",
+      "memberId": 70
+    },
+    {
+      "name": "Diogo Ferrão",
+      "memberId": 71
+    },
+    {
+      "name": "Gonçalo Aroeira",
+      "memberId": 72
+    },
+    {
+      "name": "Helena Guerra",
+      "memberId": 73
+    },
+    {
+      "name": "Inês Carioca Rodrigues",
+      "memberId": 74
+    },
+    {
+      "name": "Inês Filipe",
+      "memberId": 75
+    },
+    {
+      "name": "José Caldas",
+      "memberId": 76
+    },
+    {
+      "name": "José Malfeito Ferreira",
+      "memberId": 77
+    },
+    {
+      "name": "José Velez",
+      "memberId": 78
+    },
+    {
+      "name": "João Gomes",
+      "memberId": 79
+    },
+    {
+      "name": "João Mendonça",
+      "memberId": 80
+    },
+    {
+      "name": "João Nabais",
+      "memberId": 81
+    },
+    {
+      "name": "João Pedro Cruz",
+      "memberId": 82
+    },
+    {
+      "name": "Lino Pinchete",
+      "memberId": 83
+    },
+    {
+      "name": "Luís Câmara",
+      "memberId": 84
+    },
+    {
+      "name": "Luís Pedro Coelho",
+      "memberId": 85
+    },
+    {
+      "name": "Manuel Graça",
+      "memberId": 86
+    },
+    {
+      "name": "Margarida Correia",
+      "memberId": 87
+    },
+    {
+      "name": "Miguel Bugalho",
+      "memberId": 88
+    },
+    {
+      "name": "Mário Cardoso",
+      "memberId": 89
+    },
+    {
+      "name": "Nuno Mendes",
+      "memberId": 90
+    },
+    {
+      "name": "Orlando Anunciação",
+      "memberId": 91
+    },
+    {
+      "name": "Paulo Ferreira",
+      "memberId": 92
+    },
+    {
+      "name": "Paulo Ramos",
+      "memberId": 93
+    },
+    {
+      "name": "Paulo Trezentos",
+      "memberId": 94
+    },
+    {
+      "name": "Pedro Duarte",
+      "memberId": 95
+    },
+    {
+      "name": "Pedro Fernandes Rodrigues",
+      "memberId": 96
+    },
+    {
+      "name": "Pedro Monteiro",
+      "memberId": 97
+    },
+    {
+      "name": "Pedro Vaz",
+      "memberId": 98
+    },
+    {
+      "name": "Sergio Costa",
+      "memberId": 99
+    },
+    {
+      "name": "Sofia Ligeiro",
+      "memberId": 100
+    },
+    {
+      "name": "Sun Chen Wei",
+      "memberId": 101
+    },
+    {
+      "name": "Susana Pereira",
+      "memberId": 102
+    },
+    {
+      "name": "Tiago Duarte",
+      "memberId": 103
+    },
+    {
+      "name": "Tiago Fonseca",
+      "memberId": 104
+    },
+    {
+      "name": "Vasco Manquinho",
+      "memberId": 105
+    },
+    {
+      "name": "Pedro Stralen",
+      "memberId": 106
+    },
+    {
+      "name": "Miguel Nobre Menezes",
+      "memberId": 107
+    },
+    {
+      "name": "Ana Sofia Graça",
+      "memberId": 108
+    },
+    {
+      "name": "Alexandre Francisco",
+      "memberId": 109
+    },
+    {
+      "name": "Sara Madeira",
+      "memberId": 110
+    },
+    {
+      "name": "José Ramirez Colaço",
+      "memberId": 111
+    },
+    {
+      "name": "Luís Russo",
+      "memberId": 112
+    },
+    {
+      "name": "Cláudia Antunes",
+      "memberId": 113
+    },
+    {
+      "name": "Ana Teresa Freitas",
+      "memberId": 114
+    }
+  ],
+  "updated": [
+    {
+      "name": "André Veríssimo",
+      "memberId": 56,
+      "matchedBy": "name",
+      "fields": [
+        "role",
+        "membershipStatus"
+      ]
+    },
+    {
+      "name": "Duarte Boto",
+      "memberId": 7,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    },
+    {
+      "name": "José Carreira",
+      "memberId": 32,
+      "matchedBy": "name",
+      "fields": [
+        "links.linkedin"
+      ]
+    },
+    {
+      "name": "João Martins Pedro",
+      "memberId": 51,
+      "matchedBy": "first-last name",
+      "fields": [
+        "links.linkedin"
+      ]
+    },
+    {
+      "name": "João Meneses Santos",
+      "memberId": 26,
+      "matchedBy": "name",
+      "fields": [
+        "links.linkedin"
+      ]
+    },
+    {
+      "name": "João Nuno Cardoso",
+      "memberId": 14,
+      "matchedBy": "name",
+      "fields": [
+        "links.linkedin"
+      ]
+    },
+    {
+      "name": "Beatriz Vieira",
+      "memberId": 3,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    },
+    {
+      "name": "Inês Duarte",
+      "memberId": 6,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    },
+    {
+      "name": "Hélder Dias",
+      "memberId": 8,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    },
+    {
+      "name": "Francisco Guedes",
+      "memberId": 9,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    },
+    {
+      "name": "João Marques",
+      "memberId": 5,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    },
+    {
+      "name": "André Duarte",
+      "memberId": 4,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    },
+    {
+      "name": "Vitória Cruz",
+      "memberId": 10,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    },
+    {
+      "name": "Dominika Dlugosz",
+      "memberId": 11,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    },
+    {
+      "name": "André Carneiro",
+      "memberId": 13,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    },
+    {
+      "name": "Mohamed Elbawab",
+      "memberId": 12,
+      "matchedBy": "name",
+      "fields": [
+        "role"
+      ]
+    }
+  ],
+  "unchanged": [
+    "Alexandre Borges",
+    "Ana Pimenta Alves",
+    "André Cavalheiro",
+    "André Leite",
+    "António Pereira",
+    "Clara Pereira",
+    "Dinis Rodrigues",
+    "Filipa Marques",
+    "Francisco Honório",
+    "Gonçalo Goulart Oliveira",
+    "Gonçalo Oliveira",
+    "Guilherme Costa",
+    "José Cunha",
+    "José Martinho",
+    "José Pereira",
+    "João Amoroso",
+    "João Lourenço Silva",
+    "João Novo",
+    "João Teixeira",
+    "Lourenço Tourais",
+    "Lucas Piper",
+    "Manuel Coimbra",
+    "Manuel Goulão",
+    "Mariana Serrão",
+    "Martim Afonso",
+    "Miguel Amaral",
+    "Miguel Freire",
+    "Miguel Monteiro",
+    "Miguel Rasquinho Ferreira",
+    "Miguel Vicente",
+    "Oleksandr Stopchak",
+    "Pedro Gonçalves",
+    "Pedro Henriques",
+    "Rafael Pedro",
+    "Ricardo Almeida",
+    "Ricardo Diniz",
+    "Tiago Oliveira",
+    "Tomás Nunes",
+    "Vicente Silvestre",
+    "Xavier Dias"
+  ],
+  "ambiguous": [],
+  "conflicts": [],
+  "invalidValues": [],
+  "identifiersSkipped": []
+}

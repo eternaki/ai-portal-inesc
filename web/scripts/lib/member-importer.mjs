@@ -102,7 +102,20 @@ function addFieldChange({ existing, patch, report, member, path, value }) {
     return
   }
   if (equalValue(path, current, value)) return
+  if (member.replaceContact === true && (path === 'email' || path.startsWith('links.'))) {
+    setField(patch, path, value)
+    report.fieldUpdates.push(path)
+    return
+  }
   report.conflicts.push({ name: member.name, field: path, existing: current, incoming: value })
+}
+
+function setManagedFieldChange({ existing, patch, report, path, value }) {
+  if (value == null || value === '') return
+  const current = getField(existing, path)
+  if (current === value) return
+  setField(patch, path, value)
+  report.fieldUpdates.push(path)
 }
 
 export function buildIndexes(existingDocs) {
@@ -169,6 +182,8 @@ function contactPatch(member) {
   }
   if (member.contact.type === 'linkedin') return { links: { linkedin: value }, showLinkedIn: true }
   if (member.contact.type === 'github') return { links: { github: value }, showGitHub: true }
+  if (member.contact.type === 'personalPage') return { links: { personalPage: value }, showPersonalPage: true }
+  if (member.contact.type === 'tecnicoPage') return { links: { tecnicoPage: value }, showTecnicoPage: true }
   return {}
 }
 
@@ -189,13 +204,27 @@ function identifierPatch(member, now) {
   return patch
 }
 
+function hasKnownContact(member, existing = {}) {
+  return Boolean(
+    member.contact?.value ||
+      existing.email ||
+      existing.links?.linkedin ||
+      existing.links?.github ||
+      existing.links?.personalPage ||
+      existing.links?.tecnicoPage ||
+      existing.links?.googleScholar,
+  )
+}
+
 export function buildCreatePayload(member, now, defaultBio) {
   return {
     name: member.name,
-    role: member.name === 'Arlindo Oliveira' ? 'faculty' : 'msc',
+    role: member.role ?? (member.name === 'Arlindo Oliveira' ? 'faculty' : 'msc'),
+    membershipStatus: member.membershipStatus ?? 'active',
     bioAiDraft: defaultBio,
     contactsSource: 'mlkd_members_contacts consolidated review',
     contactsVerifiedAt: now,
+    needsContactReview: !hasKnownContact(member),
     showEmail: false,
     showLinkedIn: true,
     showGitHub: true,
@@ -213,6 +242,22 @@ export function buildCreatePayload(member, now, defaultBio) {
 export function buildUpdatePayload(existing, member, now) {
   const patch = { contactsVerifiedAt: now }
   const report = { fieldUpdates: [], conflicts: [] }
+
+  setManagedFieldChange({ existing, patch, report, path: 'role', value: member.role })
+  setManagedFieldChange({
+    existing,
+    patch,
+    report,
+    path: 'membershipStatus',
+    value: member.membershipStatus ?? 'active',
+  })
+  setManagedFieldChange({
+    existing,
+    patch,
+    report,
+    path: 'needsContactReview',
+    value: !hasKnownContact(member, existing),
+  })
 
   for (const [path, value] of Object.entries(flatten(contactPatch(member)))) {
     addFieldChange({ existing, patch, report, member, path, value })
@@ -257,7 +302,7 @@ export function validateDataset(dataset) {
     if (member.contact?.type === 'email' && !normalizeEmail(member.contact.value).includes('@')) {
       invalidValues.push({ name: member.name, field: 'email', value: member.contact.value })
     }
-    if (['linkedin', 'github'].includes(member.contact?.type)) {
+    if (['linkedin', 'github', 'personalPage', 'tecnicoPage'].includes(member.contact?.type)) {
       try {
         normalizeUrl(member.contact.value)
       } catch {

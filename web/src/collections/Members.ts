@@ -8,7 +8,7 @@ export const Members: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'People',
-    defaultColumns: ['name', 'role', 'orcid', 'cienciaId'],
+    defaultColumns: ['name', 'role', 'membershipStatus', 'orcid', 'cienciaId'],
   },
   access: {
     read: anyone,
@@ -49,6 +49,21 @@ export const Members: CollectionConfig = {
         { label: 'MSc student', value: 'msc' },
         { label: 'Alumni', value: 'alumni' },
       ],
+    },
+    {
+      name: 'membershipStatus',
+      type: 'select',
+      required: true,
+      defaultValue: 'active',
+      index: true,
+      options: [
+        { label: 'Active', value: 'active' },
+        { label: 'Suspended', value: 'suspended' },
+        { label: 'Completed', value: 'completed' },
+      ],
+      admin: {
+        description: 'Current relationship with the MLKD group or project.',
+      },
     },
     {
       name: 'photo',
@@ -182,6 +197,14 @@ export const Members: CollectionConfig = {
       type: 'date',
       admin: {
         description: 'When contact data was imported or last reviewed.',
+      },
+    },
+    {
+      name: 'needsContactReview',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Contact information is missing or needs manual confirmation.',
       },
     },
     {

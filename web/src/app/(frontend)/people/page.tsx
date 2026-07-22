@@ -5,9 +5,8 @@ import config from '@payload-config'
 import { JsonLd } from '@/components/JsonLd'
 import { getDictionary } from '@/i18n/server'
 import { PUBLISHED } from '@/lib/queries'
-import type { Member, Publication } from '@/payload-types'
+import type { Media, Member, Publication } from '@/payload-types'
 
-// Data comes from the CMS; render on each request, not at build time.
 export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'People' }
@@ -18,6 +17,11 @@ const ROLE_ORDER = [
   { value: 'phd', key: 'rolePhd' },
   { value: 'msc', key: 'roleMsc' },
   { value: 'alumni', key: 'roleAlumni' },
+] as const
+
+const SECONDARY_STATUSES = [
+  { value: 'suspended', key: 'statusSuspended' },
+  { value: 'completed', key: 'statusCompleted' },
 ] as const
 
 const initials = (name: string) =>
@@ -48,7 +52,15 @@ const memberSameAs = (member: Member) =>
     visible(member.dblpKey, member.showDBLP) ? `https://dblp.org/pid/${member.dblpKey}` : null,
   ].filter((url): url is string => Boolean(url))
 
-function PersonLinks({ member, emailLabel, websiteLabel }: { member: Member; emailLabel: string; websiteLabel: string }) {
+function PersonLinks({
+  member,
+  emailLabel,
+  websiteLabel,
+}: {
+  member: Member
+  emailLabel: string
+  websiteLabel: string
+}) {
   const linkedin = visibleValue(member.links?.linkedin, member.showLinkedIn)
   const github = visibleValue(member.links?.github, member.showGitHub)
   const tecnicoPage = visibleValue(member.links?.tecnicoPage, member.showTecnicoPage)
@@ -116,6 +128,76 @@ function memberPublicationMap(publications: Publication[]) {
   return map
 }
 
+function roleLabel(member: Member, t: Awaited<ReturnType<typeof getDictionary>>['people']) {
+  const role = ROLE_ORDER.find((item) => item.value === member.role)
+  return role ? t[role.key] : member.role
+}
+
+function memberPhoto(member: Member): Media | null {
+  return member.photo && typeof member.photo === 'object' ? member.photo : null
+}
+
+function PersonCard({
+  member,
+  emailLabel,
+  websiteLabel,
+  publications,
+  roleBadge,
+}: {
+  member: Member
+  emailLabel: string
+  websiteLabel: string
+  publications: Publication[]
+  roleBadge?: string
+}) {
+  const photo = memberPhoto(member)
+  const photoUrl = photo?.sizes?.thumbnail?.url || photo?.url
+
+  return (
+    <div id={member.slug ?? `member-${member.id}`} className="person-card">
+      {photoUrl ? (
+        <img
+          className="person-avatar person-avatar--photo"
+          src={photoUrl}
+          alt={photo.alt || member.name}
+          loading="lazy"
+        />
+      ) : (
+        <div className="person-avatar">{initials(member.name)}</div>
+      )}
+      <strong>{member.name}</strong>
+      {roleBadge && <span className="badge">{roleBadge}</span>}
+      {(member.researchInterests ?? []).length > 0 && (
+        <div className="pub-meta">{(member.researchInterests ?? []).join(' · ')}</div>
+      )}
+      <PersonLinks member={member} emailLabel={emailLabel} websiteLabel={websiteLabel} />
+      {member.needsContactReview && <div className="pub-meta">Contact pending review</div>}
+      {publications.length > 0 && (
+        <div className="person-publications">
+          <div className="person-publications-head">
+            <span>Recent publications</span>
+            <span className="badge">{publications.length}</span>
+          </div>
+          <ul>
+            {publications.slice(0, 3).map((publication) => (
+              <li key={publication.id}>
+                <span>
+                  {publication.slug ? (
+                    <Link href={`/publications/${publication.slug}`}>{publication.title}</Link>
+                  ) : (
+                    publication.title
+                  )}
+                </span>
+                {publication.year ? <span className="mono">{publication.year}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default async function PeoplePage() {
   const payload = await getPayload({ config })
   const t = await getDictionary()
@@ -125,7 +207,7 @@ export default async function PeoplePage() {
       collection: 'members',
       sort: 'name',
       limit: 500,
-      depth: 0,
+      depth: 1,
     }),
     payload.find({
       collection: 'publications',
@@ -159,53 +241,55 @@ export default async function PeoplePage() {
         <Link href="/admin">{t.people.signIn}</Link>
         {t.people.metaAfter}
       </p>
-      {ROLE_ORDER.map(({ value, key }) => {
-        const group = result.docs.filter((member) => member.role === value)
+
+      <section>
+        <h2>{t.people.statusActive}</h2>
+        {ROLE_ORDER.map(({ value, key }) => {
+          const group = result.docs.filter(
+            (member) => (member.membershipStatus ?? 'active') === 'active' && member.role === value,
+          )
+          if (group.length === 0) return null
+          return (
+            <section key={value}>
+              <h3>{t.people[key]}</h3>
+              <div className="people-grid">
+                {group.map((member) => (
+                  <PersonCard
+                    key={member.id}
+                    member={member}
+                    emailLabel={t.people.email}
+                    websiteLabel={t.people.website}
+                    publications={publicationsByMember.get(member.id) ?? []}
+                  />
+                ))}
+              </div>
+            </section>
+          )
+        })}
+      </section>
+
+      {SECONDARY_STATUSES.map(({ value, key }) => {
+        const group = result.docs.filter((member) => member.membershipStatus === value)
         if (group.length === 0) return null
         return (
           <section key={value}>
             <h2>{t.people[key]}</h2>
             <div className="people-grid">
               {group.map((member) => (
-                <div key={member.id} id={member.slug ?? `member-${member.id}`} className="person-card">
-                  <div className="person-avatar">{initials(member.name)}</div>
-                  <strong>{member.name}</strong>
-                  {(member.researchInterests ?? []).length > 0 && (
-                    <div className="pub-meta">{(member.researchInterests ?? []).join(' · ')}</div>
-                  )}
-                  <PersonLinks member={member} emailLabel={t.people.email} websiteLabel={t.people.website} />
-                  {(() => {
-                    const publications = publicationsByMember.get(member.id) ?? []
-                    if (publications.length === 0) return null
-                    return (
-                      <div className="person-publications">
-                        <div className="person-publications-head">
-                          <span>Recent publications</span>
-                          <span className="badge">{publications.length}</span>
-                        </div>
-                        <ul>
-                          {publications.slice(0, 3).map((publication) => (
-                            <li key={publication.id}>
-                              <span>
-                                {publication.slug ? (
-                                  <Link href={`/publications/${publication.slug}`}>{publication.title}</Link>
-                                ) : (
-                                  publication.title
-                                )}
-                              </span>
-                              {publication.year ? <span className="mono">{publication.year}</span> : null}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )
-                  })()}
-                </div>
+                <PersonCard
+                  key={member.id}
+                  member={member}
+                  emailLabel={t.people.email}
+                  websiteLabel={t.people.website}
+                  publications={publicationsByMember.get(member.id) ?? []}
+                  roleBadge={roleLabel(member, t.people)}
+                />
               ))}
             </div>
           </section>
         )
       })}
+
       {result.docs.length === 0 && <div className="empty">{t.people.empty}</div>}
     </div>
   )
