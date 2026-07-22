@@ -9,27 +9,20 @@ import json
 import logging
 import re
 from pathlib import Path
-from typing import Any
 
-import litellm
-
-from app.config import get_settings
+from app.llm.service import ChatMessage, llm_service
 
 logger = logging.getLogger(__name__)
 
 PROMPTS_DIR = Path(__file__).parent / "prompts"
 
 def resolve_model() -> str:
-    """Runtime model: customModel > llmModel (ai-settings global) > LLM_MODEL env.
+    """Runtime model resolved through the central LLM service.
 
-    The admin can switch the model without a redeploy. Reads the cached global;
-    any failure falls back to env so the AI service never depends on the CMS.
+    Kept for backward compatibility with callers that only need metadata.
     """
-    from app.settings_cache import ai_settings
-
-    data = ai_settings()
-    model = (data.get("customModel") or data.get("llmModel") or "").strip()
-    return model or get_settings().llm_model
+    config = llm_service._candidate_configs(request_id="metadata")[0]
+    return config.litellm_model
 
 
 def load_prompt(prompt_name: str, /, **variables: str) -> str:
@@ -44,25 +37,14 @@ def complete_response(
     system: str | None = None,
     model: str | None = None,
     timeout: float | None = None,
+    request_id: str | None = None,
 ):
     """Return the raw LiteLLM response for features that need usage metadata."""
-    settings = get_settings()
-    selected_model = model or resolve_model()
     messages: list[dict[str, str]] = []
     if system:
         messages.append({"role": "system", "content": system})
     messages.append({"role": "user", "content": prompt})
-
-    kwargs: dict[str, Any] = {
-        "model": selected_model,
-        "messages": messages,
-        "temperature": settings.llm_temperature,
-        "max_tokens": settings.llm_max_tokens,
-        "num_retries": 2,
-    }
-    if timeout is not None:
-        kwargs["timeout"] = timeout
-    return litellm.completion(**kwargs)
+    return llm_service.generate(messages, model=model, timeout=timeout, request_id=request_id).raw_response
 
 
 def parse_json_response(raw: str) -> dict:
@@ -84,20 +66,14 @@ def complete(
     system: str | None = None,
     model: str | None = None,
     timeout: float | None = None,
+    request_id: str | None = None,
 ) -> str:
     """Call the configured LLM and return message content."""
-    selected_model = model or resolve_model()
-    response = complete_response(prompt, system=system, model=selected_model, timeout=timeout)
-    content = response.choices[0].message.content or ""
-    usage = getattr(response, "usage", None)
-    if usage:
-        logger.info(
-            "llm call: model=%s in=%s out=%s",
-            selected_model,
-            usage.prompt_tokens,
-            usage.completion_tokens,
-        )
-    return content
+    messages: list[ChatMessage] = []
+    if system:
+        messages.append(ChatMessage(role="system", content=system))
+    messages.append(ChatMessage(role="user", content=prompt))
+    return llm_service.generate(messages, model=model, timeout=timeout, request_id=request_id).text
 
 
 def complete_json(
@@ -106,6 +82,7 @@ def complete_json(
     system: str | None = None,
     model: str | None = None,
     timeout: float | None = None,
+    request_id: str | None = None,
 ) -> dict:
     """Call the configured LLM and parse a JSON object."""
-    return parse_json_response(complete(prompt, system=system, model=model, timeout=timeout))
+    return parse_json_response(complete(prompt, system=system, model=model, timeout=timeout, request_id=request_id))

@@ -31,11 +31,18 @@ uvicorn app.main:app --reload --port 8000   # docs at http://localhost:8000/docs
 | `PAYLOAD_URL` | Base URL of the web app (Vercel), for the Payload REST API |
 | `PAYLOAD_API_KEY` | Service user API key (writes summaries back to the CMS) |
 | `AI_SERVICE_TOKEN` | Shared secret guarding mutating endpoints |
-| `LLM_MODEL` | Default LiteLLM model id (e.g. `groq/llama-3.3-70b-versatile`) |
-| `GROQ_API_KEY` / `GEMINI_API_KEY` | Provider key for the chosen model |
+| `LLM_PROVIDER` | `auto`, `gemini`, `openrouter`, `ollama`, or `openai` |
+| `LLM_FALLBACK_ENABLED` | `true` to try the next configured provider after provider failures |
+| `LLM_FALLBACK_PROVIDERS` | Ordered list, recommended `gemini,openrouter,ollama` |
+| `GEMINI_API_KEY` / `GOOGLE_API_KEY` | Gemini key; first free cloud provider |
+| `GEMINI_MODEL` | Default `gemini-3.5-flash-lite` |
+| `OPENROUTER_API_KEY` | OpenRouter key; fallback cloud provider |
+| `OPENROUTER_MODEL` | Default `openrouter/free`; free availability and quotas can change |
+| `OLLAMA_BASE_URL` / `OLLAMA_MODEL` | Optional local fallback for development |
 | `OPENALEX_MAILTO` | Email for the OpenAlex polite pool |
 | `EMBEDDING_DEVICE` | `cpu` (default) — Spaces are CPU-only |
 | `RAG_MIN_SEMANTIC_SCORE` | Minimum semantic score for admin RAG evidence (default `0.25`) |
 
-The architecture keeps the LLM offline: the website works fully even if this service
-is down (search degrades to keyword-only, the chatbot is hidden).
+The architecture keeps the LLM isolated: the website works even if no provider is
+configured. Use `/health/llm` to check chatbot readiness without making a billable
+generation request.

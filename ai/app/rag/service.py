@@ -205,9 +205,16 @@ def _clean_suggested_readings(value: Any, valid_urls: set[str]) -> list[dict[str
 
 def _insufficient(message: str, start: float, warnings: list[str], source_count: int = 0) -> RagResponse:
     warnings = [*warnings, message]
+    model = None
+    provider = None
+    try:
+        model = resolve_model()
+        provider = _provider(model)
+    except Exception:
+        pass
     metadata = RagMetadata(
-        provider=_provider(resolve_model()),
-        model=resolve_model(),
+        provider=provider,
+        model=model,
         promptVersion=PROMPT_VERSION,
         sourceCount=source_count,
         latencyMs=int((time.monotonic() - start) * 1000),

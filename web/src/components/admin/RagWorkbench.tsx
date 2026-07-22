@@ -18,6 +18,33 @@ type RagResponse = {
   modelComparisons?: Array<{ model: string; latencyMs: number; answer: NonNullable<RagResponse['answer']> }>
 }
 
+type ApiError = { code?: string; message?: string; hint?: string; requestId?: string }
+
+const errorText = (error: ApiError | string | undefined) => {
+  if (typeof error === 'string') return error
+  switch (error?.code) {
+    case 'LLM_NOT_CONFIGURED':
+      return 'The RAG assistant is not configured. Add Gemini or OpenRouter credentials on the server.'
+    case 'MODEL_NOT_CONFIGURED':
+      return 'No language model is configured for the selected provider.'
+    case 'INVALID_API_KEY':
+      return 'The configured language-model credential was rejected.'
+    case 'PROVIDER_RATE_LIMITED':
+      return 'The provider is temporarily rate-limited. Try again later.'
+    case 'PROVIDER_QUOTA_EXCEEDED':
+      return 'The free provider quota was exceeded. Try again later or change provider.'
+    case 'OLLAMA_UNAVAILABLE':
+      return 'Ollama is not running or cannot be reached.'
+    case 'OLLAMA_MODEL_NOT_FOUND':
+    case 'MODEL_NOT_FOUND':
+      return 'The configured model is unavailable. Check the model name.'
+    case 'LLM_TIMEOUT':
+      return 'The language-model request timed out.'
+    default:
+      return error?.message || 'RAG request failed'
+  }
+}
+
 const comparisonModels = [
   'gemini/gemini-flash-lite-latest',
   'groq/llama-3.1-8b-instant',
@@ -46,7 +73,7 @@ export const RagWorkbench: React.FC = () => {
         }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`)
+      if (!res.ok) throw new Error(errorText(data?.error || `HTTP ${res.status}`))
       setResult(data)
       setState('idle')
     } catch (err) {

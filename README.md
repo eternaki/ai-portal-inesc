@@ -78,7 +78,8 @@ Admin -> /api/ingest -> FastAPI -> OpenAlex -> Payload REST -> PostgreSQL
 Publication processing:
 
 ```text
-Admin/batch -> FastAPI -> LiteLLM + sentence-transformers -> Payload REST + pgvector
+Admin/batch -> FastAPI -> LLM resolver -> LiteLLM -> Gemini/OpenRouter/Ollama
+                         -> sentence-transformers -> Payload REST + pgvector
 ```
 
 Search and topic map:
@@ -90,7 +91,7 @@ Browser -> Next.js page -> FastAPI /search or /map -> pgvector + Payload REST
 Admin RAG:
 
 ```text
-Admin -> /api/rag -> FastAPI /rag/answer -> Payload REST -> LiteLLM -> structured answer
+Admin -> /api/rag -> FastAPI /rag/answer -> Payload REST -> LLM resolver -> LiteLLM -> structured answer
 ```
 
 Member contacts and identifiers:
@@ -241,12 +242,34 @@ provide enough evidence, the assistant returns `insufficient_evidence` instead o
 guessing. Model comparison is available only when requested from the admin
 workbench.
 
-## Swapping the LLM
+## Chatbot LLM configuration
 
-One line in `.env`: `LLM_MODEL=provider/model` (litellm format), plus the
-provider's key in its standard variable. Examples:
-`gemini/gemini-2.5-flash`, `openai/gpt-4o-mini`, `anthropic/claude-haiku-4-5`,
-`ollama/llama3.1` (local). No code changes.
+The chatbot, admin RAG, summaries, and snippets all use one server-side LiteLLM
+layer. The recommended free cloud order is Gemini first, OpenRouter second, and
+optional local Ollama for development:
+
+```env
+LLM_PROVIDER=auto
+LLM_FALLBACK_ENABLED=true
+LLM_FALLBACK_PROVIDERS=gemini,openrouter,ollama
+
+GEMINI_API_KEY=...
+GEMINI_MODEL=gemini-3.5-flash-lite
+
+OPENROUTER_API_KEY=...
+OPENROUTER_MODEL=openrouter/free
+```
+
+Check readiness without spending tokens:
+
+```text
+GET /health/llm
+```
+
+OpenRouter free models and Gemini free-tier quotas can change. The API returns
+structured errors such as `LLM_NOT_CONFIGURED`, `PROVIDER_QUOTA_EXCEEDED`,
+`PROVIDER_RATE_LIMITED`, and `MODEL_NOT_FOUND` instead of leaking provider stack
+traces.
 
 ## Working agreements
 

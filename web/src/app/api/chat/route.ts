@@ -27,14 +27,22 @@ export async function POST(req: NextRequest) {
     })
     const data = await res.json().catch(() => ({}))
     if (!res.ok) {
-      const status = res.status === 429 ? 429 : 502
-      return NextResponse.json(
-        { error: data?.detail || 'chat is temporarily unavailable' },
-        { status },
-      )
+      const error = data?.error || data?.detail?.error || {
+        code: 'LLM_INTERNAL_ERROR',
+        message: data?.detail || 'chat is temporarily unavailable',
+      }
+      return NextResponse.json({ error }, { status: res.status })
     }
     return NextResponse.json(data)
   } catch {
-    return NextResponse.json({ error: 'chat is temporarily unavailable' }, { status: 502 })
+    return NextResponse.json(
+      {
+        error: {
+          code: 'PROVIDER_UNAVAILABLE',
+          message: 'chat is temporarily unavailable',
+        },
+      },
+      { status: 502 },
+    )
   }
 }

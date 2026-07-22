@@ -109,6 +109,7 @@ regenerated on every commit (see section 7).
 - `summarize.py`
 
 ### AI HTTP endpoints — `ai/app/api/routes.py`
+- `GET /health/llm`
 - `GET /health`
 - `GET /maintenance/report`
 - `GET /map`

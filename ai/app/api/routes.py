@@ -7,14 +7,18 @@ only (no LLM call); /generate/* are triggered manually from the admin.
 import logging
 import secrets
 import time
+import uuid
 from collections import defaultdict, deque
 
 from fastapi import APIRouter, Header, HTTPException
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from app import payload_api
 from app.config import get_settings
+from app.llm.errors import LLMError
 from app.llm.client import complete, complete_json, load_prompt
+from app.llm.service import llm_service
 from app.rag.models import RagRequest
 from app.rag.service import answer_question
 
@@ -56,6 +60,15 @@ def require_service_token(x_service_token: str | None) -> None:
 @router.get("/health")
 def health() -> dict:
     return {"status": "ok"}
+
+
+@router.get("/health/llm")
+def llm_health() -> dict:
+    return llm_service.readiness()
+
+
+def llm_error_response(err: LLMError) -> JSONResponse:
+    return JSONResponse(status_code=err.http_status, content=err.to_response())
 
 
 @router.get("/search")
@@ -224,6 +237,7 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
     """RAG chatbot over the group's publications (brief: section A/D chatbot)."""
     from app.settings_cache import feature_enabled
 
+    request_id = str(uuid.uuid4())
     if not feature_enabled("enableChatbot"):
         raise HTTPException(503, "the chatbot is currently disabled")
     check_chat_rate_limit(x_client_ip or "unknown")
@@ -260,16 +274,21 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
         for t in req.history[-6:]
     ) or "(start of conversation)"
 
-    answer = complete(
-        load_prompt(
-            "chat",
-            context="\n".join(context_lines) or "(no relevant publications found)",
-            history=history_text,
-            question=req.message,
+    try:
+        answer = complete(
+            load_prompt(
+                "chat",
+                context="\n".join(context_lines) or "(no relevant publications found)",
+                history=history_text,
+                question=req.message,
+            ),
+            request_id=request_id,
         )
-    )
+    except LLMError as err:
+        err.request_id = err.request_id or request_id
+        return llm_error_response(err)
     # LLM output over untrusted inputs — plain text, capped
-    return {"answer": str(answer)[:3000], "sources": sources}
+    return {"answer": str(answer)[:3000], "sources": sources, "requestId": request_id}
 
 
 class ProcessRequest(BaseModel):
@@ -430,4 +449,7 @@ def rag_answer(req: RagRequest, x_service_token: str | None = Header(None)) -> d
     Frontend/admin code should use the Next.js facade at /api/rag.
     """
     require_service_token(x_service_token)
-    return answer_question(req).model_dump()
+    try:
+        return answer_question(req).model_dump()
+    except LLMError as err:
+        return llm_error_response(err)

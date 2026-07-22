@@ -41,13 +41,25 @@ export async function POST(req: NextRequest) {
     })
     const data = await res.json().catch(() => ({}))
     if (!res.ok) {
+      const error = data?.error || data?.detail?.error || {
+        code: 'LLM_INTERNAL_ERROR',
+        message: data?.detail || `AI service returned ${res.status}`,
+      }
       return NextResponse.json(
-        { error: data?.detail || `AI service returned ${res.status}` },
-        { status: 502 },
+        { error },
+        { status: res.status },
       )
     }
     return NextResponse.json(data)
   } catch {
-    return NextResponse.json({ error: 'AI service is unavailable' }, { status: 502 })
+    return NextResponse.json(
+      {
+        error: {
+          code: 'PROVIDER_UNAVAILABLE',
+          message: 'AI service is unavailable',
+        },
+      },
+      { status: 502 },
+    )
   }
 }

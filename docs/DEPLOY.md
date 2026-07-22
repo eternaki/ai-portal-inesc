@@ -25,7 +25,8 @@ accounts or enter your tokens). Everything code-side is ready. Follow the order 
 openssl rand -hex 32     # PAYLOAD_SECRET  (keep it)
 openssl rand -hex 24     # AI_SERVICE_TOKEN (shared web ↔ ai secret; keep it)
 ```
-Get a free LLM key at <https://console.groq.com> → `GROQ_API_KEY`.
+Get a Gemini API key from Google AI Studio for the first free cloud provider. For
+fallback, create an OpenRouter API key and use `OPENROUTER_MODEL=openrouter/free`.
 
 ---
 
@@ -64,8 +65,13 @@ Get a free LLM key at <https://console.groq.com> → `GROQ_API_KEY`.
    | `PAYLOAD_URL` | your Vercel URL (set after step 3; can start with a placeholder) |
    | `PAYLOAD_API_KEY` | service user API key (see step 4) |
    | `AI_SERVICE_TOKEN` | the value from step 0 |
-   | `LLM_MODEL` | `groq/llama-3.3-70b-versatile` |
-   | `GROQ_API_KEY` | your Groq key |
+   | `LLM_PROVIDER` | `auto` |
+   | `LLM_FALLBACK_ENABLED` | `true` |
+   | `LLM_FALLBACK_PROVIDERS` | `gemini,openrouter` |
+   | `GEMINI_API_KEY` | your Gemini key |
+   | `GEMINI_MODEL` | `gemini-3.5-flash-lite` |
+   | `OPENROUTER_API_KEY` | your OpenRouter key, optional but recommended |
+   | `OPENROUTER_MODEL` | `openrouter/free` |
    | `OPENALEX_MAILTO` | your email |
 4. The Space builds and serves at `https://<user>-<space>.hf.space`. That is your
    `AI_SERVICE_URL`.
@@ -126,6 +132,7 @@ Consider also renaming the admin email to a real one.
 ## 6. Verify
 
 - `https://<space>.hf.space/health` → `{"status":"ok"}`
+- `https://<space>.hf.space/health/llm` → configured provider/model readiness
 - Vercel site → publications load, search returns results, chatbot answers.
 - Admin dashboard → the maintenance report populates.
 
@@ -134,7 +141,8 @@ Consider also renaming the admin email to a real one.
 - HF free Spaces sleep after ~48 h idle and wake on the next request (first hit is
   slow). Fine for a demo.
 - Supabase free pauses a project after long inactivity — open the dashboard to wake it.
-- Groq free tier is generous (~14k requests/day); summaries run as a batch, chat is
-  rate-limited per IP.
+- Gemini and OpenRouter free quotas can change. The chatbot reports structured
+  configuration, quota, rate-limit, timeout, and model errors instead of generic
+  provider failures.
 - The site works even if the AI Space is asleep/down: search falls back to keyword,
   the chatbot hides. Nothing on the public site hard-depends on the AI service.

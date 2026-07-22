@@ -10,6 +10,32 @@ type ChatStrings = Dictionary['chat']
 
 type Source = { n: number; title: string; slug?: string | null; year?: number | null }
 type Msg = { role: 'user' | 'assistant'; content: string; sources?: Source[] }
+type ApiError = { code?: string; message?: string; hint?: string; requestId?: string }
+
+const errorText = (error: ApiError | string | undefined, fallback: string) => {
+  if (typeof error === 'string') return error
+  switch (error?.code) {
+    case 'LLM_NOT_CONFIGURED':
+      return 'The chatbot is not configured yet. Add Gemini or OpenRouter credentials on the server.'
+    case 'MODEL_NOT_CONFIGURED':
+      return 'The chatbot model is not configured. Check the server model setting.'
+    case 'INVALID_API_KEY':
+      return 'The configured language-model credential was rejected.'
+    case 'PROVIDER_RATE_LIMITED':
+      return 'The language-model provider is temporarily rate-limited. Try again later.'
+    case 'PROVIDER_QUOTA_EXCEEDED':
+      return 'The free language-model quota was exceeded. Try again later.'
+    case 'OLLAMA_UNAVAILABLE':
+      return 'The local Ollama service is not running or cannot be reached.'
+    case 'OLLAMA_MODEL_NOT_FOUND':
+    case 'MODEL_NOT_FOUND':
+      return 'The configured model is unavailable. Check the model name.'
+    case 'LLM_TIMEOUT':
+      return 'The language-model request timed out. Try again.'
+    default:
+      return error?.message || fallback
+  }
+}
 
 export function ChatWidget({ t }: { t: ChatStrings }) {
   const [open, setOpen] = useState(false)
@@ -41,7 +67,7 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
       })
       const data = await res.json()
       if (!res.ok) {
-        const text = res.status === 429 ? t.rateLimited : t.error
+        const text = res.status === 429 ? t.rateLimited : errorText(data?.error, t.error)
         setMessages((m) => [...m, { role: 'assistant', content: text }])
       } else {
         setMessages((m) => [
