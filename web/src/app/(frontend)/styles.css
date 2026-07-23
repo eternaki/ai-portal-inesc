@@ -207,6 +207,13 @@ main {
   gap: 0.35rem;
 }
 
+.site-credit {
+  flex-basis: 100%;
+  font-size: 0.78rem;
+  color: var(--ink-40);
+  margin-top: -0.5rem;
+}
+
 /* ── hero (home) ── */
 
 .hero {

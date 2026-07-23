@@ -71,6 +71,7 @@ regenerated on every commit (see section 7).
 - `News.ts` — slug `news`
 - `Projects.ts` — slug `projects`
 - `Publications.ts` — slug `publications`
+- `ReadingGroups.ts` — slug `reading-groups`
 - `ResearchThemes.ts` — slug `research-themes`
 - `Software.ts` — slug `software`
 - `ThesisTopics.ts` — slug `thesis-topics`
@@ -87,6 +88,7 @@ regenerated on every commit (see section 7).
 - `/projects`
 - `/publications/[slug]`
 - `/publications`
+- `/reading-groups`
 - `/research`
 - `/search`
 - `/software`

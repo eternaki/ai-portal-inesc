@@ -44,7 +44,10 @@ export function MaintenancePanel() {
   }
 
   useEffect(() => {
-    void load(false)
+    const timeout = window.setTimeout(() => {
+      void load(false)
+    }, 0)
+    return () => window.clearTimeout(timeout)
   }, [])
 
   const total = report ? Object.values(report.summary).reduce((a, b) => a + b, 0) : 0

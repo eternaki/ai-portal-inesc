@@ -66,7 +66,7 @@ export default async function ResearchPage() {
       {themes.docs.length === 0 && (
         <div className="empty">
           {t.research.emptyBefore}
-          <a href="/publications">{t.research.emptyLink}</a>
+          <Link href="/publications">{t.research.emptyLink}</Link>
           {t.research.emptyAfter}
         </div>
       )}

@@ -45,14 +45,14 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
         <h1>{t.publications.title}</h1>
         <span>
           <Link href="/search">{t.publications.semanticSearch}</Link>{' '}
-          <a
+          <Link
             className="btn btn-quiet"
             href="/admin/collections/publications/create"
             title={t.publications.addTitle}
             style={{ marginLeft: '0.8rem' }}
           >
             {t.publications.add}
-          </a>
+          </Link>
         </span>
       </div>
       <p className="pub-meta">

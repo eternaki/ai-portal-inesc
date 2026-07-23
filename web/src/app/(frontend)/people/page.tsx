@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -156,10 +157,12 @@ function PersonCard({
   return (
     <div id={member.slug ?? `member-${member.id}`} className="person-card">
       {photoUrl ? (
-        <img
+        <Image
           className="person-avatar person-avatar--photo"
           src={photoUrl}
           alt={photo.alt || member.name}
+          width={44}
+          height={44}
           loading="lazy"
         />
       ) : (

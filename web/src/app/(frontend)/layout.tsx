@@ -48,6 +48,7 @@ const NAV = [
   { href: '/publications', key: 'publications' },
   { href: '/people', key: 'people' },
   { href: '/opportunities', key: 'opportunities' },
+  { href: '/reading-groups', key: 'readingGroups' },
   { href: '/news', key: 'news' },
   { href: '/events', key: 'events' },
   { href: '/search', key: 'search' },
@@ -101,9 +102,11 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             </div>
             <div className="site-footer-links">
               <Link href="/publications">{t.nav.publications}</Link>
+              <Link href="/reading-groups">{t.nav.readingGroups}</Link>
               <Link href="/opportunities">{t.footer.openThesis}</Link>
-              <a href="/admin">{t.footer.signIn}</a>
+              <Link href="/admin">{t.footer.signIn}</Link>
             </div>
+            <p className="site-credit">{t.footer.credit}</p>
           </div>
         </footer>
         {chatEnabled && <ChatWidget t={t.chat} />}

@@ -3,7 +3,8 @@
 AI-Enhanced Web Platform for the Machine Learning and Knowledge Discovery group (INESC-ID).
 
 Docs: [design](docs/plans/2026-07-10-mlkd-portal-design.md) ·
-[team plan](docs/plans/2026-07-10-mlkd-portal-plan.md) · agent/dev guide: [`CLAUDE.md`](CLAUDE.md)
+[team plan](docs/plans/2026-07-10-mlkd-portal-plan.md) ·
+[operations](docs/OPERATIONS.md) · agent/dev guide: [`CLAUDE.md`](CLAUDE.md)
 
 ## Structure
 

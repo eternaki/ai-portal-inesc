@@ -1,16 +1,17 @@
 FROM node:22-alpine AS base
-RUN corepack enable pnpm
+RUN corepack enable pnpm && corepack prepare pnpm@10.0.0 --activate
 
 FROM base AS deps
 WORKDIR /app
 COPY package.json pnpm-lock.yaml* .npmrc ./
+RUN mkdir -p /scripts && printf "process.exit(0)\n" > /scripts/setup-hooks.mjs
 RUN pnpm install --frozen-lockfile || pnpm install
 
 FROM base AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Сборка не ходит в БД: страницы объявлены force-dynamic
+# Build does not query the database: dynamic pages render at request time.
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm build
 

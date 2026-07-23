@@ -14,6 +14,7 @@ const en = {
     publications: 'Publications',
     people: 'People',
     opportunities: 'Opportunities',
+    readingGroups: 'Reading Groups',
     news: 'News',
     events: 'Events',
     search: 'Search',
@@ -21,10 +22,11 @@ const en = {
   footer: {
     openThesis: 'Open thesis topics',
     signIn: 'Member sign in',
+    credit: 'Developed by João Enomoto for MLKD / INESC-ID.',
   },
   home: {
     lede:
-      'We study how machines learn from data — and we make what we learn easy to find. Every publication on this site is indexed, semantically searchable, and summarised in plain language.',
+      'The mission of the Machine Learning and Knowledge Discovery (MLKD) group is to advance the state of the art in machine learning and its applications, in medical imaging, natural language processing and sequential decision making.',
     statPublications: 'publications',
     statPeople: 'people',
     statActiveSince: 'active since',
@@ -47,7 +49,7 @@ const en = {
     addTitle:
       'Members: add a publication via the admin panel; the summary is generated automatically',
     metaSuffix:
-      'indexed from OpenAlex · summaries generated automatically and editable by the group',
+      'curated research outputs from the MLKD group',
     allYears: 'all years',
     empty: 'No publications match this filter yet.',
   },
@@ -137,6 +139,7 @@ const en = {
       software: 'Software',
       news: 'News',
       events: 'Event',
+      'reading-groups': 'Reading Group',
     },
     types: {
       journal: 'Journal',
@@ -212,6 +215,14 @@ const en = {
     upcoming: 'Upcoming',
     past: 'Past events',
   },
+  readingGroups: {
+    title: 'Reading Groups',
+    meta: 'Research discussions, paper presentations and shared study sessions organised by the group.',
+    empty: 'No reading groups have been added yet.',
+    upcoming: 'Upcoming sessions',
+    past: 'Past sessions',
+    materials: 'Materials',
+  },
 }
 
 export type Dictionary = typeof en
@@ -223,6 +234,7 @@ const pt: Dictionary = {
     publications: 'Publicações',
     people: 'Pessoas',
     opportunities: 'Oportunidades',
+    readingGroups: 'Reading Groups',
     news: 'Notícias',
     events: 'Eventos',
     search: 'Pesquisa',
@@ -230,10 +242,11 @@ const pt: Dictionary = {
   footer: {
     openThesis: 'Temas de tese em aberto',
     signIn: 'Entrar (membros)',
+    credit: 'Desenvolvido por João Enomoto para MLKD / INESC-ID.',
   },
   home: {
     lede:
-      'Estudamos como as máquinas aprendem a partir de dados — e tornamos o que aprendemos fácil de encontrar. Todas as publicações deste site estão indexadas, pesquisáveis por significado e resumidas em linguagem simples.',
+      'A missão do grupo Machine Learning and Knowledge Discovery (MLKD) é avançar o estado da arte em aprendizagem automática e nas suas aplicações em imagiologia médica, processamento de linguagem natural e tomada de decisão sequencial.',
     statPublications: 'publicações',
     statPeople: 'pessoas',
     statActiveSince: 'ativos desde',
@@ -256,7 +269,7 @@ const pt: Dictionary = {
     addTitle:
       'Membros: adicionem uma publicação através do painel de administração; o resumo é gerado automaticamente',
     metaSuffix:
-      'indexadas do OpenAlex · resumos gerados automaticamente e editáveis pelo grupo',
+      'resultados de investigação curados pelo grupo MLKD',
     allYears: 'todos os anos',
     empty: 'Ainda não há publicações para este filtro.',
   },
@@ -347,6 +360,7 @@ const pt: Dictionary = {
       software: 'Software',
       news: 'Notícia',
       events: 'Evento',
+      'reading-groups': 'Reading Group',
     },
     types: {
       journal: 'Revista',
@@ -420,6 +434,14 @@ const pt: Dictionary = {
     empty: 'Ainda não há eventos — volte em breve.',
     upcoming: 'Próximos',
     past: 'Eventos anteriores',
+  },
+  readingGroups: {
+    title: 'Reading Groups',
+    meta: 'Discussões de investigação, apresentações de artigos e sessões de estudo organizadas pelo grupo.',
+    empty: 'Ainda não há reading groups adicionados.',
+    upcoming: 'Próximas sessões',
+    past: 'Sessões anteriores',
+    materials: 'Materiais',
   },
 }
 

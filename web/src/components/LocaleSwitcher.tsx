@@ -13,6 +13,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
   const choose = (locale: Locale) => {
     if (locale === current) return
     // One year; Lax so ordinary navigations keep sending it.
+    // eslint-disable-next-line react-hooks/immutability
     document.cookie = `${LOCALE_COOKIE}=${locale}; path=/; max-age=31536000; samesite=lax`
     router.refresh()
   }

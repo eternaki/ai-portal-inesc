@@ -75,6 +75,7 @@ export interface Config {
     'thesis-topics': ThesisTopic;
     news: News;
     events: Event;
+    'reading-groups': ReadingGroup;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -92,6 +93,7 @@ export interface Config {
     'thesis-topics': ThesisTopicsSelect<false> | ThesisTopicsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
+    'reading-groups': ReadingGroupsSelect<false> | ReadingGroupsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -644,6 +646,55 @@ export interface Event {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reading-groups".
+ */
+export interface ReadingGroup {
+  id: number;
+  title: string;
+  /**
+   * URL identifier; created automatically, can be edited by hand
+   */
+  slug?: string | null;
+  date: string;
+  presenter?: string | null;
+  /**
+   * Paper or topic discussed
+   */
+  paperTitle?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Slides, papers, notes or supporting files uploaded manually.
+   */
+  materials?:
+    | {
+        label: string;
+        file: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional MLKD publications related to this session.
+   */
+  relatedPublications?: (number | Publication)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -697,6 +748,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'events';
         value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'reading-groups';
+        value: number | ReadingGroup;
       } | null)
     | ({
         relationTo: 'media';
@@ -954,6 +1009,28 @@ export interface EventsSelect<T extends boolean = true> {
   speaker?: T;
   description?: T;
   link?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reading-groups_select".
+ */
+export interface ReadingGroupsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  date?: T;
+  presenter?: T;
+  paperTitle?: T;
+  description?: T;
+  materials?:
+    | T
+    | {
+        label?: T;
+        file?: T;
+        id?: T;
+      };
+  relatedPublications?: T;
   updatedAt?: T;
   createdAt?: T;
 }
