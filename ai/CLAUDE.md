@@ -6,7 +6,7 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 ## Layout
 
 - `app/main.py` — FastAPI app entry point.
-- `app/api/routes.py` — HTTP endpoints (search, map, process, snippet).
+- `app/api/routes.py` — HTTP endpoints (search, map, process, snippet, `/metrics`).
 - `app/config.py` — settings from env (`Settings`, `get_settings()`). **All**
   configuration comes from env / `.env`.
 - `app/llm/client.py` — **the only place that calls an LLM.** Public helpers:
@@ -14,16 +14,22 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 - `app/llm/prompts/*.md` — prompt templates (files, reviewed like code).
 - `app/pipelines/` — batch jobs: `ingest`, `embed`, `embed_entities` (multi-entity
   vectors), `summarize`, `cluster`, `bios`, `maintenance` (data-health report),
-  `benchmark` (search metrics: P@5/Recall@10/MRR).
+  `benchmark` (search metrics: labelled P@5/Recall@10/MRR, plus label-free ANN
+  recall via `python -m app.pipelines.benchmark --ann`).
 - `app/entities.py` — entity → embedding-text adapters (publications, members,
   projects, thesis topics). The ONLY type-specific code for the unified pipeline.
 - `app/search.py` — hybrid search: pgvector semantic + Postgres full-text, fused
   (RRF). Reads the content table READ-ONLY for ranking; still writes nothing.
 - `app/settings_cache.py` — cached read of the `ai-settings` global (model +
   feature flags). `feature_enabled(name)` gates chat/search/summary endpoints.
-- `app/embeddings.py` — sentence-transformers + pgvector search. Tracks a
+- `app/embeddings.py` — sentence-transformers (multilingual, 384-dim) + pgvector
+  ANN search over an HNSW index (cosine). Sets `hnsw.ef_search` per query. Tracks a
   `content_hash` so re-embedding is skipped when content is unchanged.
-- `app/db.py` — Postgres connection for **AI-owned tables only**.
+- `app/metrics.py` — in-process metric registry (request/LLM latency, cost, errors)
+  scraped at `GET /metrics` (Prometheus text or `?format=json`). Best-effort:
+  instrumentation never breaks a request.
+- `app/db.py` — Postgres connection + schema for **AI-owned tables only** (embedding
+  tables carry HNSW indexes; tuning knobs `HNSW_*` in config).
 - `app/payload_api.py` — Payload REST client; the **only** way to write content back.
   Ingest creates drafts (`status=pending_review`); never publishes automatically.
 

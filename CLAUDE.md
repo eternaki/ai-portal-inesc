@@ -32,7 +32,7 @@ frontend/UX, AI & automation, data & visibility).
 | Database | **PostgreSQL 16 + pgvector** | One DB for relational data *and* vector search |
 | Publication data | **OpenAlex API** (+ ORCID / DBLP) | Free, official, has abstracts + citations (Google Scholar has no API) |
 | LLM | **Gemini** free tier (swappable) | Summaries / bios / snippets; any provider via LiteLLM |
-| Embeddings | **sentence-transformers** (local) | Semantic search, no API cost |
+| Embeddings | **sentence-transformers** (local, multilingual, 384-dim) | Semantic search over EN+PT, no API cost; pgvector **HNSW/ANN** index |
 | Deploy | **Docker Compose** | Whole system: `db` + `web` + `ai`, one command |
 
 ## 3. Architecture & ownership (hard rules)
@@ -116,6 +116,7 @@ regenerated on every commit (see section 7).
 - `GET /health`
 - `GET /maintenance/report`
 - `GET /map`
+- `GET /metrics`
 - `GET /search/all`
 - `GET /search`
 - `POST /chat`

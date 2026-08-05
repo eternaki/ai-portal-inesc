@@ -56,8 +56,22 @@ class Settings(BaseSettings):
     rag_min_source_score: float = 0.05
     rag_min_semantic_score: float = 0.25
 
-    # Local embedding model (sentence-transformers)
-    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    # Local embedding model (sentence-transformers). Multilingual by default so
+    # semantic search works on the group's Portuguese content as well as English.
+    # This model is 384-dim — the same size as the older all-MiniLM-L6-v2 — so the
+    # pgvector column and HNSW index are unchanged. Switching the model changes the
+    # content_hash (model is part of it), so the embed pipeline re-embeds on the
+    # next run without any manual reset.
+    embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+
+    # pgvector HNSW approximate-nearest-neighbour index. ANN keeps vector search
+    # sub-linear as the corpus grows; on today's small corpus a generous ef_search
+    # keeps recall effectively exact. ef_search must be >= the largest LIMIT a query
+    # uses (search over-fetches up to limit*4), or the index returns fewer rows and
+    # recall drops. m / ef_construction only affect index build. All tunable via env.
+    hnsw_m: int = 16
+    hnsw_ef_construction: int = 64
+    hnsw_ef_search: int = 100
 
     # OpenAlex "polite pool": set the team's real email
     openalex_mailto: str = "mlkd-portal@example.com"
