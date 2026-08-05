@@ -16,12 +16,22 @@ function AuthorName({ author }: { author: NonNullable<Publication['authors']>[nu
 }
 
 // Server component: reads the active locale so the "summary" badge is localized.
-export async function PubRow({ pub }: { pub: Publication }) {
+// `clusterColor` (from the /map topic model) ties this row back to the map —
+// omit it and the row just renders without a tag, no dependency on the AI service.
+export async function PubRow({ pub, clusterColor }: { pub: Publication; clusterColor?: string | null }) {
   const t = await getDictionary()
   const hasAiSummary = pub.aiSummaryStatus && pub.aiSummaryStatus !== 'none'
   return (
     <article className="pub-item">
       <div className="pub-title">
+        {clusterColor && (
+          <Link
+            href={`/map?pub=${pub.id}`}
+            className="pub-cluster-dot"
+            style={{ background: clusterColor }}
+            title={t.pubRow.viewOnMap}
+          />
+        )}
         {pub.slug ? <Link href={`/publications/${pub.slug}`}>{pub.title}</Link> : pub.title}
       </div>
       <div className="pub-meta">

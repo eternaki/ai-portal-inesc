@@ -3,8 +3,10 @@ import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Scatter } from '@/components/Scatter'
+import { CountUp } from '@/components/CountUp'
 import { JsonLd, ORGANIZATION } from '@/components/JsonLd'
 import { PubRow } from '@/components/PubRow'
+import { clusterColor, fetchPublicationClusters } from '@/lib/clusterColors'
 import { PUBLISHED } from '@/lib/queries'
 import { getDictionary, getLocale } from '@/i18n/server'
 import { dateLocale } from '@/i18n/config'
@@ -12,18 +14,25 @@ import { dateLocale } from '@/i18n/config'
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
 
+// Same family as the /map cluster palette — ties the homepage back to the
+// "map of knowledge" concept without pretending themes map 1:1 to clusters.
+const THEME_COLORS = [
+  '#2553a5', '#b97a10', '#2a7f62', '#8c3fa8', '#c04b3d', '#1b7f9e',
+]
+
 export default async function HomePage() {
   const payload = await getPayload({ config })
   const t = await getDictionary()
   const locale = await getLocale()
 
-  const [pubCount, memberCount, recentPubs, themes, openTopics, news] = await Promise.all([
+  const [pubCount, memberCount, recentPubs, themes, openTopics, news, clusters] = await Promise.all([
     payload.count({ collection: 'publications', where: PUBLISHED }),
     payload.count({ collection: 'members' }),
     payload.find({ collection: 'publications', where: PUBLISHED, sort: '-year', limit: 5, depth: 0 }),
     payload.find({ collection: 'research-themes', limit: 6, depth: 0 }),
     payload.count({ collection: 'thesis-topics', where: { status: { equals: 'open' } } }),
-    payload.find({ collection: 'news', sort: '-date', limit: 2, depth: 0 }),
+    payload.find({ collection: 'news', sort: '-date', limit: 2, depth: 1 }),
+    fetchPublicationClusters(),
   ])
 
   const years = recentPubs.docs.map((d) => d.year).filter(Boolean) as number[]
@@ -35,29 +44,29 @@ export default async function HomePage() {
     <div>
       <JsonLd data={ORGANIZATION} />
       <section className="hero">
-        <Scatter className="hero-scatter" />
+        <Scatter className="hero-scatter" count={46} dark />
         <div className="hero-content">
           <div className="eyebrow">INESC-ID · Lisboa</div>
           <h1>Machine Learning &amp; Knowledge Discovery</h1>
           <p className="hero-lede">{t.home.lede}</p>
           <div className="hero-stats">
             <div className="stat">
-              <b>{pubCount.totalDocs}</b>
+              <b><CountUp value={pubCount.totalDocs} /></b>
               <span>{t.home.statPublications}</span>
             </div>
             <div className="stat">
-              <b>{memberCount.totalDocs}</b>
+              <b><CountUp value={memberCount.totalDocs} /></b>
               <span>{t.home.statPeople}</span>
             </div>
             {minYear ? (
               <div className="stat">
-                <b>{minYear}—</b>
+                <b><CountUp value={minYear} suffix="—" /></b>
                 <span>{t.home.statActiveSince}</span>
               </div>
             ) : null}
             {openTopics.totalDocs > 0 ? (
               <div className="stat">
-                <b>{openTopics.totalDocs}</b>
+                <b><CountUp value={openTopics.totalDocs} /></b>
                 <span>{t.home.statOpenTopics}</span>
               </div>
             ) : null}
@@ -72,17 +81,26 @@ export default async function HomePage() {
             <Link href="/research">{t.home.allThemes}</Link>
           </div>
           <div className="card-grid">
-            {themes.docs.map((theme) => (
-              <div key={theme.id} className="card">
-                <h3>
-                  {theme.slug ? (
-                    <Link href={`/research#${theme.slug}`}>{theme.name}</Link>
-                  ) : (
-                    theme.name
+            {themes.docs.map((theme, i) => {
+              const color = THEME_COLORS[i % THEME_COLORS.length]
+              const pubCount = theme.keyPublications?.length ?? 0
+              return (
+                <div key={theme.id} className="card theme-tile" style={{ borderTopColor: color }}>
+                  <h3>
+                    {theme.slug ? (
+                      <Link href={`/research#${theme.slug}`}>{theme.name}</Link>
+                    ) : (
+                      theme.name
+                    )}
+                  </h3>
+                  {pubCount > 0 && (
+                    <span className="theme-tile-count mono" style={{ color }}>
+                      {pubCount} {pubCount === 1 ? t.home.themePub : t.home.themePubs}
+                    </span>
                   )}
-                </h3>
-              </div>
-            ))}
+                </div>
+              )
+            })}
           </div>
         </section>
       )}
@@ -93,7 +111,7 @@ export default async function HomePage() {
           <Link href="/publications">{t.home.all} {pubCount.totalDocs} →</Link>
         </div>
         {recentPubs.docs.map((pub) => (
-          <PubRow key={pub.id} pub={pub} />
+          <PubRow key={pub.id} pub={pub} clusterColor={clusters.has(pub.id) ? clusterColor(clusters.get(pub.id)!) : null} />
         ))}
       </section>
 
@@ -103,25 +121,53 @@ export default async function HomePage() {
             <h2>{t.home.newsHead}</h2>
             <Link href="/news">{t.home.allNews}</Link>
           </div>
-          {news.docs.map((n) => (
-            <div key={n.id} className="news-item">
-              <div className="news-date">
-                {n.date ? new Date(n.date).toLocaleDateString(dateLocale[locale], { day: 'numeric', month: 'long', year: 'numeric' }) : ''}
-              </div>
-              <div className="pub-title">
-                {n.slug ? <Link href={`/news/${n.slug}`}>{n.title}</Link> : n.title}
-              </div>
-            </div>
-          ))}
+          <div className="news-card-grid">
+            {news.docs.map((n, i) => {
+              const color = THEME_COLORS[(i + 2) % THEME_COLORS.length]
+              const cover = typeof n.coverImage === 'object' ? n.coverImage : null
+              const coverUrl = cover?.sizes?.card?.url ?? cover?.url
+              return (
+                <Link key={n.id} href={n.slug ? `/news/${n.slug}` : '#'} className="news-card">
+                  <div className="news-card-media" style={{ background: `${color}1a` }}>
+                    {coverUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={coverUrl} alt="" />
+                    ) : (
+                      <span className="news-card-media-mark" style={{ color }}>
+                        MLKD
+                      </span>
+                    )}
+                  </div>
+                  <div className="news-card-body">
+                    <div className="news-date">
+                      {n.date ? new Date(n.date).toLocaleDateString(dateLocale[locale], { day: 'numeric', month: 'long', year: 'numeric' }) : ''}
+                    </div>
+                    <div className="pub-title">{n.title}</div>
+                  </div>
+                  <div className="news-card-accent" style={{ background: color }} />
+                </Link>
+              )
+            })}
+          </div>
         </section>
       )}
 
-      <section>
-        <h2>{t.home.joinHead}</h2>
-        <p style={{ maxWidth: '54ch' }}>{t.home.joinLede}</p>
-        <Link className="btn" href="/opportunities">
-          {t.home.browseTopics}
-        </Link>
+      <section className="join-banner">
+        <div className="join-banner-inner">
+          <div>
+            <h2 className="join-banner-head">{t.home.joinHead}</h2>
+            <p className="join-banner-lede">{t.home.joinLede}</p>
+            <Link className="btn" href="/opportunities">
+              {t.home.browseTopics}
+            </Link>
+          </div>
+          {openTopics.totalDocs > 0 && (
+            <div className="join-banner-stat">
+              <b>{openTopics.totalDocs}</b>
+              <span>{t.home.joinStatLabel}</span>
+            </div>
+          )}
+        </div>
       </section>
     </div>
   )

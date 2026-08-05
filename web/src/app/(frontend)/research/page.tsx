@@ -5,6 +5,7 @@ import config from '@payload-config'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { Member, Publication } from '@/payload-types'
 import { getDictionary } from '@/i18n/server'
+import { MemberAvatarStack } from '@/components/MemberAvatarStack'
 
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
@@ -41,7 +42,7 @@ export default async function ResearchPage() {
   const themes = await payload.find({
     collection: 'research-themes',
     limit: 50,
-    depth: 1,
+    depth: 2, // members → members.photo needs a second level to resolve
   })
 
   // Resolve publications for every theme in parallel (hand-picked, else semantic)
@@ -89,9 +90,10 @@ export default async function ResearchPage() {
                 </div>
               ) : null}
               {members.length > 0 && (
-                <p className="pub-meta">
-                  {t.research.people} {members.map((m) => m.name).join(', ')}
-                </p>
+                <div className="theme-people">
+                  <span className="pub-meta">{t.research.people}</span>
+                  <MemberAvatarStack members={members} />
+                </div>
               )}
 
               {pubs.length > 0 && (

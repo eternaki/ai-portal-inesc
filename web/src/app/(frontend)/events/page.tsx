@@ -36,26 +36,34 @@ export default async function EventsPage() {
       : ''
 
   const renderEvent = (e: (typeof events.docs)[number]) => (
-    <div key={e.id} className="news-item">
-      <div className="news-date">
-        {fmt(e.date)}
-        {e.location ? ` · ${e.location}` : ''}
-      </div>
-      <div className="pub-title">
-        {e.link ? (
-          <a href={e.link} target="_blank" rel="noreferrer">
-            {e.title}
-          </a>
-        ) : (
-          e.title
-        )}
-      </div>
-      {e.speaker && <div className="pub-meta">{e.speaker}</div>}
-      {e.description ? (
-        <div className="rich-text" style={{ fontSize: '0.92rem' }}>
-          <RichText data={e.description} />
+    <div key={e.id} className="event-row">
+      {e.date && (
+        <div className="event-date-badge">
+          <b>{new Date(e.date).getDate()}</b>
+          <span>{new Date(e.date).toLocaleDateString(dateLocale[locale], { month: 'short' })}</span>
         </div>
-      ) : null}
+      )}
+      <div>
+        <div className="news-date">
+          {fmt(e.date)}
+          {e.location ? ` · ${e.location}` : ''}
+        </div>
+        <div className="pub-title">
+          {e.link ? (
+            <a href={e.link} target="_blank" rel="noreferrer">
+              {e.title}
+            </a>
+          ) : (
+            e.title
+          )}
+        </div>
+        {e.speaker && <div className="pub-meta">{e.speaker}</div>}
+        {e.description ? (
+          <div className="rich-text" style={{ fontSize: '0.92rem' }}>
+            <RichText data={e.description} />
+          </div>
+        ) : null}
+      </div>
     </div>
   )
 

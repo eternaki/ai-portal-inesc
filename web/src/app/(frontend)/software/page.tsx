@@ -8,6 +8,34 @@ export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'Software & Datasets' }
 
+function KindIcon({ kind }: { kind: string }) {
+  if (kind === 'dataset') {
+    return (
+      <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+        <ellipse cx="8" cy="3.2" rx="6" ry="2.2" fill="none" stroke="currentColor" strokeWidth="1.3" />
+        <path
+          d="M2 3.2v9.6c0 1.2 2.7 2.2 6 2.2s6-1 6-2.2V3.2M2 8c0 1.2 2.7 2.2 6 2.2s6-1 6-2.2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.3"
+        />
+      </svg>
+    )
+  }
+  return (
+    <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+      <path
+        d="M5.5 4 2 8l3.5 4M10.5 4 14 8l-3.5 4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export default async function SoftwarePage() {
   const payload = await getPayload({ config })
   const t = await getDictionary()
@@ -30,7 +58,9 @@ export default async function SoftwarePage() {
           <div key={s.id} className="card">
             <h3>{s.repoUrl ? <a href={s.repoUrl}>{s.name}</a> : s.name}</h3>
             <div className="pub-meta">
-              <span className="badge">{s.kind}</span>
+              <span className="badge badge-icon">
+                <KindIcon kind={s.kind} /> {s.kind}
+              </span>
             </div>
             {s.description && <p className="pub-meta">{s.description}</p>}
             {s.repoUrl && (

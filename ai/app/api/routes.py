@@ -273,7 +273,7 @@ def topic_map() -> dict:
     try:
         with db.connect() as conn:
             rows = conn.execute(
-                "SELECT publication_id, cluster_id, x, y, label FROM topic_map"
+                "SELECT publication_id, cluster_id, x, y, label FROM topic_map ORDER BY publication_id"
             ).fetchall()
     except Exception:
         rows = []

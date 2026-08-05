@@ -8,6 +8,21 @@ import { SITE_URL, SITE_NAME } from '@/lib/site'
 import { getDictionary, getLocale } from '@/i18n/server'
 import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 import { ChatWidget } from '@/components/ChatWidget'
+import { MobileNav } from '@/components/MobileNav'
+import { ThemeToggle } from '@/components/ThemeToggle'
+import { ScrollReveal } from '@/components/ScrollReveal'
+
+// Runs before paint so there is no light→dark flash on load; falls back to the
+// OS preference when the visitor hasn't chosen explicitly yet.
+const THEME_INIT_SCRIPT = `
+(function () {
+  try {
+    var t = localStorage.getItem('mlkd-theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    if (t === 'dark') document.documentElement.dataset.theme = 'dark';
+  } catch (e) {}
+})();
+`
 
 // Typography: STIX Two Text — the typeface of scientific journals (the site is
 // set in the same font as the papers it indexes); Plex Sans/Mono — UI and data.
@@ -65,7 +80,14 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const chatEnabled = aiSettings?.features?.enableChatbot !== false
 
   return (
-    <html lang={locale} className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
+    <html
+      lang={locale}
+      className={`${serif.variable} ${sans.variable} ${mono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body>
         <header className="site-header">
           <div className="site-header-inner">
@@ -83,22 +105,35 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                 <small>INESC-ID · Lisboa</small>
               </span>
             </Link>
-            <nav className="site-nav">
-              {NAV.map((item) => (
-                <Link key={item.href} href={item.href}>
-                  {t.nav[item.key]}
-                </Link>
-              ))}
-              <LocaleSwitcher current={locale} />
-            </nav>
+            <MobileNav>
+              <nav className="site-nav">
+                {NAV.map((item) => (
+                  <Link key={item.href} href={item.href}>
+                    {t.nav[item.key]}
+                  </Link>
+                ))}
+                <LocaleSwitcher current={locale} />
+                <ThemeToggle light={t.theme.light} dark={t.theme.dark} />
+              </nav>
+            </MobileNav>
           </div>
         </header>
         <main>{children}</main>
         <footer className="site-footer">
           <div className="site-footer-inner">
-            <div>
-              <strong>Machine Learning and Knowledge Discovery</strong>
-              <p>INESC-ID · Rua Alves Redol 9, 1000-029 Lisboa, Portugal</p>
+            <div className="site-footer-brand">
+              <span className="site-logo-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                  <circle cx="5" cy="17" r="2.4" fill="var(--cobalt)" />
+                  <circle cx="17" cy="5" r="2.4" fill="var(--cobalt)" />
+                  <circle cx="19" cy="18" r="1.7" fill="var(--amber)" />
+                  <path d="M5 17 L17 5 M17 5 L19 18" stroke="var(--ink-40)" strokeWidth="1" />
+                </svg>
+              </span>
+              <div>
+                <strong>Machine Learning and Knowledge Discovery</strong>
+                <p>INESC-ID · Rua Alves Redol 9, 1000-029 Lisboa, Portugal</p>
+              </div>
             </div>
             <div className="site-footer-links">
               <Link href="/publications">{t.nav.publications}</Link>
@@ -110,6 +145,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           </div>
         </footer>
         {chatEnabled && <ChatWidget t={t.chat} />}
+        <ScrollReveal />
       </body>
     </html>
   )
