@@ -41,7 +41,7 @@ export default async function ReadingGroupsPage() {
       : ''
 
   const renderItem = (item: (typeof result.docs)[number]) => (
-    <article key={item.id} className="news-item">
+    <article key={item.id} className="session-card">
       <div className="news-date">
         {fmt(item.date)}
         {item.presenter ? ` · ${item.presenter}` : ''}
@@ -87,13 +87,13 @@ export default async function ReadingGroupsPage() {
       {upcoming.length > 0 && (
         <section>
           <h2>{t.readingGroups.upcoming}</h2>
-          {upcoming.map(renderItem)}
+          <div className="session-list">{upcoming.map(renderItem)}</div>
         </section>
       )}
       {past.length > 0 && (
         <section>
           <h2>{t.readingGroups.past}</h2>
-          {past.map(renderItem)}
+          <div className="session-list">{past.map(renderItem)}</div>
         </section>
       )}
     </div>
