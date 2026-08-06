@@ -79,7 +79,7 @@ services:
       RAG_MIN_SOURCE_SCORE: ${RAG_MIN_SOURCE_SCORE:-0.05}
       RAG_MIN_SEMANTIC_SCORE: ${RAG_MIN_SEMANTIC_SCORE:-0.25}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
       EMBEDDING_DEVICE: ${EMBEDDING_DEVICE:-cpu}
       OPENALEX_MAILTO: ${OPENALEX_MAILTO:-mlkd-portal@example.com}
     ports:
