@@ -102,6 +102,7 @@ regenerated on every commit (see section 7).
 - `/api/rag`
 
 ### AI pipelines — `ai/app/pipelines/`
+- `backfill_links.py`
 - `benchmark.py`
 - `bios.py`
 - `cluster.py`
