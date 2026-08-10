@@ -79,6 +79,7 @@ regenerated on every commit (see section 7).
 
 ### Site pages — `web/src/app/(frontend)/`
 - `/`
+- `/dissertations`
 - `/events`
 - `/map`
 - `/news/[slug]`
