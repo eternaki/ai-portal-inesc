@@ -19,7 +19,6 @@ const NOISE_COLOR = '#8a94a6'
 
 const W = 960
 const H = 620
-const MIN_ZOOM = 1
 const MAX_ZOOM = 8
 
 export function TopicMapChart({
@@ -41,6 +40,10 @@ export function TopicMapChart({
   const drag = useRef<{ startClientX: number; startClientY: number; startView: typeof view; moved: boolean } | null>(
     null,
   )
+  // The drag itself is tracked in a ref (pointer math needs a synchronous value),
+  // but the cursor is rendered output — refs must not be read during render, so
+  // the grab/grabbing state gets its own piece of state.
+  const [dragging, setDragging] = useState(false)
 
   const zoomAt = (clientX: number, clientY: number, factor: number) => {
     const svg = svgRef.current
@@ -76,6 +79,7 @@ export function TopicMapChart({
   const onPointerDown = (e: React.PointerEvent) => {
     ;(e.target as Element).setPointerCapture(e.pointerId)
     drag.current = { startClientX: e.clientX, startClientY: e.clientY, startView: view, moved: false }
+    setDragging(true)
   }
   const onPointerMove = (e: React.PointerEvent) => {
     if (!drag.current) return
@@ -97,6 +101,7 @@ export function TopicMapChart({
   }
   const onPointerUp = () => {
     drag.current = null
+    setDragging(false)
   }
   // Swallow the click that follows a drag so it doesn't navigate away.
   const onClickCapture = (e: React.MouseEvent) => {
@@ -161,19 +166,22 @@ export function TopicMapChart({
 
   // Arriving from a "view on map" link: zoom in and centre on that publication
   // instead of dropping the visitor into the whole, unfocused cloud of points.
-  useEffect(() => {
-    if (!highlighted) return
+  // Adjusted during render (React's "state derived from a prop change" pattern)
+  // rather than in an effect: an effect would paint the wide, unfocused cloud
+  // first and only then jump, and setState in an effect body cascades renders.
+  // Tracking the id we last zoomed to keeps the visitor's own pan/zoom intact.
+  const [zoomedToId, setZoomedToId] = useState<number | undefined>(undefined)
+  if (highlighted && zoomedToId !== highlighted.p.publication.id) {
     const zoomW = W / 5
     const zoomH = zoomW * (H / W)
+    setZoomedToId(highlighted.p.publication.id)
     setView({
       x: Math.min(W - zoomW, Math.max(0, highlighted.cx - zoomW / 2)),
       y: Math.min(H - zoomH, Math.max(0, highlighted.cy - zoomH / 2)),
       w: zoomW,
       h: zoomH,
     })
-    // Only when the target point (re)appears — not on every drag/zoom.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlighted?.p.publication.id])
+  }
 
   return (
     <div style={{ position: 'relative' }}>
@@ -194,7 +202,7 @@ export function TopicMapChart({
           border: '1px solid var(--ink-12)',
           borderRadius: 'var(--radius)',
           boxShadow: 'var(--shadow-sm)',
-          cursor: drag.current ? 'grabbing' : 'grab',
+          cursor: dragging ? 'grabbing' : 'grab',
           touchAction: 'none',
         }}
       >
