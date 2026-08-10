@@ -236,7 +236,7 @@ def _entity_result_doc(entity_type: str, doc: dict, lexical_to_text) -> dict | N
         description = ", ".join(interests) if isinstance(interests, list) else str(interests or "")
     elif entity_type == "projects":
         description = lexical_to_text(doc.get("description"))
-    elif entity_type == "thesis-topics":
+    elif entity_type == "dissertations":
         description = lexical_to_text(doc.get("description"))
     elif entity_type == "software":
         description = doc.get("description") or doc.get("kind") or ""

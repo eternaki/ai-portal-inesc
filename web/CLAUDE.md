@@ -52,6 +52,12 @@ architecture, global rules). This file covers only the `web/` specifics.
   are close. The page structure mirrors the group's existing site
   (mlkd.idss.inesc-id.pt), which the supervisor asked us to preserve — do not merge
   them without checking with him first.
+- **`dissertations` covers the whole life of a thesis** (`open` → `ongoing` →
+  `finished`); it is the collection formerly called `thesis-topics`. Open topics are
+  a *stage*, not a separate section — `/opportunities` was removed because the two
+  were the same content under two names. Supervisors and the author are stored as a
+  name plus an optional member link (the `Publications.authors` pattern): only 17 of
+  37 legacy names resolve to a member, and the attribution must render regardless.
 - **Public list pages must be exhaustively reachable.** Paginate (`page` search
   param) and build filter facets from the whole collection, not from the current
   page — a chip list that covers only part of the archive hides content with no

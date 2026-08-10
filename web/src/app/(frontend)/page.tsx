@@ -32,7 +32,7 @@ export default async function HomePage() {
     payload.count({ collection: 'members', where: { membershipStatus: { equals: 'active' } } }),
     payload.find({ collection: 'publications', where: PUBLISHED, sort: '-year', limit: 5, depth: 0 }),
     payload.find({ collection: 'research-themes', limit: 6, depth: 0 }),
-    payload.count({ collection: 'thesis-topics', where: { status: { equals: 'open' } } }),
+    payload.count({ collection: 'dissertations', where: { status: { equals: 'open' } } }),
     payload.find({ collection: 'news', sort: '-date', limit: 2, depth: 1 }),
     fetchPublicationClusters(),
   ])
@@ -141,7 +141,7 @@ export default async function HomePage() {
           <div>
             <h2 className="join-banner-head">{t.home.joinHead}</h2>
             <p className="join-banner-lede">{t.home.joinLede}</p>
-            <Link className="btn" href="/opportunities">
+            <Link className="btn" href="/dissertations?status=open">
               {t.home.browseTopics}
             </Link>
           </div>

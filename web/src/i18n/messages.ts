@@ -13,7 +13,6 @@ const en = {
     publications: 'Publications',
     dissertations: 'Dissertations',
     people: 'People',
-    opportunities: 'Opportunities',
     news: 'News',
     events: 'Events',
     readingGroups: 'Reading Groups',
@@ -121,18 +120,6 @@ const en = {
     contactPending: 'Contact pending review',
     empty: 'No members yet — add them in the admin panel.',
   },
-  opportunities: {
-    title: 'Opportunities',
-    metaBefore:
-      'Open MSc and PhD thesis topics supervised by the group. Interested? Contact the advisor listed on the topic — or reach out via ',
-    anyFaculty: 'any faculty member',
-    metaAfter: ' if you have your own idea.',
-    openHead: 'Open topics',
-    emptyOpen:
-      'No open topics right now — new topics are usually published before each semester. Speculative applications are welcome anytime.',
-    advisor: 'Advisor:',
-    assignedHead: 'Recently assigned',
-  },
   research: {
     title: 'Research',
     meta: 'The thematic lines we work on, and who drives them.',
@@ -186,7 +173,7 @@ const en = {
       publications: 'Publication',
       members: 'Person',
       projects: 'Project',
-      'thesis-topics': 'Thesis topic',
+      dissertations: 'Dissertation',
       software: 'Software',
       news: 'News',
       events: 'Event',
@@ -293,7 +280,6 @@ const pt: Dictionary = {
     publications: 'Publicações',
     dissertations: 'Dissertações',
     people: 'Pessoas',
-    opportunities: 'Oportunidades',
     news: 'Notícias',
     events: 'Eventos',
     readingGroups: 'Reading Groups',
@@ -399,18 +385,6 @@ const pt: Dictionary = {
     contactPending: 'Contacto por confirmar',
     empty: 'Ainda não há membros — adicione-os no painel de administração.',
   },
-  opportunities: {
-    title: 'Oportunidades',
-    metaBefore:
-      'Temas de tese de mestrado e doutoramento em aberto, orientados pelo grupo. Interessado? Contacte o orientador indicado no tema — ou fale com ',
-    anyFaculty: 'qualquer docente',
-    metaAfter: ' se tiver a sua própria ideia.',
-    openHead: 'Temas em aberto',
-    emptyOpen:
-      'Sem temas em aberto neste momento — normalmente publicam-se novos temas antes de cada semestre. Candidaturas espontâneas são bem-vindas a qualquer altura.',
-    advisor: 'Orientador:',
-    assignedHead: 'Atribuídos recentemente',
-  },
   research: {
     title: 'Investigação',
     meta: 'As linhas temáticas em que trabalhamos, e quem as impulsiona.',
@@ -465,7 +439,7 @@ const pt: Dictionary = {
       publications: 'Publicação',
       members: 'Pessoa',
       projects: 'Projeto',
-      'thesis-topics': 'Tópico de tese',
+      dissertations: 'Dissertação',
       software: 'Software',
       news: 'Notícia',
       events: 'Evento',

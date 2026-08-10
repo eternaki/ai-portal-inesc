@@ -15,7 +15,7 @@ const ENTITY_TYPES = [
   'publications',
   'members',
   'projects',
-  'thesis-topics',
+  'dissertations',
   'software',
   'news',
   'events',
@@ -42,7 +42,7 @@ const ENTITY_LINK: Record<EntityType, (hit: UnifiedHit) => string> = {
   publications: (hit) => (hit.slug ? `/publications/${hit.slug}` : '/publications'),
   members: (hit) => (hit.slug ? `/people#${hit.slug}` : '/people'),
   projects: (hit) => (hit.slug ? `/projects#${hit.slug}` : '/projects'),
-  'thesis-topics': (hit) => (hit.slug ? `/opportunities#${hit.slug}` : '/opportunities'),
+  dissertations: (hit) => (hit.slug ? `/dissertations/${hit.slug}` : '/dissertations'),
   software: (hit) => (hit.slug ? `/software#${hit.slug}` : '/software'),
   news: (hit) => (hit.slug ? `/news/${hit.slug}` : '/news'),
   events: (hit) => (hit.slug ? `/events#${hit.slug}` : '/events'),
@@ -125,11 +125,11 @@ async function textualFallback(q: string, type?: EntityType): Promise<UnifiedHit
           source: 'lexical' as const,
         })),
       )
-    } else if (entityType === 'thesis-topics') {
-      const res = await payload.find({ collection: 'thesis-topics', sort: 'title', limit: 200, depth: 0 })
+    } else if (entityType === 'dissertations') {
+      const res = await payload.find({ collection: 'dissertations', sort: 'title', limit: 200, depth: 0 })
       results.push(
         ...res.docs.map((doc) => ({
-          entity_type: 'thesis-topics' as const,
+          entity_type: 'dissertations' as const,
           id: doc.id,
           title: doc.title,
           slug: doc.slug,

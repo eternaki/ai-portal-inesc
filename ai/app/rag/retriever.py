@@ -8,15 +8,18 @@ from app.entities import ENTITY_ADAPTERS, PUBLISHED_ONLY
 from app.rag.models import RagSource
 from app.rag.safety import detect_prompt_injection, sanitize_text
 
-DEFAULT_SCOPE = ["publications", "members", "projects", "thesisTopics"]
+DEFAULT_SCOPE = ["publications", "members", "projects", "dissertations"]
 SCOPE_MAP = {
     "publications": "publications",
     "members": "members",
     "projects": "projects",
     "news": "news",
     "software": "software",
-    "thesisTopics": "thesis-topics",
-    "thesis-topics": "thesis-topics",
+    # Legacy aliases: the collection was renamed from thesis-topics, and callers
+    # may still ask for it by either of its old names.
+    "thesisTopics": "dissertations",
+    "thesis-topics": "dissertations",
+    "dissertations": "dissertations",
 }
 logger = logging.getLogger(__name__)
 
@@ -199,12 +202,12 @@ def _source_from_doc(collection: str, doc: dict) -> RagSource | None:
             return None
         return RagSource(id=doc["id"], type="software", title=title, text=text, url=_url("software", doc))
 
-    if collection == "thesis-topics":
+    if collection == "dissertations":
         title = doc.get("title") or ""
         text = "\n".join([sanitize_text(doc.get("description")), sanitize_text(doc.get("level")), sanitize_text(doc.get("status"))])
         if not title or not text.strip():
             return None
-        return RagSource(id=doc["id"], type="thesisTopic", title=title, text=text, url=_url("opportunities", doc))
+        return RagSource(id=doc["id"], type="dissertation", title=title, text=text, url=_url("dissertations", doc))
 
     return None
 

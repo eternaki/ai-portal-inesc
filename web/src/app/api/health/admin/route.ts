@@ -19,7 +19,7 @@ type CollectionSlug =
   | 'members'
   | 'publications'
   | 'projects'
-  | 'thesis-topics'
+  | 'dissertations'
   | 'software'
   | 'news'
   | 'events'
@@ -77,12 +77,12 @@ export async function GET(req: NextRequest) {
   const checks: HealthCheck[] = []
 
   try {
-    const [members, publications, projects, thesisTopics, software, news, events, readingGroups] =
+    const [members, publications, projects, dissertations, software, news, events, readingGroups] =
       await Promise.all([
         payload.count({ collection: 'members' }),
         payload.count({ collection: 'publications', where: PUBLISHED }),
         payload.count({ collection: 'projects' }),
-        payload.count({ collection: 'thesis-topics' }),
+        payload.count({ collection: 'dissertations' }),
         payload.count({ collection: 'software' }),
         payload.count({ collection: 'news' }),
         payload.count({ collection: 'events' }),
@@ -93,7 +93,7 @@ export async function GET(req: NextRequest) {
       members: members.totalDocs,
       publications: publications.totalDocs,
       projects: projects.totalDocs,
-      'thesis-topics': thesisTopics.totalDocs,
+      dissertations: dissertations.totalDocs,
       software: software.totalDocs,
       news: news.totalDocs,
       events: events.totalDocs,

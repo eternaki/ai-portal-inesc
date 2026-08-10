@@ -54,7 +54,7 @@ export const metadata = {
     template: '%s | MLKD @ INESC-ID',
   },
   description:
-    'Machine Learning and Knowledge Discovery group at INESC-ID: publications, people, projects and opportunities.',
+    'Machine Learning and Knowledge Discovery group at INESC-ID: publications, people, dissertations and events.',
 }
 
 // Section list mirrors the group's existing site (mlkd.idss.inesc-id.pt), which the
@@ -62,10 +62,9 @@ export const metadata = {
 // The map is not a section of its own (it is a view of publications), so it is
 // reached from Research/Publications, and search is the icon at the end of the row.
 const NAV = [
-  { href: '/research', key: 'research' },
-  { href: '/publications', key: 'publications' },
   { href: '/people', key: 'people' },
-  { href: '/opportunities', key: 'opportunities' },
+  { href: '/publications', key: 'publications' },
+  { href: '/dissertations', key: 'dissertations' },
   { href: '/news', key: 'news' },
   { href: '/events', key: 'events' },
   { href: '/reading-groups', key: 'readingGroups' },
@@ -158,9 +157,9 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             </div>
             <div className="site-footer-links">
               <Link href="/publications">{t.nav.publications}</Link>
-              <Link href="/reading-groups">{t.nav.readingGroups}</Link>
+              <Link href="/dissertations">{t.nav.dissertations}</Link>
               <Link href="/map">{t.nav.map}</Link>
-              <Link href="/opportunities">{t.footer.openThesis}</Link>
+              <Link href="/dissertations?status=open">{t.footer.openThesis}</Link>
               <Link href="/admin">{t.footer.signIn}</Link>
             </div>
             <p className="site-credit">{t.footer.credit}</p>

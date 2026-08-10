@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
-const DEFAULT_SCOPE = ['publications', 'members', 'projects', 'news', 'software', 'thesisTopics']
+const DEFAULT_SCOPE = ['publications', 'members', 'projects', 'news', 'software', 'dissertations']
 
 export async function POST(req: NextRequest) {
   const payload = await getPayload({ config })

@@ -56,7 +56,7 @@ def _project_text(d: dict) -> str:
     return _join(d.get("title") or "", lexical_to_text(d.get("description")))
 
 
-def _thesis_text(d: dict) -> str:
+def _dissertation_text(d: dict) -> str:
     return _join(d.get("title") or "", lexical_to_text(d.get("description")))
 
 
@@ -81,7 +81,7 @@ ENTITY_ADAPTERS: dict[str, Callable[[dict], str]] = {
     "publications": _publication_text,
     "members": _member_text,
     "projects": _project_text,
-    "thesis-topics": _thesis_text,
+    "dissertations": _dissertation_text,
     "software": _software_text,
     "news": _news_text,
     "events": _event_text,
