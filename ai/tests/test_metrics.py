@@ -27,6 +27,38 @@ def test_latency_tracks_sum_count_and_avg():
     assert lat["avg_ms"] == 150.0
 
 
+def test_percentiles_separate_the_cold_start_from_the_typical_request():
+    # The real case that motivated histograms: one ~31s cold start (model load)
+    # among fast warm calls. The mean says "15s", which describes nothing; p50
+    # must still report a fast typical request and p95 must expose the outlier.
+    metrics.registry.observe_latency("ai_http_request_latency", 31_000.0, labels={"path": "/search"})
+    for _ in range(9):
+        metrics.registry.observe_latency("ai_http_request_latency", 80.0, labels={"path": "/search"})
+
+    lat = metrics.registry.snapshot()["latency"]['ai_http_request_latency{path="/search"}']
+    assert lat["count"] == 10
+    assert lat["avg_ms"] > 3_000        # the mean is dragged up by one sample...
+    assert lat["p50_ms"] == 100         # ...while p50 still reports a fast request
+    assert lat["p95_ms"] == 60_000      # and the tail is visible on its own
+
+
+def test_percentiles_are_none_without_samples():
+    lat = metrics.registry.snapshot()["latency"]
+    assert lat == {}
+
+
+def test_histogram_buckets_are_cumulative_and_exposed():
+    for ms in (5.0, 60.0, 700.0):
+        metrics.registry.observe_latency("ai_llm_latency", ms, labels={"provider": "gemini"})
+    text = metrics.registry.render_prometheus()
+
+    # Cumulative: everything <= 1000ms is in the 1000 bucket, +Inf holds them all.
+    assert 'ai_llm_latency_ms_bucket{provider="gemini",le="5"} 1' in text
+    assert 'ai_llm_latency_ms_bucket{provider="gemini",le="100"} 2' in text
+    assert 'ai_llm_latency_ms_bucket{provider="gemini",le="1000"} 3' in text
+    assert 'ai_llm_latency_ms_bucket{provider="gemini",le="+Inf"} 3' in text
+
+
 def test_record_llm_error_increments_error_series_and_cost():
     metrics.record_llm("gemini", "gemini-3.5-flash-lite", "error", 42.0)
     metrics.record_llm("gemini", "gemini-3.5-flash-lite", "ok", 30.0, cost_usd=0.001, total_tokens=250)
