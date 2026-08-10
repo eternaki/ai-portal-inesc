@@ -22,15 +22,26 @@ logger = logging.getLogger(__name__)
 # like provider="gemini" without a separate object per series.
 _LabelKey = tuple[str, tuple[tuple[str, str], ...]]
 
+# Histogram bucket edges in milliseconds. A mean alone actively misleads here: one
+# cold start (model load, ~30s) mixed with fast warm calls (~80ms) averages to a
+# number that describes neither. Buckets keep the tail visible as its own value.
+# The range spans a fast DB query to a slow LLM call so one set fits every series.
+LATENCY_BUCKETS_MS: tuple[float, ...] = (
+    5, 10, 25, 50, 100, 250, 500, 1_000, 2_500, 5_000, 10_000, 30_000, 60_000,
+)
+
 
 class _Registry:
     def __init__(self) -> None:
         self._lock = threading.Lock()
         self._counters: dict[_LabelKey, float] = defaultdict(float)
-        # Latency is stored as (sum_ms, count) per series so we can expose both a
-        # total and derive an average without keeping every sample.
+        # Latency keeps sum + count (for totals) and per-bucket counts (for
+        # percentiles), which is exactly a Prometheus histogram.
         self._latency_sum: dict[_LabelKey, float] = defaultdict(float)
         self._latency_count: dict[_LabelKey, float] = defaultdict(float)
+        self._latency_buckets: dict[_LabelKey, list[int]] = defaultdict(
+            lambda: [0] * len(LATENCY_BUCKETS_MS)
+        )
 
     @staticmethod
     def _key(name: str, labels: dict[str, str] | None) -> _LabelKey:
@@ -50,6 +61,10 @@ class _Registry:
             with self._lock:
                 self._latency_sum[key] += ms
                 self._latency_count[key] += 1
+                buckets = self._latency_buckets[key]
+                for i, edge in enumerate(LATENCY_BUCKETS_MS):
+                    if ms <= edge:
+                        buckets[i] += 1
         except Exception:  # noqa: BLE001
             logger.debug("metrics observe_latency failed for %s", name, exc_info=True)
 
@@ -59,6 +74,7 @@ class _Registry:
             counters = dict(self._counters)
             lat_sum = dict(self._latency_sum)
             lat_count = dict(self._latency_count)
+            lat_buckets = {k: list(v) for k, v in self._latency_buckets.items()}
 
         lines: list[str] = []
         for (name, labels), value in sorted(counters.items()):
@@ -67,10 +83,23 @@ class _Registry:
             lines.append(f"{name}_ms_sum{_fmt_labels(labels)} {_fmt_num(total)}")
         for (name, labels), count in sorted(lat_count.items()):
             lines.append(f"{name}_ms_count{_fmt_labels(labels)} {_fmt_num(count)}")
+        # Cumulative buckets + the mandatory +Inf, so Prometheus can compute
+        # histogram_quantile() over these series.
+        for (name, labels), buckets in sorted(lat_buckets.items()):
+            for edge, count in zip(LATENCY_BUCKETS_MS, buckets):
+                le = _fmt_labels(labels + (("le", _fmt_num(edge)),))
+                lines.append(f"{name}_ms_bucket{le} {_fmt_num(count)}")
+            inf = _fmt_labels(labels + (("le", "+Inf"),))
+            lines.append(f"{name}_ms_bucket{inf} {_fmt_num(lat_count.get((name, labels), 0))}")
         return "\n".join(lines) + "\n"
 
     def snapshot(self) -> dict:
-        """Structured view of the current metrics (used by tests and /metrics?format=json)."""
+        """Structured view of the current metrics (used by tests and /metrics?format=json).
+
+        Reports percentiles next to the mean: with a cold start in the sample the
+        mean is not a number anyone should act on, while p50 shows the typical
+        request and p95 shows the tail.
+        """
         with self._lock:
             return {
                 "counters": {_series_id(k): v for k, v in self._counters.items()},
@@ -81,6 +110,8 @@ class _Registry:
                         "avg_ms": round(self._latency_sum[k] / self._latency_count[k], 2)
                         if self._latency_count[k]
                         else 0.0,
+                        "p50_ms": _percentile(self._latency_buckets[k], self._latency_count[k], 0.50),
+                        "p95_ms": _percentile(self._latency_buckets[k], self._latency_count[k], 0.95),
                     }
                     for k in self._latency_count
                 },
@@ -92,6 +123,25 @@ class _Registry:
             self._counters.clear()
             self._latency_sum.clear()
             self._latency_count.clear()
+            self._latency_buckets.clear()
+
+
+def _percentile(buckets: list[int], total: float, q: float) -> float | None:
+    """Bucket-based percentile: the upper edge of the first bucket covering q.
+
+    Reported as the bucket boundary rather than an interpolated value — with
+    coarse buckets interpolation invents precision the data doesn't have. Returns
+    None when every sample lands past the last edge (the value is only known to be
+    larger than the top bucket), so the caller can say "over 60s" instead of
+    quietly reporting 60s.
+    """
+    if not total:
+        return None
+    target = q * total
+    for edge, count in zip(LATENCY_BUCKETS_MS, buckets):
+        if count >= target:
+            return float(edge)
+    return None
 
 
 def _fmt_labels(labels: tuple[tuple[str, str], ...]) -> str:

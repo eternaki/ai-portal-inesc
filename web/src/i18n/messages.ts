@@ -19,10 +19,14 @@ const en = {
     events: 'Events',
     search: 'Search',
   },
+  theme: {
+    light: 'Switch to light mode',
+    dark: 'Switch to dark mode',
+  },
   footer: {
     openThesis: 'Open thesis topics',
     signIn: 'Member sign in',
-    credit: 'Developed by João Enomoto for MLKD / INESC-ID.',
+    credit: 'Developed for MLKD / INESC-ID.',
   },
   home: {
     lede:
@@ -33,6 +37,9 @@ const en = {
     statOpenTopics: 'open thesis topics',
     themesHead: 'Research themes',
     allThemes: 'All themes →',
+    themePub: 'key publication',
+    themePubs: 'key publications',
+    latest: 'Latest',
     recentHead: 'Recent publications',
     all: 'All',
     newsHead: 'News',
@@ -41,6 +48,7 @@ const en = {
     joinLede:
       'Looking for an MSc or PhD topic in machine learning? We keep an updated list of open topics and research challenges.',
     browseTopics: 'Browse open topics',
+    joinStatLabel: 'open thesis topics right now',
   },
   publications: {
     title: 'Publications',
@@ -158,6 +166,7 @@ const en = {
   pub: {
     citations: 'citations',
     viewOriginal: 'View original publication',
+    viewOnMap: 'See where this sits in the topic map →',
     materials: 'Materials',
     download: 'Download',
     openFile: 'Open',
@@ -195,6 +204,7 @@ const en = {
   },
   pubRow: {
     summary: 'summary',
+    viewOnMap: 'View on the topic map',
   },
   chat: {
     open: 'Ask about our research',
@@ -208,6 +218,13 @@ const en = {
     sources: 'Sources',
     aiNote: 'AI-generated answers, may contain mistakes',
     close: 'Close chat',
+  },
+  notFound: {
+    eyebrow: '404',
+    title: 'This page doesn’t exist',
+    lede: 'The link may be broken, or the page may have moved. Try the topic map, or head back home.',
+    home: 'Back home',
+    browseMap: 'Browse the topic map',
   },
   events: {
     title: 'Events',
@@ -239,6 +256,10 @@ const pt: Dictionary = {
     events: 'Eventos',
     search: 'Pesquisa',
   },
+  theme: {
+    light: 'Mudar para o modo claro',
+    dark: 'Mudar para o modo escuro',
+  },
   footer: {
     openThesis: 'Temas de tese em aberto',
     signIn: 'Entrar (membros)',
@@ -253,6 +274,9 @@ const pt: Dictionary = {
     statOpenTopics: 'temas de tese em aberto',
     themesHead: 'Linhas de investigação',
     allThemes: 'Todas as linhas →',
+    themePub: 'publicação-chave',
+    themePubs: 'publicações-chave',
+    latest: 'Mais recente',
     recentHead: 'Publicações recentes',
     all: 'Todas',
     newsHead: 'Notícias',
@@ -261,6 +285,7 @@ const pt: Dictionary = {
     joinLede:
       'À procura de um tema de mestrado ou doutoramento em aprendizagem automática? Mantemos uma lista atualizada de temas em aberto e desafios de investigação.',
     browseTopics: 'Ver temas em aberto',
+    joinStatLabel: 'temas de tese em aberto agora',
   },
   publications: {
     title: 'Publicações',
@@ -379,6 +404,7 @@ const pt: Dictionary = {
   pub: {
     citations: 'citações',
     viewOriginal: 'Ver publicação original',
+    viewOnMap: 'Ver posição no mapa de temas →',
     materials: 'Materiais',
     download: 'Descarregar',
     openFile: 'Abrir',
@@ -415,6 +441,7 @@ const pt: Dictionary = {
   },
   pubRow: {
     summary: 'resumo',
+    viewOnMap: 'Ver no mapa de temas',
   },
   chat: {
     open: 'Pergunte sobre a nossa investigação',
@@ -428,6 +455,13 @@ const pt: Dictionary = {
     sources: 'Fontes',
     aiNote: 'Respostas geradas por IA, podem conter erros',
     close: 'Fechar chat',
+  },
+  notFound: {
+    eyebrow: '404',
+    title: 'Esta página não existe',
+    lede: 'O link pode estar quebrado, ou a página pode ter sido movida. Experimente o mapa de temas, ou volte ao início.',
+    home: 'Voltar ao início',
+    browseMap: 'Ver o mapa de temas',
   },
   events: {
     title: 'Eventos',
