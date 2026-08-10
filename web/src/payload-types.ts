@@ -549,7 +549,20 @@ export interface Dissertation {
   slug?: string | null;
   level: 'msc' | 'phd';
   status: 'open' | 'ongoing' | 'finished';
-  advisors?: (number | Member)[] | null;
+  supervisors?:
+    | {
+        name: string;
+        member?: (number | null) | Member;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The student writing or having written the thesis. Empty while the topic is open.
+   */
+  author?: {
+    name?: string | null;
+    member?: (number | null) | Member;
+  };
   description?: {
     root: {
       type: string;
@@ -565,6 +578,32 @@ export interface Dissertation {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * What a student needs to apply. Shown as its own block on the page.
+   */
+  requisites?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Link to the defended thesis in the Fenix repository.
+   */
+  fenixUrl?: string | null;
+  /**
+   * Legacy page this record was imported from. Set by the importer.
+   */
+  sourceUrl?: string | null;
   themes?: (number | ResearchTheme)[] | null;
   updatedAt: string;
   createdAt: string;
@@ -976,8 +1015,23 @@ export interface DissertationsSelect<T extends boolean = true> {
   slug?: T;
   level?: T;
   status?: T;
-  advisors?: T;
+  supervisors?:
+    | T
+    | {
+        name?: T;
+        member?: T;
+        id?: T;
+      };
+  author?:
+    | T
+    | {
+        name?: T;
+        member?: T;
+      };
   description?: T;
+  requisites?: T;
+  fenixUrl?: T;
+  sourceUrl?: T;
   themes?: T;
   updatedAt?: T;
   createdAt?: T;
