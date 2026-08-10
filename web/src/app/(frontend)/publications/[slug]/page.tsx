@@ -176,7 +176,9 @@ export default async function PublicationPage(props: { params: Params }) {
           ) : null}
         </p>
         {(() => {
-          const original = pub.originalUrl || (pub.doi ? `https://doi.org/${pub.doi}` : pub.pdfUrl)
+          // Open access before the DOI: doi.org resolves to the publisher, which
+          // is usually a paywall, while pdfUrl is a copy the reader can open.
+          const original = pub.originalUrl || pub.pdfUrl || (pub.doi ? `https://doi.org/${pub.doi}` : null)
           return original ? (
             <p>
               <a className="btn" href={original} target="_blank" rel="noreferrer">

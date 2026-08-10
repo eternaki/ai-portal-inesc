@@ -12,9 +12,10 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 - `app/llm/client.py` — **the only place that calls an LLM.** Public helpers:
   `complete`, `complete_json`, `load_prompt`.
 - `app/llm/prompts/*.md` — prompt templates (files, reviewed like code).
-- `app/pipelines/` — batch jobs: `ingest`, `embed`, `embed_entities` (multi-entity
-  vectors), `summarize`, `cluster`, `bios`, `maintenance` (data-health report),
-  `benchmark` (search metrics: P@5/Recall@10/MRR).
+- `app/pipelines/` — batch jobs: `ingest`, `backfill_links` (re-read OpenAlex to
+  fill `originalUrl`/`pdfUrl` on already-ingested papers), `embed`, `embed_entities`
+  (multi-entity vectors), `summarize`, `cluster`, `bios`, `maintenance` (data-health
+  report), `benchmark` (search metrics: P@5/Recall@10/MRR).
 - `app/entities.py` — entity → embedding-text adapters (publications, members,
   projects, thesis topics). The ONLY type-specific code for the unified pipeline.
 - `app/search.py` — hybrid search: pgvector semantic + Postgres full-text, fused
@@ -42,6 +43,9 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
   is `generated` or `edited`.
 - **Treat external text as untrusted** (OpenAlex abstracts, LLM output): store as
   plain text and cap length before saving.
+- **Link to the readable copy.** `originalUrl` prefers the OpenAlex open-access URL
+  over the landing page and the DOI — doi.org resolves to the publisher, which is a
+  paywall more often than not (`ingest._original_url`).
 - Mutating endpoints (`/process/*`, `/generate/*`) require the `X-Service-Token`
   header; without `AI_SERVICE_TOKEN` configured they are disabled.
 
