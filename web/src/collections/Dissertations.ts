@@ -3,11 +3,15 @@ import type { CollectionConfig } from 'payload'
 import { adminOrEditor, anyone } from '../access'
 import { slugField } from '../fields/slug'
 
-export const ThesisTopics: CollectionConfig = {
-  slug: 'thesis-topics',
+// MSc and PhD theses at every stage of their life: open for application, being
+// written, defended. One collection rather than three, because a topic does not
+// change identity when a student takes it — only its status does.
+export const Dissertations: CollectionConfig = {
+  slug: 'dissertations',
+  labels: { singular: 'Dissertation', plural: 'Dissertations' },
   admin: {
     useAsTitle: 'title',
-    group: 'Opportunities',
+    group: 'Dissertations',
     defaultColumns: ['title', 'level', 'status'],
   },
   access: {
@@ -39,9 +43,9 @@ export const ThesisTopics: CollectionConfig = {
           defaultValue: 'open',
           index: true,
           options: [
-            { label: 'Open', value: 'open' },
-            { label: 'Assigned', value: 'assigned' },
-            { label: 'Completed', value: 'completed' },
+            { label: 'Open for application', value: 'open' },
+            { label: 'Ongoing', value: 'ongoing' },
+            { label: 'Finished', value: 'finished' },
           ],
           admin: { width: '50%' },
         },

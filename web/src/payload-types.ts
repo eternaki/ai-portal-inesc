@@ -72,7 +72,7 @@ export interface Config {
     'research-themes': ResearchTheme;
     projects: Project;
     software: Software;
-    'thesis-topics': ThesisTopic;
+    dissertations: Dissertation;
     news: News;
     events: Event;
     'reading-groups': ReadingGroup;
@@ -90,7 +90,7 @@ export interface Config {
     'research-themes': ResearchThemesSelect<false> | ResearchThemesSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     software: SoftwareSelect<false> | SoftwareSelect<true>;
-    'thesis-topics': ThesisTopicsSelect<false> | ThesisTopicsSelect<true>;
+    dissertations: DissertationsSelect<false> | DissertationsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     'reading-groups': ReadingGroupsSelect<false> | ReadingGroupsSelect<true>;
@@ -538,9 +538,9 @@ export interface Software {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "thesis-topics".
+ * via the `definition` "dissertations".
  */
-export interface ThesisTopic {
+export interface Dissertation {
   id: number;
   title: string;
   /**
@@ -548,7 +548,7 @@ export interface ThesisTopic {
    */
   slug?: string | null;
   level: 'msc' | 'phd';
-  status: 'open' | 'assigned' | 'completed';
+  status: 'open' | 'ongoing' | 'finished';
   advisors?: (number | Member)[] | null;
   description?: {
     root: {
@@ -738,8 +738,8 @@ export interface PayloadLockedDocument {
         value: number | Software;
       } | null)
     | ({
-        relationTo: 'thesis-topics';
-        value: number | ThesisTopic;
+        relationTo: 'dissertations';
+        value: number | Dissertation;
       } | null)
     | ({
         relationTo: 'news';
@@ -969,9 +969,9 @@ export interface SoftwareSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "thesis-topics_select".
+ * via the `definition` "dissertations_select".
  */
-export interface ThesisTopicsSelect<T extends boolean = true> {
+export interface DissertationsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   level?: T;
