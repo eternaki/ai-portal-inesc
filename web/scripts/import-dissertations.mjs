@@ -7,8 +7,9 @@
  * Writes through Payload's Local API via `payload run`, so arrays, relationships
  * and richText are built by Payload itself — no SQL, and no API key needed.
  *
- * Idempotent: an existing record is matched on fenixUrl first, then on a
- * normalised title, and updated rather than duplicated.
+ * Idempotent: an existing record is matched on title and updated rather than
+ * duplicated. Title, not fenixUrl, is the key — see the note above the
+ * `where` clause below for why.
  */
 
 import { mkdir, writeFile } from 'node:fs/promises'
@@ -93,7 +94,24 @@ async function run() {
     created: [],
     updated: [],
     unresolvedPeople: [],
+    duplicateFenixUrls: [],
     errors: [],
+  }
+
+  // Only 30 of 59 legacy entries even have a fenixUrl (1 open, 29 finished, 0
+  // ongoing), so it can never be a primary key on its own — and it has
+  // already been observed to be actively wrong: two unrelated entries can
+  // share one Fenix link (an open topic pointing at someone else's defended
+  // thesis, a copy-paste error on the legacy site). Surface every such
+  // collision so the group can be told, without letting it affect matching.
+  const byFenixUrl = new Map()
+  for (const row of parsed) {
+    if (!row.fenixUrl) continue
+    if (!byFenixUrl.has(row.fenixUrl)) byFenixUrl.set(row.fenixUrl, [])
+    byFenixUrl.get(row.fenixUrl).push(row.title)
+  }
+  for (const [url, titles] of byFenixUrl) {
+    if (titles.length > 1) report.duplicateFenixUrls.push({ url, titles })
   }
 
   for (const row of parsed) {
@@ -120,9 +138,14 @@ async function run() {
       sourceUrl: row.sourceUrl,
     }
 
-    const where = row.fenixUrl
-      ? { fenixUrl: { equals: row.fenixUrl } }
-      : { title: { equals: row.title } }
+    // Title is the only identity the source reliably provides: all 59 titles
+    // are unique, but fenixUrl is absent from half the entries and — per
+    // duplicateFenixUrls above — is not even unique when present. Matching on
+    // it caused one entry to silently overwrite an unrelated one that shared
+    // its (wrong) Fenix link. Trade-off: a dissertation whose title is edited
+    // on the legacy site between runs would be re-created rather than
+    // updated, which is far cheaper than the silent-overwrite failure mode.
+    const where = { title: { equals: row.title } }
     const existing = await payload.find({ collection: 'dissertations', where, limit: 1, depth: 0 })
     const found = existing.docs[0]
 
@@ -146,7 +169,7 @@ async function run() {
   console.log(
     `${report.mode}: parsed ${report.parsed}, created ${report.created.length}, ` +
       `updated ${report.updated.length}, unresolved people ${report.unresolvedPeople.length}, ` +
-      `errors ${report.errors.length}`,
+      `duplicate fenixUrls ${report.duplicateFenixUrls.length}, errors ${report.errors.length}`,
   )
   console.log(`report → ${reportPath}`)
 }

@@ -52,7 +52,7 @@
       "title": "Text Segmentation by TextTiling with Modern Neural Retrieval Models"
     },
     {
-      "id": 16,
+      "id": 63,
       "title": "Analysis of sensor data for monitoring of open spaces"
     },
     {
@@ -390,6 +390,15 @@
       "role": "supervisor",
       "name": "Luís Miguel Veiga Vaz Caldas de Oliveira.",
       "title": "Predicting Frequency and Claims of Health Insurance with Machine Learning techniques"
+    }
+  ],
+  "duplicateFenixUrls": [
+    {
+      "url": "https://fenix.tecnico.ulisboa.pt/cursos/mecd/dissertacao/565303595503041",
+      "titles": [
+        "Analysis of sensor data for monitoring of open spaces",
+        "Siamese Transformer Networks for Improving Address Matching"
+      ]
     }
   ],
   "errors": []

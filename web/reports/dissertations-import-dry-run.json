@@ -1,245 +1,245 @@
 {
   "mode": "dry-run",
   "parsed": 59,
-  "created": [
+  "created": [],
+  "updated": [
     {
-      "title": "Multimodal Document Representation Learning",
-      "status": "open"
+      "id": 4,
+      "title": "Multimodal Document Representation Learning"
     },
     {
-      "title": "Improving Retrieval Augmented Generation using LLMs",
-      "status": "open"
+      "id": 5,
+      "title": "Improving Retrieval Augmented Generation using LLMs"
     },
     {
-      "title": "Generation of New Scientific Knowledge using LLMs",
-      "status": "open"
+      "id": 6,
+      "title": "Generation of New Scientific Knowledge using LLMs"
     },
     {
-      "title": "Enhancing Fine-Grained Perceptual Understanding of Scientific Graphs in Vision Language Models",
-      "status": "open"
+      "id": 7,
+      "title": "Enhancing Fine-Grained Perceptual Understanding of Scientific Graphs in Vision Language Models"
     },
     {
-      "title": "Multi-Modal Autoencoder Framework for Predicting Plasma Proteome from Genomic Data Using AlphaGenome",
-      "status": "open"
+      "id": 8,
+      "title": "Multi-Modal Autoencoder Framework for Predicting Plasma Proteome from Genomic Data Using AlphaGenome"
     },
     {
-      "title": "Adaptive Early Vision Networks: Learning Biologically Constrained Front-Ends for Robust Visual Recognition",
-      "status": "open"
+      "id": 9,
+      "title": "Adaptive Early Vision Networks: Learning Biologically Constrained Front-Ends for Robust Visual Recognition"
     },
     {
-      "title": "Optimization Model for Biomass Plant Control",
-      "status": "open"
+      "id": 10,
+      "title": "Optimization Model for Biomass Plant Control"
     },
     {
-      "title": "\"Agentification\" in a Manufacturing Context",
-      "status": "open"
+      "id": 11,
+      "title": "\"Agentification\" in a Manufacturing Context"
     },
     {
-      "title": "AI-Driven Pulmonary Function Analysis for Respiratory Screening",
-      "status": "open"
+      "id": 12,
+      "title": "AI-Driven Pulmonary Function Analysis for Respiratory Screening"
     },
     {
-      "title": "Improving Medical Image Segmentation through Human Feedback and Reward Modeling",
-      "status": "open"
+      "id": 13,
+      "title": "Improving Medical Image Segmentation through Human Feedback and Reward Modeling"
     },
     {
-      "title": "Sign Language Recognition with Large Vision-and-Language Models",
-      "status": "open"
+      "id": 14,
+      "title": "Sign Language Recognition with Large Vision-and-Language Models"
     },
     {
-      "title": "Text Segmentation by TextTiling with Modern Neural Retrieval Models",
-      "status": "open"
+      "id": 15,
+      "title": "Text Segmentation by TextTiling with Modern Neural Retrieval Models"
     },
     {
-      "title": "Analysis of sensor data for monitoring of open spaces",
-      "status": "open"
+      "id": 63,
+      "title": "Analysis of sensor data for monitoring of open spaces"
     },
     {
-      "title": "Unmixing mass spectra using machine learning for species identification",
-      "status": "ongoing"
+      "id": 17,
+      "title": "Unmixing mass spectra using machine learning for species identification"
     },
     {
-      "title": "Developing a Sense of Humour in Large Language Models",
-      "status": "ongoing"
+      "id": 18,
+      "title": "Developing a Sense of Humour in Large Language Models"
     },
     {
-      "title": "An Intelligent Software Agent for Personalized Tutoring",
-      "status": "ongoing"
+      "id": 19,
+      "title": "An Intelligent Software Agent for Personalized Tutoring"
     },
     {
-      "title": "Reasoning in Large Language Models and the Dual-Process Theory of Cognition",
-      "status": "ongoing"
+      "id": 20,
+      "title": "Reasoning in Large Language Models and the Dual-Process Theory of Cognition"
     },
     {
-      "title": "Handling Portuguese Varieties with Pre-Trained Language Models",
-      "status": "ongoing"
+      "id": 21,
+      "title": "Handling Portuguese Varieties with Pre-Trained Language Models"
     },
     {
-      "title": "Assessing Large Language Models for information verification in Portuguese",
-      "status": "ongoing"
+      "id": 22,
+      "title": "Assessing Large Language Models for information verification in Portuguese"
     },
     {
-      "title": "Deep neural network architectures for dual process computation",
-      "status": "ongoing"
+      "id": 23,
+      "title": "Deep neural network architectures for dual process computation"
     },
     {
-      "title": "Hybrid Prompt Optimization for Sparse Autoencoder Feature Visualization in Large Language Models",
-      "status": "finished"
+      "id": 24,
+      "title": "Hybrid Prompt Optimization for Sparse Autoencoder Feature Visualization in Large Language Models"
     },
     {
-      "title": "Transfer single-cell foundation models to predict drug resistance in cancer",
-      "status": "finished"
+      "id": 25,
+      "title": "Transfer single-cell foundation models to predict drug resistance in cancer"
     },
     {
-      "title": "Stroke Segmentation from Computed Tomography scans",
-      "status": "finished"
+      "id": 26,
+      "title": "Stroke Segmentation from Computed Tomography scans"
     },
     {
-      "title": "Biologically inspired CNNs for Medical Imaging tasks",
-      "status": "finished"
+      "id": 27,
+      "title": "Biologically inspired CNNs for Medical Imaging tasks"
     },
     {
-      "title": "Using large language models to interact with personal information systems",
-      "status": "finished"
+      "id": 28,
+      "title": "Using large language models to interact with personal information systems"
     },
     {
-      "title": "Modelos de causalidade para determinação do impacto de acções comerciais",
-      "status": "finished"
+      "id": 29,
+      "title": "Modelos de causalidade para determinação do impacto de acções comerciais"
     },
     {
-      "title": "Using biological features to improve deep neural network models for vision",
-      "status": "finished"
+      "id": 30,
+      "title": "Using biological features to improve deep neural network models for vision"
     },
     {
-      "title": "Representation learning of animal behavior",
-      "status": "finished"
+      "id": 31,
+      "title": "Representation learning of animal behavior"
     },
     {
-      "title": "Using Large Language Models do solve the Abstraction and Reasoning Challenge",
-      "status": "finished"
+      "id": 32,
+      "title": "Using Large Language Models do solve the Abstraction and Reasoning Challenge"
     },
     {
-      "title": "Using sequences of coronary angiograms to quantify the severity of stenosis",
-      "status": "finished"
+      "id": 33,
+      "title": "Using sequences of coronary angiograms to quantify the severity of stenosis"
     },
     {
-      "title": "Using graph embeddings to explore deep neural network architectures",
-      "status": "finished"
+      "id": 34,
+      "title": "Using graph embeddings to explore deep neural network architectures"
     },
     {
-      "title": "Stenosis detection in coronary X-ray angiographies",
-      "status": "finished"
+      "id": 35,
+      "title": "Stenosis detection in coronary X-ray angiographies"
     },
     {
-      "title": "Operation log monitoring using machine learning",
-      "status": "finished"
+      "id": 36,
+      "title": "Operation log monitoring using machine learning"
     },
     {
-      "title": "Deep learning when data is scarce",
-      "status": "finished"
+      "id": 37,
+      "title": "Deep learning when data is scarce"
     },
     {
-      "title": "Efficient Algorithms for Medical Image Segmentation",
-      "status": "finished"
+      "id": 38,
+      "title": "Efficient Algorithms for Medical Image Segmentation"
     },
     {
-      "title": "Towards Improving Ischemic Stroke Functional Outcome Prediction with Computed Tomography Brain Scans Using Deep Learning",
-      "status": "finished"
+      "id": 39,
+      "title": "Towards Improving Ischemic Stroke Functional Outcome Prediction with Computed Tomography Brain Scans Using Deep Learning"
     },
     {
-      "title": "Transaction-Based Entity Monitoring in a Client Due Diligence Context",
-      "status": "finished"
+      "id": 40,
+      "title": "Transaction-Based Entity Monitoring in a Client Due Diligence Context"
     },
     {
-      "title": "Pretraining the Vision Transformer using self-supervised methods for vision-based deep reinforcement learning",
-      "status": "finished"
+      "id": 41,
+      "title": "Pretraining the Vision Transformer using self-supervised methods for vision-based deep reinforcement learning"
     },
     {
-      "title": "Neural Models for Generating Clinically Accurate Chest X-Ray Reports",
-      "status": "finished"
+      "id": 42,
+      "title": "Neural Models for Generating Clinically Accurate Chest X-Ray Reports"
     },
     {
-      "title": "Old photo and image restoration using deep learning techniques",
-      "status": "finished"
+      "id": 43,
+      "title": "Old photo and image restoration using deep learning techniques"
     },
     {
-      "title": "Using a Siamese Network to Accurately Detect Ischemic Stroke in Computed Tomography Scans",
-      "status": "finished"
+      "id": 44,
+      "title": "Using a Siamese Network to Accurately Detect Ischemic Stroke in Computed Tomography Scans"
     },
     {
-      "title": "Siamese Transformer Networks for Improving Address Matching",
-      "status": "finished"
+      "id": 16,
+      "title": "Siamese Transformer Networks for Improving Address Matching"
     },
     {
-      "title": "A Modular Architecture for Model-Based Deep Reinforcement Learning",
-      "status": "finished"
+      "id": 45,
+      "title": "A Modular Architecture for Model-Based Deep Reinforcement Learning"
     },
     {
-      "title": "Improving the Performance of Deep Neural Networks in Vision Tasks with Attention Mechanisms.",
-      "status": "finished"
+      "id": 46,
+      "title": "Improving the Performance of Deep Neural Networks in Vision Tasks with Attention Mechanisms."
     },
     {
-      "title": "Using Knowledge Graphs to model Digital Footprints",
-      "status": "finished"
+      "id": 47,
+      "title": "Using Knowledge Graphs to model Digital Footprints"
     },
     {
-      "title": "Evaluating generalization in Deep Reinforcement Learning with Procedural Generated Environments",
-      "status": "finished"
+      "id": 48,
+      "title": "Evaluating generalization in Deep Reinforcement Learning with Procedural Generated Environments"
     },
     {
-      "title": "Combining off and on-policy training in Deep Reinforcement",
-      "status": "finished"
+      "id": 49,
+      "title": "Combining off and on-policy training in Deep Reinforcement"
     },
     {
-      "title": "Application of Deep Learning Techniques to the Diagnosis of Medical Images",
-      "status": "finished"
+      "id": 50,
+      "title": "Application of Deep Learning Techniques to the Diagnosis of Medical Images"
     },
     {
-      "title": "MyWatson: A system for interactive acess of personal records",
-      "status": "finished"
+      "id": 51,
+      "title": "MyWatson: A system for interactive acess of personal records"
     },
     {
-      "title": "Automatic Annotation of Unstructured Fields in Medical Databases",
-      "status": "finished"
+      "id": 52,
+      "title": "Automatic Annotation of Unstructured Fields in Medical Databases"
     },
     {
-      "title": "Biological Data Processing Using Grid Technologies",
-      "status": "finished"
+      "id": 53,
+      "title": "Biological Data Processing Using Grid Technologies"
     },
     {
-      "title": "Modelling and Inference of Gene Regulatory Networks",
-      "status": "finished"
+      "id": 54,
+      "title": "Modelling and Inference of Gene Regulatory Networks"
     },
     {
-      "title": "Pathological Analysis of Tissues using Deep Neural Networks",
-      "status": "finished"
+      "id": 55,
+      "title": "Pathological Analysis of Tissues using Deep Neural Networks"
     },
     {
-      "title": "Deep Convolutional Encoder-Decoder Architectures for Clinically Relevant Coronary Artery Segmentation",
-      "status": "finished"
+      "id": 56,
+      "title": "Deep Convolutional Encoder-Decoder Architectures for Clinically Relevant Coronary Artery Segmentation"
     },
     {
-      "title": "Automated Assessment of Coronary Artery Stenosis in X-ray Angiography using Deep Neural Networks",
-      "status": "finished"
+      "id": 57,
+      "title": "Automated Assessment of Coronary Artery Stenosis in X-ray Angiography using Deep Neural Networks"
     },
     {
-      "title": "Applying Deep Learning to Medical Images",
-      "status": "finished"
+      "id": 58,
+      "title": "Applying Deep Learning to Medical Images"
     },
     {
-      "title": "Imputation Techniques for Clinical Data of Ischemic Stroke Patients",
-      "status": "finished"
+      "id": 59,
+      "title": "Imputation Techniques for Clinical Data of Ischemic Stroke Patients"
     },
     {
-      "title": "WeatherIST - iOS application for detailed weather prevision in Continental Portugal",
-      "status": "finished"
+      "id": 60,
+      "title": "WeatherIST - iOS application for detailed weather prevision in Continental Portugal"
     },
     {
-      "title": "Predicting Frequency and Claims of Health Insurance with Machine Learning techniques",
-      "status": "finished"
+      "id": 61,
+      "title": "Predicting Frequency and Claims of Health Insurance with Machine Learning techniques"
     }
   ],
-  "updated": [],
   "unresolvedPeople": [
     {
       "role": "supervisor",
@@ -390,6 +390,15 @@
       "role": "supervisor",
       "name": "Luís Miguel Veiga Vaz Caldas de Oliveira.",
       "title": "Predicting Frequency and Claims of Health Insurance with Machine Learning techniques"
+    }
+  ],
+  "duplicateFenixUrls": [
+    {
+      "url": "https://fenix.tecnico.ulisboa.pt/cursos/mecd/dissertacao/565303595503041",
+      "titles": [
+        "Analysis of sensor data for monitoring of open spaces",
+        "Siamese Transformer Networks for Improving Address Matching"
+      ]
     }
   ],
   "errors": []
