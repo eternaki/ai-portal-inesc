@@ -1,8 +1,8 @@
-# MLKD Portal — вся система одной командой: docker compose up
+# MLKD Portal — the whole system with one command: docker compose up
 #
-# Для локальной разработки чаще удобнее поднять только БД:
+# For local development it is usually easier to start only the database:
 #   docker compose up -d db
-# и запускать web (pnpm dev) и ai (uvicorn) на хосте — см. README.
+# and run web (pnpm dev) and ai (uvicorn) on the host — see README.
 
 services:
   db:
@@ -13,7 +13,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mlkd}
       POSTGRES_DB: ${POSTGRES_DB:-mlkd}
     ports:
-      # только localhost: наружу БД не выставляем
+      # localhost only: the database is never exposed outside the host
       - '127.0.0.1:5432:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
@@ -36,8 +36,14 @@ services:
       # Reach the AI service (search/chat/import/maintenance) inside the network.
       AI_SERVICE_URL: http://ai:8000
       AI_SERVICE_TOKEN: ${AI_SERVICE_TOKEN:-}
+      # Uploads (member photos, news covers, publication attachments) must live on
+      # a volume: the default is <cwd>/media inside the image, which is wiped by
+      # every rebuild. Keep this in sync with the media-data mount below.
+      MEDIA_DIR: /app/media
     ports:
       - '3000:3000'
+    volumes:
+      - media-data:/app/media
     depends_on:
       db:
         condition: service_healthy
@@ -83,7 +89,8 @@ services:
       EMBEDDING_DEVICE: ${EMBEDDING_DEVICE:-cpu}
       OPENALEX_MAILTO: ${OPENALEX_MAILTO:-mlkd-portal@example.com}
     ports:
-      # только localhost: /generate/* защищён токеном, но наружу сервис не нужен
+      # localhost only: /generate/* is token-protected, but the service still has
+      # no reason to be reachable from outside the host
       - '127.0.0.1:8000:8000'
     depends_on:
       db:
@@ -91,3 +98,4 @@ services:
 
 volumes:
   db-data:
+  media-data:
