@@ -41,7 +41,7 @@ export default async function ReadingGroupsPage() {
       : ''
 
   const renderItem = (item: (typeof result.docs)[number]) => (
-    <article key={item.id} className="session-card">
+    <article key={item.id} id={item.slug ?? undefined} className="session-card">
       <div className="news-date">
         {fmt(item.date)}
         {item.presenter ? ` · ${item.presenter}` : ''}

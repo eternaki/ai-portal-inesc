@@ -36,15 +36,17 @@ type UnifiedHit = {
   source?: 'semantic' | 'lexical'
 }
 
+// Collections without a detail page still deep-link to their anchor on the list
+// page — landing on a 200-item list with no idea which row matched is a dead end.
 const ENTITY_LINK: Record<EntityType, (hit: UnifiedHit) => string> = {
   publications: (hit) => (hit.slug ? `/publications/${hit.slug}` : '/publications'),
   members: (hit) => (hit.slug ? `/people#${hit.slug}` : '/people'),
-  projects: () => '/projects',
-  'thesis-topics': () => '/opportunities',
-  software: () => '/software',
+  projects: (hit) => (hit.slug ? `/projects#${hit.slug}` : '/projects'),
+  'thesis-topics': (hit) => (hit.slug ? `/opportunities#${hit.slug}` : '/opportunities'),
+  software: (hit) => (hit.slug ? `/software#${hit.slug}` : '/software'),
   news: (hit) => (hit.slug ? `/news/${hit.slug}` : '/news'),
-  events: () => '/events',
-  'reading-groups': () => '/reading-groups',
+  events: (hit) => (hit.slug ? `/events#${hit.slug}` : '/events'),
+  'reading-groups': (hit) => (hit.slug ? `/reading-groups#${hit.slug}` : '/reading-groups'),
 }
 
 function textFromRich(node: unknown): string {
@@ -64,13 +66,16 @@ function yearFromDate(value: unknown): number | null {
   return Number.isFinite(year) ? year : null
 }
 
+// Keyword fallback used when the AI service is unreachable. Every non-empty token
+// counts: dropping short ones made the field's own vocabulary — AI, ML, NLP, RL —
+// match nothing at all.
 function matchesQuery(hit: UnifiedHit, q: string) {
   const haystack = `${hit.title ?? ''} ${hit.description ?? ''}`.toLowerCase()
-  return q
+  const tokens = q
     .toLowerCase()
     .split(/\s+/)
-    .filter((token) => token.length > 2)
-    .some((token) => haystack.includes(token))
+    .filter(Boolean)
+  return tokens.length > 0 && tokens.some((token) => haystack.includes(token))
 }
 
 async function textualFallback(q: string, type?: EntityType): Promise<UnifiedHit[]> {

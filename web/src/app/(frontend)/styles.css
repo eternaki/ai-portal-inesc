@@ -80,8 +80,14 @@ html {
   }
 }
 
+/* Sticky footer: pages with little content (an empty collection, a short news
+   item) would otherwise leave the footer floating mid-screen with dead space
+   below it. The column keeps <main> growing to fill whatever is left. */
 body {
   margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans, -apple-system, sans-serif);
@@ -174,6 +180,8 @@ input:focus-visible {
 }
 
 main {
+  flex: 1 0 auto; /* takes the slack so the footer sits at the bottom — see body */
+  width: 100%;
   max-width: var(--max);
   margin: 0 auto;
   padding: 2.5rem 1.25rem 5rem;
@@ -299,6 +307,24 @@ main > h1:first-child {
   right: 0;
 }
 
+/* Search sits in the nav as an icon: it is a tool, not a section, and the row
+   stays short. The word comes back in the mobile panel, where a lone glyph in a
+   stacked list of labels reads as an orphan. */
+.site-nav-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-70);
+}
+
+.site-nav-search-label {
+  display: none;
+}
+
+.site-nav-search::after {
+  display: none;
+}
+
 /* Hamburger toggle — hidden on desktop, shown below the nav breakpoint */
 .nav-toggle {
   display: none;
@@ -340,19 +366,24 @@ main > h1:first-child {
 }
 
 .site-footer {
+  flex-shrink: 0;
   border-top: 2px solid var(--cobalt);
   background: var(--ink-6);
   margin-top: 3rem;
 }
 
+/* Grid, not space-between: with only two blocks in a 1120px row the latter tore
+   them to opposite edges and left a canyon in the middle. Columns size to their
+   content and stack below the breakpoint. The extra bottom padding is clearance
+   for the fixed chat FAB, which sits over this corner. */
 .site-footer-inner {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 2.75rem 1.25rem;
-  display: flex;
-  justify-content: space-between;
-  gap: 2.5rem;
-  flex-wrap: wrap;
+  padding: 2.75rem 1.25rem 4.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1.75rem 4rem;
   font-size: 0.92rem;
   color: var(--ink-70);
 }
@@ -382,15 +413,27 @@ main > h1:first-child {
 }
 
 .site-credit {
-  flex-basis: 100%;
+  grid-column: 1 / -1;
   font-size: 0.78rem;
   color: var(--ink-40);
-  margin-top: -0.5rem;
+  margin: 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--ink-12);
+}
+
+@media (max-width: 640px) {
+  .site-footer-inner {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }
 
 /* ── responsive nav (mobile dropdown) ── */
 
-@media (max-width: 1360px) {
+/* Was 1360px, which pushed a 1366px-wide laptop into the hamburger. Seven items
+   plus the logo and the three controls measure ~1210px, so this is the tightest
+   breakpoint that still keeps a 1366px laptop on the full row. */
+@media (max-width: 1240px) {
   .nav-toggle {
     display: flex;
   }
@@ -436,6 +479,10 @@ main > h1:first-child {
 
   .nav-panel .site-nav a::after {
     display: none;
+  }
+
+  .nav-panel .site-nav-search-label {
+    display: inline;
   }
 
   .nav-panel .locale-switcher {
@@ -864,6 +911,23 @@ main > h1:first-child {
   transform: translateY(-1px);
 }
 
+/* A second filter row (year, then type) reads as one control block, not two */
+.filters + .filters {
+  margin-top: -0.9rem;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--ink-12);
+  font-size: 0.82rem;
+  color: var(--ink-40);
+}
+
 .search-form {
   display: flex;
   gap: 0.6rem;
@@ -1050,7 +1114,7 @@ main > h1:first-child {
   margin-top: 1.2rem;
 }
 
-/* ── появление карточек при прокрутке (ScrollReveal.tsx) ── */
+/* ── card reveal on scroll (ScrollReveal.tsx) ── */
 
 .reveal-pending {
   opacity: 0;
@@ -1096,7 +1160,7 @@ main > h1:first-child {
   color: var(--ink-40);
 }
 
-/* ── главная: тематические плитки ── */
+/* ── home: research theme tiles ── */
 
 .theme-tile {
   border-top: 3px solid transparent;
@@ -1108,7 +1172,7 @@ main > h1:first-child {
   letter-spacing: 0.03em;
 }
 
-/* ── главная: карточки новостей ── */
+/* ── home: news cards ── */
 
 .news-card-grid {
   display: grid;
@@ -1169,7 +1233,7 @@ main > h1:first-child {
   height: 3px;
 }
 
-/* ── главная: CTA-баннер "Join us" ── */
+/* ── home: "Join us" CTA banner ── */
 
 .join-banner {
   margin-top: 3rem;
@@ -1244,7 +1308,7 @@ main > h1:first-child {
   border-bottom: 1px solid var(--ink-12);
 }
 
-/* ── reading groups: карточки сессий ── */
+/* ── session cards ── */
 
 .session-list {
   display: flex;
@@ -1273,7 +1337,7 @@ main > h1:first-child {
   border-top: 1px solid var(--ink-12);
 }
 
-/* ── события: бейдж с датой ── */
+/* ── events: date badge ── */
 
 .event-row {
   display: flex;
@@ -1364,7 +1428,7 @@ main > h1:first-child {
   cursor: default;
 }
 
-/* ── переключатель темы ── */
+/* ── theme toggle ── */
 
 .theme-toggle {
   display: inline-flex;
@@ -1387,7 +1451,7 @@ main > h1:first-child {
   transform: rotate(-8deg);
 }
 
-/* ── чат-бот ── */
+/* ── chatbot ── */
 
 .chat-root {
   position: fixed;
@@ -1525,7 +1589,7 @@ main > h1:first-child {
   }
 }
 
-/* ── страница Research: карточки тем ── */
+/* ── Research page: theme cards ── */
 
 .theme-list {
   display: flex;
@@ -1586,7 +1650,7 @@ main > h1:first-child {
   background: var(--ink-40);
 }
 
-/* ── страница Map: точки-публикации ── */
+/* ── Map page: publication points ── */
 
 .map-legend {
   display: flex;
@@ -1669,7 +1733,7 @@ main > h1:first-child {
   font-size: 0.95rem !important;
 }
 
-/* ── скелетоны загрузки (/map, /search — ждут AI-сервис) ── */
+/* ── loading skeletons (/map, /search wait on the AI service) ── */
 
 @keyframes skeleton-shimmer {
   0% {
@@ -1727,7 +1791,7 @@ main > h1:first-child {
   border-bottom: 1px solid var(--ink-12);
 }
 
-/* ── стопка аватаров (MemberAvatarStack) ── */
+/* ── avatar stack (MemberAvatarStack) ── */
 
 .theme-people {
   display: flex;
@@ -1798,7 +1862,7 @@ main > h1:first-child {
   flex-wrap: wrap;
 }
 
-/* ── мини-карта на странице публикации ── */
+/* ── mini map on the publication page ── */
 
 .mini-map {
   display: block;
@@ -1864,7 +1928,7 @@ main > h1:first-child {
   color: rgba(255, 255, 255, 0.65);
 }
 
-/* ── вложения публикации (материалы) ── */
+/* ── publication attachments (materials) ── */
 
 .attach-grid {
   display: grid;

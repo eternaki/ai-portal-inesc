@@ -36,7 +36,7 @@ export default async function EventsPage() {
       : ''
 
   const renderEvent = (e: (typeof events.docs)[number]) => (
-    <div key={e.id} className="event-row">
+    <div key={e.id} id={e.slug ?? undefined} className="event-row">
       {e.date && (
         <div className="event-date-badge">
           <b>{new Date(e.date).getDate()}</b>

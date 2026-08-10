@@ -6,10 +6,10 @@ import { Scatter } from '@/components/Scatter'
 import { CountUp } from '@/components/CountUp'
 import { JsonLd, ORGANIZATION } from '@/components/JsonLd'
 import { PubRow } from '@/components/PubRow'
+import { NewsCard } from '@/components/NewsCard'
 import { clusterColor, fetchPublicationClusters } from '@/lib/clusterColors'
 import { PUBLISHED } from '@/lib/queries'
 import { getDictionary, getLocale } from '@/i18n/server'
-import { dateLocale } from '@/i18n/config'
 
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
@@ -27,7 +27,9 @@ export default async function HomePage() {
 
   const [pubCount, memberCount, recentPubs, themes, openTopics, news, clusters] = await Promise.all([
     payload.count({ collection: 'publications', where: PUBLISHED }),
-    payload.count({ collection: 'members' }),
+    // Active members only — alumni and completed memberships would inflate the
+    // headline number into a claim about people who have already left.
+    payload.count({ collection: 'members', where: { membershipStatus: { equals: 'active' } } }),
     payload.find({ collection: 'publications', where: PUBLISHED, sort: '-year', limit: 5, depth: 0 }),
     payload.find({ collection: 'research-themes', limit: 6, depth: 0 }),
     payload.count({ collection: 'thesis-topics', where: { status: { equals: 'open' } } }),
@@ -122,32 +124,14 @@ export default async function HomePage() {
             <Link href="/news">{t.home.allNews}</Link>
           </div>
           <div className="news-card-grid">
-            {news.docs.map((n, i) => {
-              const color = THEME_COLORS[(i + 2) % THEME_COLORS.length]
-              const cover = typeof n.coverImage === 'object' ? n.coverImage : null
-              const coverUrl = cover?.sizes?.card?.url ?? cover?.url
-              return (
-                <Link key={n.id} href={n.slug ? `/news/${n.slug}` : '#'} className="news-card">
-                  <div className="news-card-media" style={{ background: `${color}1a` }}>
-                    {coverUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={coverUrl} alt="" />
-                    ) : (
-                      <span className="news-card-media-mark" style={{ color }}>
-                        MLKD
-                      </span>
-                    )}
-                  </div>
-                  <div className="news-card-body">
-                    <div className="news-date">
-                      {n.date ? new Date(n.date).toLocaleDateString(dateLocale[locale], { day: 'numeric', month: 'long', year: 'numeric' }) : ''}
-                    </div>
-                    <div className="pub-title">{n.title}</div>
-                  </div>
-                  <div className="news-card-accent" style={{ background: color }} />
-                </Link>
-              )
-            })}
+            {news.docs.map((item, i) => (
+              <NewsCard
+                key={item.id}
+                item={item}
+                locale={locale}
+                color={THEME_COLORS[(i + 2) % THEME_COLORS.length]}
+              />
+            ))}
           </div>
         </section>
       )}

@@ -140,14 +140,12 @@ function memberPhoto(member: Member): Media | null {
 
 function PersonCard({
   member,
-  emailLabel,
-  websiteLabel,
+  t,
   publications,
   roleBadge,
 }: {
   member: Member
-  emailLabel: string
-  websiteLabel: string
+  t: Awaited<ReturnType<typeof getDictionary>>['people']
   publications: Publication[]
   roleBadge?: string
 }) {
@@ -173,12 +171,12 @@ function PersonCard({
       {(member.researchInterests ?? []).length > 0 && (
         <div className="pub-meta">{(member.researchInterests ?? []).join(' · ')}</div>
       )}
-      <PersonLinks member={member} emailLabel={emailLabel} websiteLabel={websiteLabel} />
-      {member.needsContactReview && <div className="pub-meta">Contact pending review</div>}
+      <PersonLinks member={member} emailLabel={t.email} websiteLabel={t.website} />
+      {member.needsContactReview && <div className="pub-meta">{t.contactPending}</div>}
       {publications.length > 0 && (
         <div className="person-publications">
           <div className="person-publications-head">
-            <span>Recent publications</span>
+            <span>{t.recentPublications}</span>
             <span className="badge">{publications.length}</span>
           </div>
           <ul>
@@ -260,8 +258,7 @@ export default async function PeoplePage() {
                   <PersonCard
                     key={member.id}
                     member={member}
-                    emailLabel={t.people.email}
-                    websiteLabel={t.people.website}
+                    t={t.people}
                     publications={publicationsByMember.get(member.id) ?? []}
                   />
                 ))}
@@ -282,8 +279,7 @@ export default async function PeoplePage() {
                 <PersonCard
                   key={member.id}
                   member={member}
-                  emailLabel={t.people.email}
-                  websiteLabel={t.people.website}
+                  t={t.people}
                   publications={publicationsByMember.get(member.id) ?? []}
                   roleBadge={roleLabel(member, t.people)}
                 />

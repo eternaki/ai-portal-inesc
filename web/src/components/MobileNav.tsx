@@ -5,7 +5,15 @@ import React, { useState } from 'react'
 // Wraps the (server-rendered) nav links + locale switcher. On desktop this is
 // visually inert (`display: contents`); below the nav breakpoint it becomes a
 // hamburger-triggered dropdown panel. See .nav-toggle / .nav-panel in styles.css.
-export function MobileNav({ children }: { children: React.ReactNode }) {
+export function MobileNav({
+  children,
+  openLabel,
+  closeLabel,
+}: {
+  children: React.ReactNode
+  openLabel: string
+  closeLabel: string
+}) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -13,7 +21,7 @@ export function MobileNav({ children }: { children: React.ReactNode }) {
       <button
         type="button"
         className="nav-toggle"
-        aria-label={open ? 'Close menu' : 'Open menu'}
+        aria-label={open ? closeLabel : openLabel}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >

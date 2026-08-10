@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { RichText } from '@payloadcms/richtext-lexical/react'
@@ -20,15 +21,16 @@ export default async function OpportunitiesPage() {
     sort: '-createdAt',
   })
 
-  const open = topics.docs.filter((t) => t.status === 'open')
-  const taken = topics.docs.filter((t) => t.status !== 'open')
+  // Not `t` — that is the dictionary; shadowing it here has bitten this file before.
+  const open = topics.docs.filter((topic) => topic.status === 'open')
+  const taken = topics.docs.filter((topic) => topic.status !== 'open')
 
   return (
     <div>
       <h1>{t.opportunities.title}</h1>
       <p className="pub-meta" style={{ maxWidth: '60ch' }}>
         {t.opportunities.metaBefore}
-        <a href="/people">{t.opportunities.anyFaculty}</a>
+        <Link href="/people">{t.opportunities.anyFaculty}</Link>
         {t.opportunities.metaAfter}
       </p>
 
@@ -41,7 +43,7 @@ export default async function OpportunitiesPage() {
         {open.map((topic) => {
           const advisors = (topic.advisors ?? []).filter((a): a is Member => typeof a === 'object')
           return (
-            <div key={topic.id} className="card">
+            <div key={topic.id} id={topic.slug ?? undefined} className="card">
               <h3>{topic.title}</h3>
               <div className="pub-meta">
                 <span className="badge badge-open">{topic.level === 'phd' ? 'PhD' : 'MSc'}</span>
@@ -65,7 +67,7 @@ export default async function OpportunitiesPage() {
         <>
           <h2>{t.opportunities.assignedHead}</h2>
           {taken.slice(0, 10).map((topic) => (
-            <div key={topic.id} className="pub-item">
+            <div key={topic.id} id={topic.slug ?? undefined} className="pub-item">
               <div className="pub-title">{topic.title}</div>
               <div className="pub-meta">
                 <span className="badge">{topic.level === 'phd' ? 'PhD' : 'MSc'}</span>{' '}

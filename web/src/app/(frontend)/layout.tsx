@@ -57,16 +57,18 @@ export const metadata = {
     'Machine Learning and Knowledge Discovery group at INESC-ID: publications, people, projects and opportunities.',
 }
 
+// Section list mirrors the group's existing site (mlkd.idss.inesc-id.pt), which the
+// supervisor asked us to preserve — Events and Reading Groups stay separate.
+// The map is not a section of its own (it is a view of publications), so it is
+// reached from Research/Publications, and search is the icon at the end of the row.
 const NAV = [
   { href: '/research', key: 'research' },
-  { href: '/map', key: 'map' },
   { href: '/publications', key: 'publications' },
   { href: '/people', key: 'people' },
   { href: '/opportunities', key: 'opportunities' },
-  { href: '/reading-groups', key: 'readingGroups' },
   { href: '/news', key: 'news' },
   { href: '/events', key: 'events' },
-  { href: '/search', key: 'search' },
+  { href: '/reading-groups', key: 'readingGroups' },
 ] as const
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
@@ -105,13 +107,32 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                 <small>INESC-ID · Lisboa</small>
               </span>
             </Link>
-            <MobileNav>
+            <MobileNav openLabel={t.nav.openMenu} closeLabel={t.nav.closeMenu}>
               <nav className="site-nav">
                 {NAV.map((item) => (
                   <Link key={item.href} href={item.href}>
                     {t.nav[item.key]}
                   </Link>
                 ))}
+                <Link className="site-nav-search" href="/search" aria-label={t.nav.search}>
+                  <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
+                    <circle
+                      cx="8.5"
+                      cy="8.5"
+                      r="5.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                    />
+                    <path
+                      d="M12.7 12.7 L17 17"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="site-nav-search-label">{t.nav.search}</span>
+                </Link>
                 <LocaleSwitcher current={locale} />
                 <ThemeToggle light={t.theme.light} dark={t.theme.dark} />
               </nav>
@@ -138,6 +159,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             <div className="site-footer-links">
               <Link href="/publications">{t.nav.publications}</Link>
               <Link href="/reading-groups">{t.nav.readingGroups}</Link>
+              <Link href="/map">{t.nav.map}</Link>
               <Link href="/opportunities">{t.footer.openThesis}</Link>
               <Link href="/admin">{t.footer.signIn}</Link>
             </div>

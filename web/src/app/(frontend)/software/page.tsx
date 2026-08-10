@@ -55,8 +55,16 @@ export default async function SoftwarePage() {
 
       <div className="card-grid">
         {items.docs.map((s) => (
-          <div key={s.id} className="card">
-            <h3>{s.repoUrl ? <a href={s.repoUrl}>{s.name}</a> : s.name}</h3>
+          <div key={s.id} id={s.slug ?? undefined} className="card">
+            <h3>
+              {s.repoUrl ? (
+                <a href={s.repoUrl} target="_blank" rel="noreferrer">
+                  {s.name}
+                </a>
+              ) : (
+                s.name
+              )}
+            </h3>
             <div className="pub-meta">
               <span className="badge badge-icon">
                 <KindIcon kind={s.kind} /> {s.kind}

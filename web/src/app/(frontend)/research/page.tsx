@@ -59,7 +59,10 @@ export default async function ResearchPage() {
 
   return (
     <div>
-      <h1>{t.research.title}</h1>
+      <div className="section-head">
+        <h1>{t.research.title}</h1>
+        <Link href="/map">{t.nav.map} →</Link>
+      </div>
       <p className="pub-meta" style={{ maxWidth: '60ch' }}>
         {t.research.meta}
       </p>

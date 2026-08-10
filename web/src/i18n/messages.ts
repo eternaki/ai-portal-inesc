@@ -10,14 +10,18 @@ import type { Locale } from './config'
 const en = {
   nav: {
     research: 'Research',
-    map: 'Map',
     publications: 'Publications',
     people: 'People',
     opportunities: 'Opportunities',
-    readingGroups: 'Reading Groups',
     news: 'News',
     events: 'Events',
+    readingGroups: 'Reading Groups',
+    // Not top-level nav: the map is reached from Research and Publications, the
+    // search icon from the header. Both still need an accessible label.
+    map: 'Research map',
     search: 'Search',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
   },
   theme: {
     light: 'Switch to light mode',
@@ -58,7 +62,21 @@ const en = {
       'Members: add a publication via the admin panel; the summary is generated automatically',
     metaSuffix:
       'curated research outputs from the MLKD group',
+    rangeOf: 'of',
     allYears: 'all years',
+    allTypes: 'all types',
+    types: {
+      journal: 'Journal',
+      conference: 'Conference',
+      workshop: 'Workshop',
+      book: 'Book / Chapter',
+      preprint: 'Preprint',
+      other: 'Other',
+    },
+    prevPage: '← Newer',
+    nextPage: 'Older →',
+    pageLabel: 'Page',
+    pageOf: 'of',
     empty: 'No publications match this filter yet.',
   },
   people: {
@@ -76,6 +94,8 @@ const en = {
     statusCompleted: 'Completed',
     website: 'Website',
     email: 'Email',
+    recentPublications: 'Recent publications',
+    contactPending: 'Contact pending review',
     empty: 'No members yet — add them in the admin panel.',
   },
   opportunities: {
@@ -247,14 +267,16 @@ export type Dictionary = typeof en
 const pt: Dictionary = {
   nav: {
     research: 'Investigação',
-    map: 'Mapa',
     publications: 'Publicações',
     people: 'Pessoas',
     opportunities: 'Oportunidades',
-    readingGroups: 'Reading Groups',
     news: 'Notícias',
     events: 'Eventos',
+    readingGroups: 'Reading Groups',
+    map: 'Mapa de investigação',
     search: 'Pesquisa',
+    openMenu: 'Abrir menu',
+    closeMenu: 'Fechar menu',
   },
   theme: {
     light: 'Mudar para o modo claro',
@@ -263,7 +285,7 @@ const pt: Dictionary = {
   footer: {
     openThesis: 'Temas de tese em aberto',
     signIn: 'Entrar (membros)',
-    credit: 'Desenvolvido por João Enomoto para MLKD / INESC-ID.',
+    credit: 'Desenvolvido para MLKD / INESC-ID.',
   },
   home: {
     lede:
@@ -295,7 +317,21 @@ const pt: Dictionary = {
       'Membros: adicionem uma publicação através do painel de administração; o resumo é gerado automaticamente',
     metaSuffix:
       'resultados de investigação curados pelo grupo MLKD',
+    rangeOf: 'de',
     allYears: 'todos os anos',
+    allTypes: 'todos os tipos',
+    types: {
+      journal: 'Revista',
+      conference: 'Conferência',
+      workshop: 'Workshop',
+      book: 'Livro / Capítulo',
+      preprint: 'Preprint',
+      other: 'Outro',
+    },
+    prevPage: '← Mais recentes',
+    nextPage: 'Mais antigas →',
+    pageLabel: 'Página',
+    pageOf: 'de',
     empty: 'Ainda não há publicações para este filtro.',
   },
   people: {
@@ -313,6 +349,8 @@ const pt: Dictionary = {
     statusCompleted: 'Terminados',
     website: 'Site',
     email: 'Email',
+    recentPublications: 'Publicações recentes',
+    contactPending: 'Contacto por confirmar',
     empty: 'Ainda não há membros — adicione-os no painel de administração.',
   },
   opportunities: {

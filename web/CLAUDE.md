@@ -48,6 +48,14 @@ architecture, global rules). This file covers only the `web/` specifics.
   by `path#Export`): `ImportPublicationPanel` (DOI/URL/title import, on the
   Publications list) and `MaintenancePanel` (data-health, on the dashboard). After
   adding one, run `pnpm generate:importmap`.
+- **Events and Reading Groups stay separate collections** even though their fields
+  are close. The page structure mirrors the group's existing site
+  (mlkd.idss.inesc-id.pt), which the supervisor asked us to preserve — do not merge
+  them without checking with him first.
+- **Public list pages must be exhaustively reachable.** Paginate (`page` search
+  param) and build filter facets from the whole collection, not from the current
+  page — a chip list that covers only part of the archive hides content with no
+  way to reach it. See `src/app/(frontend)/publications/page.tsx`.
 - **Feature flags** are in the `ai-settings` global (`features` group):
   `enableChatbot`, `enableSemanticSearch`, `enableSummaries`. The layout hides the
   chat widget when off; the AI service enforces the rest.
