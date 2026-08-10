@@ -10,6 +10,7 @@
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "dissertations:parser:test": "node --test scripts/tests/dissertation-parser.test.mjs",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "members:import": "node scripts/import-members.mjs --dry-run",
     "members:import:apply": "node scripts/import-members.mjs --apply",
