@@ -30,7 +30,7 @@ plainly illogical.**
 | `thesis-topics` becomes `dissertations` | The collection already models the same lifecycle (open/assigned/completed ≙ New/Ongoing/Finished) and already holds 2 rows. Renaming beats duplicating. |
 | `/opportunities` is deleted outright, no redirect | The portal is not deployed anywhere (`SITE_URL` unset, `docs/DEPLOY.md` is placeholders), so no external link can break. Internal links are updated in place. |
 | `/research` is deleted; themes move to the homepage | 4 themes, all with empty descriptions, 1 member link, 0 key publications. The page only looked populated because it silently fell back to semantic search over the theme *name*. The legacy site has no such section either — it states the mission in a paragraph on the homepage. |
-| No global search page; each list page searches its own content | Of six searchable collections, four are empty or near-empty. A cross-entity search returns what a publications search would. Semantic search is not lost — it moves to where it is used. |
+| ~~No global search page; each list page searches its own content~~ **REVERSED 2026-08-10** | The user decided to leave search exactly as it is for now and revisit it later. `/search` and the header magnifier stay; no per-section search inputs are added. The only search change in this work is renaming the `thesis-topics` entity type to `dissertations`, which is forced by the collection rename. |
 | Events and Reading Groups stay separate | Supervisor's explicit request. Recorded in `web/CLAUDE.md` so it is not "cleaned up" later. |
 
 ### Resulting navigation
@@ -39,8 +39,9 @@ plainly illogical.**
 People · Publications · Dissertations · News · Events · Reading Groups · Open positions
 ```
 
-Seven items, no search magnifier. This mirrors the legacy order (Team first, Open
-positions last); News is our addition, slotted with the other "what's happening"
+The magnifier stays in the header (see the reversed search decision above), so this
+is seven items plus the search icon. The order mirrors the legacy site (Team first,
+Open positions last); News is our addition, slotted with the other "what's happening"
 sections. Two labels are long ("Reading Groups", "Open positions"), so the row lands
 near the 1240px hamburger breakpoint — measure it in the browser during
 implementation and raise the breakpoint if it wraps.
@@ -130,8 +131,17 @@ Parsing rules:
 - People are resolved against `members` by normalised name; unresolved names are
   stored as text and listed in the report.
 
-Idempotent: matching is on `fenixUrl`, else on normalised title, so a re-run updates
-rather than duplicates.
+Idempotent: matching is on **title**, which is unique across all 59 entries. `fenixUrl`
+is deliberately NOT a key — only 30 of 59 entries carry one, and the source reuses a
+single URL for two different works (an open topic points at someone else's defended
+thesis). The first implementation keyed on `fenixUrl` and silently overwrote one
+record; the importer now reports duplicated Fenix URLs instead, as a defect list to
+hand back to the group. Trade-off accepted: renaming a dissertation upstream would
+create a second row rather than update the first.
+
+The apply switch is the env var `DISSERTATIONS_APPLY=1`, compared as a strict string.
+`payload run` does not forward unknown command-line flags to the script, so the
+`--apply` flag the plan originally specified never arrived.
 
 ## 4. Member photos
 
@@ -219,13 +229,19 @@ reachable by hover alone.
 
 Publication type stays as chips — four options is what chips are for.
 
-## 8. Section-scoped search
+## 8. Section-scoped search — DEFERRED
 
-A search input on `/publications` (publications only), `/dissertations`
-(dissertations only) and `/people` (name search). All three call the existing
-`/search/all?types=…` endpoint; the AI service needs no change.
+Originally this section replaced the global `/search` page with a search input on
+`/publications`, `/dissertations` and `/people`. **The user cancelled it on
+2026-08-10:** search stays exactly as it is and will be reconsidered on its own
+later. Nothing here is implemented.
 
-`/people` gains the most: it currently renders 113 cards with no way to find anyone.
+The one unavoidable exception is mechanical: `search/page.tsx` references the
+`thesis-topics` collection, which the rename removes, so its entity type and result
+link change to `dissertations`. Behaviour is unchanged.
+
+Noted for whenever this is revisited: `/people` renders 113 cards with no way to
+find anyone, which is the strongest argument for a per-section search.
 
 ## 9. Staging
 
@@ -234,8 +250,8 @@ Independent pieces, in this order:
 1. **Dissertations** — collection, migration, pages, importer. Highest value.
 2. **Roster reconciliation report** — read-only, unblocks the photo decision.
 3. **Member photos** — after `MEDIA_DIR` is live and the roster is understood.
-4. **Publications histogram + scoped search + `/research` and `/opportunities`
-   removal + nav reorder** — the front-end pass.
+4. **Publications histogram + `/research` removal + nav reorder** — the front-end
+   pass. (`/opportunities` goes with stage 1; scoped search is deferred.)
 5. **Open positions** — smallest, least urgent.
 
 Each stage gets its own implementation plan.
