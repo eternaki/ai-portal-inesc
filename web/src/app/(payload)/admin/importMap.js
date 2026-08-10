@@ -25,6 +25,7 @@ import { GenerateSnippetButton as GenerateSnippetButton_dcb089909e9090db5e605697
 import { ImportPublicationPanel as ImportPublicationPanel_13e7797d2ccbf93a8725229ad473d4c0 } from '../../../components/admin/ImportPublicationForm'
 import { HealthDashboard as HealthDashboard_542e1774d57e2ccbfc5e85421984c0db } from '../../../components/admin/HealthDashboard'
 import { MaintenancePanel as MaintenancePanel_71f7d34178f9252bcb754cb7adbe9128 } from '../../../components/admin/MaintenancePanel'
+import { CoveragePanel as CoveragePanel_e2b84f4f7ffef7d899d82488d6f235ce } from '../../../components/admin/CoveragePanel'
 import { RagWorkbench as RagWorkbench_8103a32c69e7ba4fa2dce31c7d4dc105 } from '../../../components/admin/RagWorkbench'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -57,6 +58,7 @@ export const importMap = {
   "/components/admin/ImportPublicationForm#ImportPublicationPanel": ImportPublicationPanel_13e7797d2ccbf93a8725229ad473d4c0,
   "/components/admin/HealthDashboard#HealthDashboard": HealthDashboard_542e1774d57e2ccbfc5e85421984c0db,
   "/components/admin/MaintenancePanel#MaintenancePanel": MaintenancePanel_71f7d34178f9252bcb754cb7adbe9128,
+  "/components/admin/CoveragePanel#CoveragePanel": CoveragePanel_e2b84f4f7ffef7d899d82488d6f235ce,
   "/components/admin/RagWorkbench#RagWorkbench": RagWorkbench_8103a32c69e7ba4fa2dce31c7d4dc105,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

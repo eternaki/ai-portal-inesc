@@ -96,6 +96,7 @@ regenerated on every commit (see section 7).
 ### Web API routes — `web/src/app/api/`
 - `/api/ai/snippet`
 - `/api/chat`
+- `/api/coverage`
 - `/api/health/admin`
 - `/api/ingest`
 - `/api/maintenance`
@@ -105,6 +106,7 @@ regenerated on every commit (see section 7).
 - `benchmark.py`
 - `bios.py`
 - `cluster.py`
+- `coverage.py`
 - `embed.py`
 - `embed_entities.py`
 - `ingest.py`
@@ -112,6 +114,7 @@ regenerated on every commit (see section 7).
 - `summarize.py`
 
 ### AI HTTP endpoints — `ai/app/api/routes.py`
+- `GET /coverage/report`
 - `GET /health/llm`
 - `GET /health`
 - `GET /maintenance/report`
