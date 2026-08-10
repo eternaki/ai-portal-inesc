@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Give the portal the Dissertations section the group's legacy site has — 58 theses across three lifecycle stages — by renaming the existing `thesis-topics` collection, extending it, building list and detail pages, and importing the legacy content.
+**Goal:** Give the portal the Dissertations section the group's legacy site has — 59 theses across three lifecycle stages — by renaming the existing `thesis-topics` collection, extending it, building list and detail pages, and importing the legacy content.
 
 **Architecture:** `thesis-topics` is renamed to `dissertations` in place (it already models the same lifecycle and holds two rows) via two reversible SQL migrations. A dependency-free parser library turns the legacy site's machine-generated HTML into plain records; a thin importer script feeds those records to Payload's Local API through `payload run`, so no API key or direct SQL is involved. Pages follow the existing publications pattern: a paginated list plus a per-item detail page.
 
@@ -30,7 +30,7 @@ Legacy pages and their shape:
 
 | URL | Entries | Author | Fenix link |
 |---|---|---|---|
-| `https://mlkd.idss.inesc-id.pt/mlkd-dissertations-new.html` | 12 | no | no |
+| `https://mlkd.idss.inesc-id.pt/mlkd-dissertations-new.html` | 13 | no | no |
 | `https://mlkd.idss.inesc-id.pt/mlkd-dissertations-ongoing.html` | 7 | yes | no |
 | `https://mlkd.idss.inesc-id.pt/mlkd-dissertations-finished.html` | 39 | yes | yes |
 
@@ -47,7 +47,7 @@ Markup is identical across all three pages:
 ```
 
 - On `new` and `ongoing` the `<a class="thesis-topic-link">` has **no `href`**.
-- The finished page contains **one** entry whose classes are `thesis-topic-no-abstract-link` / `-text` / `-abstract` instead. Miss it and you silently import 38 of 39.
+- The `new` page and the `finished` page each contain **one** entry whose classes are `thesis-topic-no-abstract-link` / `-text` / `-abstract` instead. Miss it and you silently import 38 of 39.
 - `ATTRIBUTION` is `Supervised by A [and B] [and authored by X]`.
 - `DESCRIPTION_HTML` contains real `<p>`, `<ol>`, `<li>` markup.
 
@@ -754,27 +754,31 @@ function paragraphNode(text) {
 export function htmlToLexical(html) {
   if (!html || !html.trim()) return null
 
-  const blocks = []
-  let rest = html
-
-  // Pull lists out first so their items keep their numbering.
-  rest = rest.replace(/<(ol|ul)\b[^>]*>([\s\S]*?)<\/\1>/gi, (_, tag, inner) => {
+  // Turn list items into marker-prefixed paragraphs in place, so a list keeps its
+  // position in the reading order. Collecting them separately would hoist every
+  // list above the prose that introduces it.
+  const withLists = html.replace(/<(ol|ul)\b[^>]*>([\s\S]*?)<\/\1>/gi, (_, tag, inner) => {
+    const ordered = tag.toLowerCase() === 'ol'
     let n = 0
+    const lines = []
     for (const item of inner.match(/<li\b[^>]*>[\s\S]*?<\/li>/gi) ?? []) {
       const text = textOf(item)
       if (!text) continue
       n += 1
-      blocks.push(tag.toLowerCase() === 'ol' ? `${n}. ${text}` : `• ${text}`)
+      lines.push(ordered ? `${n}. ${text}` : `\u2022 ${text}`)
     }
-    return ' ' // placeholder so surrounding prose does not merge across the list
+    return lines.map((line) => `<p>${line}</p>`).join('')
   })
 
-  for (const chunk of rest.split(/<\/p>|<br\s*\/?>| /i)) {
-    const text = textOf(chunk)
-    if (text) blocks.push(text)
-  }
+  // Split on the opening tag as well as the closing one: the source opens its
+  // abstracts with bare prose before the first <p>, so splitting on </p> alone
+  // would glue that first sentence onto the paragraph after it.
+  const children = withLists
+    .split(/<\/?p\b[^>]*>|<br\s*\/?>/gi)
+    .map(textOf)
+    .filter(Boolean)
+    .map(paragraphNode)
 
-  const children = blocks.filter(Boolean).map(paragraphNode)
   if (children.length === 0) return null
   return { root: { type: 'root', children } }
 }
@@ -872,7 +876,7 @@ export function parseDissertationPage(html, { status, sourceUrl }) {
 cd web && node --test scripts/tests/dissertation-parser.test.mjs
 ```
 
-Expected: all tests pass. If `parseAttribution` fails the "without a leading and" case, check that the `(?:\s+and)?` group is optional; if `htmlToLexical` merges a list into the surrounding prose, check the ` ` placeholder survives the replace.
+Expected: all tests pass. If `parseAttribution` fails the "without a leading and" case, check that the `(?:\s+and)?` group is optional; if `htmlToLexical` merges two paragraphs into one, check that the split regex covers the opening `<p>` tag and not only the closing one.
 
 - [ ] **Step 5: Add the test script**
 
@@ -951,7 +955,7 @@ const BASE = 'https://mlkd.idss.inesc-id.pt'
 // turns "the site was redesigned" into a loud error instead of an import that
 // quietly drops half the archive.
 const PAGES = [
-  { url: `${BASE}/mlkd-dissertations-new.html`, status: 'open', expected: 12 },
+  { url: `${BASE}/mlkd-dissertations-new.html`, status: 'open', expected: 13 },
   { url: `${BASE}/mlkd-dissertations-ongoing.html`, status: 'ongoing', expected: 7 },
   { url: `${BASE}/mlkd-dissertations-finished.html`, status: 'finished', expected: 39 },
 ]
@@ -1083,7 +1087,7 @@ In `web/package.json`:
 cd web && pnpm dissertations:import
 ```
 
-Expected: `dry-run: parsed 58, created 58, updated 0, …`. If it throws the count assertion, the legacy markup changed — fix the parser and its tests, do not weaken the assertion.
+Expected: `dry-run: parsed 59, created 59, updated 0, …`. If it throws the count assertion, the legacy markup changed — fix the parser and its tests, do not weaken the assertion.
 
 Read `web/reports/dissertations-import-dry-run.json` and sanity-check three records against the live pages.
 
@@ -1097,7 +1101,7 @@ docker exec ai-portal-inesc-db-1 psql -U mlkd -d mlkd \
   -c "select count(*) from dissertations where author_name is not null;"
 ```
 
-Expected: `open 14` (12 imported + the 2 pre-existing rows), `ongoing 7`, `finished 39`; supervisors and authors populated.
+Expected: `open 15` (13 imported + the 2 pre-existing rows), `ongoing 7`, `finished 39`; supervisors and authors populated.
 
 - [ ] **Step 6: Verify the import is idempotent**
 
@@ -1106,7 +1110,7 @@ cd web && pnpm dissertations:import:apply
 docker exec ai-portal-inesc-db-1 psql -U mlkd -d mlkd -c "select count(*) from dissertations;"
 ```
 
-Expected: still 60 rows, report shows `created 0, updated 58`. **If the count grew, the matching is broken — fix it before committing.**
+Expected: still 61 rows, report shows `created 0, updated 59`. **If the count grew, the matching is broken — fix it before committing.**
 
 - [ ] **Step 7: Commit**
 

@@ -11,8 +11,8 @@ The portal replaces the group's existing site at <https://mlkd.idss.inesc-id.pt>
 The supervisor asked us to keep that site's sections intact. An audit of both sites
 found three gaps and one factual error:
 
-- **Dissertations do not exist here.** The legacy site carries 58 of them across
-  three lifecycle stages (12 open, 7 ongoing, 39 finished). This is the single
+- **Dissertations do not exist here.** The legacy site carries 59 of them across
+  three lifecycle stages (13 open, 7 ongoing, 39 finished). This is the single
   largest missing section.
 - **Open positions do not exist here.** Legacy has a section for paid research jobs.
 - **Nobody has a photo.** 113 members, 0 photos. Legacy has a photo for all 57.
@@ -77,13 +77,14 @@ companion and the `payload_locked_documents_rels` column, and remaps the status 
 dissertation authors on the legacy site, 17 match a member exactly and 20 do not —
 some are spelling variants (`João Marques Cardoso` vs our `João Marques`), some are
 students we simply do not have. A hard relationship would drop the author on 20 of
-57 records. This is the pattern `Publications.authors` already uses: the
+those 37. This is the pattern `Publications.authors` already uses: the
 bibliographic fact always renders, the profile link appears when we can resolve it.
 
 **Why `requisites` is its own field but `notes` and `external cooperation` are not.**
-"Requisites" appears in all 12 open topics and is what a student uses to decide
-whether to apply, so it earns a styled block. "Notes" and "External cooperation"
-appear in 6 of 12 and live as prose inside the description; promoting them would
+"Requisites" appears in 12 of the 13 open topics (the thirteenth has no abstract at
+all) and is what a student uses to decide whether to apply, so it earns a styled
+block. "Notes" and "External cooperation" appear in about half and live as prose
+inside the description; promoting them would
 make the editor face fields that are usually empty.
 
 **Deliberately omitted:** `references` (part of the description in the source) and
@@ -114,16 +115,17 @@ Source markup is regular across all three legacy pages — `.thesis-topic-link`
 
 | Page | Count | Author | Fenix link |
 |---|---|---|---|
-| new | 12 | no | no |
+| new | 13 | no | no |
 | ongoing | 7 | yes | no |
-| finished | 38 + 1 variant | yes | yes |
+| finished | 39 (38 + 1 variant) | yes | yes |
 
 Parsing rules:
 
 - The attribution line is `Supervised by A [and B] [and authored by X]`. Split on
   ` and authored by ` first, then split supervisors on ` and `.
-- The finished page has one entry using `.thesis-topic-no-abstract-*` class names.
-  The parser must accept both variants or it silently imports 38 of 39.
+- The `new` and `finished` pages each have one entry using `.thesis-topic-no-abstract-*`
+  class names. The parser must accept both variants or it silently drops them; the
+  first count of the `new` page missed exactly this and read 12 instead of 13.
 - Description HTML converts to Lexical richText.
 - People are resolved against `members` by normalised name; unresolved names are
   stored as text and listed in the report.
