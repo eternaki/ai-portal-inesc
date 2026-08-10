@@ -7,6 +7,7 @@ import type { Publication } from '@/payload-types'
 import { PubRow } from '@/components/PubRow'
 import { JsonLd } from '@/components/JsonLd'
 import { Attachments } from '@/components/Attachments'
+import { PublicationMiniMap } from '@/components/PublicationMiniMap'
 import { SITE_URL } from '@/lib/site'
 import { published } from '@/lib/queries'
 import { getDictionary } from '@/i18n/server'
@@ -147,7 +148,7 @@ export default async function PublicationPage(props: { params: Params }) {
     <article>
       <JsonLd data={jsonLd} />
       <div className="article-head">
-        <div className="eyebrow">
+        <div className="pub-eyebrow">
           {pub.type}
           {pub.venue ? ` · ${pub.venue}` : ''} · {pub.year}
         </div>
@@ -184,6 +185,7 @@ export default async function PublicationPage(props: { params: Params }) {
             </p>
           ) : null
         })()}
+        <PublicationMiniMap publicationId={pub.id} label={t.pub.viewOnMap} />
       </div>
 
       {hasSummary && summary ? (

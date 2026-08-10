@@ -5,6 +5,7 @@ import config from '@payload-config'
 import { PubRow } from '@/components/PubRow'
 import { published, PUBLISHED } from '@/lib/queries'
 import { getDictionary } from '@/i18n/server'
+import { clusterColor, fetchPublicationClusters } from '@/lib/clusterColors'
 
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
@@ -22,7 +23,7 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
   if (year) filter.year = { equals: Number(year) }
   if (type) filter.type = { equals: type }
 
-  const [result, allYears] = await Promise.all([
+  const [result, allYears, clusters] = await Promise.all([
     payload.find({
       collection: 'publications',
       where: published(filter),
@@ -37,6 +38,7 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
           (a, b) => Number(b) - Number(a),
         ),
       ),
+    fetchPublicationClusters(),
   ])
 
   return (
@@ -79,7 +81,7 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
       )}
 
       {result.docs.map((pub) => (
-        <PubRow key={pub.id} pub={pub} />
+        <PubRow key={pub.id} pub={pub} clusterColor={clusters.has(pub.id) ? clusterColor(clusters.get(pub.id)!) : null} />
       ))}
     </div>
   )
