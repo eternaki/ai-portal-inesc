@@ -55,6 +55,13 @@ export function visibleLinks(member: Member): { label: string; href: string }[] 
   return entries.filter((e): e is { label: string; href: string } => Boolean(e?.href))
 }
 
+// Derived from visibleLinks() rather than hand-listed again, so the JSON-LD
+// output and the on-page links row can never drift apart — that's the point of
+// this extraction. Side effect: the emitted order differs from the old inline
+// implementation (which listed linkedin/github/personalPage/tecnicoPage/
+// googleScholar/orcid/cienciaId/dblpKey). That's fine: sameAs is schema.org's
+// way of saying "this URL also identifies the same entity" — it's read as an
+// unordered set by every consumer, not a sequence.
 /** schema.org sameAs: the same links, plus the personal page. */
 export function memberSameAs(member: Member): string[] {
   const personal = visibleValue(member.links?.personalPage, member.showPersonalPage)
