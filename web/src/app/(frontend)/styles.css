@@ -1008,6 +1008,8 @@ main > h1:first-child {
 }
 
 .person-card {
+  display: block;
+  color: inherit;
   background: var(--card);
   border: 1px solid var(--ink-12);
   border-radius: var(--radius);
@@ -1058,6 +1060,31 @@ main > h1:first-child {
   gap: 0.7rem;
   font-size: 0.82rem;
   flex-wrap: wrap;
+}
+
+/* Profile header: photo beside the name, stacking on narrow screens */
+.person-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.person-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--ink-12);
+}
+
+.person-photo--initials {
+  display: grid;
+  place-items: center;
+  font-family: var(--font-serif, georgia, serif);
+  font-size: 2.2rem;
+  color: var(--ink-40);
+  background: var(--ink-6);
 }
 
 .person-publications {
