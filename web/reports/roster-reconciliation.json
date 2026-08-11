@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-11T08:57:58.719Z",
+  "generatedAt": "2026-08-11T09:07:38.977Z",
   "source": "https://mlkd.idss.inesc-id.pt/mlkd-team.html",
   "note": "Read-only. No record was changed. Decisions belong to the group.",
   "totals": {
@@ -598,6 +598,20 @@
   ],
   "agrees": [
     {
+      "legacyName": "Arlindo Oliveira",
+      "ourName": "Arlindo Oliveira",
+      "memberId": 1,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "faculty",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "faculty",
+        "membershipStatus": "active"
+      }
+    },
+    {
       "legacyName": "Beatriz Vieira",
       "ourName": "Beatriz Vieira",
       "memberId": 3,
@@ -794,23 +808,7 @@
       }
     }
   ],
-  "needsReview": [
-    {
-      "legacyName": "Arlindo Oliveira",
-      "ourName": "Arlindo L. Oliveira",
-      "memberId": 1,
-      "matchedBy": "first + last name only",
-      "legacy": {
-        "role": "faculty",
-        "membershipStatus": "active"
-      },
-      "ours": {
-        "role": "faculty",
-        "membershipStatus": "active"
-      },
-      "differs": false
-    }
-  ],
+  "needsReview": [],
   "onLegacySiteOnly": [
     {
       "name": "Vincente Silvestre",
