@@ -8,7 +8,7 @@
  * Idempotent: a row already linked is left alone, so a re-run changes nothing.
  */
 
-import { mkdir, writeFile } from 'node:fs/promises'
+import { access, mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -65,10 +65,30 @@ async function run() {
   }
 
   const reportPath = path.join(repoRoot, 'reports', `author-aliases-${apply ? 'apply' : 'dry-run'}.json`)
+  const total = report.linked.reduce((sum, entry) => sum + entry.rowsChanged, 0)
+
+  // An apply report only earns its keep by recording a real change. A no-op apply
+  // (everything already linked) has nothing to say beyond "nothing happened" — and
+  // writing that anyway is actively harmful, not merely uninformative: if a report
+  // from a real apply already sits at this path, overwriting it replaces the only
+  // record that 50 rows were linked with one claiming rowsChanged: 0 for every
+  // member, which is exactly what happened before this guard existed. So a no-op
+  // apply never touches reportPath — it neither overwrites a prior report nor
+  // creates a fresh empty one. (The dry-run report has no such failure mode — it
+  // never records an action that was actually taken — so it is always written.)
+  if (apply && total === 0) {
+    const existedBefore = await access(reportPath).then(() => true, () => false)
+    console.log(`apply: 0 author row(s) linked, ${report.skipped.length} skipped`)
+    console.log(
+      existedBefore
+        ? `kept the existing report — this run changed nothing → ${reportPath}`
+        : `no report written — this run changed nothing and there is no prior report to preserve`,
+    )
+    return
+  }
+
   await mkdir(path.dirname(reportPath), { recursive: true })
   await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
-
-  const total = report.linked.reduce((sum, entry) => sum + entry.rowsChanged, 0)
   console.log(`${report.mode}: ${total} author row(s) ${apply ? 'linked' : 'would be linked'}, ${report.skipped.length} skipped`)
   console.log(`report → ${reportPath}`)
 }
