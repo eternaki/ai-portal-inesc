@@ -22,6 +22,8 @@
     "publications:link-members": "node scripts/link-publication-members-db.mjs",
     "publications:link-members:apply": "node scripts/link-publication-members-db.mjs --apply",
     "publications:link-members:test": "node --test scripts/tests/publication-member-linker.test.mjs",
+    "roster:reconcile": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/reconcile-roster.mjs",
+    "roster:parser:test": "node --test scripts/tests/legacy-team-parser.test.mjs",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "typecheck": "tsc --noEmit",
