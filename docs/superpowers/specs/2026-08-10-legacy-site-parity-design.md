@@ -15,7 +15,7 @@ found three gaps and one factual error:
   three lifecycle stages (13 open, 7 ongoing, 39 finished). This is the single
   largest missing section.
 - **Open positions do not exist here.** Legacy has a section for paid research jobs.
-- **Nobody has a photo.** 113 members, 0 photos. Legacy has a photo for all 59.
+- ~~**Nobody has a photo.**~~ **DONE** — 55 of 113 members now carry the photo the legacy site has for them.
 - **42 members are shown as active MSc students whom the group lists as alumni.**
   The People page currently makes a false claim about the group's composition.
 
@@ -143,30 +143,50 @@ The apply switch is the env var `DISSERTATIONS_APPLY=1`, compared as a strict st
 `payload run` does not forward unknown command-line flags to the script, so the
 `--apply` flag the plan originally specified never arrived.
 
-## 4. Member photos
+## 4. Member photos — DONE
 
-`web/scripts/import-member-photos.mjs`, dry-run by default.
+`web/scripts/import-member-photos.mjs`, dry-run by default; apply with
+`MEMBER_PHOTOS_APPLY=1`.
 
 Parses the legacy team page (`.member-image` / `.member-name` / `.member-title`),
-downloads each photo, uploads it to Payload Media, and links it to the member.
+downloads each photo, uploads it to Payload Media and links it to the member.
+
+**Result: 55 of 113 members now have a photo.** The remainder are honest gaps, not
+failures:
+
+| Outcome | Count | Detail |
+|---|---|---|
+| uploaded | 55 | |
+| weak match, skipped | 1 | `Arlindo Oliveira` ↔ our `Arlindo L. Oliveira` |
+| not in our database | 2 | `Vincente Silvestre`, `Oleksander S.` |
+| duplicate legacy entry | 1 | `Gonçalo Oliveira` is listed twice, under two photo files |
 
 **Matching uses two signals.** Displayed names are sometimes abbreviated (`R.
-Barbulescu`, `Oleksander S.`) while the photo filename carries the full name
+Barbulescu`) while the photo filename carries the full name
 (`RuxandraBarbulescu.jpg`). Matching on both recovers those cases.
+
+**A first+last match is reported, never acted on** — attaching the wrong face to a
+profile is worse than an initials avatar. `MEMBER_PHOTOS_INCLUDE_WEAK=1` lets an
+operator accept them after reading the report, which keeps that judgement with a
+person. This is why the group leader's own photo is still missing.
+
+**One member never gets two photos in a run.** The first pass silently overwrote
+Gonçalo Oliveira's link and orphaned a Media row (since removed); the importer now
+reports the duplicate instead.
 
 **LinkedIn is not a source.** Profile pages are behind authentication, photos are
 served as signed `media.licdn.com` URLs, and automated collection breaches their
 user agreement. Members without a legacy photo keep the initials avatar and can
-upload their own through the existing profile self-edit — which is what the brief
-asks for anyway.
+upload their own through the existing profile self-edit.
 
-**Prerequisite:** uploads currently vanish on rebuild. The `MEDIA_DIR` env var and
-the `media-data` volume added to `docker-compose.yml` must be in place first.
+The name matcher is shared with the roster reconciliation
+(`web/scripts/lib/member-matcher.mjs`) so one set of rules governs both.
 
-## 5. Roster reconciliation
+## 5. Roster reconciliation — REPORT PRODUCED, NO CHANGES MADE
 
 `web/scripts/reconcile-roster.mjs` — **read-only, produces a report, changes
-nothing.**
+nothing.** Run it with `pnpm roster:reconcile`; the output lives at
+`web/reports/roster-reconciliation.json`.
 
 Measured by `pnpm roster:reconcile` (read-only) against the legacy team page,
 which lists **59** people — 14 current, 45 alumni:
@@ -255,9 +275,9 @@ find anyone, which is the strongest argument for a per-section search.
 
 Independent pieces, in this order:
 
-1. **Dissertations** — collection, migration, pages, importer. Highest value.
-2. **Roster reconciliation report** — read-only, unblocks the photo decision.
-3. **Member photos** — after `MEDIA_DIR` is live and the roster is understood.
+1. ~~**Dissertations**~~ — **DONE** (61 records live: 15 open, 7 ongoing, 39 finished).
+2. ~~**Roster reconciliation report**~~ — **DONE**, read-only; 42 status mismatches found.
+3. ~~**Member photos**~~ — **DONE**, 55 imported.
 4. **Publications histogram + `/research` removal + nav reorder** — the front-end
    pass. (`/opportunities` goes with stage 1; scoped search is deferred.)
 5. **Open positions** — smallest, least urgent.
