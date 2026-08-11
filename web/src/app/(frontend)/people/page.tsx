@@ -4,9 +4,11 @@ import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { JsonLd } from '@/components/JsonLd'
+import { PersonLinks } from '@/components/PersonLinks'
 import { getDictionary } from '@/i18n/server'
+import { initials, memberPhotoAlt, memberPhotoUrl, memberSameAs } from '@/lib/member'
 import { PUBLISHED } from '@/lib/queries'
-import type { Media, Member, Publication } from '@/payload-types'
+import type { Member, Publication } from '@/payload-types'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,96 +26,6 @@ const SECONDARY_STATUSES = [
   { value: 'suspended', key: 'statusSuspended' },
   { value: 'completed', key: 'statusCompleted' },
 ] as const
-
-const initials = (name: string) =>
-  name
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((w) => w[0])
-    .filter((_, i, arr) => i === 0 || i === arr.length - 1)
-    .join('')
-    .toUpperCase()
-
-const visible = (value: unknown, toggle?: boolean | null) => Boolean(value) && toggle !== false
-
-const visibleValue = (value?: string | null, toggle?: boolean | null) =>
-  visible(value, toggle) ? value : null
-
-const memberSameAs = (member: Member) =>
-  [
-    visibleValue(member.links?.linkedin, member.showLinkedIn),
-    visibleValue(member.links?.github, member.showGitHub),
-    visibleValue(member.links?.personalPage, member.showPersonalPage),
-    visibleValue(member.links?.tecnicoPage, member.showTecnicoPage),
-    visibleValue(member.links?.googleScholar, member.showGoogleScholar),
-    visible(member.orcid, member.showORCID) ? `https://orcid.org/${member.orcid}` : null,
-    visible(member.cienciaId, member.showCienciaId)
-      ? `https://www.cienciavitae.pt/${member.cienciaId}`
-      : null,
-    visible(member.dblpKey, member.showDBLP) ? `https://dblp.org/pid/${member.dblpKey}` : null,
-  ].filter((url): url is string => Boolean(url))
-
-function PersonLinks({
-  member,
-  emailLabel,
-  websiteLabel,
-}: {
-  member: Member
-  emailLabel: string
-  websiteLabel: string
-}) {
-  const linkedin = visibleValue(member.links?.linkedin, member.showLinkedIn)
-  const github = visibleValue(member.links?.github, member.showGitHub)
-  const tecnicoPage = visibleValue(member.links?.tecnicoPage, member.showTecnicoPage)
-  const googleScholar = visibleValue(member.links?.googleScholar, member.showGoogleScholar)
-  const personalPage = visibleValue(member.links?.personalPage, member.showPersonalPage)
-
-  return (
-    <div className="person-links">
-      {linkedin && (
-        <a href={linkedin} target="_blank" rel="noreferrer">
-          LinkedIn
-        </a>
-      )}
-      {github && (
-        <a href={github} target="_blank" rel="noreferrer">
-          GitHub
-        </a>
-      )}
-      {visible(member.orcid, member.showORCID) && (
-        <a href={`https://orcid.org/${member.orcid}`} target="_blank" rel="noreferrer">
-          ORCID
-        </a>
-      )}
-      {visible(member.cienciaId, member.showCienciaId) && (
-        <a href={`https://www.cienciavitae.pt/${member.cienciaId}`} target="_blank" rel="noreferrer">
-          Ciencia Vitae
-        </a>
-      )}
-      {visible(member.dblpKey, member.showDBLP) && (
-        <a href={`https://dblp.org/pid/${member.dblpKey}`} target="_blank" rel="noreferrer">
-          DBLP
-        </a>
-      )}
-      {tecnicoPage && (
-        <a href={tecnicoPage} target="_blank" rel="noreferrer">
-          Tecnico
-        </a>
-      )}
-      {googleScholar && (
-        <a href={googleScholar} target="_blank" rel="noreferrer">
-          Google Scholar
-        </a>
-      )}
-      {personalPage && (
-        <a href={personalPage} target="_blank" rel="noreferrer">
-          {websiteLabel}
-        </a>
-      )}
-      {member.showEmail && member.email && <a href={`mailto:${member.email}`}>{emailLabel}</a>}
-    </div>
-  )
-}
 
 function memberPublicationMap(publications: Publication[]) {
   const map = new Map<number, Publication[]>()
@@ -134,10 +46,6 @@ function roleLabel(member: Member, t: Awaited<ReturnType<typeof getDictionary>>[
   return role ? t[role.key] : member.role
 }
 
-function memberPhoto(member: Member): Media | null {
-  return member.photo && typeof member.photo === 'object' ? member.photo : null
-}
-
 function PersonCard({
   member,
   t,
@@ -149,8 +57,7 @@ function PersonCard({
   publications: Publication[]
   roleBadge?: string
 }) {
-  const photo = memberPhoto(member)
-  const photoUrl = photo?.sizes?.thumbnail?.url || photo?.url
+  const photoUrl = memberPhotoUrl(member)
 
   return (
     <div id={member.slug ?? `member-${member.id}`} className="person-card">
@@ -158,7 +65,7 @@ function PersonCard({
         <Image
           className="person-avatar person-avatar--photo"
           src={photoUrl}
-          alt={photo.alt || member.name}
+          alt={memberPhotoAlt(member)}
           width={44}
           height={44}
           loading="lazy"
