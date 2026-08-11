@@ -209,6 +209,11 @@ Root cause: `web/data/mlkd-members-roster-update.json` declares `role: msc,
 membershipStatus: active` for 87 people — evidently everyone who ever wrote a thesis
 with the group, not the current cohort.
 
+**Decision, 2026-08-11: we do not change roles or membership statuses at all.**
+The user ruled that correcting them is the supervisor's work, not ours. The
+reconciliation report is the deliverable and the end of our involvement here; do
+not "fix" a role later because it looks wrong, however obvious the case seems.
+
 The report groups people into: status mismatch, present here but not on the legacy
 site (47 MSc), present there but not here, and a separate "fuzzy match, needs a
 human" list. **Nobody is deleted and no status is changed automatically** — the user

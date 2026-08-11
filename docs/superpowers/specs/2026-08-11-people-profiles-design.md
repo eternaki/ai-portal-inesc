@@ -135,5 +135,7 @@ lists, and the pager labels. No visible string is hardcoded.
   box is a separate decision and the user has asked that search be left alone for
   now.
 - Giving members OpenAlex ids and re-running `ingest` (see §2).
-- Correcting member roles (the roster reconciliation report exists; the decisions
-  belong to the group).
+- **Correcting member roles or membership statuses. Ruled out by the user on
+  2026-08-11: that work belongs to the supervisor.** The evidence in this spec —
+  members filed as `alumni` or `msc` while co-authoring 3–14 papers — is recorded
+  so he can act on it, not so we can.
