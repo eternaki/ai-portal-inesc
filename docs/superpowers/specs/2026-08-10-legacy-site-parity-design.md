@@ -15,8 +15,8 @@ found three gaps and one factual error:
   three lifecycle stages (13 open, 7 ongoing, 39 finished). This is the single
   largest missing section.
 - **Open positions do not exist here.** Legacy has a section for paid research jobs.
-- **Nobody has a photo.** 113 members, 0 photos. Legacy has a photo for all 57.
-- **41 members are shown as active MSc students who the group lists as alumni.**
+- **Nobody has a photo.** 113 members, 0 photos. Legacy has a photo for all 59.
+- **42 members are shown as active MSc students whom the group lists as alumni.**
   The People page currently makes a false claim about the group's composition.
 
 Guiding rule agreed with the user: **lose nothing from the legacy site, but we may
@@ -152,7 +152,7 @@ downloads each photo, uploads it to Payload Media, and links it to the member.
 
 **Matching uses two signals.** Displayed names are sometimes abbreviated (`R.
 Barbulescu`, `Oleksander S.`) while the photo filename carries the full name
-(`RuxandraBarbulescu.jpg`). Matching on both recovers those cases; 4 of 57 need it.
+(`RuxandraBarbulescu.jpg`). Matching on both recovers those cases.
 
 **LinkedIn is not a source.** Profile pages are behind authentication, photos are
 served as signed `media.licdn.com` URLs, and automated collection breaches their
@@ -168,14 +168,22 @@ the `media-data` volume added to `docker-compose.yml` must be in place first.
 `web/scripts/reconcile-roster.mjs` — **read-only, produces a report, changes
 nothing.**
 
-Measured today by cross-tabulating our members against the legacy team page:
+Measured by `pnpm roster:reconcile` (read-only) against the legacy team page,
+which lists **59** people — 14 current, 45 alumni:
 
-| Ours | Legacy | Count |
-|---|---|---|
-| MSc, active | alumni | **41** |
-| PhD, active | PhD Student | 9 ✓ |
-| MSc, active | Student | 2 ✓ |
-| alumni, completed | alumni | 1 ✓ |
+| Outcome | Count |
+|---|---|
+| status mismatch — ours `msc/active`, theirs `alumni/completed` | **42** |
+| agree | 14 |
+| fuzzy match, needs a human | 1 (`Arlindo Oliveira` ↔ `Arlindo L. Oliveira`, roles agree) |
+| on the legacy site only | 2 (`Vincente Silvestre`, `Oleksander S.`) |
+| in our database only | 57 (45 active MSc, 11 alumni, 1 suspended) |
+
+Every single mismatch is the same one: we call someone an active MSc student, the
+group calls them an alumnus. There is no second pattern.
+
+Put together: we present **87** people as active MSc students. 42 are provably
+alumni by the group's own site; the other 45 do not appear on it at all.
 
 Root cause: `web/data/mlkd-members-roster-update.json` declares `role: msc,
 membershipStatus: active` for 87 people — evidently everyone who ever wrote a thesis

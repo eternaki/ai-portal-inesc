@@ -33,7 +33,7 @@ const TEAM_URL = 'https://mlkd.idss.inesc-id.pt/mlkd-team.html'
 // Measured 2026-08-10. The parser reads generated markup, so its failure mode is
 // silent under-matching; a count check turns a redesign into a loud error instead
 // of a reconciliation that quietly compares against half the roster.
-const EXPECTED_PEOPLE = 57
+const EXPECTED_PEOPLE = 59
 
 async function run() {
   const payload = await getPayload({ config })

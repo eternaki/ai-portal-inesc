@@ -1,0 +1,1173 @@
+{
+  "generatedAt": "2026-08-11T08:41:14.837Z",
+  "source": "https://mlkd.idss.inesc-id.pt/mlkd-team.html",
+  "note": "Read-only. No record was changed. Decisions belong to the group.",
+  "totals": {
+    "legacy": 59,
+    "ours": 113
+  },
+  "statusMismatch": [
+    {
+      "legacyName": "R. Barbulescu",
+      "ourName": "Ruxandra Barbulescu",
+      "memberId": 16,
+      "matchedBy": "photo filename",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "David Calhas",
+      "ourName": "David Calhas",
+      "memberId": 17,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "João Silva",
+      "ourName": "João Silva",
+      "memberId": 18,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Alexandre Borges",
+      "ourName": "Alexandre Borges",
+      "memberId": 19,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Miguel Freire",
+      "ourName": "Miguel Freire",
+      "memberId": 20,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Gonçalo Oliveira",
+      "ourName": "Gonçalo Oliveira",
+      "memberId": 21,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Manuel Goulão",
+      "ourName": "Manuel Goulão",
+      "memberId": 22,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Guilherme Costa",
+      "ourName": "Guilherme Costa",
+      "memberId": 23,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Lucas Piper",
+      "ourName": "Lucas Piper",
+      "memberId": 24,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "João Amoroso",
+      "ourName": "João Amoroso",
+      "memberId": 25,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "João Meneses",
+      "ourName": "João Meneses",
+      "memberId": 26,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "João Teixeira",
+      "ourName": "João Teixeira",
+      "memberId": 27,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Clara Pereira",
+      "ourName": "Clara Pereira",
+      "memberId": 28,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Mariana Serrão",
+      "ourName": "Mariana Serrão",
+      "memberId": 29,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Miguel Vicente",
+      "ourName": "Miguel Vicente",
+      "memberId": 30,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Gonçalo Oliveira",
+      "ourName": "Gonçalo Oliveira",
+      "memberId": 21,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "José Carreira",
+      "ourName": "José Carreira",
+      "memberId": 32,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Tomás Nunes",
+      "ourName": "Tomás Nunes",
+      "memberId": 33,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Pedro Henriques",
+      "ourName": "Pedro Henriques",
+      "memberId": 35,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Francisco Honório",
+      "ourName": "Francisco Honório",
+      "memberId": 36,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "José Cunha",
+      "ourName": "José Cunha",
+      "memberId": 37,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Miguel Ferreira",
+      "ourName": "Miguel Ferreira",
+      "memberId": 38,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Martim Afonso",
+      "ourName": "Martim Afonso",
+      "memberId": 39,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Ana Alves",
+      "ourName": "Ana Alves",
+      "memberId": 40,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Miguel Amaral",
+      "ourName": "Miguel Amaral",
+      "memberId": 41,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "João Novo",
+      "ourName": "João Novo",
+      "memberId": 42,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Lourenço Tourais",
+      "ourName": "Lourenço Tourais",
+      "memberId": 43,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Manuel Coimbra",
+      "ourName": "Manuel Coimbra",
+      "memberId": 44,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Tiago Oliveira",
+      "ourName": "Tiago Oliveira",
+      "memberId": 45,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "André Leite",
+      "ourName": "André Leite",
+      "memberId": 46,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "José Martinho",
+      "ourName": "José Martinho",
+      "memberId": 48,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "José Pereira",
+      "ourName": "José Pereira",
+      "memberId": 49,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "António Pereira",
+      "ourName": "António Pereira",
+      "memberId": 50,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "João Pedro",
+      "ourName": "João Pedro",
+      "memberId": 51,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Rafael Pedro",
+      "ourName": "Rafael Pedro",
+      "memberId": 52,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Ricardo Diniz",
+      "ourName": "Ricardo Diniz",
+      "memberId": 53,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Filipa Marques",
+      "ourName": "Filipa Marques",
+      "memberId": 54,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Dinis Rodrigues",
+      "ourName": "Dinis Rodrigues",
+      "memberId": 55,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Pedro Gonçalves",
+      "ourName": "Pedro Gonçalves",
+      "memberId": 57,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "André Cavalheiro",
+      "ourName": "André Cavalheiro",
+      "memberId": 58,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Xavier Dias",
+      "ourName": "Xavier Dias",
+      "memberId": 59,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Miguel Monteiro",
+      "ourName": "Miguel Monteiro",
+      "memberId": 60,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    }
+  ],
+  "agrees": [
+    {
+      "legacyName": "Beatriz Vieira",
+      "ourName": "Beatriz Vieira",
+      "memberId": 3,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "André Duarte",
+      "ourName": "André Duarte",
+      "memberId": 4,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "João Marques",
+      "ourName": "João Marques",
+      "memberId": 5,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Inês Duarte",
+      "ourName": "Inês Duarte",
+      "memberId": 6,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Duarte Boto",
+      "ourName": "Duarte Boto",
+      "memberId": 7,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Helder Dias",
+      "ourName": "Helder Dias",
+      "memberId": 8,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Francisco Guedes",
+      "ourName": "Francisco Guedes",
+      "memberId": 9,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Vitória Cruz",
+      "ourName": "Vitória Cruz",
+      "memberId": 10,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Dominika Dlugosz",
+      "ourName": "Dominika Dlugosz",
+      "memberId": 11,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Mohamed Elbawab",
+      "ourName": "Mohamed Elbawab",
+      "memberId": 12,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "André Carneiro",
+      "ourName": "André Carneiro",
+      "memberId": 13,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "phd",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "phd",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "João Cardoso",
+      "ourName": "João Cardoso",
+      "memberId": 14,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "msc",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "Ricardo Almeida",
+      "ourName": "Ricardo Almeida",
+      "memberId": 15,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "msc",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "msc",
+        "membershipStatus": "active"
+      }
+    },
+    {
+      "legacyName": "André Veríssimo",
+      "ourName": "André Veríssimo",
+      "memberId": 56,
+      "matchedBy": "exact name",
+      "legacy": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      },
+      "ours": {
+        "role": "alumni",
+        "membershipStatus": "completed"
+      }
+    }
+  ],
+  "needsReview": [
+    {
+      "legacyName": "Arlindo Oliveira",
+      "ourName": "Arlindo L. Oliveira",
+      "memberId": 1,
+      "matchedBy": "first + last name only",
+      "legacy": {
+        "role": "faculty",
+        "membershipStatus": "active"
+      },
+      "ours": {
+        "role": "faculty",
+        "membershipStatus": "active"
+      },
+      "differs": false
+    }
+  ],
+  "onLegacySiteOnly": [
+    {
+      "name": "Vincente Silvestre",
+      "nameFromPhoto": "Vincente Silvestre",
+      "legacyRole": "alumni",
+      "legacyStatus": "completed"
+    },
+    {
+      "name": "Oleksander S.",
+      "nameFromPhoto": null,
+      "legacyRole": "alumni",
+      "legacyStatus": "completed"
+    }
+  ],
+  "inOurDatabaseOnly": [
+    {
+      "memberId": 114,
+      "name": "Ana Teresa Freitas",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 113,
+      "name": "Cláudia Antunes",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 112,
+      "name": "Luís Russo",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 111,
+      "name": "José Ramirez Colaço",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 110,
+      "name": "Sara Madeira",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 109,
+      "name": "Alexandre Francisco",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 108,
+      "name": "Ana Sofia Graça",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 107,
+      "name": "Miguel Nobre Menezes",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 106,
+      "name": "Pedro Stralen",
+      "role": "msc",
+      "membershipStatus": "suspended"
+    },
+    {
+      "memberId": 105,
+      "name": "Vasco Manquinho",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 104,
+      "name": "Tiago Fonseca",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 103,
+      "name": "Tiago Duarte",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 102,
+      "name": "Susana Pereira",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 101,
+      "name": "Sun Chen Wei",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 100,
+      "name": "Sofia Ligeiro",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 99,
+      "name": "Sergio Costa",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 98,
+      "name": "Pedro Vaz",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 97,
+      "name": "Pedro Monteiro",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 96,
+      "name": "Pedro Fernandes Rodrigues",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 95,
+      "name": "Pedro Duarte",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 94,
+      "name": "Paulo Trezentos",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 93,
+      "name": "Paulo Ramos",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 92,
+      "name": "Paulo Ferreira",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 91,
+      "name": "Orlando Anunciação",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 90,
+      "name": "Nuno Mendes",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 89,
+      "name": "Mário Cardoso",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 88,
+      "name": "Miguel Bugalho",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 87,
+      "name": "Margarida Correia",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 86,
+      "name": "Manuel Graça",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 85,
+      "name": "Luís Pedro Coelho",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 84,
+      "name": "Luís Câmara",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 83,
+      "name": "Lino Pinchete",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 82,
+      "name": "João Pedro Cruz",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 81,
+      "name": "João Nabais",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 80,
+      "name": "João Mendonça",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 79,
+      "name": "João Gomes",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 78,
+      "name": "José Velez",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 77,
+      "name": "José Malfeito Ferreira",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 76,
+      "name": "José Caldas",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 75,
+      "name": "Inês Filipe",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 74,
+      "name": "Inês Carioca Rodrigues",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 73,
+      "name": "Helena Guerra",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 72,
+      "name": "Gonçalo Aroeira",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 71,
+      "name": "Diogo Ferrão",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 70,
+      "name": "Diogo Branco",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 69,
+      "name": "Diogo Araújo",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 68,
+      "name": "Diana Neves",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 67,
+      "name": "Daniela Carvalho",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 66,
+      "name": "Daniela Campos",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 65,
+      "name": "Artur Krystopchuk",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 64,
+      "name": "António Mota",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 63,
+      "name": "André Martins",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 62,
+      "name": "Ana Casimiro",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 61,
+      "name": "Alexandra Carvalho",
+      "role": "alumni",
+      "membershipStatus": "completed"
+    },
+    {
+      "memberId": 47,
+      "name": "Oleksandr Stopchak",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 34,
+      "name": "Vicente Silvestre",
+      "role": "msc",
+      "membershipStatus": "active"
+    },
+    {
+      "memberId": 31,
+      "name": "Gonçalo Goulart Oliveira",
+      "role": "msc",
+      "membershipStatus": "active"
+    }
+  ],
+  "unmappedLegacyRole": []
+}
