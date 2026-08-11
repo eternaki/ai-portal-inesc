@@ -1,0 +1,420 @@
+{
+  "generatedAt": "2026-08-11T08:48:15.504Z",
+  "mode": "apply",
+  "weakMatchesIncluded": false,
+  "source": "https://mlkd.idss.inesc-id.pt/mlkd-team.html",
+  "legacyPeople": 59,
+  "uploaded": [
+    {
+      "memberId": 3,
+      "name": "Beatriz Vieira",
+      "matchedBy": "exact name",
+      "filename": "BeatrizVieira.jpeg",
+      "bytes": 18361
+    },
+    {
+      "memberId": 4,
+      "name": "André Duarte",
+      "matchedBy": "exact name",
+      "filename": "AndreDuarte.jpeg",
+      "bytes": 295162
+    },
+    {
+      "memberId": 5,
+      "name": "João Marques",
+      "matchedBy": "exact name",
+      "filename": "JoaoMarques.jpeg",
+      "bytes": 13623
+    },
+    {
+      "memberId": 6,
+      "name": "Inês Duarte",
+      "matchedBy": "exact name",
+      "filename": "InesDuarte.jpeg",
+      "bytes": 8166
+    },
+    {
+      "memberId": 7,
+      "name": "Duarte Boto",
+      "matchedBy": "exact name",
+      "filename": "DuarteBoto.jpg",
+      "bytes": 13118
+    },
+    {
+      "memberId": 8,
+      "name": "Helder Dias",
+      "matchedBy": "exact name",
+      "filename": "HelderDias.jpg",
+      "bytes": 6627
+    },
+    {
+      "memberId": 9,
+      "name": "Francisco Guedes",
+      "matchedBy": "exact name",
+      "filename": "FranciscoGuedes.jpg",
+      "bytes": 6653
+    },
+    {
+      "memberId": 10,
+      "name": "Vitória Cruz",
+      "matchedBy": "exact name",
+      "filename": "VitoriaCruz.png",
+      "bytes": 81523
+    },
+    {
+      "memberId": 11,
+      "name": "Dominika Dlugosz",
+      "matchedBy": "exact name",
+      "filename": "dominika.jpg",
+      "bytes": 11867
+    },
+    {
+      "memberId": 12,
+      "name": "Mohamed Elbawab",
+      "matchedBy": "exact name",
+      "filename": "MohamedElbawab.jpeg",
+      "bytes": 5620
+    },
+    {
+      "memberId": 13,
+      "name": "André Carneiro",
+      "matchedBy": "exact name",
+      "filename": "AndreCarneiro.jpeg",
+      "bytes": 21592
+    },
+    {
+      "memberId": 14,
+      "name": "João Cardoso",
+      "matchedBy": "exact name",
+      "filename": "JoaoCardoso.jpg",
+      "bytes": 19807
+    },
+    {
+      "memberId": 15,
+      "name": "Ricardo Almeida",
+      "matchedBy": "exact name",
+      "filename": "RicardoAlmeida.jpg",
+      "bytes": 8601
+    },
+    {
+      "memberId": 16,
+      "name": "Ruxandra Barbulescu",
+      "matchedBy": "photo filename",
+      "filename": "RuxandraBarbulescu.jpg",
+      "bytes": 9821
+    },
+    {
+      "memberId": 17,
+      "name": "David Calhas",
+      "matchedBy": "exact name",
+      "filename": "DavidCalhas.jpeg",
+      "bytes": 10055
+    },
+    {
+      "memberId": 18,
+      "name": "João Silva",
+      "matchedBy": "exact name",
+      "filename": "JoaoSilva.jpeg",
+      "bytes": 23712
+    },
+    {
+      "memberId": 19,
+      "name": "Alexandre Borges",
+      "matchedBy": "exact name",
+      "filename": "AlexandreBorges.jpeg",
+      "bytes": 17690
+    },
+    {
+      "memberId": 20,
+      "name": "Miguel Freire",
+      "matchedBy": "exact name",
+      "filename": "MiguelFreire.jpeg",
+      "bytes": 5838
+    },
+    {
+      "memberId": 21,
+      "name": "Gonçalo Oliveira",
+      "matchedBy": "exact name",
+      "filename": "gravo.jpeg",
+      "bytes": 8871
+    },
+    {
+      "memberId": 22,
+      "name": "Manuel Goulão",
+      "matchedBy": "exact name",
+      "filename": "ManuelGoulao.jpeg",
+      "bytes": 12744
+    },
+    {
+      "memberId": 23,
+      "name": "Guilherme Costa",
+      "matchedBy": "exact name",
+      "filename": "GuilhermeCosta.jpg",
+      "bytes": 7099
+    },
+    {
+      "memberId": 24,
+      "name": "Lucas Piper",
+      "matchedBy": "exact name",
+      "filename": "LucasPiper.jpg",
+      "bytes": 13812
+    },
+    {
+      "memberId": 25,
+      "name": "João Amoroso",
+      "matchedBy": "exact name",
+      "filename": "JoaoAmoroso.jpg",
+      "bytes": 5804
+    },
+    {
+      "memberId": 26,
+      "name": "João Meneses",
+      "matchedBy": "exact name",
+      "filename": "JoaoMeneses.jpg",
+      "bytes": 9342
+    },
+    {
+      "memberId": 27,
+      "name": "João Teixeira",
+      "matchedBy": "exact name",
+      "filename": "JoaoTeixeira.jpeg",
+      "bytes": 11581
+    },
+    {
+      "memberId": 28,
+      "name": "Clara Pereira",
+      "matchedBy": "exact name",
+      "filename": "ClaraPereira.jpg",
+      "bytes": 19231
+    },
+    {
+      "memberId": 29,
+      "name": "Mariana Serrão",
+      "matchedBy": "exact name",
+      "filename": "MarianaSerrao.jpg",
+      "bytes": 97122
+    },
+    {
+      "memberId": 30,
+      "name": "Miguel Vicente",
+      "matchedBy": "exact name",
+      "filename": "MiguelVicente.jpeg",
+      "bytes": 10710
+    },
+    {
+      "memberId": 21,
+      "name": "Gonçalo Oliveira",
+      "matchedBy": "exact name",
+      "filename": "GoncaloOliveira.jpg",
+      "bytes": 9838
+    },
+    {
+      "memberId": 32,
+      "name": "José Carreira",
+      "matchedBy": "exact name",
+      "filename": "JoseCarreira.jpg",
+      "bytes": 93012
+    },
+    {
+      "memberId": 33,
+      "name": "Tomás Nunes",
+      "matchedBy": "exact name",
+      "filename": "TomasNunes.jpg",
+      "bytes": 66477
+    },
+    {
+      "memberId": 35,
+      "name": "Pedro Henriques",
+      "matchedBy": "exact name",
+      "filename": "PedroHenriques.jpeg",
+      "bytes": 17629
+    },
+    {
+      "memberId": 36,
+      "name": "Francisco Honório",
+      "matchedBy": "exact name",
+      "filename": "FranciscoHonório.jpeg",
+      "bytes": 39018
+    },
+    {
+      "memberId": 37,
+      "name": "José Cunha",
+      "matchedBy": "exact name",
+      "filename": "JoseCunha.jpeg",
+      "bytes": 16608
+    },
+    {
+      "memberId": 38,
+      "name": "Miguel Ferreira",
+      "matchedBy": "exact name",
+      "filename": "MiguelFerreira.jpeg",
+      "bytes": 12560
+    },
+    {
+      "memberId": 39,
+      "name": "Martim Afonso",
+      "matchedBy": "exact name",
+      "filename": "MartimAfonso.jpeg",
+      "bytes": 75754
+    },
+    {
+      "memberId": 40,
+      "name": "Ana Alves",
+      "matchedBy": "exact name",
+      "filename": "AnaAlves.jpeg",
+      "bytes": 17187
+    },
+    {
+      "memberId": 41,
+      "name": "Miguel Amaral",
+      "matchedBy": "exact name",
+      "filename": "MiguelAmaral.jpeg",
+      "bytes": 12908
+    },
+    {
+      "memberId": 42,
+      "name": "João Novo",
+      "matchedBy": "exact name",
+      "filename": "JoaoNovo.png",
+      "bytes": 70180
+    },
+    {
+      "memberId": 43,
+      "name": "Lourenço Tourais",
+      "matchedBy": "exact name",
+      "filename": "LourencoTourais.jpeg",
+      "bytes": 11142
+    },
+    {
+      "memberId": 44,
+      "name": "Manuel Coimbra",
+      "matchedBy": "exact name",
+      "filename": "ManuelCoimbra.jpeg",
+      "bytes": 12046
+    },
+    {
+      "memberId": 45,
+      "name": "Tiago Oliveira",
+      "matchedBy": "exact name",
+      "filename": "TiagoOliveira.jpeg",
+      "bytes": 21691
+    },
+    {
+      "memberId": 46,
+      "name": "André Leite",
+      "matchedBy": "exact name",
+      "filename": "AndreLeite.jpeg",
+      "bytes": 15952
+    },
+    {
+      "memberId": 48,
+      "name": "José Martinho",
+      "matchedBy": "exact name",
+      "filename": "JoseMartinho.jpeg",
+      "bytes": 11311
+    },
+    {
+      "memberId": 49,
+      "name": "José Pereira",
+      "matchedBy": "exact name",
+      "filename": "JosePereira.jpeg",
+      "bytes": 17775
+    },
+    {
+      "memberId": 50,
+      "name": "António Pereira",
+      "matchedBy": "exact name",
+      "filename": "AntonioPereira.jpeg",
+      "bytes": 7406
+    },
+    {
+      "memberId": 51,
+      "name": "João Pedro",
+      "matchedBy": "exact name",
+      "filename": "JoaoPedro.jpeg",
+      "bytes": 10549
+    },
+    {
+      "memberId": 52,
+      "name": "Rafael Pedro",
+      "matchedBy": "exact name",
+      "filename": "RafaelPedro.jpeg",
+      "bytes": 8340
+    },
+    {
+      "memberId": 53,
+      "name": "Ricardo Diniz",
+      "matchedBy": "exact name",
+      "filename": "RicardoDInis.jpeg",
+      "bytes": 11666
+    },
+    {
+      "memberId": 54,
+      "name": "Filipa Marques",
+      "matchedBy": "exact name",
+      "filename": "FilipaMarques.jpeg",
+      "bytes": 9670
+    },
+    {
+      "memberId": 55,
+      "name": "Dinis Rodrigues",
+      "matchedBy": "exact name",
+      "filename": "DinisRodrigues.jpeg",
+      "bytes": 13781
+    },
+    {
+      "memberId": 56,
+      "name": "André Veríssimo",
+      "matchedBy": "exact name",
+      "filename": "AndreVerissimo.jpeg",
+      "bytes": 8781
+    },
+    {
+      "memberId": 57,
+      "name": "Pedro Gonçalves",
+      "matchedBy": "exact name",
+      "filename": "PedroGoncalves.jpeg",
+      "bytes": 10519
+    },
+    {
+      "memberId": 58,
+      "name": "André Cavalheiro",
+      "matchedBy": "exact name",
+      "filename": "AndreCavalheiro.jpeg",
+      "bytes": 18614
+    },
+    {
+      "memberId": 59,
+      "name": "Xavier Dias",
+      "matchedBy": "exact name",
+      "filename": "XavierDias.jpeg",
+      "bytes": 13104
+    },
+    {
+      "memberId": 60,
+      "name": "Miguel Monteiro",
+      "matchedBy": "exact name",
+      "filename": "MiguelMonteiro.jpeg",
+      "bytes": 12129
+    }
+  ],
+  "alreadyHadPhoto": [],
+  "unmatched": [
+    {
+      "name": "Vincente Silvestre",
+      "nameFromPhoto": "Vincente Silvestre"
+    },
+    {
+      "name": "Oleksander S.",
+      "nameFromPhoto": null
+    }
+  ],
+  "weakMatchSkipped": [
+    {
+      "legacyName": "Arlindo Oliveira",
+      "ourName": "Arlindo L. Oliveira",
+      "memberId": 1
+    }
+  ],
+  "errors": []
+}

@@ -23,7 +23,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 import { parseLegacyTeamPage } from './lib/legacy-team-parser.mjs'
-import { firstLastKey, normalizeName } from './lib/member-importer.mjs'
+import { buildMemberIndex, matchMember } from './lib/member-matcher.mjs'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const repoRoot = path.resolve(dirname, '..')
@@ -51,17 +51,7 @@ async function run() {
 
   const members = (await payload.find({ collection: 'members', limit: 1000, depth: 0 })).docs
 
-  const byExact = new Map()
-  const byFirstLast = new Map()
-  const ambiguousFirstLast = new Set()
-  for (const m of members) {
-    byExact.set(normalizeName(m.name), m)
-    const key = firstLastKey(m.name)
-    if (!key) continue
-    // A first+last key shared by two people is not usable as evidence.
-    if (byFirstLast.has(key)) ambiguousFirstLast.add(key)
-    byFirstLast.set(key, m)
-  }
+  const index = buildMemberIndex(members)
 
   const report = {
     generatedAt: new Date().toISOString(),
@@ -84,31 +74,7 @@ async function run() {
       continue
     }
 
-    const candidates = [person.name, person.nameFromPhoto].filter(Boolean)
-    let member = null
-    let how = null
-
-    for (const candidate of candidates) {
-      const hit = byExact.get(normalizeName(candidate))
-      if (hit) {
-        member = hit
-        how = candidate === person.name ? 'exact name' : 'photo filename'
-        break
-      }
-    }
-
-    if (!member) {
-      for (const candidate of candidates) {
-        const key = firstLastKey(candidate)
-        if (!key || ambiguousFirstLast.has(key)) continue
-        const hit = byFirstLast.get(key)
-        if (hit) {
-          member = hit
-          how = 'first + last name only'
-          break
-        }
-      }
-    }
+    const { member, how } = matchMember(person, index)
 
     if (!member) {
       report.onLegacySiteOnly.push({
