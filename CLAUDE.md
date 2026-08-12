@@ -70,6 +70,7 @@ regenerated on every commit (see section 7).
 - `Media.ts` — slug `media`
 - `Members.ts` — slug `members`
 - `News.ts` — slug `news`
+- `OpenPositions.ts` — slug `open-positions`
 - `Projects.ts` — slug `projects`
 - `Publications.ts` — slug `publications`
 - `ReadingGroups.ts` — slug `reading-groups`

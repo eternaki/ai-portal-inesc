@@ -14,6 +14,7 @@ import { ResearchThemes } from './collections/ResearchThemes'
 import { Projects } from './collections/Projects'
 import { Software } from './collections/Software'
 import { Dissertations } from './collections/Dissertations'
+import { OpenPositions } from './collections/OpenPositions'
 import { News } from './collections/News'
 import { Events } from './collections/Events'
 import { ReadingGroups } from './collections/ReadingGroups'
@@ -44,6 +45,7 @@ export default buildConfig({
     Projects,
     Software,
     Dissertations,
+    OpenPositions,
     News,
     Events,
     ReadingGroups,

@@ -58,6 +58,13 @@ architecture, global rules). This file covers only the `web/` specifics.
   were the same content under two names. Supervisors and the author are stored as a
   name plus an optional member link (the `Publications.authors` pattern): only 17 of
   37 legacy names resolve to a member, and the attribution must render regardless.
+- **`open-positions` stays separate from `dissertations`** even though both are
+  "opportunities". They are different processes with a different person at the
+  door: an open position is a paid research job (PhD contract, postdoc, junior
+  researcher) with a degree-holding applicant, a Euraxess/HR application route and
+  a hard deadline; a dissertation topic is picked by a student already enrolled at
+  the university, from their supervisor, with no deadline. The legacy site keeps
+  them apart for that reason — do not fold one into the other.
 - **Public list pages must be exhaustively reachable.** Paginate (`page` search
   param) and build filter facets from the whole collection, not from the current
   page — a chip list that covers only part of the archive hides content with no
