@@ -19,12 +19,5 @@ export const ResearchThemes: CollectionConfig = {
     { name: 'name', type: 'text', required: true },
     slugField('name'),
     { name: 'description', type: 'richText' },
-    { name: 'members', type: 'relationship', relationTo: 'members', hasMany: true },
-    {
-      name: 'keyPublications',
-      type: 'relationship',
-      relationTo: 'publications',
-      hasMany: true,
-    },
   ],
 }

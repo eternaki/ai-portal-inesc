@@ -1005,6 +1005,9 @@ main > h1:first-child {
   fill: var(--ink-40);
   font-family: var(--font-mono, Menlo, monospace);
   font-size: 11px;
+  /* The tick labels sit visually over the bar/link click targets but are not
+     inside the <a>; without this a click on the glyph pixels misses the link. */
+  pointer-events: none;
 }
 
 .year-histogram-details {
@@ -1312,6 +1315,11 @@ main > h1:first-child {
   font-size: 0.74rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+}
+
+.theme-tile-desc {
+  font-size: 0.88rem;
+  color: var(--ink-70);
 }
 
 /* ── home: news cards ── */

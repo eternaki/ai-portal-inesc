@@ -91,7 +91,6 @@ regenerated on every commit (see section 7).
 - `/publications/[slug]`
 - `/publications`
 - `/reading-groups`
-- `/research`
 - `/search`
 - `/software`
 

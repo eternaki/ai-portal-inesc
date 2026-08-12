@@ -10,6 +10,7 @@ import * as migration_20260722_100000_member_status_contact_review from './20260
 import * as migration_20260723_100000_reading_groups from './20260723_100000_reading_groups';
 import * as migration_20260811_100000_rename_thesis_topics_to_dissertations from './20260811_100000_rename_thesis_topics_to_dissertations';
 import * as migration_20260811_110000_dissertation_fields from './20260811_110000_dissertation_fields';
+import * as migration_20260811_120000_research_theme_fields from './20260811_120000_research_theme_fields';
 
 export const migrations = [
   {
@@ -71,5 +72,10 @@ export const migrations = [
     up: migration_20260811_110000_dissertation_fields.up,
     down: migration_20260811_110000_dissertation_fields.down,
     name: '20260811_110000_dissertation_fields'
+  },
+  {
+    up: migration_20260811_120000_research_theme_fields.up,
+    down: migration_20260811_120000_research_theme_fields.down,
+    name: '20260811_120000_research_theme_fields'
   },
 ];

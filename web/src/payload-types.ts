@@ -470,8 +470,6 @@ export interface ResearchTheme {
     };
     [k: string]: unknown;
   } | null;
-  members?: (number | Member)[] | null;
-  keyPublications?: (number | Publication)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -968,8 +966,6 @@ export interface ResearchThemesSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
   description?: T;
-  members?: T;
-  keyPublications?: T;
   updatedAt?: T;
   createdAt?: T;
 }

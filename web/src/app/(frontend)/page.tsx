@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Scatter } from '@/components/Scatter'
 import { CountUp } from '@/components/CountUp'
 import { JsonLd, ORGANIZATION } from '@/components/JsonLd'
@@ -80,26 +81,18 @@ export default async function HomePage() {
         <section>
           <div className="section-head">
             <h2>{t.home.themesHead}</h2>
-            <Link href="/research">{t.home.allThemes}</Link>
           </div>
           <div className="card-grid">
             {themes.docs.map((theme, i) => {
               const color = THEME_COLORS[i % THEME_COLORS.length]
-              const pubCount = theme.keyPublications?.length ?? 0
               return (
                 <div key={theme.id} className="card theme-tile" style={{ borderTopColor: color }}>
-                  <h3>
-                    {theme.slug ? (
-                      <Link href={`/research#${theme.slug}`}>{theme.name}</Link>
-                    ) : (
-                      theme.name
-                    )}
-                  </h3>
-                  {pubCount > 0 && (
-                    <span className="theme-tile-count mono" style={{ color }}>
-                      {pubCount} {pubCount === 1 ? t.home.themePub : t.home.themePubs}
-                    </span>
-                  )}
+                  <h3>{theme.name}</h3>
+                  {theme.description ? (
+                    <div className="rich-text theme-tile-desc">
+                      <RichText data={theme.description} />
+                    </div>
+                  ) : null}
                 </div>
               )
             })}
