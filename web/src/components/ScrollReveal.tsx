@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
-const SELECTOR = '.card, .person-card, .theme-card, .news-card, .attach-card, .pub-item, .event-row'
+const SELECTOR = '.card, .person-card, .news-card, .attach-card, .pub-item, .event-row'
 
 // Fades/lifts cards in as they enter the viewport. Runs once globally (mounted
 // in the root layout) rather than per-page — the alternative is wrapping every
