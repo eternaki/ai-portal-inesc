@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getPayload({ config })
 
-  const [pubs, news, dissertations, projects, software] = await Promise.all([
+  const [pubs, news, dissertations, members, projects, software] = await Promise.all([
     payload.find({
       collection: 'publications',
       where: PUBLISHED,
@@ -27,6 +27,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     payload.find({
       collection: 'dissertations',
       limit: 500,
+      depth: 0,
+      select: { slug: true, updatedAt: true },
+    }),
+    payload.find({
+      collection: 'members',
+      limit: 1000,
       depth: 0,
       select: { slug: true, updatedAt: true },
     }),
@@ -71,6 +77,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((d) => d.slug)
       .map((d) => ({
         url: `${SITE_URL}/dissertations/${d.slug}`,
+        lastModified: d.updatedAt ? new Date(d.updatedAt) : undefined,
+        changeFrequency: 'monthly' as const,
+      })),
+    ...members.docs
+      .filter((d) => d.slug)
+      .map((d) => ({
+        url: `${SITE_URL}/people/${d.slug}`,
         lastModified: d.updatedAt ? new Date(d.updatedAt) : undefined,
         changeFrequency: 'monthly' as const,
       })),

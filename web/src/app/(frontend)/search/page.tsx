@@ -40,7 +40,7 @@ type UnifiedHit = {
 // page — landing on a 200-item list with no idea which row matched is a dead end.
 const ENTITY_LINK: Record<EntityType, (hit: UnifiedHit) => string> = {
   publications: (hit) => (hit.slug ? `/publications/${hit.slug}` : '/publications'),
-  members: (hit) => (hit.slug ? `/people#${hit.slug}` : '/people'),
+  members: (hit) => (hit.slug ? `/people/${hit.slug}` : '/people'),
   projects: (hit) => (hit.slug ? `/projects#${hit.slug}` : '/projects'),
   dissertations: (hit) => (hit.slug ? `/dissertations/${hit.slug}` : '/dissertations'),
   software: (hit) => (hit.slug ? `/software#${hit.slug}` : '/software'),

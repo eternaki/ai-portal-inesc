@@ -61,7 +61,7 @@ function AuthorName({ author }: { author: NonNullable<Publication['authors']>[nu
   const member = typeof author.member === 'object' ? author.member : null
   if (member?.slug) {
     return (
-      <Link className="author-member-link" href={`/people#${member.slug}`}>
+      <Link className="author-member-link" href={`/people/${member.slug}`}>
         {author.name}
       </Link>
     )

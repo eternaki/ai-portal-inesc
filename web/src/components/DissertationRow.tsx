@@ -7,7 +7,7 @@ function PersonName({ name, member }: { name: string; member?: number | Member |
   const resolved = member && typeof member === 'object' ? member : null
   if (resolved?.slug) {
     return (
-      <Link className="author-member-link" href={`/people#${resolved.slug}`}>
+      <Link className="author-member-link" href={`/people/${resolved.slug}`}>
         {name}
       </Link>
     )

@@ -26,7 +26,7 @@ export function MemberAvatarStack({ members, max = 6 }: { members: Member[]; max
         return (
           <Link
             key={m.id}
-            href={m.slug ? `/people#${m.slug}` : '/people'}
+            href={m.slug ? `/people/${m.slug}` : '/people'}
             className="avatar-stack-item"
             title={m.name}
           >

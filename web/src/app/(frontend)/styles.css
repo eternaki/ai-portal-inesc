@@ -1025,11 +1025,6 @@ main > h1:first-child {
   border-color: transparent;
 }
 
-.person-card:target {
-  border-color: color-mix(in srgb, var(--cobalt), transparent 35%);
-  box-shadow: 0 0 0 3px var(--cobalt-wash);
-}
-
 .person-avatar {
   width: 44px;
   height: 44px;

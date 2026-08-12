@@ -42,7 +42,9 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
       sort: '-year',
       limit: PER_PAGE,
       page: currentPage,
-      depth: 0,
+      // depth 1 resolves author.member into an object; at depth 0 it is a bare id
+      // and PubRow silently renders every author as plain text.
+      depth: 1,
     }),
     payload
       .find({
