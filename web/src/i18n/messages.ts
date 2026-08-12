@@ -64,6 +64,10 @@ const en = {
       'curated research outputs from the MLKD group',
     rangeOf: 'of',
     allYears: 'all years',
+    histogramAria: 'Publications per year — select a year to filter',
+    histogramTable: 'Years as a table',
+    yearColumn: 'Year',
+    countColumn: 'Publications',
     allTypes: 'all types',
     types: {
       journal: 'Journal',
@@ -335,6 +339,10 @@ const pt: Dictionary = {
       'resultados de investigação curados pelo grupo MLKD',
     rangeOf: 'de',
     allYears: 'todos os anos',
+    histogramAria: 'Publicações por ano — selecione um ano para filtrar',
+    histogramTable: 'Anos em tabela',
+    yearColumn: 'Ano',
+    countColumn: 'Publicações',
     allTypes: 'todos os tipos',
     types: {
       journal: 'Revista',

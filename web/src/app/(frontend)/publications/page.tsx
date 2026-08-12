@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getPayload, type Where } from 'payload'
 import config from '@payload-config'
 import { PubRow } from '@/components/PubRow'
+import { YearHistogram } from '@/components/YearHistogram'
 import { published, PUBLISHED } from '@/lib/queries'
 import { getDictionary } from '@/i18n/server'
 import { clusterColor, fetchPublicationClusters } from '@/lib/clusterColors'
@@ -54,12 +55,19 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
         depth: 0,
         select: { year: true, type: true },
       })
-      .then((r) => ({
-        years: Array.from(new Set(r.docs.map((d) => d.year).filter(Boolean))).sort(
-          (a, b) => Number(b) - Number(a),
-        ),
-        types: PUB_TYPES.filter((candidate) => r.docs.some((d) => d.type === candidate)),
-      })),
+      .then((r) => {
+        const perYear = new Map<number, number>()
+        for (const doc of r.docs) {
+          if (!doc.year) continue
+          perYear.set(doc.year, (perYear.get(doc.year) ?? 0) + 1)
+        }
+        return {
+          years: Array.from(perYear, ([year, count]) => ({ year, count })).sort(
+            (a, b) => a.year - b.year,
+          ),
+          types: PUB_TYPES.filter((candidate) => r.docs.some((d) => d.type === candidate)),
+        }
+      }),
     fetchPublicationClusters(),
   ])
 
@@ -100,20 +108,18 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
         {t.publications.metaSuffix}
       </p>
 
-      <div className="filters">
-        <Link href={hrefWith({ year: null, page: 1 })} className={!activeYear ? 'active' : ''}>
-          {t.publications.allYears}
-        </Link>
-        {facets.years.map((y) => (
-          <Link
-            key={y}
-            href={hrefWith({ year: String(y), page: 1 })}
-            className={String(y) === activeYear ? 'active' : ''}
-          >
-            {y}
-          </Link>
-        ))}
-      </div>
+      <YearHistogram
+        counts={facets.years}
+        activeYear={activeYear}
+        hrefForYear={(year) => hrefWith({ year, page: 1 })}
+        labels={{
+          allYears: t.publications.allYears,
+          aria: t.publications.histogramAria,
+          table: t.publications.histogramTable,
+          yearColumn: t.publications.yearColumn,
+          countColumn: t.publications.countColumn,
+        }}
+      />
 
       <div className="filters">
         <Link href={hrefWith({ type: null, page: 1 })} className={!activeType ? 'active' : ''}>

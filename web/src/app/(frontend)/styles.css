@@ -916,6 +916,126 @@ main > h1:first-child {
   margin-top: -0.9rem;
 }
 
+/* ── publications: year histogram ── */
+
+.year-histogram {
+  margin: 1.1rem 0 1.4rem;
+}
+
+.year-histogram-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.year-histogram-head a {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.78rem;
+  padding: 0.15rem 0.65rem;
+  border: 1px solid var(--ink-12);
+  border-radius: 999px;
+  color: var(--ink-70);
+  background: var(--card);
+}
+
+.year-histogram-head a.active,
+.year-histogram-head a:hover {
+  border-color: var(--cobalt);
+  color: var(--cobalt);
+  background: var(--cobalt-wash);
+  text-decoration: none;
+}
+
+.year-histogram-selected {
+  font-size: 0.78rem;
+  color: var(--ink-70);
+}
+
+.year-histogram-svg {
+  display: block;
+  width: 100%;
+  height: 90px;
+}
+
+/* Single series, single hue — validated against the page surface in both themes. */
+.year-histogram-bar {
+  fill: #2553a5;
+  transition: fill 160ms var(--ease);
+}
+
+:root[data-theme='dark'] .year-histogram-bar {
+  fill: #6b93e2;
+}
+
+/* Selection is an outline, not a second colour. When a year is chosen the rest
+   drop to neutral so the choice reads at a glance. */
+.year-histogram:has(.is-selected) .year-histogram-bar {
+  fill: var(--ink-40);
+}
+
+.year-histogram .year-histogram-bar.is-selected {
+  fill: #2553a5;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  paint-order: stroke;
+}
+
+:root[data-theme='dark'] .year-histogram .year-histogram-bar.is-selected {
+  fill: #6b93e2;
+}
+
+.year-histogram-empty {
+  fill: var(--ink-12);
+}
+
+.year-histogram-hit {
+  fill: transparent;
+}
+
+.year-histogram-svg a:hover .year-histogram-bar {
+  fill: var(--cobalt-bright);
+}
+
+.year-histogram-svg a:focus-visible .year-histogram-hit {
+  fill: var(--cobalt-wash);
+}
+
+.year-histogram-tick {
+  fill: var(--ink-40);
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 11px;
+}
+
+.year-histogram-details {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--ink-70);
+}
+
+.year-histogram-details summary {
+  cursor: pointer;
+}
+
+.year-histogram-table {
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.year-histogram-table th,
+.year-histogram-table td {
+  padding: 0.15rem 0.9rem 0.15rem 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.year-histogram-table th {
+  color: var(--ink-40);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .pager {
   display: flex;
   align-items: center;
