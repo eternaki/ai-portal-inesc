@@ -86,6 +86,7 @@ regenerated on every commit (see section 7).
 - `/map`
 - `/news/[slug]`
 - `/news`
+- `/open-positions`
 - `/people/[slug]`
 - `/people`
 - `/projects`

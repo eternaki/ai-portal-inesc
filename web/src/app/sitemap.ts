@@ -51,6 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/news',
     '/events',
     '/reading-groups',
+    '/open-positions',
     '/search',
     ...(projects.totalDocs > 0 ? ['/projects'] : []),
     ...(software.totalDocs > 0 ? ['/software'] : []),

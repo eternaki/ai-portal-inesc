@@ -68,6 +68,7 @@ const NAV = [
   { href: '/news', key: 'news' },
   { href: '/events', key: 'events' },
   { href: '/reading-groups', key: 'readingGroups' },
+  { href: '/open-positions', key: 'openPositions' },
 ] as const
 
 export default async function RootLayout(props: { children: React.ReactNode }) {

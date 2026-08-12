@@ -833,6 +833,31 @@ main > h1:first-child {
   background: var(--card);
 }
 
+/* This page is empty most of the year, so its empty state is the design, not a
+   fallback: a heading, an explanation and a route onward. */
+.positions-empty {
+  border: 1px solid var(--ink-12);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 2rem 1.75rem;
+  max-width: 62ch;
+  box-shadow: var(--shadow-sm);
+}
+
+.positions-empty h2 {
+  margin-top: 0;
+  padding-left: 0;
+  font-size: 1.3rem;
+}
+
+.positions-empty h2::before {
+  display: none;
+}
+
+.positions-empty p {
+  color: var(--ink-70);
+}
+
 /* ── publications ── */
 
 .pub-item {

@@ -15,6 +15,7 @@ const en = {
     news: 'News',
     events: 'Events',
     readingGroups: 'Reading Groups',
+    openPositions: 'Open positions',
     // Not top-level nav: the map is reached from Research and Publications, the
     // search icon from the header. Both still need an accessible label.
     map: 'Research map',
@@ -100,6 +101,23 @@ const en = {
     pageLabel: 'Page',
     pageOf: 'of',
     rangeOf: 'of',
+  },
+  openPositions: {
+    title: 'Open positions',
+    meta: 'Funded research posts at MLKD. For MSc and PhD thesis topics, see the dissertations.',
+    kinds: {
+      phd: 'PhD position',
+      postdoc: 'Postdoc',
+      researcher: 'Researcher',
+      internship: 'Internship',
+    },
+    deadline: 'Apply by',
+    apply: 'Apply',
+    contact: 'Contact',
+    emptyHead: 'No open positions right now',
+    emptyLede:
+      'Funded posts open when a new project starts, usually once or twice a year. In the meantime, the group supervises MSc and PhD dissertations — and speculative enquiries are welcome.',
+    emptyDissertations: 'Browse dissertation topics',
   },
   people: {
     title: 'People',
@@ -278,6 +296,7 @@ const pt: Dictionary = {
     news: 'Notícias',
     events: 'Eventos',
     readingGroups: 'Reading Groups',
+    openPositions: 'Vagas',
     map: 'Mapa de investigação',
     search: 'Pesquisa',
     openMenu: 'Abrir menu',
@@ -361,6 +380,23 @@ const pt: Dictionary = {
     pageLabel: 'Página',
     pageOf: 'de',
     rangeOf: 'de',
+  },
+  openPositions: {
+    title: 'Vagas',
+    meta: 'Posições de investigação financiadas no MLKD. Para temas de tese de mestrado e doutoramento, consulte as dissertações.',
+    kinds: {
+      phd: 'Doutoramento',
+      postdoc: 'Pós-doutoramento',
+      researcher: 'Investigador',
+      internship: 'Estágio',
+    },
+    deadline: 'Candidaturas até',
+    apply: 'Candidatar',
+    contact: 'Contacto',
+    emptyHead: 'Não há vagas abertas de momento',
+    emptyLede:
+      'As posições financiadas abrem quando começa um novo projeto, normalmente uma ou duas vezes por ano. Entretanto, o grupo orienta dissertações de mestrado e doutoramento — e candidaturas espontâneas são bem-vindas.',
+    emptyDissertations: 'Ver temas de dissertação',
   },
   people: {
     title: 'Pessoas',
