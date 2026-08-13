@@ -104,6 +104,7 @@ const FIXED_SURFACES = {
   '.eyebrow': '#16233f',
   '.hero h1': '#16233f',
   '.stat b': '#16233f',
+  '.stat > span': '#16233f',
 }
 
 /** Rules whose own font-size marks them as large text (>=24px, or >=18.66px bold). */
@@ -116,6 +117,22 @@ function isLargeText(declarations) {
   if (value === null) return false
   const weight = parseInt(declarations['font-weight'] ?? '400', 10)
   return value >= 24 || (value >= 18.66 && weight >= 700)
+}
+
+/**
+ * The fill a descendant selector sits on, from the nearest ancestor rule that
+ * declares one. Only walks whole-word ancestors of a descendant selector, so
+ * `.a .b` looks at `.a` — it never guesses across unrelated rules.
+ */
+export function inheritedBackground(selector, rules) {
+  const parts = selector.split(' ')
+  for (let i = parts.length - 1; i > 0; i -= 1) {
+    const ancestor = parts.slice(0, i).join(' ')
+    const rule = rules.find((r) => r.selector === ancestor)
+    const bg = rule?.declarations.background ?? rule?.declarations['background-color']
+    if (bg) return bg
+  }
+  return null
 }
 
 async function run() {
@@ -135,7 +152,14 @@ async function run() {
 
     for (const rule of rules) {
       const fgRaw = rule.declarations.color
-      const bgRaw = rule.declarations.background ?? rule.declarations['background-color']
+      // A child sets colour and inherits its parent's fill — `.event-date-badge
+      // span` is white text on a surface declared one rule up. Checking only
+      // rules that carry both properties misses exactly those, which is how a
+      // white-on-near-white badge label survived the first pass.
+      const bgRaw =
+        rule.declarations.background ??
+        rule.declarations['background-color'] ??
+        inheritedBackground(rule.selector, rules)
       if (!fgRaw || !bgRaw) continue
 
       const fg = parseColor(resolve(fgRaw, theme.tokens))

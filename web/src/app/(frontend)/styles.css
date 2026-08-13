@@ -420,19 +420,28 @@ main > h1:first-child {
 
 .site-footer-brand {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  max-width: 40ch;
+  align-items: center;
+  gap: 0.8rem;
+  max-width: 44ch;
 }
 
 .site-footer strong {
+  display: block;
   font-family: var(--font-serif, georgia, serif);
   font-size: 1.05rem;
+  line-height: 1.25;
   color: var(--ink);
 }
 
+/* The address is metadata, so it is set like the site's other metadata — the mono
+   face, tracked out and one step down. It also stops the two lines reading as one
+   run-on sentence in the same voice. */
 .site-footer p {
-  margin: 0.3em 0 0;
+  margin: 0.35em 0 0;
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-70);
 }
 
 .site-footer-affiliations {
@@ -860,7 +869,9 @@ main > h1:first-child {
   color: var(--on-fill);
   text-decoration: none;
   transform: translateY(-1px);
-  box-shadow: 0 14px 32px -10px rgba(37, 83, 165, 0.55);
+  /* --shadow-cobalt, not a literal blue: the hard-coded one was mixed from the
+     light theme's cobalt and left a navy pool under a pale button on dark. */
+  box-shadow: var(--shadow-cobalt);
 }
 
 .btn:active {
@@ -982,12 +993,28 @@ main > h1:first-child {
   transition: transform 160ms var(--ease), border-color 160ms var(--ease), background 160ms var(--ease), color 160ms var(--ease);
 }
 
-.filters a:hover,
-.filters a.active {
+/* Three states, three appearances. Hover and active used to render identically,
+   so the one thing the row has to answer — which filter am I looking at? — was
+   only answerable by moving the mouse away. */
+.filters a:hover {
   border-color: var(--cobalt);
   color: var(--cobalt);
   text-decoration: none;
   background: var(--cobalt-wash);
+  transform: translateY(-1px);
+}
+
+.filters a.active {
+  border-color: var(--cobalt);
+  background: var(--cobalt);
+  color: var(--on-fill);
+  text-decoration: none;
+}
+
+.filters a.active:hover {
+  background: var(--cobalt-dark);
+  border-color: var(--cobalt-dark);
+  color: var(--on-fill);
   transform: translateY(-1px);
 }
 
@@ -1188,7 +1215,7 @@ main > h1:first-child {
   font-size: 0.7rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--amber-text);
   margin-top: 0.9rem;
 }
 
@@ -1568,7 +1595,7 @@ main > h1:first-child {
 
 .join-banner-stat span {
   font-size: 0.78rem;
-  color: var(--ink-40);
+  color: var(--ink-70);
   max-width: 16ch;
   display: block;
 }
@@ -1653,7 +1680,8 @@ main > h1:first-child {
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.65);
+  /* Follows the badge fill, which is --ink and therefore near-white on dark. */
+  color: var(--on-fill);
 }
 
 .news-item:last-child {
@@ -2176,7 +2204,7 @@ main > h1:first-child {
   display: block;
   font-family: var(--font-mono, Menlo, monospace);
   font-size: 0.72rem;
-  color: var(--ink-40);
+  color: var(--ink-70);
 }
 
 /* ── publication attachments (materials) ── */
