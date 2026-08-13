@@ -100,11 +100,13 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
         hrefForYear={(year) => hrefWith({ year, page: 1 })}
         labels={{
           allYears: t.publications.allYears,
+          filterYear: t.publications.filterYear,
           aria: t.publications.histogramAria,
         }}
       />
 
       <div className="filters">
+        <span className="filters-label">{t.publications.filterType}</span>
         <Link href={hrefWith({ type: null, page: 1 })} className={!activeType ? 'active' : ''}>
           {t.publications.allTypes}
         </Link>

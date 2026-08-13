@@ -66,6 +66,7 @@ export default async function DissertationsPage(props: { searchParams: SearchPar
       </p>
 
       <div className="filters">
+        <span className="filters-label">{t.dissertations.filterStage}</span>
         <Link href={hrefWith({ status: null, page: 1 })} className={!activeStage ? 'active' : ''}>
           {t.dissertations.allStages}
         </Link>
@@ -81,6 +82,7 @@ export default async function DissertationsPage(props: { searchParams: SearchPar
       </div>
 
       <div className="filters">
+        <span className="filters-label">{t.dissertations.filterLevel}</span>
         <Link href={hrefWith({ level: null, page: 1 })} className={!activeLevel ? 'active' : ''}>
           {t.dissertations.allLevels}
         </Link>

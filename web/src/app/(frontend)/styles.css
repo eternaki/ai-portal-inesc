@@ -147,6 +147,14 @@ h2::before {
   padding-left: 0;
 }
 
+/* The 3em above an h2 separates it from the section before it. The first section
+   on a page has none — it follows the page title — so that margin was landing as
+   a ~75px hole between "Events" and "Upcoming". */
+h1 + section > h2:first-child,
+h1 + section > .section-head:first-child h2 {
+  margin-top: 1.1em;
+}
+
 h3 {
   font-size: 1.15rem;
   margin-top: 2.2em;
@@ -819,16 +827,21 @@ main > h1:first-child {
   color: var(--ink-70);
 }
 
+/* A badge states a fact; a filter chip is a control. They used to be the same
+   object — mono type, pill, hairline border, card fill — so on the dissertations
+   list the "Open for application" tag on a row was indistinguishable from the
+   "Open for application" button above it. Controls keep the outline and the card
+   fill, which is what makes them look raised; badges are flat and tinted. */
 .badge {
   display: inline-block;
   padding: 0.05rem 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   font-family: var(--font-mono, Menlo, monospace);
   font-size: 0.68rem;
   letter-spacing: 0.03em;
-  border: 1px solid var(--ink-12);
+  border: 1px solid transparent;
   color: var(--ink-70);
-  background: var(--card);
+  background: var(--ink-6);
   vertical-align: middle;
 }
 
@@ -1016,6 +1029,21 @@ main > h1:first-child {
   border-color: var(--cobalt-dark);
   color: var(--on-fill);
   transform: translateY(-1px);
+}
+
+/* Names the axis each row filters on. Two stacked rows of identical pills gave a
+   reader no way to tell that the first narrows by stage and the second by level —
+   the chips said "all stages" and "all levels" only until one was picked, after
+   which the row lost the only word explaining it. */
+.filters-label {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-right: 0.15rem;
+  /* Fixed column so stacked rows line their chips up on the same left edge. */
+  min-width: 3.4rem;
 }
 
 /* A second filter row (year, then type) reads as one control block, not two */
