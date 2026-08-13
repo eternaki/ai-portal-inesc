@@ -19,6 +19,16 @@
   --amber: #b97a10;
   --amber-bright: #d99a2b;
   --amber-wash: #faf3e3;
+  /* Amber as *text*. The display amber reads 3.2:1 on its own wash, so the AI
+     badge gets a deeper one; the wash and the dot keep the brighter value. */
+  --amber-text: #8f5c06;
+
+  /* Text on a filled --cobalt or --ink surface. Both of those invert between the
+     themes — cobalt is a dark blue on light and a pale one on dark — so a literal
+     #fff reads at 2.4:1 once the theme flips, which is how the primary button,
+     the chat launcher and the language switch all became unreadable in the dark.
+     --paper inverts the same way, so this one value is right on both. */
+  --on-fill: var(--paper);
 
   --max: 1120px;
   --radius: 14px;
@@ -50,6 +60,7 @@
   --amber: #e6ab48;
   --amber-bright: #f2bd63;
   --amber-wash: rgba(230, 171, 72, 0.16);
+  --amber-text: var(--amber);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 1px rgba(0, 0, 0, 0.24);
   --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
@@ -821,7 +832,7 @@ main > h1:first-child {
 .badge-ai {
   border-color: transparent;
   background: var(--amber-wash);
-  color: var(--amber);
+  color: var(--amber-text);
 }
 
 .badge-open {
@@ -835,7 +846,7 @@ main > h1:first-child {
   padding: 0.55rem 1.2rem;
   border-radius: 999px;
   background: var(--cobalt);
-  color: #fff;
+  color: var(--on-fill);
   font-weight: 500;
   font-size: 0.92rem;
   border: none;
@@ -846,7 +857,7 @@ main > h1:first-child {
 
 .btn:hover {
   background: var(--cobalt-dark);
-  color: #fff;
+  color: var(--on-fill);
   text-decoration: none;
   transform: translateY(-1px);
   box-shadow: 0 14px 32px -10px rgba(37, 83, 165, 0.55);
@@ -1264,14 +1275,14 @@ main > h1:first-child {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  color: var(--ink-40);
+  color: var(--ink-70);
   background: var(--ink-6);
   flex-shrink: 0;
   transition: color 160ms var(--ease), background 160ms var(--ease);
 }
 
 .person-card-linkedin:hover {
-  color: #fff;
+  color: var(--on-fill);
   background: var(--cobalt);
 }
 
@@ -1329,7 +1340,7 @@ main > h1:first-child {
   place-items: center;
   font-family: var(--font-serif, georgia, serif);
   font-size: 2.2rem;
-  color: var(--ink-40);
+  color: var(--ink-70);
   background: var(--ink-6);
 }
 
@@ -1629,7 +1640,7 @@ main > h1:first-child {
   justify-content: center;
   background: var(--ink);
   border-radius: var(--radius-sm);
-  color: #fff;
+  color: var(--on-fill);
 }
 
 .event-date-badge b {
@@ -1732,7 +1743,7 @@ main > h1:first-child {
 
 .locale-switcher button.active {
   background: var(--cobalt);
-  color: #fff;
+  color: var(--on-fill);
   cursor: default;
 }
 
@@ -1780,7 +1791,7 @@ main > h1:first-child {
   border: none;
   border-radius: 999px;
   background: var(--cobalt);
-  color: #fff;
+  color: var(--on-fill);
   font-family: var(--font-sans, sans-serif);
   font-size: 0.9rem;
   font-weight: 500;
@@ -2231,7 +2242,7 @@ main > h1:first-child {
 
 .attach-card-plain .attach-icon {
   background: var(--paper);
-  color: var(--ink-40);
+  color: var(--ink-70);
 }
 
 .attach-foot {
