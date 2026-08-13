@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-08-13T11:11:08.792Z",
+  "mode": "apply",
+  "rosterEntries": 120,
+  "members": 113,
+  "renamed": [
+    {
+      "id": 8,
+      "from": "Helder Dias",
+      "to": "Hélder Dias",
+      "slug": "helder-dias"
+    },
+    {
+      "id": 40,
+      "from": "Ana Alves",
+      "to": "Ana Pimenta Alves",
+      "slug": "ana-alves"
+    },
+    {
+      "id": 46,
+      "from": "André Leite",
+      "to": "André Loras Leite",
+      "slug": "andre-leite"
+    },
+    {
+      "id": 50,
+      "from": "António Pereira",
+      "to": "António Farinha Pereira",
+      "slug": "antonio-pereira"
+    },
+    {
+      "id": 49,
+      "from": "José Pereira",
+      "to": "José Reis Pereira",
+      "slug": "jose-pereira"
+    },
+    {
+      "id": 18,
+      "from": "João Silva",
+      "to": "João Lourenço Silva",
+      "slug": "joao-silva"
+    },
+    {
+      "id": 51,
+      "from": "João Pedro",
+      "to": "João Martins Pedro",
+      "slug": "joao-pedro"
+    },
+    {
+      "id": 26,
+      "from": "João Meneses",
+      "to": "João Meneses Santos",
+      "slug": "joao-meneses"
+    },
+    {
+      "id": 14,
+      "from": "João Cardoso",
+      "to": "João Nuno Cardoso",
+      "slug": "joao-cardoso"
+    },
+    {
+      "id": 38,
+      "from": "Miguel Ferreira",
+      "to": "Miguel Rasquinho Ferreira",
+      "slug": "miguel-ferreira"
+    },
+    {
+      "id": 41,
+      "from": "Miguel Amaral",
+      "to": "Miguel Silva Amaral",
+      "slug": "miguel-amaral"
+    }
+  ],
+  "alreadyCorrect": 93,
+  "unmatched": [
+    {
+      "name": "Filipe Grácio",
+      "contact": "https://www.linkedin.com/in/filipegracio/"
+    }
+  ],
+  "ambiguous": []
+}

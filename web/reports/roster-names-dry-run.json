@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-08-13T11:13:29.202Z",
+  "mode": "dry-run",
+  "rosterEntries": 120,
+  "members": 113,
+  "renamed": [],
+  "alreadyCorrect": 102,
+  "unmatched": [
+    {
+      "name": "Filipe Grácio",
+      "contact": "https://www.linkedin.com/in/filipegracio/"
+    }
+  ],
+  "ambiguous": [],
+  "skippedShorter": [
+    {
+      "id": 40,
+      "current": "Ana Pimenta Alves",
+      "roster": "Ana Alves"
+    },
+    {
+      "id": 41,
+      "current": "Miguel Silva Amaral",
+      "roster": "Miguel Amaral"
+    }
+  ]
+}
