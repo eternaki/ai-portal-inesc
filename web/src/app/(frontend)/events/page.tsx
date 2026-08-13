@@ -26,46 +26,53 @@ export default async function EventsPage() {
   const upcoming = events.docs.filter((e) => e.date && e.date >= now).reverse()
   const past = events.docs.filter((e) => !e.date || e.date < now)
 
-  const fmt = (d?: string | null) =>
-    d
-      ? new Date(d).toLocaleDateString(dateLocale[locale], {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        })
-      : ''
+  // Same rail as the publication list: the date stands apart from the meeting, and
+  // the year is printed only when it changes, which turns eighty-three reading
+  // groups into a timeline instead of a column of identical badges. The full date
+  // used to be repeated in the body as well, one line under the badge that already
+  // said it.
+  const renderEvent = (e: (typeof events.docs)[number], previous?: (typeof events.docs)[number]) => {
+    const date = e.date ? new Date(e.date) : null
+    const previousDate = previous?.date ? new Date(previous.date) : null
+    const showYear = !previousDate || previousDate.getFullYear() !== date?.getFullYear()
 
-  const renderEvent = (e: (typeof events.docs)[number]) => (
-    <div key={e.id} id={e.slug ?? undefined} className="event-row">
-      {e.date && (
-        <div className="event-date-badge">
-          <b>{new Date(e.date).getDate()}</b>
-          <span>{new Date(e.date).toLocaleDateString(dateLocale[locale], { month: 'short' })}</span>
-        </div>
-      )}
-      <div>
-        <div className="news-date">
-          {fmt(e.date)}
-          {e.location ? ` · ${e.location}` : ''}
-        </div>
-        <div className="pub-title">
-          {e.link ? (
-            <a href={e.link} target="_blank" rel="noreferrer">
-              {e.title}
-            </a>
-          ) : (
-            e.title
+    return (
+      <article key={e.id} id={e.slug ?? undefined} className="event-row">
+        <div className="event-rail">
+          {date && showYear && <span className="event-year">{date.getFullYear()}</span>}
+          {date && (
+            <span className="event-day">
+              {date.getDate()} {date.toLocaleDateString(dateLocale[locale], { month: 'short' })}
+            </span>
           )}
         </div>
-        {e.speaker && <div className="pub-meta">{e.speaker}</div>}
-        {e.description ? (
-          <div className="rich-text" style={{ fontSize: '0.92rem' }}>
-            <RichText data={e.description} />
+
+        <div className="event-body">
+          <div className="pub-title">
+            {e.link ? (
+              <a href={e.link} target="_blank" rel="noreferrer">
+                {e.title}
+              </a>
+            ) : (
+              e.title
+            )}
           </div>
-        ) : null}
-      </div>
-    </div>
-  )
+          {(e.speaker || e.location) && (
+            <div className="event-meta">
+              {e.speaker}
+              {e.speaker && e.location ? ' · ' : ''}
+              {e.location ? <span className="mono">{e.location}</span> : null}
+            </div>
+          )}
+          {e.description ? (
+            <div className="rich-text event-description">
+              <RichText data={e.description} />
+            </div>
+          ) : null}
+        </div>
+      </article>
+    )
+  }
 
   return (
     <div>
@@ -75,13 +82,13 @@ export default async function EventsPage() {
       {upcoming.length > 0 && (
         <section>
           <h2>{t.events.upcoming}</h2>
-          {upcoming.map(renderEvent)}
+          {upcoming.map((e, i) => renderEvent(e, upcoming[i - 1]))}
         </section>
       )}
       {past.length > 0 && (
         <section>
           <h2>{t.events.past}</h2>
-          {past.map(renderEvent)}
+          {past.map((e, i) => renderEvent(e, past[i - 1]))}
         </section>
       )}
     </div>
