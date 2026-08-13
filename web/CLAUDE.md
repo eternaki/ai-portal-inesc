@@ -48,10 +48,14 @@ architecture, global rules). This file covers only the `web/` specifics.
   by `path#Export`): `ImportPublicationPanel` (DOI/URL/title import, on the
   Publications list) and `MaintenancePanel` (data-health, on the dashboard). After
   adding one, run `pnpm generate:importmap`.
-- **Events and Reading Groups stay separate collections** even though their fields
-  are close. The page structure mirrors the group's existing site
-  (mlkd.idss.inesc-id.pt), which the supervisor asked us to preserve — do not merge
-  them without checking with him first.
+- **Reading-group meetings are `events`.** There is no `reading-groups` collection:
+  on the group's own site the Events page *is* the reading-group log — 83 meetings
+  since March 2022, each a paper, its presenter and a link to it — so a second
+  collection was the same content in two places. The archive was imported by
+  `scripts/import-events.mjs` (`pnpm events:import` / `:apply`, matched on title +
+  date because one paper was discussed twice), and the nav's *Reading Groups* entry
+  links out to the Técnico page that schedules the sessions. The **page** structure
+  still mirrors the legacy site, which the supervisor asked us to preserve.
 - **`dissertations` covers the whole life of a thesis** (`open` → `ongoing` →
   `finished`); it is the collection formerly called `thesis-topics`. Open topics are
   a *stage*, not a separate section — `/opportunities` was removed because the two

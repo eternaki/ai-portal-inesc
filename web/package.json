@@ -26,6 +26,8 @@
     "publications:link-members:apply": "node scripts/link-publication-members-db.mjs --apply",
     "publications:link-members:test": "node --test scripts/tests/publication-member-linker.test.mjs",
     "scripts:test": "node --test scripts/tests/*.test.mjs",
+    "events:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/import-events.mjs",
+    "events:import:apply": "cross-env EVENTS_APPLY=1 NODE_OPTIONS=--no-deprecation payload run scripts/import-events.mjs",
     "photos:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/import-member-photos.mjs",
     "photos:import:apply": "cross-env MEMBER_PHOTOS_APPLY=1 NODE_OPTIONS=--no-deprecation payload run scripts/import-member-photos.mjs",
     "matcher:test": "node --test scripts/tests/member-matcher.test.mjs",

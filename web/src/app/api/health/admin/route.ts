@@ -23,7 +23,6 @@ type CollectionSlug =
   | 'software'
   | 'news'
   | 'events'
-  | 'reading-groups'
 
 async function fetchJson(url: string, init?: RequestInit) {
   const res = await fetch(url, { ...init, cache: 'no-store' })
@@ -77,7 +76,7 @@ export async function GET(req: NextRequest) {
   const checks: HealthCheck[] = []
 
   try {
-    const [members, publications, projects, dissertations, software, news, events, readingGroups] =
+    const [members, publications, projects, dissertations, software, news, events] =
       await Promise.all([
         payload.count({ collection: 'members' }),
         payload.count({ collection: 'publications', where: PUBLISHED }),
@@ -86,7 +85,6 @@ export async function GET(req: NextRequest) {
         payload.count({ collection: 'software' }),
         payload.count({ collection: 'news' }),
         payload.count({ collection: 'events' }),
-        payload.count({ collection: 'reading-groups' }),
       ])
 
     const counts: Record<CollectionSlug, number> = {
@@ -97,7 +95,6 @@ export async function GET(req: NextRequest) {
       software: software.totalDocs,
       news: news.totalDocs,
       events: events.totalDocs,
-      'reading-groups': readingGroups.totalDocs,
     }
 
     checks.push({

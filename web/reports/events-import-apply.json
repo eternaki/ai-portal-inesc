@@ -1,0 +1,426 @@
+{
+  "generatedAt": "2026-08-13T10:55:04.607Z",
+  "mode": "apply",
+  "source": "https://mlkd.idss.inesc-id.pt/mlkd-events.html",
+  "parsed": 83,
+  "created": [],
+  "updated": [
+    {
+      "id": 2,
+      "title": "Deep Feedback Models",
+      "date": "2025-09-09"
+    },
+    {
+      "id": 3,
+      "title": "Brain Mapping with Dense Features Grounding Cortical Semantic Selectivity in Natural Images With Vision Transformers",
+      "date": "2025-07-01"
+    },
+    {
+      "id": 4,
+      "title": "Visual-RFT: Visual Reinforcement Fine-Tuning",
+      "date": "2025-06-24"
+    },
+    {
+      "id": 5,
+      "title": "A Conformal Risk Control Framework for Granular Word Assessment and Uncertainty Calibration of CLIPScore Quality Estimates",
+      "date": "2025-05-27"
+    },
+    {
+      "id": 6,
+      "title": "Refining Knowledge Distillation for Effective and Efficient Passage Retrieval",
+      "date": "2025-05-13"
+    },
+    {
+      "id": 7,
+      "title": "Circuit Tracing: Revealing Computational Graphs in Language Models",
+      "date": "2025-04-29"
+    },
+    {
+      "id": 8,
+      "title": "Time-varying EEG spectral power predicts evoked and spontaneous BOLD-fMRI motor brain activity",
+      "date": "2025-04-15"
+    },
+    {
+      "id": 9,
+      "title": "∞-Video A Training-Free Approach to Long Video Understanding via Continuous-Time Memory Consolidation",
+      "date": "2025-04-01"
+    },
+    {
+      "id": 10,
+      "title": "SigLIP 2: Multilingual Vision-Language Encoders with Improved Semantic Understanding, Localization, and Dense Features",
+      "date": "2025-03-18"
+    },
+    {
+      "id": 10,
+      "title": "SigLIP 2: Multilingual Vision-Language Encoders with Improved Semantic Understanding, Localization, and Dense Features",
+      "date": "2025-03-18"
+    },
+    {
+      "id": 11,
+      "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+      "date": "2025-02-18"
+    },
+    {
+      "id": 12,
+      "title": "Integração de métodos de ML no processo clínico",
+      "date": "2025-02-11"
+    },
+    {
+      "id": 13,
+      "title": "DIS-CO: Discovering Copyrighted Content in VLMs Training Data",
+      "date": "2025-02-04"
+    },
+    {
+      "id": 14,
+      "title": "VisMin: Visual Minimal-Change Understanding",
+      "date": "2025-01-28"
+    },
+    {
+      "id": 15,
+      "title": "From Manual to Automated Efficient Fragment Counting in Digital Pathology",
+      "date": "2025-01-21"
+    },
+    {
+      "id": 16,
+      "title": "Towards scientific discovery with dictionary learning: Extracting biological concepts from microscopy foundation models",
+      "date": "2025-01-14"
+    },
+    {
+      "id": 17,
+      "title": "Segment Anything",
+      "date": "2024-12-17"
+    },
+    {
+      "id": 18,
+      "title": "Explicitly Modeling Pre-Cortical Vision with a Neuro-Inspired Front-End Improves CNN Robustness",
+      "date": "2024-12-10"
+    },
+    {
+      "id": 19,
+      "title": "LumberChunker: Long-Form Narrative Document Segmentation",
+      "date": "2024-12-03"
+    },
+    {
+      "id": 20,
+      "title": "Computing a human-like reaction time metric from stable recurrent vision models",
+      "date": "2024-11-26"
+    },
+    {
+      "id": 21,
+      "title": "Thinking LLMs: General Instruction Following with Thought Generation",
+      "date": "2024-11-12"
+    },
+    {
+      "id": 22,
+      "title": "Contrasting Intra-Modal and Ranking Cross-Modal Hard Negatives to Enhance Visio-Linguistic Compositional Understanding",
+      "date": "2024-11-05"
+    },
+    {
+      "id": 23,
+      "title": "Gecko: Versatile Text Embeddings Distilled from Large Language Models",
+      "date": "2024-10-29"
+    },
+    {
+      "id": 24,
+      "title": "Cobra Effect in Reference-Free Image Captioning Metrics",
+      "date": "2024-10-22"
+    },
+    {
+      "id": 25,
+      "title": "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+      "date": "2024-10-15"
+    },
+    {
+      "id": 26,
+      "title": "Brain Decodes Deep Nets",
+      "date": "2024-10-08"
+    },
+    {
+      "id": 27,
+      "title": "When Do We Not Need Larger Vision Models?",
+      "date": "2024-10-01"
+    },
+    {
+      "id": 28,
+      "title": "Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet",
+      "date": "2024-09-24"
+    },
+    {
+      "id": 29,
+      "title": "Debating with More Persuasive LLMs Leads to More Truthful Answers",
+      "date": "2024-06-11"
+    },
+    {
+      "id": 30,
+      "title": "Finding Regions of Interest in Whole Slide Images Using Multiple Instance Learning",
+      "date": "2024-05-28"
+    },
+    {
+      "id": 31,
+      "title": "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification",
+      "date": "2024-05-14"
+    },
+    {
+      "id": 32,
+      "title": "Hard Prompts Made Easy: Gradient-Based Discrete Optimization for Prompt Tuning and Discovery",
+      "date": "2024-04-30"
+    },
+    {
+      "id": 33,
+      "title": "Energy Transformer",
+      "date": "2024-04-16"
+    },
+    {
+      "id": 34,
+      "title": "Emergence of Shape Bias in Convolutional Neural Networks through Activation Sparsity",
+      "date": "2024-04-02"
+    },
+    {
+      "id": 35,
+      "title": "Modular Visual Question Answering via Code Generation",
+      "date": "2024-03-19"
+    },
+    {
+      "id": 36,
+      "title": "DE-COP: Detecting Copyrighted Content in Language Models Training Data",
+      "date": "2024-03-05"
+    },
+    {
+      "id": 37,
+      "title": "De novo design of protein structure and function with RFdiffusion",
+      "date": "2024-02-20"
+    },
+    {
+      "id": 38,
+      "title": "Spatial-frequency channels, shape bias, and adversarial robustness",
+      "date": "2024-02-06"
+    },
+    {
+      "id": 39,
+      "title": "Hopfield networks is all you need",
+      "date": "2024-01-30"
+    },
+    {
+      "id": 40,
+      "title": "Machine Learning as a magnifying glass to study society",
+      "date": "2024-01-23"
+    },
+    {
+      "id": 41,
+      "title": "Large Language Model (LLM) as a System of Multiple Expert Agents An Approach to solve the Abstraction and Reasoning Corpus (ARC) Challenge",
+      "date": "2024-01-16"
+    },
+    {
+      "id": 42,
+      "title": "Chain-of-Verification Reduces Hallucination in Large Language Models",
+      "date": "2024-01-09"
+    },
+    {
+      "id": 43,
+      "title": "Dense and Aligned Captions (DAC) Promote Compositional Reasoning in VL Models",
+      "date": "2023-12-12"
+    },
+    {
+      "id": 44,
+      "title": "Text Embeddings by Weakly-Supervised Contrastive Pre-training",
+      "date": "2023-12-05"
+    },
+    {
+      "id": 45,
+      "title": "BLADE: Combining Vocabulary Pruning and Intermediate Pretraining for Scaleable Neural CLIR",
+      "date": "2023-11-28"
+    },
+    {
+      "id": 46,
+      "title": "Self-Verification Improves Few-Shot Clinical Information Extraction",
+      "date": "2023-11-21"
+    },
+    {
+      "id": 47,
+      "title": "Evaluation and Analysis of Hallucination in Large Vision-Language Models",
+      "date": "2023-11-14"
+    },
+    {
+      "id": 48,
+      "title": "Connecting Large Language Models with Evolutionary Algorithms Yields Powerful Prompt Optimizers",
+      "date": "2023-11-07"
+    },
+    {
+      "id": 49,
+      "title": "LongLoRA: Efficient Fine-tuning of Long-Context Large Language Models",
+      "date": "2023-10-31"
+    },
+    {
+      "id": 50,
+      "title": "MMICL: Empowering Vision-language Model with Multi-Modal In-Context Learning",
+      "date": "2023-10-24"
+    },
+    {
+      "id": 51,
+      "title": "Clinical Camel: An Open Expert-Level Medical Language Model with Dialogue-Based Knowledge Encoding",
+      "date": "2023-10-17"
+    },
+    {
+      "id": 52,
+      "title": "Early warning system and prediction model for Covid-19 in China",
+      "date": "2023-10-10"
+    },
+    {
+      "id": 53,
+      "title": "Towards General Text Embeddings with Multi-stage Contrastive Learning",
+      "date": "2023-10-03"
+    },
+    {
+      "id": 54,
+      "title": "Lost in the Middle: How Language Models Use Long Contexts",
+      "date": "2023-09-26"
+    },
+    {
+      "id": 55,
+      "title": "Connecting metrics for shape-texture knowledge in computer vision",
+      "date": "2023-09-19"
+    },
+    {
+      "id": 56,
+      "title": "A Survey of Convolutional Neural Networks: Analysis, Applications, and Prospects",
+      "date": "2023-09-12"
+    },
+    {
+      "id": 57,
+      "title": "Self-Consistent Models and Values",
+      "date": "2023-07-11"
+    },
+    {
+      "id": 58,
+      "title": "Highly accurate protein structure prediction with AlphaFold",
+      "date": "2023-07-04"
+    },
+    {
+      "id": 59,
+      "title": "Controversial stimuli: Pitting neural networks against each other as models of human cognition",
+      "date": "2023-06-27"
+    },
+    {
+      "id": 60,
+      "title": "BAM! Born-Again Multi-Task Networks for Natural Language Understanding",
+      "date": "2023-05-23"
+    },
+    {
+      "id": 61,
+      "title": "Invariant Feature Learning for OOD Robust Image Classification Models",
+      "date": "2023-05-09"
+    },
+    {
+      "id": 62,
+      "title": "Contrastive Model Inversion for Data-Free Knowledge Distillation",
+      "date": "2023-04-11"
+    },
+    {
+      "id": 63,
+      "title": "Grounding Language Models to Images for Multimodal Generation",
+      "date": "2023-03-14"
+    },
+    {
+      "id": 64,
+      "title": "Distilling Knowledge from Reader to Retriever for Question Answering",
+      "date": "2023-02-28"
+    },
+    {
+      "id": 65,
+      "title": "Constrained transformer network for ECG signal processing and arrhythmia classification",
+      "date": "2023-02-14"
+    },
+    {
+      "id": 66,
+      "title": "Efficient Long-Text Understanding with Short-Text Models",
+      "date": "2023-02-07"
+    },
+    {
+      "id": 67,
+      "title": "Conditional Prompt Learning for Vision-Language Models",
+      "date": "2023-01-31"
+    },
+    {
+      "id": 68,
+      "title": "Training language models to follow instructions with human feedback",
+      "date": "2023-01-24"
+    },
+    {
+      "id": 69,
+      "title": "Towards Neural Nets for Conscious Processing and Causal Reasoning",
+      "date": "2023-01-17"
+    },
+    {
+      "id": 70,
+      "title": "A Unified Approach to Interpreting Model Predictions",
+      "date": "2023-01-10"
+    },
+    {
+      "id": 71,
+      "title": "A Contrastive Framework for Neural Text Generation",
+      "date": "2022-12-14"
+    },
+    {
+      "id": 72,
+      "title": "Measuring axiomatic identifiability of counterfactual image models",
+      "date": "2022-12-06"
+    },
+    {
+      "id": 73,
+      "title": "Swin Transformer V2: Scaling Up Capacity and Resolution",
+      "date": "2022-10-25"
+    },
+    {
+      "id": 74,
+      "title": "ImageNet-trained CNNs are biased towards texture; increasing shape bias improves accuracy and robustness",
+      "date": "2022-10-18"
+    },
+    {
+      "id": 75,
+      "title": "High-Resolution Image Synthesis with Latent Diffusion Models",
+      "date": "2022-10-11"
+    },
+    {
+      "id": 76,
+      "title": "Text-to-Text Multi-view Learning for Passage Re-ranking",
+      "date": "2022-10-04"
+    },
+    {
+      "id": 77,
+      "title": "Compositional Attention: Disentangling Search and Retrieval",
+      "date": "2022-09-20"
+    },
+    {
+      "id": 78,
+      "title": "Revisiting ResNets: Improved Training and Scaling Strategies",
+      "date": "2022-09-13"
+    },
+    {
+      "id": 79,
+      "title": "Reasoning for Complex Data through Ensemble-based Self-Supervised Learning",
+      "date": "2022-06-21"
+    },
+    {
+      "id": 80,
+      "title": "A contrastive rule for meta-learning",
+      "date": "2022-06-07"
+    },
+    {
+      "id": 81,
+      "title": "FLAVA: A Foundational Language And Vision Alignment Model",
+      "date": "2022-04-12"
+    },
+    {
+      "id": 82,
+      "title": "Sanity Checks for Saliency Maps",
+      "date": "2022-03-29"
+    },
+    {
+      "id": 83,
+      "title": "A ConvNet for the 2020s",
+      "date": "2022-03-15"
+    }
+  ],
+  "skippedNoDate": [],
+  "errors": []
+}

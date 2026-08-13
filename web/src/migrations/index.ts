@@ -12,9 +12,10 @@ import * as migration_20260811_100000_rename_thesis_topics_to_dissertations from
 import * as migration_20260811_110000_dissertation_fields from './20260811_110000_dissertation_fields';
 import * as migration_20260811_120000_research_theme_fields from './20260811_120000_research_theme_fields';
 import * as migration_20260811_130000_open_positions from './20260811_130000_open_positions';
-
-import * as migration_20260813_100000_drop_suspended_membership from './20260813_100000_drop_suspended_membership';
-
+
+import * as migration_20260813_100000_drop_suspended_membership from './20260813_100000_drop_suspended_membership';
+import * as migration_20260813_120000_drop_reading_groups from './20260813_120000_drop_reading_groups';
+
 export const migrations = [
   {
     up: migration_20260713_211902_initial.up,
@@ -90,5 +91,10 @@ export const migrations = [
     up: migration_20260813_100000_drop_suspended_membership.up,
     down: migration_20260813_100000_drop_suspended_membership.down,
     name: '20260813_100000_drop_suspended_membership'
+  },
+  {
+    up: migration_20260813_120000_drop_reading_groups.up,
+    down: migration_20260813_120000_drop_reading_groups.down,
+    name: '20260813_120000_drop_reading_groups'
   },
 ];

@@ -73,7 +73,6 @@ regenerated on every commit (see section 7).
 - `OpenPositions.ts` — slug `open-positions`
 - `Projects.ts` — slug `projects`
 - `Publications.ts` — slug `publications`
-- `ReadingGroups.ts` — slug `reading-groups`
 - `ResearchThemes.ts` — slug `research-themes`
 - `Software.ts` — slug `software`
 - `Users.ts` — slug `users`

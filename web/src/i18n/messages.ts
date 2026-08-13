@@ -277,14 +277,6 @@ const en = {
     upcoming: 'Upcoming',
     past: 'Past events',
   },
-  readingGroups: {
-    title: 'Reading Groups',
-    meta: 'Research discussions, paper presentations and shared study sessions organised by the group.',
-    empty: 'No reading groups have been added yet.',
-    upcoming: 'Upcoming sessions',
-    past: 'Past sessions',
-    materials: 'Materials',
-  },
 }
 
 export type Dictionary = typeof en
@@ -556,14 +548,6 @@ const pt: Dictionary = {
     empty: 'Ainda não há eventos — volte em breve.',
     upcoming: 'Próximos',
     past: 'Eventos anteriores',
-  },
-  readingGroups: {
-    title: 'Reading Groups',
-    meta: 'Discussões de investigação, apresentações de artigos e sessões de estudo organizadas pelo grupo.',
-    empty: 'Ainda não há reading groups adicionados.',
-    upcoming: 'Próximas sessões',
-    past: 'Sessões anteriores',
-    materials: 'Materiais',
   },
 }
 
