@@ -106,8 +106,13 @@ export default async function HomePage() {
           <h2>{t.home.recentHead}</h2>
           <Link href="/publications">{t.home.all} {pubCount.totalDocs} →</Link>
         </div>
-        {recentPubs.docs.map((pub) => (
-          <PubRow key={pub.id} pub={pub} clusterColor={clusters.has(pub.id) ? clusterColor(clusters.get(pub.id)!) : null} />
+        {recentPubs.docs.map((pub, index) => (
+          <PubRow
+            key={pub.id}
+            pub={pub}
+            clusterColor={clusters.has(pub.id) ? clusterColor(clusters.get(pub.id)!) : null}
+            showYear={index === 0 || recentPubs.docs[index - 1].year !== pub.year}
+          />
         ))}
       </section>
 
