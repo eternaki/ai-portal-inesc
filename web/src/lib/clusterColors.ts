@@ -20,7 +20,17 @@ export function clusterColor(cluster: number): string {
  * service / topic map isn't available — callers should degrade gracefully. */
 export async function fetchPublicationClusters(): Promise<Map<number, number>> {
   try {
-    const res = await fetch(`${AI_URL}/map`, { cache: 'no-store', signal: AbortSignal.timeout(8000) })
+    // Cached, and on a short leash. The colours are decoration: the home page and
+    // the publications list render perfectly without them, so they must never be
+    // what a reader waits on. The topic map only changes when the clustering
+    // pipeline runs, which is a manual batch job, so five minutes is generous.
+    //
+    // This mattered: with the AI service failing, an 8s no-store timeout on every
+    // request turned both pages into ten-second loads.
+    const res = await fetch(`${AI_URL}/map`, {
+      next: { revalidate: 300 },
+      signal: AbortSignal.timeout(2000),
+    })
     if (!res.ok) return new Map()
     const data: { points: Array<{ cluster: number; publication: { id: number } }> } = await res.json()
     return new Map(data.points.map((p) => [p.publication.id, p.cluster]))

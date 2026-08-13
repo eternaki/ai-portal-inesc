@@ -129,31 +129,25 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                 <a href={READING_GROUPS_URL} target="_blank" rel="noreferrer">
                   {t.nav.readingGroups}
                 </a>
-                {/* A plain GET form, not a link to the search page: you can start
-                    typing from anywhere, and it still works with JavaScript off.
-                    Collapsed it is the same width as the icon it replaced, so the
-                    row does not grow; focusing it opens the field over the nav. */}
-                <form className="site-search" action="/search" method="get" role="search">
-                  <button type="submit" aria-label={t.nav.search}>
-                    <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
-                      <circle
-                        cx="8.5"
-                        cy="8.5"
-                        r="5.5"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                      />
-                      <path
-                        d="M12.7 12.7 L17 17"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </button>
-                  <input type="search" name="q" placeholder={t.nav.search} aria-label={t.nav.search} />
-                </form>
+                <Link className="site-nav-search" href="/search" aria-label={t.nav.search}>
+                  <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
+                    <circle
+                      cx="8.5"
+                      cy="8.5"
+                      r="5.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                    />
+                    <path
+                      d="M12.7 12.7 L17 17"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="site-nav-search-label">{t.nav.search}</span>
+                </Link>
                 <Link className="site-nav-signin" href="/admin" aria-label={t.nav.signIn}>
                   <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
                     <circle cx="10" cy="6.6" r="3.3" fill="none" stroke="currentColor" strokeWidth="1.7" />
