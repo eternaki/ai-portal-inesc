@@ -1,0 +1,526 @@
+{
+  "generatedAt": "2026-08-13T17:43:01.044Z",
+  "mode": "apply",
+  "publications": 252,
+  "duplicateGroups": 26,
+  "merged": [
+    {
+      "title": "Sem-Detect: Semantic Level Detection of AI Generated Peer-Reviews",
+      "kept": {
+        "id": 277,
+        "type": "preprint",
+        "year": 2026,
+        "citations": 0
+      },
+      "deleted": {
+        "id": 279,
+        "type": "preprint",
+        "year": 2026,
+        "citations": 0
+      },
+      "carriedOver": [
+        "originalUrl"
+      ],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "Engineering FAIR Privacy-preserving Applications that Learn Histories of Disease",
+      "kept": {
+        "id": 273,
+        "type": "preprint",
+        "year": 2026,
+        "citations": 0
+      },
+      "deleted": {
+        "id": 275,
+        "type": "preprint",
+        "year": 2026,
+        "citations": 0
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "ADAPT: Hybrid Prompt Optimization for LLM Feature Visualization",
+      "kept": {
+        "id": 270,
+        "type": "preprint",
+        "year": 2026,
+        "citations": 0
+      },
+      "deleted": {
+        "id": 272,
+        "type": "preprint",
+        "year": 2026,
+        "citations": 0
+      },
+      "carriedOver": [
+        "pdfUrl"
+      ],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "CountPath: Automating Fragment Counting in Digital Pathology",
+      "kept": {
+        "id": 269,
+        "type": "conference",
+        "year": 2025,
+        "citations": 0
+      },
+      "deleted": {
+        "id": 266,
+        "type": "preprint",
+        "year": 2025,
+        "citations": 0
+      },
+      "carriedOver": [
+        "venue",
+        "pdfUrl",
+        "authors"
+      ],
+      "memberLinksRescued": 1,
+      "abstractDiffered": {
+        "kept": 1348,
+        "dropped": 1340
+      }
+    },
+    {
+      "title": "Pre-trained VGG16 model for forensic dental age estimation",
+      "kept": {
+        "id": 40,
+        "type": "journal",
+        "year": 2025,
+        "citations": 3
+      },
+      "deleted": {
+        "id": 260,
+        "type": "preprint",
+        "year": 2025,
+        "citations": 0
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "Non-invasive derivation of instantaneous free-wave ratio from invasive coronary angiography using a new deep learning artificial intelligence model and comparison with human operators’ performance",
+      "kept": {
+        "id": 67,
+        "type": "journal",
+        "year": 2025,
+        "citations": 1
+      },
+      "deleted": {
+        "id": 256,
+        "type": "preprint",
+        "year": 2024,
+        "citations": 0
+      },
+      "carriedOver": [
+        "authors"
+      ],
+      "memberLinksRescued": 3
+    },
+    {
+      "title": "LumberChunker: Long-Form Narrative Document Segmentation",
+      "kept": {
+        "id": 11,
+        "type": "conference",
+        "year": 2024,
+        "citations": 17
+      },
+      "deleted": {
+        "id": 252,
+        "type": "preprint",
+        "year": 2024,
+        "citations": 0
+      },
+      "carriedOver": [
+        "venue"
+      ],
+      "memberLinksRescued": 0,
+      "abstractDiffered": {
+        "kept": 1003,
+        "dropped": 1085
+      }
+    },
+    {
+      "title": "Improving Address Matching Using Siamese Transformer Networks",
+      "kept": {
+        "id": 110,
+        "type": "book",
+        "year": 2023,
+        "citations": 3
+      },
+      "deleted": {
+        "id": 245,
+        "type": "preprint",
+        "year": 2023,
+        "citations": 0
+      },
+      "carriedOver": [
+        "abstract",
+        "pdfUrl"
+      ],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "An Efficient Algorithm for the Identification of Structured Motifs in DNA Promoter Sequences",
+      "kept": {
+        "id": 20,
+        "type": "journal",
+        "year": 2006,
+        "citations": 57
+      },
+      "deleted": {
+        "id": 242,
+        "type": "conference",
+        "year": 2006,
+        "citations": 0
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "Graph Neural Networks for Traffic Forecasting",
+      "kept": {
+        "id": 28,
+        "type": "journal",
+        "year": 2020,
+        "citations": 24
+      },
+      "deleted": {
+        "id": 240,
+        "type": "preprint",
+        "year": 2021,
+        "citations": 0
+      },
+      "carriedOver": [
+        "pdfUrl"
+      ],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "Pretraining the Vision Transformer Using Self-Supervised Methods for Vision Based Deep Reinforcement Learning",
+      "kept": {
+        "id": 109,
+        "type": "journal",
+        "year": 2023,
+        "citations": 3
+      },
+      "deleted": {
+        "id": 238,
+        "type": "preprint",
+        "year": 2022,
+        "citations": 0
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0,
+      "abstractDiffered": {
+        "kept": 1550,
+        "dropped": 1608
+      }
+    },
+    {
+      "title": "Modeling the Geospatial Evolution of COVID-19 using Spatio-temporal Convolutional Sequence-to-sequence Neural Networks",
+      "kept": {
+        "id": 59,
+        "type": "journal",
+        "year": 2022,
+        "citations": 13
+      },
+      "deleted": {
+        "id": 235,
+        "type": "preprint",
+        "year": 2021,
+        "citations": 0
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0,
+      "abstractDiffered": {
+        "kept": 1682,
+        "dropped": 1660
+      }
+    },
+    {
+      "title": "Using Soft Labels to Model Uncertainty in Medical Image Segmentation",
+      "kept": {
+        "id": 61,
+        "type": "book",
+        "year": 2022,
+        "citations": 11
+      },
+      "deleted": {
+        "id": 233,
+        "type": "preprint",
+        "year": 2021,
+        "citations": 0
+      },
+      "carriedOver": [
+        "abstract",
+        "pdfUrl"
+      ],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "Improved Model Checking Techniques for State Space Analysis of Gene Regulatory Networks",
+      "kept": {
+        "id": 227,
+        "type": "book",
+        "year": 2011,
+        "citations": 0
+      },
+      "deleted": {
+        "id": 207,
+        "type": "book",
+        "year": 2010,
+        "citations": 0
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0,
+      "abstractDiffered": {
+        "kept": 1279,
+        "dropped": 1211
+      }
+    },
+    {
+      "title": "The Digital Mind",
+      "kept": {
+        "id": 58,
+        "type": "book",
+        "year": 2017,
+        "citations": 15
+      },
+      "deleted": {
+        "id": 224,
+        "type": "book",
+        "year": 2017,
+        "citations": 0
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "Assessing Policy, Loss and Planning Combinations in Reinforcement Learning Using a New Modular Architecture",
+      "kept": {
+        "id": 66,
+        "type": "book",
+        "year": 2022,
+        "citations": 1
+      },
+      "deleted": {
+        "id": 218,
+        "type": "preprint",
+        "year": 2022,
+        "citations": 0
+      },
+      "carriedOver": [
+        "abstract",
+        "pdfUrl",
+        "authors"
+      ],
+      "memberLinksRescued": 1
+    },
+    {
+      "title": "FSM decomposition by direct circuit manipulation applied to low power design",
+      "kept": {
+        "id": 126,
+        "type": "conference",
+        "year": 2000,
+        "citations": 13
+      },
+      "deleted": {
+        "id": 216,
+        "type": "conference",
+        "year": 2002,
+        "citations": 0
+      },
+      "carriedOver": [
+        "abstract"
+      ],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "Assessing the Impact of Attention and Self-Attention Mechanisms on the Classification of Skin Lesions",
+      "kept": {
+        "id": 33,
+        "type": "conference",
+        "year": 2022,
+        "citations": 17
+      },
+      "deleted": {
+        "id": 189,
+        "type": "preprint",
+        "year": 2021,
+        "citations": 1
+      },
+      "carriedOver": [
+        "pdfUrl"
+      ],
+      "memberLinksRescued": 0,
+      "abstractDiffered": {
+        "kept": 1907,
+        "dropped": 1911
+      }
+    },
+    {
+      "title": "Encoder-Decoder Architectures for Clinically Relevant Coronary Artery Segmentation",
+      "kept": {
+        "id": 56,
+        "type": "book",
+        "year": 2022,
+        "citations": 19
+      },
+      "deleted": {
+        "id": 182,
+        "type": "preprint",
+        "year": 2021,
+        "citations": 2
+      },
+      "carriedOver": [
+        "abstract",
+        "pdfUrl",
+        "authors"
+      ],
+      "memberLinksRescued": 1
+    },
+    {
+      "title": "An exact gate assignment algorithm for tree circuits under rise and fall delays",
+      "kept": {
+        "id": 167,
+        "type": "conference",
+        "year": 2000,
+        "citations": 5
+      },
+      "deleted": {
+        "id": 177,
+        "type": "conference",
+        "year": 2002,
+        "citations": 3
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0,
+      "abstractDiffered": {
+        "kept": 1746,
+        "dropped": 1738
+      }
+    },
+    {
+      "title": "The ELIXIR channel in F1000Research",
+      "kept": {
+        "id": 107,
+        "type": "journal",
+        "year": 2016,
+        "citations": 4
+      },
+      "deleted": {
+        "id": 149,
+        "type": "journal",
+        "year": 2015,
+        "citations": 3
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0,
+      "abstractDiffered": {
+        "kept": 813,
+        "dropped": 879
+      }
+    },
+    {
+      "title": "Efficient and tight upper bounds for haplotype inference by pure parsimony using delayed haplotype selection",
+      "kept": {
+        "id": 128,
+        "type": "conference",
+        "year": 2007,
+        "citations": 9
+      },
+      "deleted": {
+        "id": 141,
+        "type": "book",
+        "year": 2007,
+        "citations": 6
+      },
+      "carriedOver": [
+        "venue"
+      ],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "Implicit Resolution of the Chapman-Kolmogorov Equations for Sequential Circuits: An Application in Power Estimation",
+      "kept": {
+        "id": 123,
+        "type": "conference",
+        "year": 2003,
+        "citations": 19
+      },
+      "deleted": {
+        "id": 137,
+        "type": "conference",
+        "year": 2003,
+        "citations": 7
+      },
+      "carriedOver": [
+        "venue"
+      ],
+      "memberLinksRescued": 0,
+      "abstractDiffered": {
+        "kept": 932,
+        "dropped": 937
+      }
+    },
+    {
+      "title": "A probabilistic method for the computation of testability of RTL constructs",
+      "kept": {
+        "id": 112,
+        "type": "conference",
+        "year": 2004,
+        "citations": 9
+      },
+      "deleted": {
+        "id": 130,
+        "type": "conference",
+        "year": 2004,
+        "citations": 9
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "Using the Minimum Description Length Principle to Infer Reduced Ordered Decision Graphs",
+      "kept": {
+        "id": 89,
+        "type": "journal",
+        "year": 1996,
+        "citations": 22
+      },
+      "deleted": {
+        "id": 57,
+        "type": "journal",
+        "year": 1996,
+        "citations": 15
+      },
+      "carriedOver": [],
+      "memberLinksRescued": 0
+    },
+    {
+      "title": "Analog Macromodeling using Kernel Methods",
+      "kept": {
+        "id": 85,
+        "type": "conference",
+        "year": 2003,
+        "citations": 33
+      },
+      "deleted": {
+        "id": 51,
+        "type": "conference",
+        "year": 2003,
+        "citations": 30
+      },
+      "carriedOver": [
+        "venue"
+      ],
+      "memberLinksRescued": 0
+    }
+  ],
+  "refused": [],
+  "errors": []
+}

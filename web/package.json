@@ -26,6 +26,8 @@
     "publications:link-members:apply": "node scripts/link-publication-members-db.mjs --apply",
     "publications:link-members:test": "node --test scripts/tests/publication-member-linker.test.mjs",
     "scripts:test": "node --test scripts/tests/*.test.mjs",
+    "publications:dedupe": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/merge-duplicate-publications.mjs",
+    "publications:dedupe:apply": "cross-env PUBLICATIONS_DEDUPE_APPLY=1 NODE_OPTIONS=--no-deprecation payload run scripts/merge-duplicate-publications.mjs",
     "design:contrast": "node scripts/audit-contrast.mjs",
     "themes:sync": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/apply-research-themes.mjs",
     "themes:sync:apply": "cross-env THEMES_APPLY=1 NODE_OPTIONS=--no-deprecation payload run scripts/apply-research-themes.mjs",
