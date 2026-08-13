@@ -20,6 +20,13 @@ scripts\local-setup.bat --reset-db
 
 The setup restores the local seed when needed, runs Payload migrations, imports the curated member data and links publication authors to member profiles.
 
+**After restoring the seed, run `pnpm seed:prune:apply` in `web/`.** The dump carries
+two dissertations invented during early development, presented on the public page as
+open for application — a student can apply to a topic that does not exist. The prune
+removes them and is safe to re-run: it deletes by exact title and refuses when a
+title matches more than one record. The seeded news item is left in place on purpose,
+as the only example of how a post renders on the home page.
+
 ## Main Admin Tasks
 
 - Add or edit members in `/admin/collections/members`.
