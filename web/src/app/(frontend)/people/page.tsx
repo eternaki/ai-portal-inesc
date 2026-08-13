@@ -19,10 +19,10 @@ const ROLE_ORDER = [
   { value: 'alumni', key: 'roleAlumni' },
 ] as const
 
-const SECONDARY_STATUSES = [
-  { value: 'suspended', key: 'statusSuspended' },
-  { value: 'completed', key: 'statusCompleted' },
-] as const
+// Membership is binary here, as it is on the group's own site: you are with the
+// group or you have been. A third state existed briefly but nobody could say what
+// it meant, so it was removed rather than left for a reader to guess at.
+const SECONDARY_STATUSES = [{ value: 'completed', key: 'statusCompleted' }] as const
 
 export default async function PeoplePage() {
   const payload = await getPayload({ config })

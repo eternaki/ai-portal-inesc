@@ -30,7 +30,6 @@ const en = {
   footer: {
     openThesis: 'Open thesis topics',
     signIn: 'Member sign in',
-    credit: 'Developed for MLKD / INESC-ID.',
   },
   home: {
     lede:
@@ -119,6 +118,9 @@ const en = {
     emptyLede:
       'Funded posts open when a new project starts, usually once or twice a year. In the meantime, the group supervises MSc and PhD dissertations — and speculative enquiries are welcome.',
     emptyDissertations: 'Browse dissertation topics',
+    pastHead: 'Previous positions',
+    pastLede: 'Calls that have closed, kept as a record of the kind of post the group opens.',
+    closedOn: 'Closed',
   },
   people: {
     title: 'People',
@@ -131,7 +133,6 @@ const en = {
     roleMsc: 'MSc Students',
     roleAlumni: 'Alumni',
     statusActive: 'Active members',
-    statusSuspended: 'Suspended',
     statusCompleted: 'Completed',
     website: 'Website',
     email: 'Email',
@@ -309,7 +310,6 @@ const pt: Dictionary = {
   footer: {
     openThesis: 'Temas de tese em aberto',
     signIn: 'Entrar (membros)',
-    credit: 'Desenvolvido para MLKD / INESC-ID.',
   },
   home: {
     lede:
@@ -398,6 +398,9 @@ const pt: Dictionary = {
     emptyLede:
       'As posições financiadas abrem quando começa um novo projeto, normalmente uma ou duas vezes por ano. Entretanto, o grupo orienta dissertações de mestrado e doutoramento — e candidaturas espontâneas são bem-vindas.',
     emptyDissertations: 'Ver temas de dissertação',
+    pastHead: 'Posições anteriores',
+    pastLede: 'Concursos já encerrados, mantidos como registo do tipo de posição que o grupo abre.',
+    closedOn: 'Encerrado a',
   },
   people: {
     title: 'Pessoas',
@@ -410,7 +413,6 @@ const pt: Dictionary = {
     roleMsc: 'Mestrandos',
     roleAlumni: 'Antigos membros',
     statusActive: 'Membros ativos',
-    statusSuspended: 'Suspensos',
     statusCompleted: 'Terminados',
     website: 'Site',
     email: 'Email',

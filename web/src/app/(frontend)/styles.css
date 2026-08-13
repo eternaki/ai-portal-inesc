@@ -370,66 +370,53 @@ main > h1:first-child {
   margin-top: 3rem;
 }
 
-/* Compact by design: the header already carries every section, so the footer only
-   holds identity, affiliations and the members' way in. The extra bottom padding is
-   clearance for the fixed chat FAB, which sits over this corner. */
+/* Three bands, heaviest last: the members' door, then who we are, then whose
+   company we keep. The header already carries every section, so nothing is
+   repeated here and the whole thing stays short. */
 .site-footer-inner {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 1.75rem 1.25rem 3.5rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 1rem 3rem;
+  padding: 1.5rem 1.25rem 3.5rem;
   font-size: 0.92rem;
   color: var(--ink-70);
 }
 
-/* Partner marks are supplied as colour PNGs on a light ground. On the dark theme
-   they would sit in bright boxes, so they are lightened and dimmed rather than
-   re-cut; hovering restores them to full strength. */
-.site-footer-affiliations {
+/* A utility strip, not a nav: one link, set in the mono face the site uses for
+   metadata, sitting above the hairline that opens the footer proper. */
+.site-footer-utility {
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
+  justify-content: flex-end;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--ink-12);
 }
 
-.site-footer-affiliations img {
-  height: 34px;
-  width: auto;
-  opacity: 0.75;
-  transition: opacity 160ms var(--ease);
+.site-footer-utility a {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
 }
 
-.site-footer-affiliations a:hover img {
-  opacity: 1;
+.site-footer-utility a:hover {
+  color: var(--cobalt);
+  text-decoration: none;
 }
 
-:root[data-theme='dark'] .site-footer-affiliations img {
-  filter: brightness(0) invert(1);
-  opacity: 0.6;
-}
-
-:root[data-theme='dark'] .site-footer-affiliations a:hover img {
-  opacity: 0.9;
-}
-
-.site-footer-meta {
-  grid-column: 1 / -1;
+.site-footer-main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--ink-12);
+  gap: 1.75rem 3rem;
+  flex-wrap: wrap;
+  padding-top: 1.4rem;
 }
 
 .site-footer-brand {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  max-width: 34ch;
+  max-width: 40ch;
 }
 
 .site-footer strong {
@@ -442,16 +429,41 @@ main > h1:first-child {
   margin: 0.3em 0 0;
 }
 
-.site-credit {
-  font-size: 0.78rem;
-  color: var(--ink-40);
-  margin: 0;
+.site-footer-affiliations {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Partner marks keep their own colours in both themes. They are supplied as
+   dark-ink art on transparency, so on the dark theme they need their own light
+   ground — recolouring somebody else's logo is not ours to do. */
+.site-footer-affiliations a {
+  display: grid;
+  place-items: center;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  border: 1px solid var(--ink-12);
+  transition: transform 160ms var(--ease), box-shadow 160ms var(--ease);
+}
+
+.site-footer-affiliations a:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.site-footer-affiliations img {
+  height: 30px;
+  width: auto;
+  display: block;
 }
 
 @media (max-width: 640px) {
-  .site-footer-inner {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .site-footer-main {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

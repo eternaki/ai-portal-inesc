@@ -127,9 +127,7 @@ export default async function PersonPage(props: { params: Params; searchParams: 
             {member.membershipStatus && member.membershipStatus !== 'active' ? (
               <>
                 {' '}
-                <span className="badge">
-                  {member.membershipStatus === 'suspended' ? t.people.statusSuspended : t.people.statusCompleted}
-                </span>
+                <span className="badge">{t.people.statusCompleted}</span>
               </>
             ) : null}
           </p>

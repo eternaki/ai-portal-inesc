@@ -62,8 +62,8 @@ export const metadata = {
 const NAV = [
   { href: '/people', key: 'people' },
   { href: '/publications', key: 'publications' },
-  { href: '/map', key: 'map' },
   { href: '/dissertations', key: 'dissertations' },
+  { href: '/map', key: 'map' },
   { href: '/news', key: 'news' },
   { href: '/events', key: 'events' },
   { href: '/open-positions', key: 'openPositions' },
@@ -153,36 +153,37 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           </div>
         </header>
         <main>{children}</main>
+        {/* Every section already sits in the header, so the footer carries only what
+            the header cannot: the way in for members, who we are, and whose company
+            we keep. Three bands, heaviest last. */}
         <footer className="site-footer">
           <div className="site-footer-inner">
-            <div className="site-footer-brand">
-              <span className="site-logo-mark" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="20" height="20">
-                  <circle cx="5" cy="17" r="2.4" fill="var(--cobalt)" />
-                  <circle cx="17" cy="5" r="2.4" fill="var(--cobalt)" />
-                  <circle cx="19" cy="18" r="1.7" fill="var(--amber)" />
-                  <path d="M5 17 L17 5 M17 5 L19 18" stroke="var(--ink-40)" strokeWidth="1" />
-                </svg>
-              </span>
-              <div>
-                <strong>Machine Learning and Knowledge Discovery</strong>
-                <p>INESC-ID · Rua Alves Redol 9, 1000-029 Lisboa, Portugal</p>
-              </div>
-            </div>
-            {/* Every section already sits in the header, so repeating those links
-                here only made the footer tall. What belongs here is what the header
-                cannot carry: who we are part of, and the way in for members. */}
-            <div className="site-footer-affiliations">
-              {AFFILIATIONS.map((org) => (
-                <a key={org.href} href={org.href} target="_blank" rel="noreferrer" title={org.alt}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={org.src} alt={org.alt} height={34} />
-                </a>
-              ))}
-            </div>
-            <div className="site-footer-meta">
-              <p className="site-credit">{t.footer.credit}</p>
+            <div className="site-footer-utility">
               <Link href="/admin">{t.footer.signIn}</Link>
+            </div>
+            <div className="site-footer-main">
+              <div className="site-footer-brand">
+                <span className="site-logo-mark" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20">
+                    <circle cx="5" cy="17" r="2.4" fill="var(--cobalt)" />
+                    <circle cx="17" cy="5" r="2.4" fill="var(--cobalt)" />
+                    <circle cx="19" cy="18" r="1.7" fill="var(--amber)" />
+                    <path d="M5 17 L17 5 M17 5 L19 18" stroke="var(--ink-40)" strokeWidth="1" />
+                  </svg>
+                </span>
+                <div>
+                  <strong>Machine Learning and Knowledge Discovery</strong>
+                  <p>INESC-ID · Rua Alves Redol 9, 1000-029 Lisboa, Portugal</p>
+                </div>
+              </div>
+              <div className="site-footer-affiliations">
+                {AFFILIATIONS.map((org) => (
+                  <a key={org.href} href={org.href} target="_blank" rel="noreferrer" title={org.alt}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={org.src} alt={org.alt} />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </footer>

@@ -160,7 +160,7 @@ export interface Member {
   /**
    * Current relationship with the MLKD group or project.
    */
-  membershipStatus: 'active' | 'suspended' | 'completed';
+  membershipStatus: 'active' | 'completed';
   photo?: (number | null) | Media;
   bio?: {
     root: {

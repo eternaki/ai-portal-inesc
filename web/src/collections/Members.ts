@@ -58,7 +58,6 @@ export const Members: CollectionConfig = {
       index: true,
       options: [
         { label: 'Active', value: 'active' },
-        { label: 'Suspended', value: 'suspended' },
         { label: 'Completed', value: 'completed' },
       ],
       admin: {

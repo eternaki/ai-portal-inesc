@@ -17,14 +17,26 @@ export default async function OpenPositionsPage() {
   const t = await getDictionary()
   const locale = await getLocale()
 
-  // Closed positions stay in the database for the record but never reach the site.
-  const result = await payload.find({
-    collection: 'open-positions',
-    where: { status: { equals: 'open' } },
-    sort: 'deadline',
-    limit: 100,
-    depth: 0,
-  })
+  const [result, past] = await Promise.all([
+    payload.find({
+      collection: 'open-positions',
+      where: { status: { equals: 'open' } },
+      sort: 'deadline',
+      limit: 100,
+      depth: 0,
+    }),
+    // Closed calls are shown too, plainly labelled as past. They are the only
+    // honest way to answer "what does a post here look like?" on a page that is
+    // empty most of the year — and dating them keeps anyone from mistaking one for
+    // an opening.
+    payload.find({
+      collection: 'open-positions',
+      where: { status: { equals: 'closed' } },
+      sort: '-deadline',
+      limit: 20,
+      depth: 0,
+    }),
+  ])
 
   const formatDeadline = (value?: string | null) =>
     value
@@ -93,6 +105,40 @@ export default async function OpenPositionsPage() {
         </section>
       ) : (
         <div className="card-grid">{result.docs.map(renderPosition)}</div>
+      )}
+
+      {past.docs.length > 0 && (
+        <section>
+          <h2>{t.openPositions.pastHead}</h2>
+          <p className="pub-meta">{t.openPositions.pastLede}</p>
+          {past.docs.map((position) => {
+            const closed = formatDeadline(position.deadline)
+            return (
+              <article key={position.id} className="pub-item">
+                <div className="pub-title">
+                  {position.applyUrl ? (
+                    <a href={position.applyUrl} target="_blank" rel="noreferrer">
+                      {position.title}
+                    </a>
+                  ) : (
+                    position.title
+                  )}
+                </div>
+                <div className="pub-meta">
+                  <span className="badge">{t.openPositions.kinds[position.kind]}</span>
+                  {closed ? (
+                    <>
+                      {' '}
+                      <span className="mono">
+                        {t.openPositions.closedOn} {closed}
+                      </span>
+                    </>
+                  ) : null}
+                </div>
+              </article>
+            )
+          })}
+        </section>
       )}
     </div>
   )
