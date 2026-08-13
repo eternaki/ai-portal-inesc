@@ -45,6 +45,22 @@ def _model():
     return _model_instance
 
 
+def _apply_ann_tuning(conn) -> None:
+    """Set hnsw.ef_search for this connection so the HNSW index is queried with
+    enough candidate breadth (must be >= the query LIMIT or recall drops).
+
+    Best-effort: the hnsw.* GUC only exists once pgvector is loaded in the backend.
+    On a fresh connection that has not yet touched a vector, the SET can raise
+    "unrecognized configuration parameter" — in that case we fall back to pgvector's
+    default ef_search rather than failing the search.
+    """
+    ef = int(get_settings().hnsw_ef_search)
+    try:
+        conn.execute(f"SET hnsw.ef_search = {ef}")
+    except Exception as err:  # noqa: BLE001 - tuning is optional, search must still run
+        logger.debug("could not set hnsw.ef_search (%s); using pgvector default", err)
+
+
 def embed_texts(texts: list[str]) -> list[list[float]]:
     return _model().encode(texts, normalize_embeddings=True).tolist()
 
@@ -109,6 +125,7 @@ def search_publications(query: str, *, limit: int = 10) -> list[tuple[int, float
     """Semantic search: [(publication_id, score)], score is cosine similarity."""
     vec = embed_texts([query])[0]
     with db.connect() as conn:
+        _apply_ann_tuning(conn)
         rows = conn.execute(
             """
             SELECT publication_id, 1 - (embedding <=> %s::vector) AS score
@@ -198,5 +215,6 @@ def search_entities(
         params.append(types)
     params += [vec, limit]
     with db.connect() as conn:
+        _apply_ann_tuning(conn)
         rows = conn.execute(sql.format(type_filter=type_filter), tuple(params)).fetchall()
     return [(row[0], row[1], float(row[2])) for row in rows]

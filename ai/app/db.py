@@ -39,16 +39,6 @@ def ensure_schema(dim: int) -> None:
         conn.execute(
             "ALTER TABLE publication_embeddings ADD COLUMN IF NOT EXISTS content_hash text"
         )
-        conn.execute(
-            f"""
-            CREATE TABLE IF NOT EXISTS member_embeddings (
-                member_id integer PRIMARY KEY,
-                model text NOT NULL,
-                embedding vector({dim}) NOT NULL,
-                updated_at timestamptz NOT NULL DEFAULT now()
-            )
-            """
-        )
         # Unified vector store for the multi-entity embedding pipeline: one space
         # for publications, members, projects, thesis topics — so semantic search
         # can span entity types. (entity_type, entity_id) is the Payload
@@ -68,6 +58,23 @@ def ensure_schema(dim: int) -> None:
         )
         conn.execute(
             "CREATE INDEX IF NOT EXISTS entity_embeddings_type_idx ON entity_embeddings (entity_type)"
+        )
+        # Approximate-nearest-neighbour (HNSW) indexes so semantic search uses the
+        # index instead of a full brute-force scan. vector_cosine_ops matches the
+        # `<=>` (cosine) operator used by the search queries; m / ef_construction
+        # come from config. HNSW (unlike IVFFlat) needs no training data, so it is
+        # safe to create here before any rows exist. Requires pgvector >= 0.5.
+        s = get_settings()
+        m, ef_construction = int(s.hnsw_m), int(s.hnsw_ef_construction)
+        conn.execute(
+            f"CREATE INDEX IF NOT EXISTS publication_embeddings_hnsw_idx "
+            f"ON publication_embeddings USING hnsw (embedding vector_cosine_ops) "
+            f"WITH (m = {m}, ef_construction = {ef_construction})"
+        )
+        conn.execute(
+            f"CREATE INDEX IF NOT EXISTS entity_embeddings_hnsw_idx "
+            f"ON entity_embeddings USING hnsw (embedding vector_cosine_ops) "
+            f"WITH (m = {m}, ef_construction = {ef_construction})"
         )
     logger.info("pgvector schema ensured (dim=%s)", dim)
 
