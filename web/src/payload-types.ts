@@ -185,6 +185,10 @@ export interface Member {
   openalexId?: string | null;
   dblpKey?: string | null;
   tecnicoId?: string | null;
+  /**
+   * Publications known before the platform imported from OpenAlex (old site / CV). Used by the coverage report to show how many extra papers were discovered. Leave empty if unknown.
+   */
+  knownPublicationCount?: number | null;
   links?: {
     /**
      * LinkedIn or Técnico page — required by the brief
@@ -822,6 +826,7 @@ export interface MembersSelect<T extends boolean = true> {
   openalexId?: T;
   dblpKey?: T;
   tecnicoId?: T;
+  knownPublicationCount?: T;
   links?:
     | T
     | {

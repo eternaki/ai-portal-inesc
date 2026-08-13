@@ -46,8 +46,9 @@ architecture, global rules). This file covers only the `web/` specifics.
   `recordEditorialDecision` hook. Nothing auto-publishes — ingest/import make drafts.
 - **Admin custom UI** lives in `src/components/admin/` (client components, referenced
   by `path#Export`): `ImportPublicationPanel` (DOI/URL/title import, on the
-  Publications list) and `MaintenancePanel` (data-health, on the dashboard). After
-  adding one, run `pnpm generate:importmap`.
+  Publications list), `MaintenancePanel` (data-health, on the dashboard) and
+  `CoveragePanel` (publications per member vs the `knownPublicationCount` baseline
+  and OpenAlex, on the dashboard). After adding one, run `pnpm generate:importmap`.
 - **Feature flags** are in the `ai-settings` global (`features` group):
   `enableChatbot`, `enableSemanticSearch`, `enableSummaries`. The layout hides the
   chat widget when off; the AI service enforces the rest.

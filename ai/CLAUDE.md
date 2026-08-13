@@ -15,7 +15,10 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 - `app/pipelines/` — batch jobs: `ingest`, `embed`, `embed_entities` (multi-entity
   vectors), `summarize`, `cluster`, `bios`, `maintenance` (data-health report),
   `benchmark` (search metrics: labelled P@5/Recall@10/MRR, plus label-free ANN
-  recall via `python -m app.pipelines.benchmark --ann`).
+  recall via `python -m app.pipelines.benchmark --ann`), `coverage` (per-member
+  publications on site vs the `knownPublicationCount` baseline vs OpenAlex
+  `works_count` — "how many papers did the platform actually add"; read-only,
+  `--openalex` opts into the network lookup).
 - `app/entities.py` — entity → embedding-text adapters (publications, members,
   projects, thesis topics). The ONLY type-specific code for the unified pipeline.
 - `app/search.py` — hybrid search: pgvector semantic + Postgres full-text, fused

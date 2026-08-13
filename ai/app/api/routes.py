@@ -543,6 +543,21 @@ def maintenance_report(
     return run_checks(check_links=check_links)
 
 
+@router.get("/coverage/report")
+def coverage_report(
+    check_openalex: bool = False, x_service_token: str | None = Header(None)
+) -> dict:
+    """Per-member publication coverage: on-site vs known baseline vs OpenAlex.
+
+    Read-only. Answers "how many papers did the platform actually add for this
+    person". The OpenAlex lookup is opt-in (slow, network).
+    """
+    require_service_token(x_service_token)
+    from app.pipelines.coverage import run_report
+
+    return run_report(check_openalex=check_openalex)
+
+
 @router.post("/rag/answer")
 def rag_answer(req: RagRequest, x_service_token: str | None = Header(None)) -> dict:
     """Admin-only RAG endpoint.
