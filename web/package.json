@@ -26,6 +26,8 @@
     "publications:link-members:apply": "node scripts/link-publication-members-db.mjs --apply",
     "publications:link-members:test": "node --test scripts/tests/publication-member-linker.test.mjs",
     "scripts:test": "node --test scripts/tests/*.test.mjs",
+    "themes:sync": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/apply-research-themes.mjs",
+    "themes:sync:apply": "cross-env THEMES_APPLY=1 NODE_OPTIONS=--no-deprecation payload run scripts/apply-research-themes.mjs",
     "seed:prune": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/prune-seed-fixtures.mjs",
     "seed:prune:apply": "cross-env SEED_PRUNE_APPLY=1 NODE_OPTIONS=--no-deprecation payload run scripts/prune-seed-fixtures.mjs",
     "members:phd": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/apply-phd-roster.mjs",
