@@ -1255,49 +1255,63 @@ main > h1:first-child {
 
 .people-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
+  /* Seven across at full width instead of three. 114 people were thirty-eight
+     rows of wide boxes; as portraits they are a wall you can take in. */
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 1.6rem 1.15rem;
+  margin-top: 1.2rem;
 }
 
-/* Photo beside the name rather than above it: at a glance the eye wants the face
-   and the name together, and the row shape lets more people fit on a screen. The
-   card is a positioned block, not a link — the whole surface is clickable through
-   an overlay so the LinkedIn anchor can sit on top without nesting links. */
+/* No card chrome: the photograph is the object, so a border and a drop shadow
+   around it would just be a box drawn around a box. */
 .person-card {
   position: relative;
   display: flex;
-  align-items: center;
-  gap: 0.9rem;
+  flex-direction: column;
+  gap: 0.55rem;
   color: inherit;
-  background: var(--card);
-  border: 1px solid var(--ink-12);
-  border-radius: var(--radius);
-  padding: 0.9rem 1rem;
   scroll-margin-top: calc(var(--header-h) + 1rem);
-  box-shadow: var(--shadow-sm);
-  transition: transform 200ms var(--ease), border-color 200ms var(--ease), box-shadow 200ms var(--ease);
 }
 
-.person-card:hover {
+.person-portrait {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--ink-6);
+  box-shadow: var(--shadow-sm);
+  transition: transform 220ms var(--ease), box-shadow 220ms var(--ease);
+}
+
+.person-card:hover .person-portrait {
   transform: translateY(-3px);
   box-shadow: var(--shadow-md);
-  border-color: var(--cobalt);
 }
 
-.person-card-body {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+.person-avatar {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: var(--cobalt-wash);
+  color: var(--cobalt-dark);
+  font-family: var(--font-serif, georgia, serif);
+  font-weight: 600;
+  font-size: 2rem;
 }
 
-/* The overlay makes the whole card clickable while leaving the LinkedIn icon,
+.person-avatar--photo {
+  display: block;
+  object-fit: cover;
+}
+
+/* The overlay makes the whole card clickable while leaving the LinkedIn mark,
    which sits above it, reachable on its own. */
 .person-card-link {
   font-family: var(--font-serif, georgia, serif);
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   line-height: 1.25;
+  font-weight: 500;
 }
 
 .person-card-link::after {
@@ -1307,58 +1321,32 @@ main > h1:first-child {
   border-radius: var(--radius);
 }
 
-.person-card-link:hover {
+.person-card:hover .person-card-link {
   color: var(--cobalt);
   text-decoration: none;
 }
 
-.person-card .badge {
-  align-self: flex-start;
-}
-
+/* Always present, not hover-only: a shortcut that appears only under a mouse is
+   no shortcut on a touchscreen. */
 .person-card-linkedin {
-  position: relative;
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.4rem;
   z-index: 1;
-  margin-left: auto;
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   color: var(--ink-70);
-  background: var(--ink-6);
-  flex-shrink: 0;
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
   transition: color 160ms var(--ease), background 160ms var(--ease);
 }
 
 .person-card-linkedin:hover {
   color: var(--on-fill);
   background: var(--cobalt);
-}
-
-.person-avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--cobalt-wash);
-  color: var(--cobalt-dark);
-  font-family: var(--font-serif, georgia, serif);
-  font-weight: 600;
-  font-size: 1.15rem;
-  flex-shrink: 0;
-}
-
-.person-avatar--photo {
-  display: block;
-  object-fit: cover;
-  background: var(--ink-8);
-}
-
-.person-card strong {
-  font-family: var(--font-serif, georgia, serif);
-  font-size: 1.05rem;
 }
 
 .person-links {
