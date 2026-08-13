@@ -75,10 +75,12 @@ const NAV = [
 const READING_GROUPS_URL = 'https://lumlis.tecnico.ulisboa.pt/reading-group-inescid.html'
 
 // Partner institutions, as shown in the footer of the group's own site.
+// `liftOnDark` marks the logos that are mostly dark ink and would otherwise sink
+// into the dark footer. ELLIS is saturated colour throughout and needs nothing.
 const AFFILIATIONS = [
-  { href: 'https://www.inesc-id.pt/', src: '/logos/inesc.png', alt: 'INESC-ID' },
-  { href: 'https://tecnico.ulisboa.pt/en/', src: '/logos/ist.png', alt: 'Instituto Superior Técnico' },
-  { href: 'https://lumlis.tecnico.ulisboa.pt/', src: '/logos/ellis.png', alt: 'ELLIS Lisbon' },
+  { href: 'https://www.inesc-id.pt/', src: '/logos/inesc.png', alt: 'INESC-ID', liftOnDark: true },
+  { href: 'https://tecnico.ulisboa.pt/en/', src: '/logos/ist.png', alt: 'Instituto Superior Técnico', liftOnDark: true },
+  { href: 'https://lumlis.tecnico.ulisboa.pt/', src: '/logos/ellis.png', alt: 'ELLIS Lisbon', liftOnDark: false },
 ] as const
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
@@ -180,7 +182,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                 {AFFILIATIONS.map((org) => (
                   <a key={org.href} href={org.href} target="_blank" rel="noreferrer" title={org.alt}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={org.src} alt={org.alt} />
+                    <img src={org.src} alt={org.alt} {...(org.liftOnDark ? { 'data-lift-on-dark': '' } : {})} />
                   </a>
                 ))}
               </div>

@@ -1,0 +1,79 @@
+{
+  "generatedAt": "2026-08-13T13:17:53.936Z",
+  "mode": "dry-run",
+  "roster": "C:\\Users\\Anton\\Desktop\\study\\Erasmus\\praktyka\\ai-portal-inesc\\web\\data\\alunos-doutoramento.md",
+  "rosterEntries": 27,
+  "degreeRestored": [],
+  "created": [],
+  "alreadyCorrect": [
+    {
+      "id": 107,
+      "name": "Miguel Nobre Menezes"
+    },
+    {
+      "id": 56,
+      "name": "André Veríssimo"
+    },
+    {
+      "id": 115,
+      "name": "Filipe Grácio"
+    },
+    {
+      "id": 61,
+      "name": "Alexandra Carvalho"
+    },
+    {
+      "id": 94,
+      "name": "Paulo Trezentos"
+    },
+    {
+      "id": 108,
+      "name": "Ana Sofia Graça"
+    },
+    {
+      "id": 88,
+      "name": "Miguel Bugalho"
+    },
+    {
+      "id": 109,
+      "name": "Alexandre Francisco"
+    },
+    {
+      "id": 110,
+      "name": "Sara Madeira"
+    },
+    {
+      "id": 111,
+      "name": "José Ramirez Colaço"
+    },
+    {
+      "id": 112,
+      "name": "Luís Russo"
+    },
+    {
+      "id": 113,
+      "name": "Cláudia Antunes"
+    },
+    {
+      "id": 114,
+      "name": "Ana Teresa Freitas"
+    }
+  ],
+  "suspendedNotCreated": [
+    {
+      "name": "João Rico"
+    },
+    {
+      "name": "João Galego"
+    }
+  ],
+  "unexpected": [
+    {
+      "id": 106,
+      "name": "Pedro Stralen",
+      "role": "msc",
+      "note": "listed under Suspensos but present as a member — the supervisor should decide"
+    }
+  ],
+  "errors": []
+}

@@ -436,28 +436,37 @@ main > h1:first-child {
   flex-wrap: wrap;
 }
 
-/* Partner marks keep their own colours in both themes. They are supplied as
-   dark-ink art on transparency, so on the dark theme they need their own light
-   ground — recolouring somebody else's logo is not ours to do. */
+/* Partner marks sit straight on the footer, no plate. They used to have a white
+   one so their dark ink would survive the dark theme, but three white tiles in a
+   dark footer read as stickers pasted over the page. */
 .site-footer-affiliations a {
   display: grid;
   place-items: center;
-  padding: 0.5rem 0.85rem;
+  padding: 0.35rem 0.6rem;
   border-radius: var(--radius-sm);
-  background: #fff;
-  border: 1px solid var(--ink-12);
-  transition: transform 160ms var(--ease), box-shadow 160ms var(--ease);
+  transition: transform 160ms var(--ease), opacity 160ms var(--ease);
 }
 
 .site-footer-affiliations a:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
 }
 
 .site-footer-affiliations img {
   height: 30px;
   width: auto;
   display: block;
+}
+
+/* Two of the three marks are mostly dark ink — INESC-ID's globe and wordmark, the
+   "TÉCNICO LISBOA" lettering — and on the dark footer they sink into it: 62% and
+   30% of their pixels sit under 3:1 against the background. 1.35 is the smallest
+   lift that clears 3:1 everywhere; it is deliberately not higher, because past it
+   Técnico's blue shield turns visibly turquoise. At this value the measured hue
+   shift is 0.8° for INESC-ID and 6.4° for Técnico — the marks stay their own
+   colours, which a plate-free footer and untouched artwork cannot both give.
+   ELLIS is saturated colour throughout and is left exactly as delivered. */
+:root[data-theme='dark'] .site-footer-affiliations img[data-lift-on-dark] {
+  filter: brightness(1.35);
 }
 
 @media (max-width: 640px) {
