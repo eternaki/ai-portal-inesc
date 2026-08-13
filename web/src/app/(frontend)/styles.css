@@ -324,22 +324,68 @@ main > h1:first-child {
   right: 0;
 }
 
-/* Search sits in the nav as an icon: it is a tool, not a section, and the row
-   stays short. The word comes back in the mobile panel, where a lone glyph in a
-   stacked list of labels reads as an orphan. */
-.site-nav-search {
+/* Search is a field, not a link to a field. Collapsed it occupies exactly the
+   width of the icon it replaced — the header row was already close to its
+   collapse point — and focusing it slides the input open on top of the nav to
+   its left, so nothing reflows and nothing wraps. */
+.site-search {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+}
+
+.site-search button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
   color: var(--ink-70);
+  cursor: pointer;
+  z-index: 1;
 }
 
-.site-nav-search-label {
-  display: none;
+.site-search button:hover {
+  color: var(--cobalt);
 }
 
-.site-nav-search::after {
-  display: none;
+.site-search input {
+  position: absolute;
+  right: 0;
+  width: 30px;
+  height: 32px;
+  /* Room on the right for the submit glyph: the field grows leftward from the
+     icon, so the icon ends up at its trailing edge. */
+  padding: 0 2.1rem 0 0.9rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-sans, sans-serif);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: width 200ms var(--ease), background 200ms var(--ease), border-color 200ms var(--ease);
+}
+
+/* The placeholder would otherwise show through the collapsed field. */
+.site-search input::placeholder {
+  color: transparent;
+}
+
+.site-search:focus-within input {
+  width: 260px;
+  background: var(--card);
+  border-color: var(--cobalt);
+  box-shadow: var(--shadow-md);
+  cursor: text;
+}
+
+.site-search:focus-within input::placeholder {
+  color: var(--ink-40);
 }
 
 /* The members' door, same treatment as search and for the same reason: a tool,
@@ -552,9 +598,35 @@ main > h1:first-child {
     display: none;
   }
 
-  .nav-panel .site-nav-search-label,
   .nav-panel .site-nav-signin-label {
     display: inline;
+  }
+
+  /* In the stacked panel there is room, so the field is simply open: a collapsed
+     glyph in a column of labels reads as an orphan, and the overlay trick has
+     nothing to overlay. */
+  .nav-panel .site-search {
+    width: 100%;
+    margin: 0.85rem 0 0.35rem;
+  }
+
+  .nav-panel .site-search input,
+  .nav-panel .site-search:focus-within input {
+    position: static;
+    width: 100%;
+    background: var(--card);
+    border-color: var(--ink-12);
+    box-shadow: none;
+    cursor: text;
+  }
+
+  .nav-panel .site-search input::placeholder {
+    color: var(--ink-40);
+  }
+
+  .nav-panel .site-search button {
+    position: absolute;
+    left: 0;
   }
 
   .nav-panel .locale-switcher {
@@ -1767,13 +1839,27 @@ main > h1:first-child {
 
 /* ── language switcher (en/pt) ── */
 
+/* The active language used to be a filled cobalt pill — the same treatment as
+   the site's primary button, which made a two-letter preference the loudest
+   thing in the header, louder than the sections themselves. It is a preference,
+   so it is now weight and ink: the current language is simply the darker one. */
 .locale-switcher {
   display: inline-flex;
-  gap: 2px;
-  margin-left: 0.4rem;
-  padding: 2px;
-  border: 1px solid var(--ink-12);
-  border-radius: 999px;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: 0.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+}
+
+/* A hairline separating the sections from the tools that act on them. */
+.locale-switcher::before {
+  content: '';
+  width: 1px;
+  height: 16px;
+  margin-right: 0.55rem;
+  background: var(--ink-12);
 }
 
 .locale-switcher button {
@@ -1793,8 +1879,9 @@ main > h1:first-child {
 }
 
 .locale-switcher button.active {
-  background: var(--cobalt);
-  color: var(--on-fill);
+  background: transparent;
+  color: var(--ink);
+  font-weight: 600;
   cursor: default;
 }
 
