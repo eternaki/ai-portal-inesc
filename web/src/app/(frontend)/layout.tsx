@@ -148,6 +148,19 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                   </svg>
                   <span className="site-nav-search-label">{t.nav.search}</span>
                 </Link>
+                <Link className="site-nav-signin" href="/admin" aria-label={t.nav.signIn}>
+                  <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
+                    <circle cx="10" cy="6.6" r="3.3" fill="none" stroke="currentColor" strokeWidth="1.7" />
+                    <path
+                      d="M3.8 17c0-3.4 2.8-5.6 6.2-5.6s6.2 2.2 6.2 5.6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="site-nav-signin-label">{t.nav.signIn}</span>
+                </Link>
                 <LocaleSwitcher current={locale} />
                 <ThemeToggle light={t.theme.light} dark={t.theme.dark} />
               </nav>
@@ -155,14 +168,10 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           </div>
         </header>
         <main>{children}</main>
-        {/* Every section already sits in the header, so the footer carries only what
-            the header cannot: the way in for members, who we are, and whose company
-            we keep. Three bands, heaviest last. */}
+        {/* Every section sits in the header, and so does the members' door now, so
+            the footer is down to one line: who we are and whose company we keep. */}
         <footer className="site-footer">
           <div className="site-footer-inner">
-            <div className="site-footer-utility">
-              <Link href="/admin">{t.footer.signIn}</Link>
-            </div>
             <div className="site-footer-main">
               <div className="site-footer-brand">
                 <span className="site-logo-mark" aria-hidden="true">

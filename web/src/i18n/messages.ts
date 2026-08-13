@@ -20,16 +20,13 @@ const en = {
     // search icon from the header. Both still need an accessible label.
     map: 'Research map',
     search: 'Search',
+    signIn: 'Member sign in',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
   },
   theme: {
     light: 'Switch to light mode',
     dark: 'Switch to dark mode',
-  },
-  footer: {
-    openThesis: 'Open thesis topics',
-    signIn: 'Member sign in',
   },
   home: {
     lede:
@@ -292,16 +289,13 @@ const pt: Dictionary = {
     openPositions: 'Vagas',
     map: 'Mapa de investigação',
     search: 'Pesquisa',
+    signIn: 'Entrar (membros)',
     openMenu: 'Abrir menu',
     closeMenu: 'Fechar menu',
   },
   theme: {
     light: 'Mudar para o modo claro',
     dark: 'Mudar para o modo escuro',
-  },
-  footer: {
-    openThesis: 'Temas de tese em aberto',
-    signIn: 'Entrar (membros)',
   },
   home: {
     lede:

@@ -323,6 +323,24 @@ main > h1:first-child {
   display: none;
 }
 
+/* The members' door, same treatment as search and for the same reason: a tool,
+   not a section. It used to live in the footer, which put the one link staff need
+   on every page at the very bottom of it. */
+.site-nav-signin {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-70);
+}
+
+.site-nav-signin-label {
+  display: none;
+}
+
+.site-nav-signin::after {
+  display: none;
+}
+
 /* Hamburger toggle — hidden on desktop, shown below the nav breakpoint */
 .nav-toggle {
   display: none;
@@ -367,49 +385,26 @@ main > h1:first-child {
   flex-shrink: 0;
   border-top: 2px solid var(--cobalt);
   background: var(--ink-6);
-  margin-top: 3rem;
+  margin-top: 2.25rem;
 }
 
-/* Three bands, heaviest last: the members' door, then who we are, then whose
-   company we keep. The header already carries every section, so nothing is
-   repeated here and the whole thing stays short. */
+/* One band. Every section is in the header and so is the members' sign-in, which
+   leaves the footer with two jobs — say who we are, show whose company we keep —
+   and no reason to be tall. */
 .site-footer-inner {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 1.5rem 1.25rem 3.5rem;
+  padding: 1.1rem 1.25rem 1.3rem;
   font-size: 0.92rem;
   color: var(--ink-70);
-}
-
-/* A utility strip, not a nav: one link, set in the mono face the site uses for
-   metadata, sitting above the hairline that opens the footer proper. */
-.site-footer-utility {
-  display: flex;
-  justify-content: flex-end;
-  padding-bottom: 0.9rem;
-  border-bottom: 1px solid var(--ink-12);
-}
-
-.site-footer-utility a {
-  font-family: var(--font-mono, Menlo, monospace);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-}
-
-.site-footer-utility a:hover {
-  color: var(--cobalt);
-  text-decoration: none;
 }
 
 .site-footer-main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.75rem 3rem;
+  gap: 1.25rem 3rem;
   flex-wrap: wrap;
-  padding-top: 1.4rem;
 }
 
 .site-footer-brand {
@@ -452,7 +447,7 @@ main > h1:first-child {
 }
 
 .site-footer-affiliations img {
-  height: 30px;
+  height: 42px;
   width: auto;
   display: block;
 }
@@ -529,7 +524,8 @@ main > h1:first-child {
     display: none;
   }
 
-  .nav-panel .site-nav-search-label {
+  .nav-panel .site-nav-search-label,
+  .nav-panel .site-nav-signin-label {
     display: inline;
   }
 
