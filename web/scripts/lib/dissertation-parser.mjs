@@ -154,20 +154,44 @@ function splitRequisites(lexical) {
   }
 }
 
+/**
+ * Class names the page's own stylesheet hides with `display: none`.
+ *
+ * The builder that generates these pages keeps retired entries in the markup and
+ * switches them off in CSS instead of deleting them, so "present in the HTML" is
+ * not the same as "published". Reading the stylesheet is the only way to tell.
+ */
+export function hiddenClassNames(css) {
+  const hidden = new Set()
+  for (const rule of (css ?? '').matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+    if (!/display\s*:\s*none/i.test(rule[2])) continue
+    for (const name of rule[1].matchAll(/\.([A-Za-z0-9_-]+)/g)) hidden.add(name[1])
+  }
+  return hidden
+}
+
 const ENTRY_RE =
-  /<a\b([^>]*class="thesis-topic(?:-no-abstract)?-link"[^>]*)>\s*<span>([\s\S]*?)<\/span>\s*<\/a>\s*<span class="thesis-topic(?:-no-abstract)?-text">\s*<span>([\s\S]*?)<\/span>\s*<\/span>(?:\s*<span class="thesis-topic(?:-no-abstract)?-abstract">\s*<span>([\s\S]*?)<\/span>)?/gi
+  /<div\b([^>]*class="thesis-topic(?:-no-abstract)?-container[^"]*"[^>]*)>[\s\S]{0,200}?<a\b([^>]*class="thesis-topic(?:-no-abstract)?-link"[^>]*)>\s*<span>([\s\S]*?)<\/span>\s*<\/a>\s*<span class="thesis-topic(?:-no-abstract)?-text">\s*<span>([\s\S]*?)<\/span>\s*<\/span>(?:\s*<span class="thesis-topic(?:-no-abstract)?-abstract">\s*<span>([\s\S]*?)<\/span>)?/gi
 
 /**
  * Read every dissertation on one legacy page.
  * `status` is the stage that page represents; `sourceUrl` is recorded on each
- * record so a re-import can tell where a row came from.
+ * record so a re-import can tell where a row came from. `hidden` is the set from
+ * `hiddenClassNames`; entries wearing one of those classes are skipped, because
+ * republishing what the group took off its own site is not importing, it is
+ * undoing an editorial decision.
  */
-export function parseDissertationPage(html, { status, sourceUrl }) {
+export function parseDissertationPage(html, { status, sourceUrl, hidden }) {
   const rows = []
   for (const m of html.matchAll(ENTRY_RE)) {
-    const [, anchorAttrs, titleHtml, attributionHtml, abstractHtml] = m
+    const [, wrapperAttrs, anchorAttrs, titleHtml, attributionHtml, abstractHtml] = m
     const title = textOf(titleHtml)
     if (!title) continue
+
+    if (hidden?.size) {
+      const classes = (wrapperAttrs.match(/class="([^"]*)"/i)?.[1] ?? '').split(/\s+/)
+      if (classes.some((name) => hidden.has(name))) continue
+    }
 
     const hrefMatch = anchorAttrs.match(/href="([^"]+)"/i)
     const { supervisors, author } = parseAttribution(textOf(attributionHtml))

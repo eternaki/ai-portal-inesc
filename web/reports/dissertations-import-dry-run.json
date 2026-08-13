@@ -1,6 +1,6 @@
 {
   "mode": "dry-run",
-  "parsed": 59,
+  "parsed": 58,
   "created": [],
   "updated": [
     {
@@ -50,10 +50,6 @@
     {
       "id": 15,
       "title": "Text Segmentation by TextTiling with Modern Neural Retrieval Models"
-    },
-    {
-      "id": 63,
-      "title": "Analysis of sensor data for monitoring of open spaces"
     },
     {
       "id": 17,
@@ -297,11 +293,6 @@
       "title": "Deep neural network architectures for dual process computation"
     },
     {
-      "role": "author",
-      "name": "João Meneses Santos",
-      "title": "Deep neural network architectures for dual process computation"
-    },
-    {
       "role": "supervisor",
       "name": "Bruno Martins",
       "title": "Hybrid Prompt Optimization for Sparse Autoencoder Feature Visualization in Large Language Models"
@@ -392,14 +383,6 @@
       "title": "Predicting Frequency and Claims of Health Insurance with Machine Learning techniques"
     }
   ],
-  "duplicateFenixUrls": [
-    {
-      "url": "https://fenix.tecnico.ulisboa.pt/cursos/mecd/dissertacao/565303595503041",
-      "titles": [
-        "Analysis of sensor data for monitoring of open spaces",
-        "Siamese Transformer Networks for Improving Address Matching"
-      ]
-    }
-  ],
+  "duplicateFenixUrls": [],
   "errors": []
 }

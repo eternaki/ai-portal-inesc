@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
-import { parseDissertationPage } from './lib/dissertation-parser.mjs'
+import { hiddenClassNames, parseDissertationPage } from './lib/dissertation-parser.mjs'
 import { firstLastKey, normalizeName } from './lib/member-importer.mjs'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -27,14 +27,33 @@ const repoRoot = path.resolve(dirname, '..')
 
 const BASE = 'https://mlkd.idss.inesc-id.pt'
 
-// Expected counts, measured 2026-08-10. The parser reads generated markup with
-// regexes, so its failure mode is silent under-matching. Asserting the counts
-// turns "the site was redesigned" into a loud error instead of an import that
-// quietly drops half the archive.
+// Expected counts, measured 2026-08-10 and corrected 2026-08-13. The parser reads
+// generated markup with regexes, so its failure mode is silent under-matching.
+// Asserting the counts turns "the site was redesigned" into a loud error instead
+// of an import that quietly drops half the archive.
+//
+// The open page counts 12, not the 13 blocks in its HTML: the builder leaves
+// retired entries in the markup and hides them in CSS, so each page's stylesheet
+// is fetched alongside it and anything switched off there is skipped.
 const PAGES = [
-  { url: `${BASE}/mlkd-dissertations-new.html`, status: 'open', expected: 13 },
-  { url: `${BASE}/mlkd-dissertations-ongoing.html`, status: 'ongoing', expected: 7 },
-  { url: `${BASE}/mlkd-dissertations-finished.html`, status: 'finished', expected: 39 },
+  {
+    url: `${BASE}/mlkd-dissertations-new.html`,
+    css: `${BASE}/mlkd-dissertations-new.css`,
+    status: 'open',
+    expected: 12,
+  },
+  {
+    url: `${BASE}/mlkd-dissertations-ongoing.html`,
+    css: `${BASE}/mlkd-dissertations-ongoing.css`,
+    status: 'ongoing',
+    expected: 7,
+  },
+  {
+    url: `${BASE}/mlkd-dissertations-finished.html`,
+    css: `${BASE}/mlkd-dissertations-finished.css`,
+    status: 'finished',
+    expected: 39,
+  },
 ]
 
 // `payload run <script> --apply` does NOT forward `--apply` into the script's
@@ -75,7 +94,12 @@ async function run() {
   const parsed = []
   for (const page of PAGES) {
     const html = await fetchPage(page.url)
-    const rows = parseDissertationPage(html, { status: page.status, sourceUrl: page.url })
+    const hidden = hiddenClassNames(await fetchPage(page.css))
+    const rows = parseDissertationPage(html, {
+      status: page.status,
+      sourceUrl: page.url,
+      hidden,
+    })
     if (rows.length !== page.expected) {
       throw new Error(
         `${page.url}: parsed ${rows.length} entries, expected ${page.expected}. ` +

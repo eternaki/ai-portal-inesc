@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import {
+  hiddenClassNames,
   htmlToLexical,
   parseAttribution,
   parseDissertationPage,
@@ -151,4 +152,57 @@ test('parseDissertationPage splits a Requisites sentence into its own field', ()
   const rows = parseDissertationPage(html, { status: 'open', sourceUrl: 'https://example.test/new' })
   assert.equal(rows[0].description.root.children[0].children[0].text, 'Study embeddings.')
   assert.equal(rows[0].requisites.root.children[0].children[0].text, 'The student should know PyTorch.')
+})
+
+test('hiddenClassNames collects every class the stylesheet switches off', () => {
+  const css = `
+    .thesis-topic-container { display: flex; }
+    .thesis-topic-no-abstract-root-class-name { display: none; }
+    .a-nav, .b-icon { display:none; }
+    .visible { color: red; }
+  `
+  const hidden = hiddenClassNames(css)
+  assert.ok(hidden.has('thesis-topic-no-abstract-root-class-name'))
+  assert.ok(hidden.has('a-nav') && hidden.has('b-icon'))
+  assert.ok(!hidden.has('thesis-topic-container'))
+  assert.ok(!hidden.has('visible'))
+})
+
+test('hiddenClassNames survives an empty or missing stylesheet', () => {
+  assert.equal(hiddenClassNames('').size, 0)
+  assert.equal(hiddenClassNames(undefined).size, 0)
+})
+
+// The group leaves retired entries in the markup and hides them in CSS. Importing
+// one puts a topic back on the public site after they took it down — which is how
+// "Analysis of sensor data for monitoring of open spaces" ended up published here,
+// marked open for application although it already had an author.
+const PAGE_WITH_HIDDEN = `
+<div class="thesis-topic-container thesis-topic-root-class-name3">
+  <div class="thesis-topic-container1">
+    <a class="thesis-topic-link" href="https://fenix.test/1"><span>Visible Topic</span></a>
+    <span class="thesis-topic-text"><span>Supervised by Arlindo L. Oliveira</span></span>
+    <span class="thesis-topic-abstract"><span>An abstract.</span></span>
+  </div>
+</div>
+<div class="thesis-topic-no-abstract-container thesis-topic-no-abstract-root-class-name">
+  <div class="thesis-topic-no-abstract-container1">
+    <a class="thesis-topic-no-abstract-link" href="https://fenix.test/2"><span>Retired Topic</span></a>
+    <span class="thesis-topic-no-abstract-text"><span>Supervised by Arlindo L. Oliveira and authored by André Duarte</span></span>
+    <span class="thesis-topic-no-abstract-abstract"><span></span></span>
+  </div>
+</div>`
+
+test('parseDissertationPage skips entries the page hides in CSS', () => {
+  const hidden = hiddenClassNames('.thesis-topic-no-abstract-root-class-name { display: none; }')
+  const rows = parseDissertationPage(PAGE_WITH_HIDDEN, { status: 'open', sourceUrl: 'x', hidden })
+  assert.deepEqual(rows.map((r) => r.title), ['Visible Topic'])
+})
+
+test('parseDissertationPage reads both entries when nothing is hidden', () => {
+  // Without the stylesheet the parser must not start guessing which blocks are
+  // real — the no-abstract spelling is also used for genuinely published entries.
+  const rows = parseDissertationPage(PAGE_WITH_HIDDEN, { status: 'open', sourceUrl: 'x' })
+  assert.deepEqual(rows.map((r) => r.title), ['Visible Topic', 'Retired Topic'])
+  assert.equal(rows[1].author, 'André Duarte')
 })
