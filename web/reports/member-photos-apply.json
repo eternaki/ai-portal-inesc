@@ -1,19 +1,37 @@
 {
-  "generatedAt": "2026-08-11T09:07:23.343Z",
+  "generatedAt": "2026-08-13T11:25:45.990Z",
   "mode": "apply",
   "weakMatchesIncluded": false,
   "source": "https://mlkd.idss.inesc-id.pt/mlkd-team.html",
   "legacyPeople": 59,
   "uploaded": [
     {
-      "memberId": 1,
-      "name": "Arlindo Oliveira",
-      "matchedBy": "exact name",
-      "filename": "ArlindoOliveira.jpeg",
-      "bytes": 6256
+      "memberId": 31,
+      "name": "Gonçalo Goulart Oliveira",
+      "matchedBy": "pinned by photo file",
+      "filename": "gravo.jpeg",
+      "bytes": 8871
+    },
+    {
+      "memberId": 34,
+      "name": "Vicente Silvestre",
+      "matchedBy": "pinned by photo file",
+      "filename": "VincenteSilvestre.png",
+      "bytes": 97288
+    },
+    {
+      "memberId": 47,
+      "name": "Oleksandr Stopchak",
+      "matchedBy": "pinned by photo file",
+      "filename": "OleksanderS.jpeg",
+      "bytes": 14917
     }
   ],
   "alreadyHadPhoto": [
+    {
+      "memberId": 1,
+      "name": "Arlindo Oliveira"
+    },
     {
       "memberId": 3,
       "name": "Beatriz Vieira"
@@ -36,7 +54,7 @@
     },
     {
       "memberId": 8,
-      "name": "Helder Dias"
+      "name": "Hélder Dias"
     },
     {
       "memberId": 9,
@@ -59,10 +77,6 @@
       "name": "André Carneiro"
     },
     {
-      "memberId": 14,
-      "name": "João Cardoso"
-    },
-    {
       "memberId": 15,
       "name": "Ricardo Almeida"
     },
@@ -75,20 +89,12 @@
       "name": "David Calhas"
     },
     {
-      "memberId": 18,
-      "name": "João Silva"
-    },
-    {
       "memberId": 19,
       "name": "Alexandre Borges"
     },
     {
       "memberId": 20,
       "name": "Miguel Freire"
-    },
-    {
-      "memberId": 21,
-      "name": "Gonçalo Oliveira"
     },
     {
       "memberId": 22,
@@ -108,7 +114,7 @@
     },
     {
       "memberId": 26,
-      "name": "João Meneses"
+      "name": "João Meneses Santos"
     },
     {
       "memberId": 27,
@@ -151,20 +157,8 @@
       "name": "José Cunha"
     },
     {
-      "memberId": 38,
-      "name": "Miguel Ferreira"
-    },
-    {
       "memberId": 39,
       "name": "Martim Afonso"
-    },
-    {
-      "memberId": 40,
-      "name": "Ana Alves"
-    },
-    {
-      "memberId": 41,
-      "name": "Miguel Amaral"
     },
     {
       "memberId": 42,
@@ -183,24 +177,8 @@
       "name": "Tiago Oliveira"
     },
     {
-      "memberId": 46,
-      "name": "André Leite"
-    },
-    {
       "memberId": 48,
       "name": "José Martinho"
-    },
-    {
-      "memberId": 49,
-      "name": "José Pereira"
-    },
-    {
-      "memberId": 50,
-      "name": "António Pereira"
-    },
-    {
-      "memberId": 51,
-      "name": "João Pedro"
     },
     {
       "memberId": 52,
@@ -239,17 +217,54 @@
       "name": "Miguel Monteiro"
     }
   ],
-  "unmatched": [
+  "unmatched": [],
+  "weakMatchSkipped": [
     {
-      "name": "Vincente Silvestre",
-      "nameFromPhoto": "Vincente Silvestre"
+      "legacyName": "João Cardoso",
+      "ourName": "João Nuno Cardoso",
+      "memberId": 14
     },
     {
-      "name": "Oleksander S.",
-      "nameFromPhoto": null
+      "legacyName": "João Silva",
+      "ourName": "João Lourenço Silva",
+      "memberId": 18
+    },
+    {
+      "legacyName": "Miguel Ferreira",
+      "ourName": "Miguel Rasquinho Ferreira",
+      "memberId": 38
+    },
+    {
+      "legacyName": "Ana Alves",
+      "ourName": "Ana Pimenta Alves",
+      "memberId": 40
+    },
+    {
+      "legacyName": "Miguel Amaral",
+      "ourName": "Miguel Silva Amaral",
+      "memberId": 41
+    },
+    {
+      "legacyName": "André Leite",
+      "ourName": "André Loras Leite",
+      "memberId": 46
+    },
+    {
+      "legacyName": "José Pereira",
+      "ourName": "José Reis Pereira",
+      "memberId": 49
+    },
+    {
+      "legacyName": "António Pereira",
+      "ourName": "António Farinha Pereira",
+      "memberId": 50
+    },
+    {
+      "legacyName": "João Pedro",
+      "ourName": "João Martins Pedro",
+      "memberId": 51
     }
   ],
-  "weakMatchSkipped": [],
   "duplicateLegacyEntries": [],
   "errors": []
 }

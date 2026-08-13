@@ -26,7 +26,9 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 import { parseLegacyTeamPage } from './lib/legacy-team-parser.mjs'
+import { aliasedMemberName } from './lib/legacy-photo-aliases.mjs'
 import { buildMemberIndex, matchMember } from './lib/member-matcher.mjs'
+import { normalizeName } from './lib/member-importer.mjs'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const repoRoot = path.resolve(dirname, '..')
@@ -119,7 +121,19 @@ async function run() {
   const handled = new Map()
 
   for (const person of legacy) {
-    const { member, how } = matchMember(person, index)
+    // A hand-pinned file wins over every rule: the rules are what mis-assigned it.
+    const pinned = aliasedMemberName(person.photoPath)
+    const { member, how } = pinned
+      ? { member: index.byExact.get(normalizeName(pinned)) ?? null, how: 'pinned by photo file' }
+      : matchMember(person, index)
+
+    if (pinned && !member) {
+      report.errors.push({
+        name: person.name,
+        message: `photo alias points at "${pinned}", which is not a member — fix legacy-photo-aliases.mjs`,
+      })
+      continue
+    }
 
     if (!member) {
       report.unmatched.push({ name: person.name, nameFromPhoto: person.nameFromPhoto })

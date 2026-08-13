@@ -1,11 +1,15 @@
 {
-  "generatedAt": "2026-08-11T08:49:53.811Z",
+  "generatedAt": "2026-08-13T11:25:59.369Z",
   "mode": "dry-run",
   "weakMatchesIncluded": false,
   "source": "https://mlkd.idss.inesc-id.pt/mlkd-team.html",
   "legacyPeople": 59,
   "uploaded": [],
   "alreadyHadPhoto": [
+    {
+      "memberId": 1,
+      "name": "Arlindo Oliveira"
+    },
     {
       "memberId": 3,
       "name": "Beatriz Vieira"
@@ -28,7 +32,7 @@
     },
     {
       "memberId": 8,
-      "name": "Helder Dias"
+      "name": "Hélder Dias"
     },
     {
       "memberId": 9,
@@ -51,10 +55,6 @@
       "name": "André Carneiro"
     },
     {
-      "memberId": 14,
-      "name": "João Cardoso"
-    },
-    {
       "memberId": 15,
       "name": "Ricardo Almeida"
     },
@@ -67,10 +67,6 @@
       "name": "David Calhas"
     },
     {
-      "memberId": 18,
-      "name": "João Silva"
-    },
-    {
       "memberId": 19,
       "name": "Alexandre Borges"
     },
@@ -79,8 +75,8 @@
       "name": "Miguel Freire"
     },
     {
-      "memberId": 21,
-      "name": "Gonçalo Oliveira"
+      "memberId": 31,
+      "name": "Gonçalo Goulart Oliveira"
     },
     {
       "memberId": 22,
@@ -100,7 +96,7 @@
     },
     {
       "memberId": 26,
-      "name": "João Meneses"
+      "name": "João Meneses Santos"
     },
     {
       "memberId": 27,
@@ -131,6 +127,10 @@
       "name": "Tomás Nunes"
     },
     {
+      "memberId": 34,
+      "name": "Vicente Silvestre"
+    },
+    {
       "memberId": 35,
       "name": "Pedro Henriques"
     },
@@ -143,20 +143,8 @@
       "name": "José Cunha"
     },
     {
-      "memberId": 38,
-      "name": "Miguel Ferreira"
-    },
-    {
       "memberId": 39,
       "name": "Martim Afonso"
-    },
-    {
-      "memberId": 40,
-      "name": "Ana Alves"
-    },
-    {
-      "memberId": 41,
-      "name": "Miguel Amaral"
     },
     {
       "memberId": 42,
@@ -175,24 +163,12 @@
       "name": "Tiago Oliveira"
     },
     {
-      "memberId": 46,
-      "name": "André Leite"
+      "memberId": 47,
+      "name": "Oleksandr Stopchak"
     },
     {
       "memberId": 48,
       "name": "José Martinho"
-    },
-    {
-      "memberId": 49,
-      "name": "José Pereira"
-    },
-    {
-      "memberId": 50,
-      "name": "António Pereira"
-    },
-    {
-      "memberId": 51,
-      "name": "João Pedro"
     },
     {
       "memberId": 52,
@@ -231,21 +207,52 @@
       "name": "Miguel Monteiro"
     }
   ],
-  "unmatched": [
-    {
-      "name": "Vincente Silvestre",
-      "nameFromPhoto": "Vincente Silvestre"
-    },
-    {
-      "name": "Oleksander S.",
-      "nameFromPhoto": null
-    }
-  ],
+  "unmatched": [],
   "weakMatchSkipped": [
     {
-      "legacyName": "Arlindo Oliveira",
-      "ourName": "Arlindo L. Oliveira",
-      "memberId": 1
+      "legacyName": "João Cardoso",
+      "ourName": "João Nuno Cardoso",
+      "memberId": 14
+    },
+    {
+      "legacyName": "João Silva",
+      "ourName": "João Lourenço Silva",
+      "memberId": 18
+    },
+    {
+      "legacyName": "Miguel Ferreira",
+      "ourName": "Miguel Rasquinho Ferreira",
+      "memberId": 38
+    },
+    {
+      "legacyName": "Ana Alves",
+      "ourName": "Ana Pimenta Alves",
+      "memberId": 40
+    },
+    {
+      "legacyName": "Miguel Amaral",
+      "ourName": "Miguel Silva Amaral",
+      "memberId": 41
+    },
+    {
+      "legacyName": "André Leite",
+      "ourName": "André Loras Leite",
+      "memberId": 46
+    },
+    {
+      "legacyName": "José Pereira",
+      "ourName": "José Reis Pereira",
+      "memberId": 49
+    },
+    {
+      "legacyName": "António Pereira",
+      "ourName": "António Farinha Pereira",
+      "memberId": 50
+    },
+    {
+      "legacyName": "João Pedro",
+      "ourName": "João Martins Pedro",
+      "memberId": 51
     }
   ],
   "duplicateLegacyEntries": [],
