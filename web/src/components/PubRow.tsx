@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import type { Publication } from '@/payload-types'
 import { getDictionary } from '@/i18n/server'
+import { renderSciText } from '@/lib/sciText'
 
 function AuthorName({ author }: { author: NonNullable<Publication['authors']>[number] }) {
   const member = typeof author.member === 'object' ? author.member : null
@@ -32,7 +33,11 @@ export async function PubRow({ pub, clusterColor }: { pub: Publication; clusterC
             title={t.pubRow.viewOnMap}
           />
         )}
-        {pub.slug ? <Link href={`/publications/${pub.slug}`}>{pub.title}</Link> : pub.title}
+        {pub.slug ? (
+          <Link href={`/publications/${pub.slug}`}>{renderSciText(pub.title)}</Link>
+        ) : (
+          renderSciText(pub.title)
+        )}
       </div>
       <div className="pub-meta">
         {(pub.authors ?? []).map((author, index) => (
@@ -49,14 +54,6 @@ export async function PubRow({ pub, clusterColor }: { pub: Publication; clusterC
         </span>{' '}
         <span className="badge">{pub.type}</span>{' '}
         {hasAiSummary ? <span className="badge badge-ai">{t.pubRow.summary}</span> : null}
-        {pub.doi ? (
-          <>
-            {' '}
-            <a className="mono" href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer">
-              doi
-            </a>
-          </>
-        ) : null}
       </div>
     </article>
   )

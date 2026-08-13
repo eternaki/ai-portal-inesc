@@ -11,6 +11,7 @@ import { PublicationMiniMap } from '@/components/PublicationMiniMap'
 import { SITE_URL } from '@/lib/site'
 import { published } from '@/lib/queries'
 import { getDictionary } from '@/i18n/server'
+import { renderSciText, sciTextToPlain } from '@/lib/sciText'
 
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
@@ -32,12 +33,13 @@ export async function generateMetadata(props: { params: Params }) {
   const { slug } = await props.params
   const pub = await findPublication(slug)
   if (!pub) return {}
-  const description = (pub.aiSummary?.tldr || pub.abstract || '').slice(0, 200)
+  const title = sciTextToPlain(pub.title)
+  const description = sciTextToPlain(pub.aiSummary?.tldr || pub.abstract || '').slice(0, 200)
   return {
-    title: pub.title,
+    title,
     description,
     openGraph: {
-      title: pub.title,
+      title,
       description,
       type: 'article',
       url: `${SITE_URL}/publications/${pub.slug}`,
@@ -136,12 +138,12 @@ export default async function PublicationPage(props: { params: Params }) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ScholarlyArticle',
-    headline: pub.title,
+    headline: sciTextToPlain(pub.title),
     datePublished: pub.year ? String(pub.year) : undefined,
     author: (pub.authors ?? []).map((a) => ({ '@type': 'Person', name: a.name })),
     ...(pub.doi ? { sameAs: `https://doi.org/${pub.doi}` } : {}),
     ...(pub.venue ? { isPartOf: { '@type': 'Periodical', name: pub.venue } } : {}),
-    ...(pub.abstract ? { abstract: pub.abstract.slice(0, 500) } : {}),
+    ...(pub.abstract ? { abstract: sciTextToPlain(pub.abstract).slice(0, 500) } : {}),
   }
 
   return (
@@ -152,7 +154,7 @@ export default async function PublicationPage(props: { params: Params }) {
           {pub.type}
           {pub.venue ? ` · ${pub.venue}` : ''} · {pub.year}
         </div>
-        <h1>{pub.title}</h1>
+        <h1>{renderSciText(pub.title)}</h1>
         <p className="pub-meta">
           {(pub.authors ?? []).map((author, index) => (
             <React.Fragment key={`${author.name}-${index}`}>
@@ -206,7 +208,7 @@ export default async function PublicationPage(props: { params: Params }) {
       {pub.abstract && (
         <section className="abstract">
           <h2>{t.pub.abstract}</h2>
-          <p>{pub.abstract}</p>
+          <p>{renderSciText(pub.abstract)}</p>
         </section>
       )}
 

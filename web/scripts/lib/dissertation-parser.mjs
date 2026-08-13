@@ -47,30 +47,55 @@ function paragraphNode(text) {
 export function htmlToLexical(html) {
   if (!html || !html.trim()) return null
 
-  // Turn list items into marker-prefixed paragraphs in place, so a list keeps its
-  // position in the reading order. Collecting them separately would hoist every
-  // list above the prose that introduces it.
-  const withLists = html.replace(/<(ol|ul)\b[^>]*>([\s\S]*?)<\/\1>/gi, (_, tag, inner) => {
-    const ordered = tag.toLowerCase() === 'ol'
-    let n = 0
-    const lines = []
-    for (const item of inner.match(/<li\b[^>]*>[\s\S]*?<\/li>/gi) ?? []) {
+  const children = []
+
+  // Walk the source in order so a list stays where its introduction left it.
+  // Node shapes below are the ones Payload's own converters read (`list` with
+  // tag/listType, `listitem` with value, `heading` with tag) — taken from the
+  // renderer's source rather than guessed, because a wrong shape renders nothing.
+  const BLOCK = /<(ol|ul)\b[^>]*>([\s\S]*?)<\/\1>|<\/?p\b[^>]*>|<br\s*\/?>/gi
+  let cursor = 0
+
+  const pushProse = (chunk) => {
+    const text = textOf(chunk)
+    if (!text) return
+    // A line that introduces what follows ("Techniques to explore:", "Notes:")
+    // is a heading in the source's intent even though it arrives as prose. Short
+    // and ending in a colon is the shape that distinguishes it from a sentence.
+    if (text.endsWith(':') && text.length <= 80) {
+      children.push({ type: 'heading', tag: 'h4', children: [{ type: 'text', text: text.slice(0, -1) }] })
+    } else {
+      children.push(paragraphNode(text))
+    }
+  }
+
+  for (const match of html.matchAll(BLOCK)) {
+    pushProse(html.slice(cursor, match.index))
+    cursor = match.index + match[0].length
+
+    if (!match[1]) continue // a <p> or <br> boundary: nothing to emit itself
+
+    const ordered = match[1].toLowerCase() === 'ol'
+    const items = []
+    let value = 0
+    for (const item of match[2].match(/<li\b[^>]*>[\s\S]*?<\/li>/gi) ?? []) {
       const text = textOf(item)
       if (!text) continue
-      n += 1
-      lines.push(ordered ? `${n}. ${text}` : `• ${text}`)
+      value += 1
+      items.push({ type: 'listitem', value, children: [{ type: 'text', text }] })
     }
-    return lines.map((line) => `<p>${line}</p>`).join('')
-  })
+    if (items.length > 0) {
+      children.push({
+        type: 'list',
+        tag: ordered ? 'ol' : 'ul',
+        listType: ordered ? 'number' : 'bullet',
+        start: 1,
+        children: items,
+      })
+    }
+  }
 
-  // Split on the opening tag as well as the closing one: the source opens its
-  // abstracts with bare prose before the first <p>, so splitting on </p> alone
-  // would glue that first sentence onto the paragraph after it.
-  const children = withLists
-    .split(/<\/?p\b[^>]*>|<br\s*\/?>/gi)
-    .map(textOf)
-    .filter(Boolean)
-    .map(paragraphNode)
+  pushProse(html.slice(cursor))
 
   if (children.length === 0) return null
   return { root: { type: 'root', children } }
