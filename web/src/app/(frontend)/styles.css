@@ -370,20 +370,59 @@ main > h1:first-child {
   margin-top: 3rem;
 }
 
-/* Grid, not space-between: with only two blocks in a 1120px row the latter tore
-   them to opposite edges and left a canyon in the middle. Columns size to their
-   content and stack below the breakpoint. The extra bottom padding is clearance
-   for the fixed chat FAB, which sits over this corner. */
+/* Compact by design: the header already carries every section, so the footer only
+   holds identity, affiliations and the members' way in. The extra bottom padding is
+   clearance for the fixed chat FAB, which sits over this corner. */
 .site-footer-inner {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 2.75rem 1.25rem 4.5rem;
+  padding: 1.75rem 1.25rem 3.5rem;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 1.75rem 4rem;
+  align-items: center;
+  gap: 1rem 3rem;
   font-size: 0.92rem;
   color: var(--ink-70);
+}
+
+/* Partner marks are supplied as colour PNGs on a light ground. On the dark theme
+   they would sit in bright boxes, so they are lightened and dimmed rather than
+   re-cut; hovering restores them to full strength. */
+.site-footer-affiliations {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.site-footer-affiliations img {
+  height: 34px;
+  width: auto;
+  opacity: 0.75;
+  transition: opacity 160ms var(--ease);
+}
+
+.site-footer-affiliations a:hover img {
+  opacity: 1;
+}
+
+:root[data-theme='dark'] .site-footer-affiliations img {
+  filter: brightness(0) invert(1);
+  opacity: 0.6;
+}
+
+:root[data-theme='dark'] .site-footer-affiliations a:hover img {
+  opacity: 0.9;
+}
+
+.site-footer-meta {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ink-12);
 }
 
 .site-footer-brand {
@@ -403,20 +442,10 @@ main > h1:first-child {
   margin: 0.3em 0 0;
 }
 
-.site-footer-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  font-weight: 500;
-}
-
 .site-credit {
-  grid-column: 1 / -1;
   font-size: 0.78rem;
   color: var(--ink-40);
   margin: 0;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--ink-12);
 }
 
 @media (max-width: 640px) {
@@ -1148,18 +1177,25 @@ main > h1:first-child {
 
 .people-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 1rem;
   margin-top: 1rem;
 }
 
+/* Photo beside the name rather than above it: at a glance the eye wants the face
+   and the name together, and the row shape lets more people fit on a screen. The
+   card is a positioned block, not a link — the whole surface is clickable through
+   an overlay so the LinkedIn anchor can sit on top without nesting links. */
 .person-card {
-  display: block;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
   color: inherit;
   background: var(--card);
   border: 1px solid var(--ink-12);
   border-radius: var(--radius);
-  padding: 1.1rem 1.2rem;
+  padding: 0.9rem 1rem;
   scroll-margin-top: calc(var(--header-h) + 1rem);
   box-shadow: var(--shadow-sm);
   transition: transform 200ms var(--ease), border-color 200ms var(--ease), box-shadow 200ms var(--ease);
@@ -1168,12 +1204,63 @@ main > h1:first-child {
 .person-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-md);
-  border-color: transparent;
+  border-color: var(--cobalt);
+}
+
+.person-card-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* The overlay makes the whole card clickable while leaving the LinkedIn icon,
+   which sits above it, reachable on its own. */
+.person-card-link {
+  font-family: var(--font-serif, georgia, serif);
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.person-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+}
+
+.person-card-link:hover {
+  color: var(--cobalt);
+  text-decoration: none;
+}
+
+.person-card .badge {
+  align-self: flex-start;
+}
+
+.person-card-linkedin {
+  position: relative;
+  z-index: 1;
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--ink-40);
+  background: var(--ink-6);
+  flex-shrink: 0;
+  transition: color 160ms var(--ease), background 160ms var(--ease);
+}
+
+.person-card-linkedin:hover {
+  color: #fff;
+  background: var(--cobalt);
 }
 
 .person-avatar {
-  width: 44px;
-  height: 44px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -1181,7 +1268,8 @@ main > h1:first-child {
   color: var(--cobalt-dark);
   font-family: var(--font-serif, georgia, serif);
   font-weight: 600;
-  margin-bottom: 0.6rem;
+  font-size: 1.15rem;
+  flex-shrink: 0;
 }
 
 .person-avatar--photo {
@@ -2001,8 +2089,9 @@ main > h1:first-child {
   position: fixed;
   z-index: 60;
   transform: translate(-50%, calc(-100% - 12px));
-  background: var(--ink);
-  color: #fff;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--ink-12);
   padding: 0.5rem 0.7rem;
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-md);
@@ -2023,7 +2112,7 @@ main > h1:first-child {
   display: block;
   font-family: var(--font-mono, Menlo, monospace);
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--ink-40);
 }
 
 /* ── publication attachments (materials) ── */

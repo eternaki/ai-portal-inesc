@@ -19,7 +19,6 @@ const ENTITY_TYPES = [
   'software',
   'news',
   'events',
-  'reading-groups',
 ] as const
 
 type EntityType = (typeof ENTITY_TYPES)[number]
@@ -46,7 +45,6 @@ const ENTITY_LINK: Record<EntityType, (hit: UnifiedHit) => string> = {
   software: (hit) => (hit.slug ? `/software#${hit.slug}` : '/software'),
   news: (hit) => (hit.slug ? `/news/${hit.slug}` : '/news'),
   events: (hit) => (hit.slug ? `/events#${hit.slug}` : '/events'),
-  'reading-groups': (hit) => (hit.slug ? `/reading-groups#${hit.slug}` : '/reading-groups'),
 }
 
 function textFromRich(node: unknown): string {
@@ -174,20 +172,6 @@ async function textualFallback(q: string, type?: EntityType): Promise<UnifiedHit
           title: doc.title,
           slug: doc.slug,
           description: textFromRich(doc.description) || doc.speaker || doc.location || null,
-          year: yearFromDate(doc.date),
-          score: 0,
-          source: 'lexical' as const,
-        })),
-      )
-    } else if (entityType === 'reading-groups') {
-      const res = await payload.find({ collection: 'reading-groups', sort: '-date', limit: 200, depth: 0 })
-      results.push(
-        ...res.docs.map((doc) => ({
-          entity_type: 'reading-groups' as const,
-          id: doc.id,
-          title: doc.title,
-          slug: doc.slug,
-          description: textFromRich(doc.description) || doc.paperTitle || doc.presenter || null,
           year: yearFromDate(doc.date),
           score: 0,
           source: 'lexical' as const,

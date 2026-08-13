@@ -32,9 +32,6 @@ export function YearHistogram({
   labels: {
     allYears: string
     aria: string
-    table: string
-    yearColumn: string
-    countColumn: string
   }
 }) {
   if (counts.length === 0) return null
@@ -116,31 +113,6 @@ export function YearHistogram({
         </text>
       </svg>
 
-      {/* A value must not be reachable by hover alone. */}
-      <details className="year-histogram-details">
-        <summary>{labels.table}</summary>
-        <table className="year-histogram-table">
-          <thead>
-            <tr>
-              <th>{labels.yearColumn}</th>
-              <th>{labels.countColumn}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {counts
-              .slice()
-              .sort((a, b) => b.year - a.year)
-              .map((entry) => (
-                <tr key={entry.year}>
-                  <td>
-                    <Link href={hrefForYear(String(entry.year))}>{entry.year}</Link>
-                  </td>
-                  <td className="mono">{entry.count}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </details>
     </div>
   )
 }

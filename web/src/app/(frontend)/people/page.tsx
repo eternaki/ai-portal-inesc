@@ -6,7 +6,6 @@ import { JsonLd } from '@/components/JsonLd'
 import { PersonCard } from '@/components/PersonCard'
 import { getDictionary } from '@/i18n/server'
 import { memberSameAs } from '@/lib/member'
-import type { Member } from '@/payload-types'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,11 +23,6 @@ const SECONDARY_STATUSES = [
   { value: 'suspended', key: 'statusSuspended' },
   { value: 'completed', key: 'statusCompleted' },
 ] as const
-
-function roleLabel(member: Member, t: Awaited<ReturnType<typeof getDictionary>>['people']) {
-  const role = ROLE_ORDER.find((item) => item.value === member.role)
-  return role ? t[role.key] : member.role
-}
 
 export default async function PeoplePage() {
   const payload = await getPayload({ config })
@@ -92,7 +86,7 @@ export default async function PeoplePage() {
             <h2>{t.people[key]}</h2>
             <div className="people-grid">
               {group.map((member) => (
-                <PersonCard key={member.id} member={member} roleBadge={roleLabel(member, t.people)} />
+                <PersonCard key={member.id} member={member} />
               ))}
             </div>
           </section>

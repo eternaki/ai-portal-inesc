@@ -160,14 +160,6 @@ export default async function PublicationPage(props: { params: Params }) {
               <AuthorName author={author} />
             </React.Fragment>
           ))}
-          {pub.doi ? (
-            <>
-              {' · '}
-              <a className="mono" href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer">
-                doi:{pub.doi}
-              </a>
-            </>
-          ) : null}
           {typeof pub.citationCount === 'number' ? (
             <>
               {' · '}

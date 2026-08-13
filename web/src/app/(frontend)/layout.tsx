@@ -58,17 +58,27 @@ export const metadata = {
 }
 
 // Section list mirrors the group's existing site (mlkd.idss.inesc-id.pt), which the
-// supervisor asked us to preserve — Events and Reading Groups stay separate.
-// The map is not a section of its own (it is a view of publications), so it is
-// reached from Research/Publications, and search is the icon at the end of the row.
+// supervisor asked us to preserve. Search is the icon at the end of the row.
 const NAV = [
   { href: '/people', key: 'people' },
   { href: '/publications', key: 'publications' },
+  { href: '/map', key: 'map' },
   { href: '/dissertations', key: 'dissertations' },
   { href: '/news', key: 'news' },
   { href: '/events', key: 'events' },
-  { href: '/reading-groups', key: 'readingGroups' },
   { href: '/open-positions', key: 'openPositions' },
+] as const
+
+// Reading groups are not hosted here. The group's own site links straight out to
+// the Técnico page that runs them, so this entry is a signpost, not a section —
+// mirroring that rather than keeping an empty local page.
+const READING_GROUPS_URL = 'https://lumlis.tecnico.ulisboa.pt/reading-group-inescid.html'
+
+// Partner institutions, as shown in the footer of the group's own site.
+const AFFILIATIONS = [
+  { href: 'https://www.inesc-id.pt/', src: '/logos/inesc.png', alt: 'INESC-ID' },
+  { href: 'https://tecnico.ulisboa.pt/en/', src: '/logos/ist.png', alt: 'Instituto Superior Técnico' },
+  { href: 'https://lumlis.tecnico.ulisboa.pt/', src: '/logos/ellis.png', alt: 'ELLIS Lisbon' },
 ] as const
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
@@ -114,6 +124,9 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                     {t.nav[item.key]}
                   </Link>
                 ))}
+                <a href={READING_GROUPS_URL} target="_blank" rel="noreferrer">
+                  {t.nav.readingGroups}
+                </a>
                 <Link className="site-nav-search" href="/search" aria-label={t.nav.search}>
                   <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
                     <circle
@@ -156,14 +169,21 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                 <p>INESC-ID · Rua Alves Redol 9, 1000-029 Lisboa, Portugal</p>
               </div>
             </div>
-            <div className="site-footer-links">
-              <Link href="/publications">{t.nav.publications}</Link>
-              <Link href="/dissertations">{t.nav.dissertations}</Link>
-              <Link href="/map">{t.nav.map}</Link>
-              <Link href="/dissertations?status=open">{t.footer.openThesis}</Link>
+            {/* Every section already sits in the header, so repeating those links
+                here only made the footer tall. What belongs here is what the header
+                cannot carry: who we are part of, and the way in for members. */}
+            <div className="site-footer-affiliations">
+              {AFFILIATIONS.map((org) => (
+                <a key={org.href} href={org.href} target="_blank" rel="noreferrer" title={org.alt}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={org.src} alt={org.alt} height={34} />
+                </a>
+              ))}
+            </div>
+            <div className="site-footer-meta">
+              <p className="site-credit">{t.footer.credit}</p>
               <Link href="/admin">{t.footer.signIn}</Link>
             </div>
-            <p className="site-credit">{t.footer.credit}</p>
           </div>
         </footer>
         {chatEnabled && <ChatWidget t={t.chat} />}

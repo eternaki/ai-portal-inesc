@@ -50,6 +50,10 @@ const en = {
       'Looking for an MSc or PhD topic in machine learning? We keep an updated list of open topics and research challenges.',
     browseTopics: 'Browse open topics',
     joinStatLabel: 'open thesis topics right now',
+    joinLedeJobs:
+      'We are hiring. Funded research posts open when a new project starts — see what is available now.',
+    browseJobs: 'See open positions',
+    joinStatJobs: 'open positions right now',
   },
   publications: {
     title: 'Publications',
@@ -62,9 +66,6 @@ const en = {
     rangeOf: 'of',
     allYears: 'all years',
     histogramAria: 'Publications per year — select a year to filter',
-    histogramTable: 'Years as a table',
-    yearColumn: 'Year',
-    countColumn: 'Publications',
     allTypes: 'all types',
     types: {
       journal: 'Journal',
@@ -191,7 +192,6 @@ const en = {
       software: 'Software',
       news: 'News',
       events: 'Event',
-      'reading-groups': 'Reading Group',
     },
     types: {
       journal: 'Journal',
@@ -329,6 +329,10 @@ const pt: Dictionary = {
       'À procura de um tema de mestrado ou doutoramento em aprendizagem automática? Mantemos uma lista atualizada de temas em aberto e desafios de investigação.',
     browseTopics: 'Ver temas em aberto',
     joinStatLabel: 'temas de tese em aberto agora',
+    joinLedeJobs:
+      'Estamos a recrutar. As posições financiadas abrem quando começa um novo projeto — veja o que está disponível.',
+    browseJobs: 'Ver vagas',
+    joinStatJobs: 'vagas em aberto agora',
   },
   publications: {
     title: 'Publicações',
@@ -341,9 +345,6 @@ const pt: Dictionary = {
     rangeOf: 'de',
     allYears: 'todos os anos',
     histogramAria: 'Publicações por ano — selecione um ano para filtrar',
-    histogramTable: 'Anos em tabela',
-    yearColumn: 'Ano',
-    countColumn: 'Publicações',
     allTypes: 'todos os tipos',
     types: {
       journal: 'Revista',
@@ -471,7 +472,6 @@ const pt: Dictionary = {
       software: 'Software',
       news: 'Notícia',
       events: 'Evento',
-      'reading-groups': 'Reading Group',
     },
     types: {
       journal: 'Revista',

@@ -88,21 +88,7 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
 
   return (
     <div>
-      <div className="section-head">
-        <h1>{t.publications.title}</h1>
-        <span>
-          <Link href="/map">{t.nav.map} →</Link>{' '}
-          <Link href="/search">{t.publications.semanticSearch}</Link>{' '}
-          <Link
-            className="btn btn-quiet"
-            href="/admin/collections/publications/create"
-            title={t.publications.addTitle}
-            style={{ marginLeft: '0.8rem' }}
-          >
-            {t.publications.add}
-          </Link>
-        </span>
-      </div>
+      <h1>{t.publications.title}</h1>
       <p className="pub-meta">
         {firstShown}–{lastShown} {t.publications.rangeOf} {result.totalDocs}{' '}
         {t.publications.metaSuffix}
@@ -115,9 +101,6 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
         labels={{
           allYears: t.publications.allYears,
           aria: t.publications.histogramAria,
-          table: t.publications.histogramTable,
-          yearColumn: t.publications.yearColumn,
-          countColumn: t.publications.countColumn,
         }}
       />
 

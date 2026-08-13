@@ -92,7 +92,6 @@ regenerated on every commit (see section 7).
 - `/projects`
 - `/publications/[slug]`
 - `/publications`
-- `/reading-groups`
 - `/search`
 - `/software`
 

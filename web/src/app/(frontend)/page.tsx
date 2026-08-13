@@ -26,7 +26,7 @@ export default async function HomePage() {
   const t = await getDictionary()
   const locale = await getLocale()
 
-  const [pubCount, memberCount, recentPubs, themes, openTopics, news, clusters] = await Promise.all([
+  const [pubCount, memberCount, recentPubs, themes, openTopics, openJobs, news, clusters] = await Promise.all([
     payload.count({ collection: 'publications', where: PUBLISHED }),
     // Active members only — alumni and completed memberships would inflate the
     // headline number into a claim about people who have already left.
@@ -34,6 +34,7 @@ export default async function HomePage() {
     payload.find({ collection: 'publications', where: PUBLISHED, sort: '-year', limit: 5, depth: 0 }),
     payload.find({ collection: 'research-themes', limit: 6, depth: 0 }),
     payload.count({ collection: 'dissertations', where: { status: { equals: 'open' } } }),
+    payload.count({ collection: 'open-positions', where: { status: { equals: 'open' } } }),
     payload.find({ collection: 'news', sort: '-date', limit: 2, depth: 1 }),
     fetchPublicationClusters(),
   ])
@@ -63,7 +64,7 @@ export default async function HomePage() {
             </div>
             {minYear ? (
               <div className="stat">
-                <b><CountUp value={minYear} suffix="—" /></b>
+                <b><CountUp value={minYear} /></b>
                 <span>{t.home.statActiveSince}</span>
               </div>
             ) : null}
@@ -133,15 +134,17 @@ export default async function HomePage() {
         <div className="join-banner-inner">
           <div>
             <h2 className="join-banner-head">{t.home.joinHead}</h2>
-            <p className="join-banner-lede">{t.home.joinLede}</p>
-            <Link className="btn" href="/dissertations?status=open">
-              {t.home.browseTopics}
+            <p className="join-banner-lede">
+              {openJobs.totalDocs > 0 ? t.home.joinLedeJobs : t.home.joinLede}
+            </p>
+            <Link className="btn" href={openJobs.totalDocs > 0 ? '/open-positions' : '/dissertations?status=open'}>
+              {openJobs.totalDocs > 0 ? t.home.browseJobs : t.home.browseTopics}
             </Link>
           </div>
-          {openTopics.totalDocs > 0 && (
+          {(openJobs.totalDocs > 0 ? openJobs.totalDocs : openTopics.totalDocs) > 0 && (
             <div className="join-banner-stat">
-              <b>{openTopics.totalDocs}</b>
-              <span>{t.home.joinStatLabel}</span>
+              <b>{openJobs.totalDocs > 0 ? openJobs.totalDocs : openTopics.totalDocs}</b>
+              <span>{openJobs.totalDocs > 0 ? t.home.joinStatJobs : t.home.joinStatLabel}</span>
             </div>
           )}
         </div>
