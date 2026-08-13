@@ -1031,21 +1031,6 @@ main > h1:first-child {
   transform: translateY(-1px);
 }
 
-/* Names the axis each row filters on. Two stacked rows of identical pills gave a
-   reader no way to tell that the first narrows by stage and the second by level —
-   the chips said "all stages" and "all levels" only until one was picked, after
-   which the row lost the only word explaining it. */
-.filters-label {
-  font-family: var(--font-mono, Menlo, monospace);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  margin-right: 0.15rem;
-  /* Fixed column so stacked rows line their chips up on the same left edge. */
-  min-width: 3.4rem;
-}
-
 /* A second filter row (year, then type) reads as one control block, not two */
 .filters + .filters {
   margin-top: -0.9rem;
@@ -1174,16 +1159,26 @@ main > h1:first-child {
   letter-spacing: 0.06em;
 }
 
+/* One centred cluster. Pushing the two buttons to opposite edges under a
+   full-width rule left the position marker stranded in the middle of a wide
+   empty band, and on the first page — where there is no "Newer" — the whole
+   thing hung off to the right. The rule is gone with it: the list above already
+   ends in a hairline. */
 .pager {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
-  margin-top: 2.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--ink-12);
+  margin-top: 2.25rem;
   font-size: 0.82rem;
   color: var(--ink-40);
+}
+
+/* Fixed width so the buttons don't shuffle sideways as the numbers change. */
+.pager-status {
+  min-width: 11ch;
+  text-align: center;
+  color: var(--ink-70);
 }
 
 .search-form {

@@ -58,13 +58,11 @@ const en = {
     addTitle:
       'Members: add a publication via the admin panel; the summary is generated automatically',
     metaSuffix:
-      'curated research outputs from the MLKD group',
+      'Curated research outputs from the MLKD group.',
     rangeOf: 'of',
     allYears: 'all years',
-    filterYear: 'Year',
     histogramAria: 'Publications per year — select a year to filter',
     allTypes: 'all types',
-    filterType: 'Type',
     types: {
       journal: 'Journal',
       conference: 'Conference',
@@ -83,9 +81,7 @@ const en = {
     title: 'Dissertations',
     meta: 'MSc and PhD theses supervised by the group — open for application, in progress, and defended.',
     allStages: 'all stages',
-    filterStage: 'Stage',
     allLevels: 'all levels',
-    filterLevel: 'Level',
     stages: {
       open: 'Open for application',
       ongoing: 'Ongoing',
@@ -331,13 +327,11 @@ const pt: Dictionary = {
     addTitle:
       'Membros: adicionem uma publicação através do painel de administração; o resumo é gerado automaticamente',
     metaSuffix:
-      'resultados de investigação curados pelo grupo MLKD',
+      'Resultados de investigação curados pelo grupo MLKD.',
     rangeOf: 'de',
     allYears: 'todos os anos',
-    filterYear: 'Ano',
     histogramAria: 'Publicações por ano — selecione um ano para filtrar',
     allTypes: 'todos os tipos',
-    filterType: 'Tipo',
     types: {
       journal: 'Revista',
       conference: 'Conferência',
@@ -356,9 +350,7 @@ const pt: Dictionary = {
     title: 'Dissertações',
     meta: 'Teses de mestrado e doutoramento orientadas pelo grupo — em aberto, em curso e concluídas.',
     allStages: 'todas as fases',
-    filterStage: 'Fase',
     allLevels: 'todos os níveis',
-    filterLevel: 'Nível',
     stages: {
       open: 'Em aberto',
       ongoing: 'Em curso',

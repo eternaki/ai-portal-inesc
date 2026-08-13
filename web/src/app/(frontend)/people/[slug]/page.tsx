@@ -157,7 +157,7 @@ export default async function PersonPage(props: { params: Params; searchParams: 
               ) : (
                 <span />
               )}
-              <span className="mono">
+              <span className="mono pager-status">
                 {t.people.pageLabel} {currentPage} {t.people.pageOf} {publications.totalPages}
               </span>
               {publications.hasNextPage ? (

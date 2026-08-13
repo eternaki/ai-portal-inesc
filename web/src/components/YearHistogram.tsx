@@ -31,7 +31,6 @@ export function YearHistogram({
   hrefForYear: (year: string | null) => string
   labels: {
     allYears: string
-    filterYear: string
     aria: string
   }
 }) {
@@ -51,7 +50,6 @@ export function YearHistogram({
   return (
     <div className="year-histogram">
       <div className="year-histogram-head">
-        <span className="filters-label">{labels.filterYear}</span>
         <Link href={hrefForYear(null)} className={activeYear ? '' : 'active'}>
           {labels.allYears}
         </Link>

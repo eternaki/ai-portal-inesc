@@ -61,12 +61,8 @@ export default async function DissertationsPage(props: { searchParams: SearchPar
       <p className="pub-meta" style={{ maxWidth: '60ch' }}>
         {t.dissertations.meta}
       </p>
-      <p className="pub-meta">
-        {firstShown}–{lastShown} {t.dissertations.rangeOf} {result.totalDocs}
-      </p>
 
       <div className="filters">
-        <span className="filters-label">{t.dissertations.filterStage}</span>
         <Link href={hrefWith({ status: null, page: 1 })} className={!activeStage ? 'active' : ''}>
           {t.dissertations.allStages}
         </Link>
@@ -82,7 +78,6 @@ export default async function DissertationsPage(props: { searchParams: SearchPar
       </div>
 
       <div className="filters">
-        <span className="filters-label">{t.dissertations.filterLevel}</span>
         <Link href={hrefWith({ level: null, page: 1 })} className={!activeLevel ? 'active' : ''}>
           {t.dissertations.allLevels}
         </Link>
@@ -112,8 +107,8 @@ export default async function DissertationsPage(props: { searchParams: SearchPar
           ) : (
             <span />
           )}
-          <span className="mono">
-            {t.dissertations.pageLabel} {currentPage} {t.dissertations.pageOf} {result.totalPages}
+          <span className="mono pager-status">
+            {firstShown}–{lastShown} {t.dissertations.rangeOf} {result.totalDocs}
           </span>
           {result.hasNextPage ? (
             <Link className="btn btn-quiet" href={hrefWith({ page: currentPage + 1 })}>

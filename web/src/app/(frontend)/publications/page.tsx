@@ -89,10 +89,7 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
   return (
     <div>
       <h1>{t.publications.title}</h1>
-      <p className="pub-meta">
-        {firstShown}–{lastShown} {t.publications.rangeOf} {result.totalDocs}{' '}
-        {t.publications.metaSuffix}
-      </p>
+      <p className="pub-meta">{t.publications.metaSuffix}</p>
 
       <YearHistogram
         counts={facets.years}
@@ -100,13 +97,11 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
         hrefForYear={(year) => hrefWith({ year, page: 1 })}
         labels={{
           allYears: t.publications.allYears,
-          filterYear: t.publications.filterYear,
           aria: t.publications.histogramAria,
         }}
       />
 
       <div className="filters">
-        <span className="filters-label">{t.publications.filterType}</span>
         <Link href={hrefWith({ type: null, page: 1 })} className={!activeType ? 'active' : ''}>
           {t.publications.allTypes}
         </Link>
@@ -140,8 +135,8 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
           ) : (
             <span />
           )}
-          <span className="mono">
-            {t.publications.pageLabel} {currentPage} {t.publications.pageOf} {result.totalPages}
+          <span className="mono pager-status">
+            {firstShown}–{lastShown} {t.publications.rangeOf} {result.totalDocs}
           </span>
           {result.hasNextPage ? (
             <Link className="btn btn-quiet" href={hrefWith({ page: currentPage + 1 })}>
