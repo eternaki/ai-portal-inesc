@@ -48,6 +48,15 @@ architecture, global rules). This file covers only the `web/` specifics.
   by `path#Export`): `ImportPublicationPanel` (DOI/URL/title import, on the
   Publications list) and `MaintenancePanel` (data-health, on the dashboard). After
   adding one, run `pnpm generate:importmap`.
+- **On `members`, `role` is the degree and `membershipStatus` is whether they are
+  still here.** Do not express "has left" by setting `role: alumni` — that erases
+  which degree the person did, and `/people` groups by `membershipStatus` anyway
+  (Active, subdivided by role; then Completed), so it buys nothing. Set
+  `membershipStatus: 'completed'` and leave `role` alone. The `alumni` role value
+  survives only on 12 records imported before this was clear. Statuses come from
+  the group's own team page (`scripts/apply-legacy-status.mjs`), which is the only
+  source that separates current students from graduated ones — the supervisor's MSc
+  roster is everyone who ever did an MSc, in one alphabetical list.
 - **Reading-group meetings are `events`.** There is no `reading-groups` collection:
   on the group's own site the Events page *is* the reading-group log — 83 meetings
   since March 2022, each a paper, its presenter and a link to it — so a second

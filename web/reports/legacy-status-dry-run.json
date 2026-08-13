@@ -1,0 +1,369 @@
+{
+  "generatedAt": "2026-08-13T12:27:46.396Z",
+  "mode": "dry-run",
+  "source": "https://mlkd.idss.inesc-id.pt/mlkd-team.html",
+  "legacyPeople": 59,
+  "completed": [],
+  "alreadyCompleted": [
+    {
+      "id": 16,
+      "name": "Ruxandra Barbulescu",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 17,
+      "name": "David Calhas",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 18,
+      "name": "João Lourenço Silva",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 19,
+      "name": "Alexandre Borges",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 20,
+      "name": "Miguel Freire",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 31,
+      "name": "Gonçalo Goulart Oliveira",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 22,
+      "name": "Manuel Goulão",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 23,
+      "name": "Guilherme Costa",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 24,
+      "name": "Lucas Piper",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 25,
+      "name": "João Amoroso",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 26,
+      "name": "João Meneses Santos",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 27,
+      "name": "João Teixeira",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 28,
+      "name": "Clara Pereira",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 29,
+      "name": "Mariana Serrão",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 30,
+      "name": "Miguel Vicente",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 21,
+      "name": "Gonçalo Oliveira",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 32,
+      "name": "José Carreira",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 33,
+      "name": "Tomás Nunes",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 34,
+      "name": "Vicente Silvestre",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 35,
+      "name": "Pedro Henriques",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 36,
+      "name": "Francisco Honório",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 37,
+      "name": "José Cunha",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 38,
+      "name": "Miguel Rasquinho Ferreira",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 39,
+      "name": "Martim Afonso",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 40,
+      "name": "Ana Pimenta Alves",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 41,
+      "name": "Miguel Silva Amaral",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 42,
+      "name": "João Novo",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 43,
+      "name": "Lourenço Tourais",
+      "role": "msc",
+      "theirLabel": "alumni"
+    },
+    {
+      "id": 44,
+      "name": "Manuel Coimbra",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 45,
+      "name": "Tiago Oliveira",
+      "role": "msc",
+      "theirLabel": "alumni"
+    },
+    {
+      "id": 46,
+      "name": "André Loras Leite",
+      "role": "msc",
+      "theirLabel": "alumni"
+    },
+    {
+      "id": 47,
+      "name": "Oleksandr Stopchak",
+      "role": "msc",
+      "theirLabel": "alumni"
+    },
+    {
+      "id": 48,
+      "name": "José Martinho",
+      "role": "msc",
+      "theirLabel": "alumni"
+    },
+    {
+      "id": 49,
+      "name": "José Reis Pereira",
+      "role": "msc",
+      "theirLabel": "alumni"
+    },
+    {
+      "id": 50,
+      "name": "António Farinha Pereira",
+      "role": "msc",
+      "theirLabel": "alumni"
+    },
+    {
+      "id": 51,
+      "name": "João Martins Pedro",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 52,
+      "name": "Rafael Pedro",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 53,
+      "name": "Ricardo Diniz",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 54,
+      "name": "Filipa Marques",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 55,
+      "name": "Dinis Rodrigues",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 56,
+      "name": "André Veríssimo",
+      "role": "alumni",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 57,
+      "name": "Pedro Gonçalves",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 58,
+      "name": "André Cavalheiro",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 59,
+      "name": "Xavier Dias",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    },
+    {
+      "id": 60,
+      "name": "Miguel Monteiro",
+      "role": "msc",
+      "theirLabel": "Alumni"
+    }
+  ],
+  "stillActiveThere": [
+    {
+      "id": 1,
+      "name": "Arlindo Oliveira",
+      "role": "faculty",
+      "theirLabel": "Group Leader"
+    },
+    {
+      "id": 3,
+      "name": "Beatriz Vieira",
+      "role": "phd",
+      "theirLabel": "phd Student"
+    },
+    {
+      "id": 4,
+      "name": "André Duarte",
+      "role": "phd",
+      "theirLabel": "PHD Student"
+    },
+    {
+      "id": 5,
+      "name": "João Marques",
+      "role": "phd",
+      "theirLabel": "PHD Student"
+    },
+    {
+      "id": 6,
+      "name": "Inês Duarte",
+      "role": "phd",
+      "theirLabel": "PHD Student"
+    },
+    {
+      "id": 7,
+      "name": "Duarte Boto",
+      "role": "phd",
+      "theirLabel": "PHD Student"
+    },
+    {
+      "id": 8,
+      "name": "Hélder Dias",
+      "role": "phd",
+      "theirLabel": "PHD Student"
+    },
+    {
+      "id": 9,
+      "name": "Francisco Guedes",
+      "role": "phd",
+      "theirLabel": "PHD Student"
+    },
+    {
+      "id": 10,
+      "name": "Vitória Cruz",
+      "role": "phd",
+      "theirLabel": "PHD Student"
+    },
+    {
+      "id": 11,
+      "name": "Dominika Dlugosz",
+      "role": "phd",
+      "theirLabel": "PhD Student"
+    },
+    {
+      "id": 12,
+      "name": "Mohamed Elbawab",
+      "role": "phd",
+      "theirLabel": "PHD Student"
+    },
+    {
+      "id": 13,
+      "name": "André Carneiro",
+      "role": "phd",
+      "theirLabel": "PHD Student"
+    },
+    {
+      "id": 14,
+      "name": "João Nuno Cardoso",
+      "role": "msc",
+      "theirLabel": "Student"
+    },
+    {
+      "id": 15,
+      "name": "Ricardo Almeida",
+      "role": "msc",
+      "theirLabel": "Student"
+    }
+  ],
+  "wouldRevive": [],
+  "unknownLabel": [],
+  "unmatched": [],
+  "errors": []
+}
