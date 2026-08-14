@@ -33,6 +33,7 @@ export default buildConfig({
       beforeDashboard: [
         '/components/admin/HealthDashboard#HealthDashboard',
         '/components/admin/MaintenancePanel#MaintenancePanel',
+        '/components/admin/CoveragePanel#CoveragePanel',
         '/components/admin/RagWorkbench#RagWorkbench',
       ],
     },

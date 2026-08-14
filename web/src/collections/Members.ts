@@ -97,6 +97,20 @@ export const Members: CollectionConfig = {
       ],
     },
     {
+      // Baseline for the "what did the platform actually add?" question: how many
+      // papers this person was known to have BEFORE OpenAlex ingest (old site, CV,
+      // their own list). The coverage report compares it against the linked
+      // publications on the site to show the discovered difference. Left empty it
+      // simply drops out of that report — we never invent a baseline.
+      name: 'knownPublicationCount',
+      type: 'number',
+      min: 0,
+      admin: {
+        description:
+          'Publications known before the platform imported from OpenAlex (old site / CV). Used by the coverage report to show how many extra papers were discovered. Leave empty if unknown.',
+      },
+    },
+    {
       name: 'links',
       type: 'group',
       fields: [

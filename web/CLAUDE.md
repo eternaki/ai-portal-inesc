@@ -46,8 +46,9 @@ architecture, global rules). This file covers only the `web/` specifics.
   `recordEditorialDecision` hook. Nothing auto-publishes — ingest/import make drafts.
 - **Admin custom UI** lives in `src/components/admin/` (client components, referenced
   by `path#Export`): `ImportPublicationPanel` (DOI/URL/title import, on the
-  Publications list) and `MaintenancePanel` (data-health, on the dashboard). After
-  adding one, run `pnpm generate:importmap`.
+  Publications list), `MaintenancePanel` (data-health, on the dashboard) and
+  `CoveragePanel` (publications per member vs the `knownPublicationCount` baseline
+  and OpenAlex, on the dashboard). After adding one, run `pnpm generate:importmap`.
 - **On `members`, `role` is the degree and `membershipStatus` is whether they are
   still here.** Do not express "has left" by setting `role: alumni` — that erases
   which degree the person did, and `/people` groups by `membershipStatus` anyway

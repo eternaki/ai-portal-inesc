@@ -9,6 +9,7 @@ from typing import Any, Literal
 import httpx
 import litellm
 
+from app import metrics
 from app.config import get_settings
 from app.llm.errors import LLMError, map_provider_error
 
@@ -171,9 +172,19 @@ class LLMService:
         try:
             response = litellm.completion(**kwargs)
         except Exception as err:
+            metrics.record_llm(config.provider, config.model, "error", (time.monotonic() - start) * 1000)
             raise map_provider_error(err, provider=config.provider, model=config.model, request_id=request_id) from err
 
         latency_ms = int((time.monotonic() - start) * 1000)
+        usage_obj = getattr(response, "usage", None)
+        metrics.record_llm(
+            config.provider,
+            config.model,
+            "ok",
+            latency_ms,
+            cost_usd=_response_cost(response),
+            total_tokens=int(getattr(usage_obj, "total_tokens", 0) or 0),
+        )
         content = response.choices[0].message.content or ""
         if not content.strip():
             raise LLMError(
@@ -323,6 +334,18 @@ def _legacy_config(model: str) -> ProviderConfig:
 
 def _strip_prefix(value: str, prefix: str) -> str:
     return value[len(prefix):] if value.startswith(prefix) else value
+
+
+def _response_cost(response: Any) -> float:
+    """Best-effort USD cost of a completion for cost monitoring.
+
+    litellm knows per-model pricing; if the model is unknown or pricing is missing
+    it raises, so we swallow and report 0 rather than fail the call.
+    """
+    try:
+        return float(litellm.completion_cost(completion_response=response) or 0.0)
+    except Exception:  # noqa: BLE001 - cost is a metric, never a hard dependency
+        return 0.0
 
 
 def _usage_dict(usage: Any) -> dict[str, int | None] | None:

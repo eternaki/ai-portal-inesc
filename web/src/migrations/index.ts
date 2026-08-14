@@ -8,6 +8,7 @@ import * as migration_20260721_130000_member_contacts_identifiers from './202607
 import * as migration_20260721_140000_member_toggle_column_names from './20260721_140000_member_toggle_column_names';
 import * as migration_20260722_100000_member_status_contact_review from './20260722_100000_member_status_contact_review';
 import * as migration_20260723_100000_reading_groups from './20260723_100000_reading_groups';
+import * as migration_20260810_100000_member_known_publication_count from './20260810_100000_member_known_publication_count';
 import * as migration_20260811_100000_rename_thesis_topics_to_dissertations from './20260811_100000_rename_thesis_topics_to_dissertations';
 import * as migration_20260811_110000_dissertation_fields from './20260811_110000_dissertation_fields';
 import * as migration_20260811_120000_research_theme_fields from './20260811_120000_research_theme_fields';
@@ -66,6 +67,11 @@ export const migrations = [
     up: migration_20260723_100000_reading_groups.up,
     down: migration_20260723_100000_reading_groups.down,
     name: '20260723_100000_reading_groups'
+  },
+  {
+    up: migration_20260810_100000_member_known_publication_count.up,
+    down: migration_20260810_100000_member_known_publication_count.down,
+    name: '20260810_100000_member_known_publication_count'
   },
   {
     up: migration_20260811_100000_rename_thesis_topics_to_dissertations.up,
