@@ -28,7 +28,6 @@ const ROLE_KEY = {
   researcher: 'roleResearchers',
   phd: 'rolePhd',
   msc: 'roleMsc',
-  alumni: 'roleAlumni',
 } as const
 
 type Params = Promise<{ slug: string }>

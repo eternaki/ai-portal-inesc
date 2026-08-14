@@ -47,7 +47,6 @@ export const Members: CollectionConfig = {
         { label: 'Researcher', value: 'researcher' },
         { label: 'PhD student', value: 'phd' },
         { label: 'MSc student', value: 'msc' },
-        { label: 'Alumni', value: 'alumni' },
       ],
     },
     {
@@ -95,6 +94,20 @@ export const Members: CollectionConfig = {
         { name: 'dblpKey', type: 'text', unique: true, index: true, admin: { width: '20%' } },
         { name: 'tecnicoId', type: 'text', unique: true, index: true, admin: { width: '20%' } },
       ],
+    },
+    {
+      // Baseline for the "what did the platform actually add?" question: how many
+      // papers this person was known to have BEFORE OpenAlex ingest (old site, CV,
+      // their own list). The coverage report compares it against the linked
+      // publications on the site to show the discovered difference. Left empty it
+      // simply drops out of that report — we never invent a baseline.
+      name: 'knownPublicationCount',
+      type: 'number',
+      min: 0,
+      admin: {
+        description:
+          'Publications known before the platform imported from OpenAlex (old site / CV). Used by the coverage report to show how many extra papers were discovered. Leave empty if unknown.',
+      },
     },
     {
       name: 'links',
@@ -241,8 +254,11 @@ export const Members: CollectionConfig = {
       name: 'careerTrajectory',
       type: 'textarea',
       admin: {
-        description: 'Career trajectory (for alumni)',
-        condition: (data) => data?.role === 'alumni',
+        description: 'Where they went next. Shown once their time with the group is complete.',
+        // Was `role === 'alumni'`. Role is the degree and membershipStatus is
+        // whether they are still here, so keying this on the role hid the field
+        // from all 58 people who had actually left.
+        condition: (data) => data?.membershipStatus === 'completed',
       },
     },
   ],

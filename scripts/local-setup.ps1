@@ -193,19 +193,42 @@ Info 'Importing curated member data into local database...'
 Push-Location $WebDir
 try {
   $env:DATABASE_URL = $DatabaseUrl
-  node scripts/import-members-db.mjs --apply
+  pnpm members:import:apply
   if ($LASTEXITCODE -ne 0) {
-    Fail 'Member DB import failed.'
+    Fail 'Member import failed.'
   }
-  node scripts/import-members-db.mjs --apply --data=data/mlkd-members-roster-update.json --report=reports/members-roster-import-db-apply.json
+  pnpm members:import:apply -- --data=data/mlkd-members-roster-update.json
   if ($LASTEXITCODE -ne 0) {
-    Fail 'Member roster DB import failed.'
+    Fail 'Member roster import failed.'
   }
+
+  # Order matters. The two datasets above are the original curated import, and
+  # they still carry the truncated names and the "active" status everyone was
+  # given before the group's own pages were checked. Left there, a fresh setup
+  # reproduces the site as it was, not as it is: 89 MSc students instead of 44,
+  # and a second "Joao Meneses" beside "Joao Meneses Santos". These four put the
+  # corrections back, each one idempotent and each reporting what it changed.
+  Info 'Reconciling members against the rosters and the group site...'
+  pnpm members:names:apply
+  if ($LASTEXITCODE -ne 0) { Fail 'Member name reconciliation failed.' }
+  pnpm members:status:apply
+  if ($LASTEXITCODE -ne 0) { Fail 'Member status reconciliation failed.' }
+  pnpm members:phd:apply
+  if ($LASTEXITCODE -ne 0) { Fail 'PhD roster reconciliation failed.' }
+  pnpm photos:import:apply
+  if ($LASTEXITCODE -ne 0) { Fail 'Member photo import failed.' }
+
   Info 'Linking publication authors to member profiles...'
-  node scripts/link-publication-members-db.mjs --apply
+  pnpm publications:link-members:apply
   if ($LASTEXITCODE -ne 0) {
     Fail 'Publication/member link backfill failed.'
   }
+  pnpm authors:link-aliases:apply
+  if ($LASTEXITCODE -ne 0) { Fail 'Author alias linking failed.' }
+
+  Info 'Removing the development fixtures that ship in the seed...'
+  pnpm seed:prune:apply
+  if ($LASTEXITCODE -ne 0) { Fail 'Seed prune failed.' }
 } finally {
   Pop-Location
 }

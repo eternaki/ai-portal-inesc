@@ -66,7 +66,7 @@ export async function PubRow({
         </div>
       )}
 
-      <div className="pub-authors">
+      <div className="pub-meta">
         {(pub.authors ?? []).map((author, index) => (
           <React.Fragment key={`${author.name}-${index}`}>
             {index > 0 ? ', ' : ''}
@@ -75,9 +75,9 @@ export async function PubRow({
         ))}
       </div>
 
-      <div className="pub-venue">
-        {pub.type ? <span className="pub-kind">{pub.type}</span> : null}
-        {pub.venue ? <span className="mono">{pub.venue}</span> : null}
+      <div className="pub-meta">
+        {pub.venue ? <span className="mono">{pub.venue}</span> : null}{' '}
+        <span className="badge">{pub.type}</span>{' '}
         {hasAiSummary ? <span className="badge badge-ai">{t.pubRow.summary}</span> : null}
       </div>
     </article>

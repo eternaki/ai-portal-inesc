@@ -154,7 +154,7 @@ export interface Member {
    * Account for profile self-editing
    */
   user?: (number | null) | User;
-  role: 'faculty' | 'researcher' | 'phd' | 'msc' | 'alumni';
+  role: 'faculty' | 'researcher' | 'phd' | 'msc';
   /**
    * Current relationship with the MLKD group or project.
    */
@@ -185,6 +185,10 @@ export interface Member {
   openalexId?: string | null;
   dblpKey?: string | null;
   tecnicoId?: string | null;
+  /**
+   * Publications known before the platform imported from OpenAlex (old site / CV). Used by the coverage report to show how many extra papers were discovered. Leave empty if unknown.
+   */
+  knownPublicationCount?: number | null;
   links?: {
     /**
      * LinkedIn or Técnico page — required by the brief
@@ -249,7 +253,7 @@ export interface Member {
   identifiersSource?: string | null;
   identifiersVerifiedAt?: string | null;
   /**
-   * Career trajectory (for alumni)
+   * Where they went next. Shown once their time with the group is complete.
    */
   careerTrajectory?: string | null;
   updatedAt: string;
@@ -857,6 +861,7 @@ export interface MembersSelect<T extends boolean = true> {
   openalexId?: T;
   dblpKey?: T;
   tecnicoId?: T;
+  knownPublicationCount?: T;
   links?:
     | T
     | {

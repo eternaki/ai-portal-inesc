@@ -32,7 +32,7 @@ frontend/UX, AI & automation, data & visibility).
 | Database | **PostgreSQL 16 + pgvector** | One DB for relational data *and* vector search |
 | Publication data | **OpenAlex API** (+ ORCID / DBLP) | Free, official, has abstracts + citations (Google Scholar has no API) |
 | LLM | **Gemini** free tier (swappable) | Summaries / bios / snippets; any provider via LiteLLM |
-| Embeddings | **sentence-transformers** (local) | Semantic search, no API cost |
+| Embeddings | **sentence-transformers** (local, multilingual, 384-dim) | Semantic search over EN+PT, no API cost; pgvector **HNSW/ANN** index |
 | Deploy | **Docker Compose** | Whole system: `db` + `web` + `ai`, one command |
 
 ## 3. Architecture & ownership (hard rules)
@@ -97,6 +97,7 @@ regenerated on every commit (see section 7).
 ### Web API routes — `web/src/app/api/`
 - `/api/ai/snippet`
 - `/api/chat`
+- `/api/coverage`
 - `/api/health/admin`
 - `/api/ingest`
 - `/api/maintenance`
@@ -107,6 +108,7 @@ regenerated on every commit (see section 7).
 - `benchmark.py`
 - `bios.py`
 - `cluster.py`
+- `coverage.py`
 - `embed.py`
 - `embed_entities.py`
 - `ingest.py`
@@ -114,10 +116,12 @@ regenerated on every commit (see section 7).
 - `summarize.py`
 
 ### AI HTTP endpoints — `ai/app/api/routes.py`
+- `GET /coverage/report`
 - `GET /health/llm`
 - `GET /health`
 - `GET /maintenance/report`
 - `GET /map`
+- `GET /metrics`
 - `GET /search/all`
 - `GET /search`
 - `POST /chat`

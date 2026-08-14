@@ -1,0 +1,68 @@
+name: CI
+
+# Runs on every push and PR. Two independent jobs mirror the two subsystems:
+# the Next.js/Payload web app and the FastAPI AI service. The AI job spins up a
+# pgvector database so the ANN (HNSW) integration tests actually execute instead
+# of skipping.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Web (lint + typecheck)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+
+  ai:
+    name: AI service (pytest + ANN)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: mlkd
+          POSTGRES_PASSWORD: mlkd
+          POSTGRES_DB: mlkd
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U mlkd"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # Points app.db at the service container so the ANN integration tests run.
+      DATABASE_URL: postgresql://mlkd:mlkd@localhost:5432/mlkd
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: ai/requirements.txt
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q

@@ -1,21 +1,38 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useSyncExternalStore } from 'react'
 
-// Applies data-theme before paint (see the inline script in layout.tsx) so there
-// is no light->dark flash; this component only needs to reflect/toggle it.
+// The real source of truth for the theme is the `data-theme` attribute that the
+// inline script in layout.tsx sets before paint (no light->dark flash). That
+// makes the DOM an external store, so we read it with useSyncExternalStore
+// instead of mirroring it into state from an effect: no duplicated state, and
+// the server render (which has no document) stays honest by returning null.
+const listeners = new Set<() => void>()
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange)
+  return () => {
+    listeners.delete(onChange)
+  }
+}
+
+function getSnapshot(): 'light' | 'dark' {
+  return (document.documentElement.dataset.theme as 'dark' | undefined) || 'light'
+}
+
+// Unknown until hydration — matches the previous initial state.
+function getServerSnapshot(): 'light' | 'dark' | null {
+  return null
+}
+
 export function ThemeToggle({ light, dark }: { light: string; dark: string }) {
-  const [theme, setTheme] = useState<'light' | 'dark' | null>(null)
-
-  useEffect(() => {
-    setTheme((document.documentElement.dataset.theme as 'dark') || 'light')
-  }, [])
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   const toggle = () => {
     const next = theme === 'dark' ? 'light' : 'dark'
-    setTheme(next)
     document.documentElement.dataset.theme = next
     window.localStorage.setItem('mlkd-theme', next)
+    listeners.forEach((notify) => notify())
   }
 
   return (

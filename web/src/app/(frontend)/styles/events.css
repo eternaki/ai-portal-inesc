@@ -1,73 +1,38 @@
 /* ── events: date badge ── */
 
-/* The same two-column rhythm the publication list uses, so a reader who has
-   scanned one list already knows how to read this one. The dark date badge that
-   used to sit here made a column of eighty-three identical blocks, and the full
-   date was printed again in the body directly beside it. */
 .event-row {
-  display: grid;
-  grid-template-columns: 5.5rem 1fr;
-  gap: 0 1.1rem;
-  max-width: 860px;
-  padding: 1.1rem 0;
+  display: flex;
+  gap: 1.1rem;
+  max-width: 760px;
+  padding: 1.2rem 0;
   border-bottom: 1px solid var(--ink-12);
 }
 
-.event-row:last-child {
-  border-bottom: none;
-}
-
-.event-rail {
+.event-date-badge {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
-  padding-top: 0.15rem;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  border-radius: var(--radius-sm);
+  color: var(--on-fill);
 }
 
-.event-year {
+.event-date-badge b {
   font-family: var(--font-mono, Menlo, monospace);
-  font-size: 0.95rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
-  line-height: 1.2;
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
-.event-day {
-  font-family: var(--font-mono, Menlo, monospace);
-  font-size: 0.76rem;
-  letter-spacing: 0.04em;
+.event-date-badge span {
+  font-size: 0.68rem;
   text-transform: uppercase;
-  color: var(--ink-40);
-  font-variant-numeric: tabular-nums;
-}
-
-.event-meta {
-  color: var(--ink-70);
-  font-size: 0.86rem;
-  margin-top: 0.2rem;
-}
-
-.event-meta .mono {
-  font-size: 0.76rem;
-  color: var(--ink-40);
-}
-
-.event-description {
-  font-size: 0.92rem;
-  margin-top: 0.35rem;
-}
-
-@media (max-width: 560px) {
-  .event-row {
-    grid-template-columns: 1fr;
-    gap: 0.3rem;
-  }
-
-  .event-rail {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 0.5rem;
-  }
+  letter-spacing: 0.04em;
+  /* Follows the badge fill, which is --ink and therefore near-white on dark. */
+  color: var(--on-fill);
 }
 
 .news-item:last-child {

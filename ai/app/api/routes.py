@@ -12,10 +12,10 @@ import uuid
 from collections import defaultdict, deque
 
 from fastapi import APIRouter, Header, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
 from pydantic import BaseModel, Field
 
-from app import payload_api
+from app import metrics, payload_api
 from app.config import get_settings
 from app.llm.errors import LLMError
 from app.llm.client import complete, complete_json, load_prompt
@@ -66,6 +66,19 @@ def health() -> dict:
 @router.get("/health/llm")
 def llm_health() -> dict:
     return llm_service.readiness()
+
+
+@router.get("/metrics")
+def metrics_endpoint(format: str = "prometheus"):
+    """Expose in-process metrics for scraping (request/LLM latency, cost, errors).
+
+    Prometheus text format by default; `?format=json` returns the structured
+    snapshot. Aggregate counters only — no request bodies or user content — so it
+    is safe to leave unauthenticated like /health.
+    """
+    if format == "json":
+        return metrics.registry.snapshot()
+    return PlainTextResponse(metrics.registry.render_prometheus())
 
 
 def llm_error_response(err: LLMError) -> JSONResponse:
@@ -526,6 +539,21 @@ def maintenance_report(
     from app.pipelines.maintenance import run_checks
 
     return run_checks(check_links=check_links)
+
+
+@router.get("/coverage/report")
+def coverage_report(
+    check_openalex: bool = False, x_service_token: str | None = Header(None)
+) -> dict:
+    """Per-member publication coverage: on-site vs known baseline vs OpenAlex.
+
+    Read-only. Answers "how many papers did the platform actually add for this
+    person". The OpenAlex lookup is opt-in (slow, network).
+    """
+    require_service_token(x_service_token)
+    from app.pipelines.coverage import run_report
+
+    return run_report(check_openalex=check_openalex)
 
 
 @router.post("/rag/answer")
