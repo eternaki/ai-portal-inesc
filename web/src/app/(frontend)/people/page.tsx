@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { JsonLd } from '@/components/JsonLd'
@@ -51,11 +50,6 @@ export default async function PeoplePage() {
     <div>
       <JsonLd data={peopleJsonLd} />
       <h1>{t.people.title}</h1>
-      <p className="pub-meta">
-        {t.people.metaBefore}
-        <Link href="/admin">{t.people.signIn}</Link>
-        {t.people.metaAfter}
-      </p>
 
       <section>
         <h2>{t.people.statusActive}</h2>

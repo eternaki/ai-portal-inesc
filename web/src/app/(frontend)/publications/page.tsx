@@ -117,12 +117,16 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
 
       {result.docs.length === 0 && <div className="empty">{t.publications.empty}</div>}
 
-      {result.docs.map((pub) => (
-        <PubRow
-          key={pub.id}
-          pub={pub}
-          clusterColor={clusters.has(pub.id) ? clusterColor(clusters.get(pub.id)!) : null}
-        />
+      {result.docs.map((pub, index) => (
+        <React.Fragment key={pub.id}>
+          {(index === 0 || result.docs[index - 1].year !== pub.year) && (
+            <h2 className="year-heading">{pub.year}</h2>
+          )}
+          <PubRow
+            pub={pub}
+            clusterColor={clusters.has(pub.id) ? clusterColor(clusters.get(pub.id)!) : null}
+          />
+        </React.Fragment>
       ))}
 
       <Pager

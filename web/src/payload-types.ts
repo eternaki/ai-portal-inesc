@@ -340,6 +340,7 @@ export interface Publication {
   year: number;
   type: 'journal' | 'conference' | 'workshop' | 'book' | 'preprint' | 'other';
   venue?: string | null;
+  publicationDate?: string | null;
   authors?:
     | {
         name: string;
@@ -901,6 +902,7 @@ export interface PublicationsSelect<T extends boolean = true> {
   year?: T;
   type?: T;
   venue?: T;
+  publicationDate?: T;
   authors?:
     | T
     | {

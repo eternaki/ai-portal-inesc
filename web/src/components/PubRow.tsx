@@ -1,7 +1,9 @@
 import React from 'react'
 import Link from 'next/link'
 import type { Publication } from '@/payload-types'
-import { getDictionary } from '@/i18n/server'
+import { getDictionary, getLocale } from '@/i18n/server'
+import { dateLocale } from '@/i18n/config'
+import { preciseDayMonth } from '@/lib/publicationDate'
 import { renderSciText } from '@/lib/sciText'
 
 function AuthorName({ author }: { author: NonNullable<Publication['authors']>[number] }) {
@@ -19,9 +21,23 @@ function AuthorName({ author }: { author: NonNullable<Publication['authors']>[nu
 // Server component: reads the active locale so the "summary" badge is localized.
 // `clusterColor` (from the /map topic model) ties this row back to the map —
 // omit it and the row just renders without a tag, no dependency on the AI service.
-export async function PubRow({ pub, clusterColor }: { pub: Publication; clusterColor?: string | null }) {
+//
+// No year here: the page groups publications under a year heading (same pattern
+// as /people's role headings), so a row is just the work — putting the year in a
+// side rail on every row as well made each row visually wider than its text and
+// repeated what the heading above it already said.
+export async function PubRow({
+  pub,
+  clusterColor,
+}: {
+  pub: Publication
+  clusterColor?: string | null
+}) {
   const t = await getDictionary()
+  const locale = await getLocale()
   const hasAiSummary = pub.aiSummaryStatus && pub.aiSummaryStatus !== 'none'
+  // Only a real OpenAlex day/month, never its Jan-1 year-only default.
+  const date = preciseDayMonth(pub.publicationDate)
   return (
     <article className="pub-item">
       <div className="pub-title">
@@ -39,6 +55,17 @@ export async function PubRow({ pub, clusterColor }: { pub: Publication; clusterC
           renderSciText(pub.title)
         )}
       </div>
+
+      {date && (
+        <div className="pub-day">
+          {date.toLocaleDateString(dateLocale[locale], {
+            day: 'numeric',
+            month: 'short',
+            timeZone: 'UTC',
+          })}
+        </div>
+      )}
+
       <div className="pub-meta">
         {(pub.authors ?? []).map((author, index) => (
           <React.Fragment key={`${author.name}-${index}`}>
@@ -47,11 +74,9 @@ export async function PubRow({ pub, clusterColor }: { pub: Publication; clusterC
           </React.Fragment>
         ))}
       </div>
+
       <div className="pub-meta">
-        <span className="mono">
-          {pub.year}
-          {pub.venue ? ` · ${pub.venue}` : ''}
-        </span>{' '}
+        {pub.venue ? <span className="mono">{pub.venue}</span> : null}{' '}
         <span className="badge">{pub.type}</span>{' '}
         {hasAiSummary ? <span className="badge badge-ai">{t.pubRow.summary}</span> : null}
       </div>

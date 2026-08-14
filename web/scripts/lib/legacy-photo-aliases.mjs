@@ -27,7 +27,7 @@ export const PHOTO_ALIASES = [
   { file: 'VincenteSilvestre.png', member: 'Vicente Silvestre' },
   { file: 'OleksanderS.jpeg', member: 'Oleksandr Stopchak' },
   { file: 'gravo.jpeg', member: 'Gonçalo Goulart Oliveira' },
-  { file: 'JoaoMeneses.jpg', member: 'João Meneses Santos' },
+  { file: 'JoaoMeneses.jpg', member: 'João Meneses' },
 ]
 
 const BY_FILE = new Map(PHOTO_ALIASES.map((row) => [row.file, row.member]))

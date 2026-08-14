@@ -73,8 +73,6 @@ const en = {
     },
     prevPage: '← Newer',
     nextPage: 'Older →',
-    pageLabel: 'Page',
-    pageOf: 'of',
     empty: 'No publications match this filter yet.',
   },
   dissertations: {
@@ -95,8 +93,6 @@ const en = {
     back: '← All dissertations',
     prevPage: '← Newer',
     nextPage: 'Older →',
-    pageLabel: 'Page',
-    pageOf: 'of',
     rangeOf: 'of',
   },
   openPositions: {
@@ -121,9 +117,6 @@ const en = {
   },
   people: {
     title: 'People',
-    metaBefore: 'Members edit their own profiles — ',
-    signIn: 'sign in',
-    metaAfter: ' to update yours.',
     roleFaculty: 'Faculty',
     roleResearchers: 'Researchers',
     rolePhd: 'PhD Students',
@@ -139,7 +132,6 @@ const en = {
     backToPeople: '← All people',
     prevPage: '← Newer',
     nextPage: 'Older →',
-    pageLabel: 'Page',
     pageOf: 'of',
   },
   projects: {
@@ -341,8 +333,6 @@ const pt: Dictionary = {
     },
     prevPage: '← Mais recentes',
     nextPage: 'Mais antigas →',
-    pageLabel: 'Página',
-    pageOf: 'de',
     empty: 'Ainda não há publicações para este filtro.',
   },
   dissertations: {
@@ -363,8 +353,6 @@ const pt: Dictionary = {
     back: '← Todas as dissertações',
     prevPage: '← Mais recentes',
     nextPage: 'Mais antigas →',
-    pageLabel: 'Página',
-    pageOf: 'de',
     rangeOf: 'de',
   },
   openPositions: {
@@ -389,9 +377,6 @@ const pt: Dictionary = {
   },
   people: {
     title: 'Pessoas',
-    metaBefore: 'Os membros editam os seus próprios perfis — ',
-    signIn: 'entre',
-    metaAfter: ' para atualizar o seu.',
     roleFaculty: 'Docentes',
     roleResearchers: 'Investigadores',
     rolePhd: 'Doutorandos',
@@ -407,7 +392,6 @@ const pt: Dictionary = {
     backToPeople: '← Todas as pessoas',
     prevPage: '← Mais recentes',
     nextPage: 'Mais antigas →',
-    pageLabel: 'Página',
     pageOf: 'de',
   },
   projects: {

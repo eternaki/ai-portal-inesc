@@ -107,7 +107,11 @@ export default async function HomePage() {
           <Link href="/publications">{t.home.all} {pubCount.totalDocs} →</Link>
         </div>
         {recentPubs.docs.map((pub) => (
-          <PubRow key={pub.id} pub={pub} clusterColor={clusters.has(pub.id) ? clusterColor(clusters.get(pub.id)!) : null} />
+          <PubRow
+            key={pub.id}
+            pub={pub}
+            clusterColor={clusters.has(pub.id) ? clusterColor(clusters.get(pub.id)!) : null}
+          />
         ))}
       </section>
 

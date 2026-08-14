@@ -6,3 +6,5 @@ __pycache__/
 .DS_Store
 *.stackdump
 .superpowers/
+.localdb/
+docker-compose.override.yml

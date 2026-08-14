@@ -1,15 +1,18 @@
-"""Backfill publication links (originalUrl / pdfUrl) from OpenAlex.
+"""Backfill publication links and dates (originalUrl / pdfUrl / publicationDate)
+from OpenAlex.
 
 Run:  python -m app.pipelines.backfill_links [--all] [--dry-run]
 
-Publications ingested before `originalUrl` existed carry no link, so the site
-falls back to doi.org — the publisher's paywall — or shows no link at all. This
-re-reads each work from OpenAlex by its stored `openalexId` and fills the link
-fields, preferring an open-access copy (see ingest._original_url).
+Publications ingested before `originalUrl`/`publicationDate` existed carry no
+link and no day-level date (only `year`), so the site falls back to doi.org —
+the publisher's paywall — or shows only the year. This re-reads each work from
+OpenAlex by its stored `openalexId` and fills the fields, preferring an
+open-access copy for the link (see ingest._original_url).
 
-By default only publications missing `originalUrl` are touched. `--all` refreshes
-every publication that has an OpenAlex id, which also picks up newly deposited
-open-access copies. Nothing else about the record is changed.
+By default only publications missing `originalUrl` or `publicationDate` are
+touched. `--all` refreshes every publication that has an OpenAlex id, which also
+picks up newly deposited open-access copies. Nothing else about the record is
+changed.
 """
 
 import argparse
@@ -56,7 +59,8 @@ def run(*, refresh_all: bool = False, dry_run: bool = False) -> None:
     candidates = [
         p
         for p in publications
-        if p.get("openalexId") and (refresh_all or not p.get("originalUrl"))
+        if p.get("openalexId")
+        and (refresh_all or not p.get("originalUrl") or not p.get("publicationDate"))
     ]
     logger.info(
         "%s publications, %s with an OpenAlex id to check", len(publications), len(candidates)
@@ -81,6 +85,10 @@ def run(*, refresh_all: bool = False, dry_run: bool = False) -> None:
         pdf_url = (work.get("open_access") or {}).get("oa_url")
         if pdf_url and pdf_url != pub.get("pdfUrl"):
             patch["pdfUrl"] = pdf_url
+        publication_date = work.get("publication_date")
+        stored_date = (pub.get("publicationDate") or "")[:10]
+        if publication_date and publication_date != stored_date:
+            patch["publicationDate"] = publication_date
 
         if not patch:
             unchanged += 1

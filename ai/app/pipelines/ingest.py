@@ -89,6 +89,7 @@ def work_to_publication(work: dict[str, Any], member_by_author_id: dict[str, int
     return {
         "title": work.get("title") or "(untitled)",
         "year": work.get("publication_year"),
+        "publicationDate": work.get("publication_date"),
         "type": _map_type(work),
         "venue": ((work.get("primary_location") or {}).get("source") or {}).get("display_name"),
         "doi": _short_doi(work),
