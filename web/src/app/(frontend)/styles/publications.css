@@ -1,0 +1,383 @@
+/* ── publications ── */
+
+/* A metadata rail, then the work. The year is the anchor: the list is sorted by
+   it, so the rail reads as a timeline as you scan — which a stack of
+   title/authors/"2026 · venue · badge" never did. */
+.pub-item {
+  display: grid;
+  grid-template-columns: 4.25rem 1fr;
+  gap: 0 1.1rem;
+  padding: 1rem 0.75rem;
+  margin: 0 -0.75rem;
+  border-bottom: 1px solid var(--ink-12);
+  border-radius: var(--radius-sm);
+  transition: background 160ms var(--ease);
+}
+
+.pub-item:hover {
+  background: var(--ink-6);
+}
+
+.pub-item:last-child {
+  border-bottom: none;
+}
+
+.pub-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-top: 0.1rem;
+}
+
+.pub-year {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.pub-kind {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.pub-title {
+  font-family: var(--font-serif, georgia, serif);
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.pub-cluster-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  transition: transform 160ms var(--ease);
+}
+
+.pub-cluster-dot:hover {
+  transform: scale(1.4);
+}
+
+.pub-authors {
+  color: var(--ink-70);
+  font-size: 0.86rem;
+  margin-top: 0.2rem;
+}
+
+.pub-venue {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.3rem;
+}
+
+.pub-venue .mono {
+  font-size: 0.76rem;
+  color: var(--ink-40);
+}
+
+/* The kind sits beside the venue rather than in the rail — the rail is the
+   timeline, and a second line of text in it made the year hard to find. A middot
+   keeps "PREPRINT" and "arXiv (Cornell University)" from reading as one phrase. */
+.pub-venue .pub-kind::after {
+  content: '·';
+  margin-left: 0.5rem;
+  color: var(--ink-40);
+}
+
+/* Kept: the publication page and the list subtitles still use it. */
+.pub-meta {
+  color: var(--ink-70);
+  font-size: 0.86rem;
+  margin-top: 0.15rem;
+}
+
+.pub-meta .mono {
+  font-size: 0.76rem;
+}
+
+@media (max-width: 560px) {
+  .pub-item {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .pub-rail {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin: 1.1rem 0 1.4rem;
+  align-items: center;
+}
+
+.filters a {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.78rem;
+  padding: 0.15rem 0.65rem;
+  border: 1px solid var(--ink-12);
+  border-radius: 999px;
+  color: var(--ink-70);
+  background: var(--card);
+  transition: transform 160ms var(--ease), border-color 160ms var(--ease), background 160ms var(--ease), color 160ms var(--ease);
+}
+
+/* Three states, three appearances. Hover and active used to render identically,
+   so the one thing the row has to answer — which filter am I looking at? — was
+   only answerable by moving the mouse away. */
+.filters a:hover {
+  border-color: var(--cobalt);
+  color: var(--cobalt);
+  text-decoration: none;
+  background: var(--cobalt-wash);
+  transform: translateY(-1px);
+}
+
+.filters a.active {
+  border-color: var(--cobalt);
+  background: var(--cobalt);
+  color: var(--on-fill);
+  text-decoration: none;
+}
+
+.filters a.active:hover {
+  background: var(--cobalt-dark);
+  border-color: var(--cobalt-dark);
+  color: var(--on-fill);
+  transform: translateY(-1px);
+}
+
+/* A second filter row (year, then type) reads as one control block, not two */
+.filters + .filters {
+  margin-top: -0.9rem;
+}
+
+/* ── publications: year histogram ── */
+
+.year-histogram {
+  margin: 1.1rem 0 1.4rem;
+}
+
+.year-histogram-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.year-histogram-head a {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.78rem;
+  padding: 0.15rem 0.65rem;
+  border: 1px solid var(--ink-12);
+  border-radius: 999px;
+  color: var(--ink-70);
+  background: var(--card);
+}
+
+.year-histogram-head a.active,
+.year-histogram-head a:hover {
+  border-color: var(--cobalt);
+  color: var(--cobalt);
+  background: var(--cobalt-wash);
+  text-decoration: none;
+}
+
+.year-histogram-selected {
+  font-size: 0.78rem;
+  color: var(--ink-70);
+}
+
+.year-histogram-svg {
+  display: block;
+  width: 100%;
+  height: 90px;
+}
+
+/* Single series, single hue — validated against the page surface in both themes. */
+.year-histogram-bar {
+  fill: #2553a5;
+  transition: fill 160ms var(--ease);
+}
+
+:root[data-theme='dark'] .year-histogram-bar {
+  fill: #6b93e2;
+}
+
+/* Selection is an outline, not a second colour. When a year is chosen the rest
+   drop to neutral so the choice reads at a glance. */
+.year-histogram:has(.is-selected) .year-histogram-bar {
+  fill: var(--ink-40);
+}
+
+.year-histogram .year-histogram-bar.is-selected {
+  fill: #2553a5;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  paint-order: stroke;
+}
+
+:root[data-theme='dark'] .year-histogram .year-histogram-bar.is-selected {
+  fill: #6b93e2;
+}
+
+.year-histogram-empty {
+  fill: var(--ink-12);
+}
+
+.year-histogram-hit {
+  fill: transparent;
+}
+
+.year-histogram-svg a:hover .year-histogram-bar {
+  fill: var(--cobalt-bright);
+}
+
+.year-histogram-svg a:focus-visible .year-histogram-hit {
+  fill: var(--cobalt-wash);
+}
+
+.year-histogram-tick {
+  fill: var(--ink-40);
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 11px;
+  /* The tick labels sit visually over the bar/link click targets but are not
+     inside the <a>; without this a click on the glyph pixels misses the link. */
+  pointer-events: none;
+}
+
+.year-histogram-details {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--ink-70);
+}
+
+.year-histogram-details summary {
+  cursor: pointer;
+}
+
+.year-histogram-table {
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.year-histogram-table th,
+.year-histogram-table td {
+  padding: 0.15rem 0.9rem 0.15rem 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.year-histogram-table th {
+  color: var(--ink-40);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* One centred cluster. Pushing the two buttons to opposite edges under a
+   full-width rule left the position marker stranded in the middle of a wide
+   empty band, and on the first page — where there is no "Newer" — the whole
+   thing hung off to the right. The rule is gone with it: the list above already
+   ends in a hairline. */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.25rem;
+  font-size: 0.82rem;
+  color: var(--ink-40);
+}
+
+/* Fixed width so the buttons don't shuffle sideways as the numbers change. */
+.pager-status {
+  min-width: 11ch;
+  text-align: center;
+  color: var(--ink-70);
+}
+
+.search-form {
+  display: flex;
+  gap: 0.6rem;
+  margin: 1.2rem 0 1.8rem;
+  flex-wrap: wrap;
+}
+
+.search-form input {
+  flex: 1;
+  min-width: 260px;
+  padding: 0.65rem 1rem;
+  font-size: 1rem;
+  font-family: var(--font-sans, -apple-system, sans-serif);
+  border: 1px solid var(--ink-12);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease);
+}
+
+.search-form input:focus-visible {
+  border-color: var(--cobalt);
+  box-shadow: 0 0 0 3px var(--cobalt-wash);
+}
+
+/* ── article page ── */
+
+.article-head {
+  max-width: 760px;
+}
+
+.summary-card {
+  background: var(--card);
+  border: 1px solid var(--ink-12);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.6rem;
+  margin: 1.6rem 0;
+  max-width: 760px;
+  box-shadow: var(--shadow-sm);
+}
+
+.summary-card h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+.summary-card dl {
+  margin: 0;
+}
+
+.summary-card dt {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber-text);
+  margin-top: 0.9rem;
+}
+
+.summary-card dd {
+  margin: 0.15rem 0 0;
+}
+
+.abstract {
+  max-width: 760px;
+  color: var(--ink-70);
+}

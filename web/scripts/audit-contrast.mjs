@@ -13,12 +13,33 @@
  * whether text can be read.
  */
 
-import { readFile } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
-const CSS = path.resolve(dirname, '../src/app/(frontend)/styles.css')
+const STYLES_DIR = path.resolve(dirname, '../src/app/(frontend)/styles')
+
+/**
+ * The stylesheet is split by area and re-assembled by @import. Read the parts, in
+ * the same order the browser does, so the tokens declared in base.css resolve for
+ * every rule that uses them — and so a new part cannot be silently skipped.
+ */
+async function readStylesheet() {
+  const entries = (await readdir(STYLES_DIR)).filter((name) => name.endsWith('.css'))
+  const index = await readFile(path.resolve(STYLES_DIR, '../styles.css'), 'utf8')
+  const ordered = [...index.matchAll(/@import\s+'\.\/styles\/([\w-]+\.css)'/g)].map((m) => m[1])
+
+  const missing = entries.filter((name) => !ordered.includes(name))
+  if (missing.length > 0) {
+    throw new Error(`styles/${missing.join(', ')} is not imported by styles.css — add it or delete it`)
+  }
+
+  const parts = await Promise.all(
+    ordered.map((name) => readFile(path.resolve(STYLES_DIR, name), 'utf8')),
+  )
+  return parts.join('\n')
+}
 
 /** sRGB channel -> linear, per WCAG. */
 const channel = (value) => {
@@ -136,7 +157,7 @@ export function inheritedBackground(selector, rules) {
 }
 
 async function run() {
-  const css = await readFile(CSS, 'utf8')
+  const css = await readStylesheet()
   const light = readTokens(css, ':root')
   const dark = { ...light, ...readTokens(css, ":root\\[data-theme='dark'\\]") }
   const rules = readRules(css)

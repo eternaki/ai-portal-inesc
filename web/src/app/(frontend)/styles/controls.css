@@ -1,0 +1,70 @@
+/* ── language switcher (en/pt) ── */
+
+/* The active language used to be a filled cobalt pill — the same treatment as
+   the site's primary button, which made a two-letter preference the loudest
+   thing in the header, louder than the sections themselves. It is a preference,
+   so it is now weight and ink: the current language is simply the darker one. */
+.locale-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: 0.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+}
+
+/* A hairline separating the sections from the tools that act on them. */
+.locale-switcher::before {
+  content: '';
+  width: 1px;
+  height: 16px;
+  margin-right: 0.55rem;
+  background: var(--ink-12);
+}
+
+.locale-switcher button {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.5rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-40);
+  cursor: pointer;
+}
+
+.locale-switcher button:hover {
+  color: var(--cobalt);
+}
+
+.locale-switcher button.active {
+  background: transparent;
+  color: var(--ink);
+  font-weight: 600;
+  cursor: default;
+}
+
+/* ── theme toggle ── */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-left: 0.3rem;
+  border: 1px solid var(--ink-12);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink-70);
+  cursor: pointer;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease), transform 160ms var(--ease);
+}
+
+.theme-toggle:hover {
+  color: var(--cobalt);
+  border-color: var(--cobalt);
+  transform: rotate(-8deg);
+}

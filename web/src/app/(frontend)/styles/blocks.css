@@ -1,0 +1,132 @@
+/* ── shared blocks ── */
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.section-head a {
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.8rem;
+  color: var(--ink-70);
+}
+
+/* A badge states a fact; a filter chip is a control. They used to be the same
+   object — mono type, pill, hairline border, card fill — so on the dissertations
+   list the "Open for application" tag on a row was indistinguishable from the
+   "Open for application" button above it. Controls keep the outline and the card
+   fill, which is what makes them look raised; badges are flat and tinted. */
+.badge {
+  display: inline-block;
+  padding: 0.05rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  border: 1px solid transparent;
+  color: var(--ink-70);
+  background: var(--ink-6);
+  vertical-align: middle;
+}
+
+.badge-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.badge-ai {
+  border-color: transparent;
+  background: var(--amber-wash);
+  color: var(--amber-text);
+}
+
+.badge-open {
+  border-color: transparent;
+  background: var(--cobalt-wash);
+  color: var(--cobalt);
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  background: var(--cobalt);
+  color: var(--on-fill);
+  font-weight: 500;
+  font-size: 0.92rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-cobalt);
+  transition: transform 180ms var(--ease), box-shadow 180ms var(--ease), background 180ms var(--ease);
+}
+
+.btn:hover {
+  background: var(--cobalt-dark);
+  color: var(--on-fill);
+  text-decoration: none;
+  transform: translateY(-1px);
+  /* --shadow-cobalt, not a literal blue: the hard-coded one was mixed from the
+     light theme's cobalt and left a navy pool under a pale button on dark. */
+  box-shadow: var(--shadow-cobalt);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-quiet {
+  background: transparent;
+  color: var(--cobalt);
+  border: 1px solid var(--ink-12);
+  box-shadow: none;
+}
+
+.btn-quiet:hover {
+  background: var(--cobalt-wash);
+  color: var(--cobalt-dark);
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.empty {
+  border: 1px dashed var(--ink-12);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  color: var(--ink-70);
+  background: var(--card);
+}
+
+/* This page is empty most of the year, so its empty state is the design, not a
+   fallback: a heading, an explanation and a route onward. */
+.positions-empty {
+  border: 1px solid var(--ink-12);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 2rem 1.75rem;
+  max-width: 62ch;
+  box-shadow: var(--shadow-sm);
+}
+
+.positions-empty h2 {
+  margin-top: 0;
+  padding-left: 0;
+  font-size: 1.3rem;
+}
+
+.positions-empty h2::before {
+  display: none;
+}
+
+.positions-empty p {
+  color: var(--ink-70);
+}

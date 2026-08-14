@@ -1,0 +1,342 @@
+/* ── header / footer ── */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  min-height: var(--header-h);
+  border-bottom: 1px solid var(--ink-12);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+}
+
+.site-header-inner {
+  min-height: var(--header-h);
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  flex-wrap: wrap;
+}
+
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--ink);
+}
+
+.site-logo:hover {
+  text-decoration: none;
+}
+
+.site-logo-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--ink-12);
+  border-radius: 10px;
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+  transition: transform 220ms var(--ease), box-shadow 220ms var(--ease);
+}
+
+.site-logo:hover .site-logo-mark {
+  transform: translateY(-1px) rotate(-4deg);
+  box-shadow: var(--shadow-md);
+}
+
+.site-logo strong {
+  display: block;
+  font-family: var(--font-serif, georgia, serif);
+  font-size: 1.2rem;
+  line-height: 1.1;
+}
+
+.site-logo small {
+  display: block;
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  position: relative;
+  color: var(--ink-70);
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding-bottom: 3px;
+}
+
+.site-nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--cobalt);
+  transition: right 220ms var(--ease);
+}
+
+.site-nav a:hover {
+  color: var(--cobalt);
+  text-decoration: none;
+}
+
+.site-nav a:hover::after {
+  right: 0;
+}
+
+/* Search sits in the nav as an icon: it is a tool, not a section, and the row
+   stays short. The word comes back in the mobile panel, where a lone glyph in a
+   stacked list of labels reads as an orphan. */
+.site-nav-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-70);
+}
+
+.site-nav-search-label {
+  display: none;
+}
+
+.site-nav-search::after {
+  display: none;
+}
+
+/* The members' door, same treatment as search and for the same reason: a tool,
+   not a section. It used to live in the footer, which put the one link staff need
+   on every page at the very bottom of it. */
+.site-nav-signin {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-70);
+}
+
+.site-nav-signin-label {
+  display: none;
+}
+
+.site-nav-signin::after {
+  display: none;
+}
+
+/* Hamburger toggle — hidden on desktop, shown below the nav breakpoint */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--ink-12);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  display: block;
+  height: 2px;
+  margin: 0 8px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform 200ms var(--ease), opacity 200ms var(--ease);
+}
+
+.nav-toggle[aria-expanded='true'] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded='true'] span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle[aria-expanded='true'] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav-panel {
+  display: contents;
+}
+
+.site-footer {
+  flex-shrink: 0;
+  border-top: 2px solid var(--cobalt);
+  background: var(--ink-6);
+  margin-top: 2.25rem;
+}
+
+/* One band. Every section is in the header and so is the members' sign-in, which
+   leaves the footer with two jobs — say who we are, show whose company we keep —
+   and no reason to be tall. */
+.site-footer-inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.1rem 1.25rem 1.3rem;
+  font-size: 0.92rem;
+  color: var(--ink-70);
+}
+
+.site-footer-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem 3rem;
+  flex-wrap: wrap;
+}
+
+.site-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  max-width: 44ch;
+}
+
+.site-footer strong {
+  display: block;
+  font-family: var(--font-serif, georgia, serif);
+  font-size: 1.05rem;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+/* The address is metadata, so it is set like the site's other metadata — the mono
+   face, tracked out and one step down. It also stops the two lines reading as one
+   run-on sentence in the same voice. */
+.site-footer p {
+  margin: 0.35em 0 0;
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-70);
+}
+
+.site-footer-affiliations {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Partner marks sit straight on the footer, no plate. They used to have a white
+   one so their dark ink would survive the dark theme, but three white tiles in a
+   dark footer read as stickers pasted over the page. */
+.site-footer-affiliations a {
+  display: grid;
+  place-items: center;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-sm);
+  transition: transform 160ms var(--ease), opacity 160ms var(--ease);
+}
+
+.site-footer-affiliations a:hover {
+  transform: translateY(-2px);
+}
+
+.site-footer-affiliations img {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+
+/* Two of the three marks are mostly dark ink — INESC-ID's globe and wordmark, the
+   "TÉCNICO LISBOA" lettering — and on the dark footer they sink into it: 62% and
+   30% of their pixels sit under 3:1 against the background. 1.35 is the smallest
+   lift that clears 3:1 everywhere; it is deliberately not higher, because past it
+   Técnico's blue shield turns visibly turquoise. At this value the measured hue
+   shift is 0.8° for INESC-ID and 6.4° for Técnico — the marks stay their own
+   colours, which a plate-free footer and untouched artwork cannot both give.
+   ELLIS is saturated colour throughout and is left exactly as delivered. */
+:root[data-theme='dark'] .site-footer-affiliations img[data-lift-on-dark] {
+  filter: brightness(1.35);
+}
+
+@media (max-width: 640px) {
+  .site-footer-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ── responsive nav (mobile dropdown) ── */
+
+/* Was 1360px, which pushed a 1366px-wide laptop into the hamburger. Seven items
+   plus the logo and the three controls measure ~1210px, so this is the tightest
+   breakpoint that still keeps a 1366px laptop on the full row. */
+@media (max-width: 1240px) {
+  .nav-toggle {
+    display: flex;
+  }
+
+  .nav-panel {
+    display: block;
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    z-index: 39;
+    max-height: calc(100vh - var(--header-h));
+    overflow-y: auto;
+    background: var(--card);
+    border-bottom: 1px solid var(--ink-12);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-8px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 220ms var(--ease), opacity 220ms var(--ease), visibility 220ms;
+  }
+
+  .nav-panel.open {
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .nav-panel .site-nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0.5rem 1.25rem 1.5rem;
+  }
+
+  .nav-panel .site-nav a {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--ink-12);
+    font-size: 1.02rem;
+  }
+
+  .nav-panel .site-nav a::after {
+    display: none;
+  }
+
+  .nav-panel .site-nav-search-label,
+  .nav-panel .site-nav-signin-label {
+    display: inline;
+  }
+
+  .nav-panel .locale-switcher {
+    margin: 1rem 0 0;
+    align-self: flex-start;
+  }
+}
