@@ -16,6 +16,7 @@ import * as migration_20260811_130000_open_positions from './20260811_130000_ope
 
 import * as migration_20260813_100000_drop_suspended_membership from './20260813_100000_drop_suspended_membership';
 import * as migration_20260813_120000_drop_reading_groups from './20260813_120000_drop_reading_groups';
+import * as migration_20260814_100000_drop_alumni_role from './20260814_100000_drop_alumni_role';
 
 export const migrations = [
   {
@@ -102,5 +103,10 @@ export const migrations = [
     up: migration_20260813_120000_drop_reading_groups.up,
     down: migration_20260813_120000_drop_reading_groups.down,
     name: '20260813_120000_drop_reading_groups'
+  },
+  {
+    up: migration_20260814_100000_drop_alumni_role.up,
+    down: migration_20260814_100000_drop_alumni_role.down,
+    name: '20260814_100000_drop_alumni_role'
   },
 ];

@@ -47,7 +47,6 @@ export const Members: CollectionConfig = {
         { label: 'Researcher', value: 'researcher' },
         { label: 'PhD student', value: 'phd' },
         { label: 'MSc student', value: 'msc' },
-        { label: 'Alumni', value: 'alumni' },
       ],
     },
     {
@@ -255,8 +254,11 @@ export const Members: CollectionConfig = {
       name: 'careerTrajectory',
       type: 'textarea',
       admin: {
-        description: 'Career trajectory (for alumni)',
-        condition: (data) => data?.role === 'alumni',
+        description: 'Where they went next. Shown once their time with the group is complete.',
+        // Was `role === 'alumni'`. Role is the degree and membershipStatus is
+        // whether they are still here, so keying this on the role hid the field
+        // from all 58 people who had actually left.
+        condition: (data) => data?.membershipStatus === 'completed',
       },
     },
   ],

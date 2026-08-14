@@ -16,7 +16,6 @@ const ROLE_ORDER = [
   { value: 'researcher', key: 'roleResearchers' },
   { value: 'phd', key: 'rolePhd' },
   { value: 'msc', key: 'roleMsc' },
-  { value: 'alumni', key: 'roleAlumni' },
 ] as const
 
 // Membership is binary here, as it is on the group's own site: you are with the

@@ -154,7 +154,7 @@ export interface Member {
    * Account for profile self-editing
    */
   user?: (number | null) | User;
-  role: 'faculty' | 'researcher' | 'phd' | 'msc' | 'alumni';
+  role: 'faculty' | 'researcher' | 'phd' | 'msc';
   /**
    * Current relationship with the MLKD group or project.
    */
@@ -253,7 +253,7 @@ export interface Member {
   identifiersSource?: string | null;
   identifiersVerifiedAt?: string | null;
   /**
-   * Career trajectory (for alumni)
+   * Where they went next. Shown once their time with the group is complete.
    */
   careerTrajectory?: string | null;
   updatedAt: string;
