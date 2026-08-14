@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
-  // Компактный образ для Docker: .next/standalone + node server.js
+  // Compact Docker image: .next/standalone + node server.js
   output: 'standalone',
   images: {
     localPatterns: [

@@ -1,0 +1,187 @@
+/* ── people ── */
+
+.people-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Photo beside the name rather than above it: at a glance the eye wants the face
+   and the name together, and the row shape lets more people fit on a screen. The
+   card is a positioned block, not a link — the whole surface is clickable through
+   an overlay so the LinkedIn anchor can sit on top without nesting links. */
+.person-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: inherit;
+  background: var(--card);
+  border: 1px solid var(--ink-12);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  scroll-margin-top: calc(var(--header-h) + 1rem);
+  box-shadow: var(--shadow-sm);
+  transition: transform 200ms var(--ease), border-color 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+
+.person-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--cobalt);
+}
+
+.person-card-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* The overlay makes the whole card clickable while leaving the LinkedIn icon,
+   which sits above it, reachable on its own. */
+.person-card-link {
+  font-family: var(--font-serif, georgia, serif);
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.person-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+}
+
+.person-card-link:hover {
+  color: var(--cobalt);
+  text-decoration: none;
+}
+
+.person-card .badge {
+  align-self: flex-start;
+}
+
+.person-card-linkedin {
+  position: relative;
+  z-index: 1;
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--ink-70);
+  background: var(--ink-6);
+  flex-shrink: 0;
+  transition: color 160ms var(--ease), background 160ms var(--ease);
+}
+
+.person-card-linkedin:hover {
+  color: var(--on-fill);
+  background: var(--cobalt);
+}
+
+.person-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--cobalt-wash);
+  color: var(--cobalt-dark);
+  font-family: var(--font-serif, georgia, serif);
+  font-weight: 600;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.person-avatar--photo {
+  display: block;
+  object-fit: cover;
+  background: var(--ink-8);
+}
+
+.person-card strong {
+  font-family: var(--font-serif, georgia, serif);
+  font-size: 1.05rem;
+}
+
+.person-links {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.7rem;
+  font-size: 0.82rem;
+  flex-wrap: wrap;
+}
+
+/* Profile header: photo beside the name, stacking on narrow screens */
+.person-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.person-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--ink-12);
+}
+
+.person-photo--initials {
+  display: grid;
+  place-items: center;
+  font-family: var(--font-serif, georgia, serif);
+  font-size: 2.2rem;
+  color: var(--ink-70);
+  background: var(--ink-6);
+}
+
+.person-publications {
+  margin-top: 0.85rem;
+  border-top: 1px solid var(--ink-12);
+  padding-top: 0.75rem;
+}
+
+.person-publications-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.person-publications ul {
+  margin: 0.55rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.person-publications li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  margin: 0.25rem 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.person-publications a {
+  color: var(--ink);
+}
+
+.author-member-link {
+  color: var(--ink);
+  font-weight: 650;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}

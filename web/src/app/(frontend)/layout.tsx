@@ -54,19 +54,33 @@ export const metadata = {
     template: '%s | MLKD @ INESC-ID',
   },
   description:
-    'Machine Learning and Knowledge Discovery group at INESC-ID: publications, people, projects and opportunities.',
+    'Machine Learning and Knowledge Discovery group at INESC-ID: publications, people, dissertations and events.',
 }
 
+// Section list mirrors the group's existing site (mlkd.idss.inesc-id.pt), which the
+// supervisor asked us to preserve. Search is the icon at the end of the row.
 const NAV = [
-  { href: '/research', key: 'research' },
-  { href: '/map', key: 'map' },
-  { href: '/publications', key: 'publications' },
   { href: '/people', key: 'people' },
-  { href: '/opportunities', key: 'opportunities' },
-  { href: '/reading-groups', key: 'readingGroups' },
+  { href: '/publications', key: 'publications' },
+  { href: '/dissertations', key: 'dissertations' },
+  { href: '/map', key: 'map' },
   { href: '/news', key: 'news' },
   { href: '/events', key: 'events' },
-  { href: '/search', key: 'search' },
+  { href: '/open-positions', key: 'openPositions' },
+] as const
+
+// Reading groups are not hosted here. The group's own site links straight out to
+// the Técnico page that runs them, so this entry is a signpost, not a section —
+// mirroring that rather than keeping an empty local page.
+const READING_GROUPS_URL = 'https://lumlis.tecnico.ulisboa.pt/reading-group-inescid.html'
+
+// Partner institutions, as shown in the footer of the group's own site.
+// `liftOnDark` marks the logos that are mostly dark ink and would otherwise sink
+// into the dark footer. ELLIS is saturated colour throughout and needs nothing.
+const AFFILIATIONS = [
+  { href: 'https://www.inesc-id.pt/', src: '/logos/inesc.png', alt: 'INESC-ID', liftOnDark: true },
+  { href: 'https://tecnico.ulisboa.pt/en/', src: '/logos/ist.png', alt: 'Instituto Superior Técnico', liftOnDark: true },
+  { href: 'https://lumlis.tecnico.ulisboa.pt/', src: '/logos/ellis.png', alt: 'ELLIS Lisbon', liftOnDark: false },
 ] as const
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
@@ -105,13 +119,48 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                 <small>INESC-ID · Lisboa</small>
               </span>
             </Link>
-            <MobileNav>
+            <MobileNav openLabel={t.nav.openMenu} closeLabel={t.nav.closeMenu}>
               <nav className="site-nav">
                 {NAV.map((item) => (
                   <Link key={item.href} href={item.href}>
                     {t.nav[item.key]}
                   </Link>
                 ))}
+                <a href={READING_GROUPS_URL} target="_blank" rel="noreferrer">
+                  {t.nav.readingGroups}
+                </a>
+                <Link className="site-nav-search" href="/search" aria-label={t.nav.search}>
+                  <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
+                    <circle
+                      cx="8.5"
+                      cy="8.5"
+                      r="5.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                    />
+                    <path
+                      d="M12.7 12.7 L17 17"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="site-nav-search-label">{t.nav.search}</span>
+                </Link>
+                <Link className="site-nav-signin" href="/admin" aria-label={t.nav.signIn}>
+                  <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
+                    <circle cx="10" cy="6.6" r="3.3" fill="none" stroke="currentColor" strokeWidth="1.7" />
+                    <path
+                      d="M3.8 17c0-3.4 2.8-5.6 6.2-5.6s6.2 2.2 6.2 5.6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="site-nav-signin-label">{t.nav.signIn}</span>
+                </Link>
                 <LocaleSwitcher current={locale} />
                 <ThemeToggle light={t.theme.light} dark={t.theme.dark} />
               </nav>
@@ -119,29 +168,34 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           </div>
         </header>
         <main>{children}</main>
+        {/* Every section sits in the header, and so does the members' door now, so
+            the footer is down to one line: who we are and whose company we keep. */}
         <footer className="site-footer">
           <div className="site-footer-inner">
-            <div className="site-footer-brand">
-              <span className="site-logo-mark" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="20" height="20">
-                  <circle cx="5" cy="17" r="2.4" fill="var(--cobalt)" />
-                  <circle cx="17" cy="5" r="2.4" fill="var(--cobalt)" />
-                  <circle cx="19" cy="18" r="1.7" fill="var(--amber)" />
-                  <path d="M5 17 L17 5 M17 5 L19 18" stroke="var(--ink-40)" strokeWidth="1" />
-                </svg>
-              </span>
-              <div>
-                <strong>Machine Learning and Knowledge Discovery</strong>
-                <p>INESC-ID · Rua Alves Redol 9, 1000-029 Lisboa, Portugal</p>
+            <div className="site-footer-main">
+              <div className="site-footer-brand">
+                <span className="site-logo-mark" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20">
+                    <circle cx="5" cy="17" r="2.4" fill="var(--cobalt)" />
+                    <circle cx="17" cy="5" r="2.4" fill="var(--cobalt)" />
+                    <circle cx="19" cy="18" r="1.7" fill="var(--amber)" />
+                    <path d="M5 17 L17 5 M17 5 L19 18" stroke="var(--ink-40)" strokeWidth="1" />
+                  </svg>
+                </span>
+                <div>
+                  <strong>Machine Learning and Knowledge Discovery</strong>
+                  <p>INESC-ID · Rua Alves Redol 9, 1000-029 Lisboa, Portugal</p>
+                </div>
+              </div>
+              <div className="site-footer-affiliations">
+                {AFFILIATIONS.map((org) => (
+                  <a key={org.href} href={org.href} target="_blank" rel="noreferrer" title={org.alt}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={org.src} alt={org.alt} {...(org.liftOnDark ? { 'data-lift-on-dark': '' } : {})} />
+                  </a>
+                ))}
               </div>
             </div>
-            <div className="site-footer-links">
-              <Link href="/publications">{t.nav.publications}</Link>
-              <Link href="/reading-groups">{t.nav.readingGroups}</Link>
-              <Link href="/opportunities">{t.footer.openThesis}</Link>
-              <Link href="/admin">{t.footer.signIn}</Link>
-            </div>
-            <p className="site-credit">{t.footer.credit}</p>
           </div>
         </footer>
         {chatEnabled && <ChatWidget t={t.chat} />}

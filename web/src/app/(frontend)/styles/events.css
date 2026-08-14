@@ -1,0 +1,94 @@
+/* ── events: date badge ── */
+
+.event-row {
+  display: flex;
+  gap: 1.1rem;
+  max-width: 760px;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--ink-12);
+}
+
+.event-date-badge {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  border-radius: var(--radius-sm);
+  color: var(--on-fill);
+}
+
+.event-date-badge b {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.event-date-badge span {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  /* Follows the badge fill, which is --ink and therefore near-white on dark. */
+  color: var(--on-fill);
+}
+
+.news-item:last-child {
+  border-bottom: none;
+}
+
+.news-date {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.74rem;
+  color: var(--ink-40);
+  letter-spacing: 0.06em;
+}
+
+.share-row {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+  flex-wrap: wrap;
+}
+
+/* Imported prose: dissertation descriptions arrive from the group's old site with
+   real structure — an introduction, a labelled sub-heading, a list of techniques,
+   a closing note. These rules are what make that structure visible instead of a
+   run of identical paragraphs. */
+.rich-text {
+  max-width: 720px;
+}
+
+.rich-text h4 {
+  margin: 1.6em 0 0.5em;
+  font-family: var(--font-sans, -apple-system, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.rich-text ul,
+.rich-text ol {
+  margin: 0.6em 0 1.2em;
+  padding-left: 1.35rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.rich-text li {
+  line-height: 1.5;
+}
+
+.rich-text ul li::marker {
+  color: var(--cobalt);
+}
+
+.rich-text ol li::marker {
+  color: var(--ink-40);
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.85em;
+}

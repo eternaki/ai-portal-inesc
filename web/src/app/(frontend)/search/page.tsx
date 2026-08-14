@@ -15,11 +15,10 @@ const ENTITY_TYPES = [
   'publications',
   'members',
   'projects',
-  'thesis-topics',
+  'dissertations',
   'software',
   'news',
   'events',
-  'reading-groups',
 ] as const
 
 type EntityType = (typeof ENTITY_TYPES)[number]
@@ -36,15 +35,16 @@ type UnifiedHit = {
   source?: 'semantic' | 'lexical'
 }
 
+// Collections without a detail page still deep-link to their anchor on the list
+// page — landing on a 200-item list with no idea which row matched is a dead end.
 const ENTITY_LINK: Record<EntityType, (hit: UnifiedHit) => string> = {
   publications: (hit) => (hit.slug ? `/publications/${hit.slug}` : '/publications'),
-  members: (hit) => (hit.slug ? `/people#${hit.slug}` : '/people'),
-  projects: () => '/projects',
-  'thesis-topics': () => '/opportunities',
-  software: () => '/software',
+  members: (hit) => (hit.slug ? `/people/${hit.slug}` : '/people'),
+  projects: (hit) => (hit.slug ? `/projects#${hit.slug}` : '/projects'),
+  dissertations: (hit) => (hit.slug ? `/dissertations/${hit.slug}` : '/dissertations'),
+  software: (hit) => (hit.slug ? `/software#${hit.slug}` : '/software'),
   news: (hit) => (hit.slug ? `/news/${hit.slug}` : '/news'),
-  events: () => '/events',
-  'reading-groups': () => '/reading-groups',
+  events: (hit) => (hit.slug ? `/events#${hit.slug}` : '/events'),
 }
 
 function textFromRich(node: unknown): string {
@@ -64,13 +64,16 @@ function yearFromDate(value: unknown): number | null {
   return Number.isFinite(year) ? year : null
 }
 
+// Keyword fallback used when the AI service is unreachable. Every non-empty token
+// counts: dropping short ones made the field's own vocabulary — AI, ML, NLP, RL —
+// match nothing at all.
 function matchesQuery(hit: UnifiedHit, q: string) {
   const haystack = `${hit.title ?? ''} ${hit.description ?? ''}`.toLowerCase()
-  return q
+  const tokens = q
     .toLowerCase()
     .split(/\s+/)
-    .filter((token) => token.length > 2)
-    .some((token) => haystack.includes(token))
+    .filter(Boolean)
+  return tokens.length > 0 && tokens.some((token) => haystack.includes(token))
 }
 
 async function textualFallback(q: string, type?: EntityType): Promise<UnifiedHit[]> {
@@ -120,11 +123,11 @@ async function textualFallback(q: string, type?: EntityType): Promise<UnifiedHit
           source: 'lexical' as const,
         })),
       )
-    } else if (entityType === 'thesis-topics') {
-      const res = await payload.find({ collection: 'thesis-topics', sort: 'title', limit: 200, depth: 0 })
+    } else if (entityType === 'dissertations') {
+      const res = await payload.find({ collection: 'dissertations', sort: 'title', limit: 200, depth: 0 })
       results.push(
         ...res.docs.map((doc) => ({
-          entity_type: 'thesis-topics' as const,
+          entity_type: 'dissertations' as const,
           id: doc.id,
           title: doc.title,
           slug: doc.slug,
@@ -169,20 +172,6 @@ async function textualFallback(q: string, type?: EntityType): Promise<UnifiedHit
           title: doc.title,
           slug: doc.slug,
           description: textFromRich(doc.description) || doc.speaker || doc.location || null,
-          year: yearFromDate(doc.date),
-          score: 0,
-          source: 'lexical' as const,
-        })),
-      )
-    } else if (entityType === 'reading-groups') {
-      const res = await payload.find({ collection: 'reading-groups', sort: '-date', limit: 200, depth: 0 })
-      results.push(
-        ...res.docs.map((doc) => ({
-          entity_type: 'reading-groups' as const,
-          id: doc.id,
-          title: doc.title,
-          slug: doc.slug,
-          description: textFromRich(doc.description) || doc.paperTitle || doc.presenter || null,
           year: yearFromDate(doc.date),
           score: 0,
           source: 'lexical' as const,

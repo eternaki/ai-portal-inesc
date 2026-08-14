@@ -1,0 +1,230 @@
+/* ── section cards (themes, projects, topics…) ── */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+/* ── card reveal on scroll (ScrollReveal.tsx) ── */
+
+.reveal-pending {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 480ms var(--ease), transform 480ms var(--ease);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--ink-12);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 200ms var(--ease), box-shadow 200ms var(--ease), border-color 200ms var(--ease);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: transparent;
+}
+
+.card h3 {
+  margin: 0;
+}
+
+.card .pub-meta {
+  margin-top: 0;
+}
+
+.card-foot {
+  margin-top: auto;
+  padding-top: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--ink-40);
+}
+
+/* ── home: research theme tiles ── */
+
+.theme-tile {
+  border-top: 3px solid transparent;
+}
+
+.theme-tile-desc {
+  font-size: 0.88rem;
+  color: var(--ink-70);
+}
+
+/* ── home: news cards ── */
+
+.news-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.news-card {
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--ink-12);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+
+.news-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.news-card-media {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.news-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.news-card-media-mark {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.news-card-body {
+  padding: 1.1rem 1.3rem 1.3rem;
+  flex: 1;
+}
+
+.news-card .pub-title {
+  margin-top: 0.3rem;
+}
+
+.news-card-accent {
+  height: 3px;
+}
+
+/* ── home: "Join us" CTA banner ── */
+
+.join-banner {
+  margin-top: 3rem;
+  padding: 3rem 2rem;
+  background: var(--card);
+  border: 1px solid var(--cobalt);
+  border-radius: var(--radius);
+}
+
+.join-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.join-banner-head {
+  color: var(--ink);
+  margin: 0 0 0.5em;
+  border-bottom: none;
+  padding-left: 0;
+}
+
+.join-banner-head::before {
+  display: none;
+}
+
+.join-banner-lede {
+  max-width: 54ch;
+  color: var(--ink-70);
+}
+
+.join-banner-stat {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 1.2rem 1.8rem;
+  border: 1px solid var(--ink-12);
+  border-radius: var(--radius-sm);
+  background: var(--ink-6);
+}
+
+.join-banner-stat b {
+  display: block;
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 2.2rem;
+  color: var(--ink);
+}
+
+.join-banner-stat span {
+  font-size: 0.78rem;
+  color: var(--ink-70);
+  max-width: 16ch;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .join-banner {
+    padding: 2rem 1.4rem;
+  }
+  .join-banner-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ── news list ── */
+
+.news-item {
+  max-width: 760px;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--ink-12);
+}
+
+/* ── session cards ── */
+
+.session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+
+.session-card {
+  max-width: 760px;
+  background: var(--card);
+  border: 1px solid var(--ink-12);
+  border-left: 4px solid var(--cobalt);
+  border-radius: var(--radius);
+  padding: 1.3rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+
+.session-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.session-card .person-publications {
+  border-top: 1px solid var(--ink-12);
+}

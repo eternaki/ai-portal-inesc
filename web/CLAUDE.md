@@ -49,6 +49,40 @@ architecture, global rules). This file covers only the `web/` specifics.
   Publications list), `MaintenancePanel` (data-health, on the dashboard) and
   `CoveragePanel` (publications per member vs the `knownPublicationCount` baseline
   and OpenAlex, on the dashboard). After adding one, run `pnpm generate:importmap`.
+- **On `members`, `role` is the degree and `membershipStatus` is whether they are
+  still here.** Do not express "has left" by setting `role: alumni` — that erases
+  which degree the person did, and `/people` groups by `membershipStatus` anyway
+  (Active, subdivided by role; then Completed), so it buys nothing. Set
+  `membershipStatus: 'completed'` and leave `role` alone. The `alumni` role value
+  survives only on 12 records imported before this was clear. Statuses come from
+  the group's own team page (`scripts/apply-legacy-status.mjs`), which is the only
+  source that separates current students from graduated ones — the supervisor's MSc
+  roster is everyone who ever did an MSc, in one alphabetical list.
+- **Reading-group meetings are `events`.** There is no `reading-groups` collection:
+  on the group's own site the Events page *is* the reading-group log — 83 meetings
+  since March 2022, each a paper, its presenter and a link to it — so a second
+  collection was the same content in two places. The archive was imported by
+  `scripts/import-events.mjs` (`pnpm events:import` / `:apply`, matched on title +
+  date because one paper was discussed twice), and the nav's *Reading Groups* entry
+  links out to the Técnico page that schedules the sessions. The **page** structure
+  still mirrors the legacy site, which the supervisor asked us to preserve.
+- **`dissertations` covers the whole life of a thesis** (`open` → `ongoing` →
+  `finished`); it is the collection formerly called `thesis-topics`. Open topics are
+  a *stage*, not a separate section — `/opportunities` was removed because the two
+  were the same content under two names. Supervisors and the author are stored as a
+  name plus an optional member link (the `Publications.authors` pattern): only 17 of
+  37 legacy names resolve to a member, and the attribution must render regardless.
+- **`open-positions` stays separate from `dissertations`** even though both are
+  "opportunities". They are different processes with a different person at the
+  door: an open position is a paid research job (PhD contract, postdoc, junior
+  researcher) with a degree-holding applicant, a Euraxess/HR application route and
+  a hard deadline; a dissertation topic is picked by a student already enrolled at
+  the university, from their supervisor, with no deadline. The legacy site keeps
+  them apart for that reason — do not fold one into the other.
+- **Public list pages must be exhaustively reachable.** Paginate (`page` search
+  param) and build filter facets from the whole collection, not from the current
+  page — a chip list that covers only part of the archive hides content with no
+  way to reach it. See `src/app/(frontend)/publications/page.tsx`.
 - **Feature flags** are in the `ai-settings` global (`features` group):
   `enableChatbot`, `enableSemanticSearch`, `enableSummaries`. The layout hides the
   chat widget when off; the AI service enforces the rest.

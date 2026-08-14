@@ -2,14 +2,15 @@ import React from 'react'
 import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Scatter } from '@/components/Scatter'
 import { CountUp } from '@/components/CountUp'
 import { JsonLd, ORGANIZATION } from '@/components/JsonLd'
 import { PubRow } from '@/components/PubRow'
+import { NewsCard } from '@/components/NewsCard'
 import { clusterColor, fetchPublicationClusters } from '@/lib/clusterColors'
 import { PUBLISHED } from '@/lib/queries'
 import { getDictionary, getLocale } from '@/i18n/server'
-import { dateLocale } from '@/i18n/config'
 
 // Data comes from the CMS — render on each request, not at build time
 export const dynamic = 'force-dynamic'
@@ -25,12 +26,15 @@ export default async function HomePage() {
   const t = await getDictionary()
   const locale = await getLocale()
 
-  const [pubCount, memberCount, recentPubs, themes, openTopics, news, clusters] = await Promise.all([
+  const [pubCount, memberCount, recentPubs, themes, openTopics, openJobs, news, clusters] = await Promise.all([
     payload.count({ collection: 'publications', where: PUBLISHED }),
-    payload.count({ collection: 'members' }),
+    // Active members only — alumni and completed memberships would inflate the
+    // headline number into a claim about people who have already left.
+    payload.count({ collection: 'members', where: { membershipStatus: { equals: 'active' } } }),
     payload.find({ collection: 'publications', where: PUBLISHED, sort: '-year', limit: 5, depth: 0 }),
     payload.find({ collection: 'research-themes', limit: 6, depth: 0 }),
-    payload.count({ collection: 'thesis-topics', where: { status: { equals: 'open' } } }),
+    payload.count({ collection: 'dissertations', where: { status: { equals: 'open' } } }),
+    payload.count({ collection: 'open-positions', where: { status: { equals: 'open' } } }),
     payload.find({ collection: 'news', sort: '-date', limit: 2, depth: 1 }),
     fetchPublicationClusters(),
   ])
@@ -60,7 +64,7 @@ export default async function HomePage() {
             </div>
             {minYear ? (
               <div className="stat">
-                <b><CountUp value={minYear} suffix="—" /></b>
+                <b><CountUp value={minYear} /></b>
                 <span>{t.home.statActiveSince}</span>
               </div>
             ) : null}
@@ -78,26 +82,18 @@ export default async function HomePage() {
         <section>
           <div className="section-head">
             <h2>{t.home.themesHead}</h2>
-            <Link href="/research">{t.home.allThemes}</Link>
           </div>
           <div className="card-grid">
             {themes.docs.map((theme, i) => {
               const color = THEME_COLORS[i % THEME_COLORS.length]
-              const pubCount = theme.keyPublications?.length ?? 0
               return (
                 <div key={theme.id} className="card theme-tile" style={{ borderTopColor: color }}>
-                  <h3>
-                    {theme.slug ? (
-                      <Link href={`/research#${theme.slug}`}>{theme.name}</Link>
-                    ) : (
-                      theme.name
-                    )}
-                  </h3>
-                  {pubCount > 0 && (
-                    <span className="theme-tile-count mono" style={{ color }}>
-                      {pubCount} {pubCount === 1 ? t.home.themePub : t.home.themePubs}
-                    </span>
-                  )}
+                  <h3>{theme.name}</h3>
+                  {theme.description ? (
+                    <div className="rich-text theme-tile-desc">
+                      <RichText data={theme.description} />
+                    </div>
+                  ) : null}
                 </div>
               )
             })}
@@ -122,32 +118,14 @@ export default async function HomePage() {
             <Link href="/news">{t.home.allNews}</Link>
           </div>
           <div className="news-card-grid">
-            {news.docs.map((n, i) => {
-              const color = THEME_COLORS[(i + 2) % THEME_COLORS.length]
-              const cover = typeof n.coverImage === 'object' ? n.coverImage : null
-              const coverUrl = cover?.sizes?.card?.url ?? cover?.url
-              return (
-                <Link key={n.id} href={n.slug ? `/news/${n.slug}` : '#'} className="news-card">
-                  <div className="news-card-media" style={{ background: `${color}1a` }}>
-                    {coverUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={coverUrl} alt="" />
-                    ) : (
-                      <span className="news-card-media-mark" style={{ color }}>
-                        MLKD
-                      </span>
-                    )}
-                  </div>
-                  <div className="news-card-body">
-                    <div className="news-date">
-                      {n.date ? new Date(n.date).toLocaleDateString(dateLocale[locale], { day: 'numeric', month: 'long', year: 'numeric' }) : ''}
-                    </div>
-                    <div className="pub-title">{n.title}</div>
-                  </div>
-                  <div className="news-card-accent" style={{ background: color }} />
-                </Link>
-              )
-            })}
+            {news.docs.map((item, i) => (
+              <NewsCard
+                key={item.id}
+                item={item}
+                locale={locale}
+                color={THEME_COLORS[(i + 2) % THEME_COLORS.length]}
+              />
+            ))}
           </div>
         </section>
       )}
@@ -156,15 +134,17 @@ export default async function HomePage() {
         <div className="join-banner-inner">
           <div>
             <h2 className="join-banner-head">{t.home.joinHead}</h2>
-            <p className="join-banner-lede">{t.home.joinLede}</p>
-            <Link className="btn" href="/opportunities">
-              {t.home.browseTopics}
+            <p className="join-banner-lede">
+              {openJobs.totalDocs > 0 ? t.home.joinLedeJobs : t.home.joinLede}
+            </p>
+            <Link className="btn" href={openJobs.totalDocs > 0 ? '/open-positions' : '/dissertations?status=open'}>
+              {openJobs.totalDocs > 0 ? t.home.browseJobs : t.home.browseTopics}
             </Link>
           </div>
-          {openTopics.totalDocs > 0 && (
+          {(openJobs.totalDocs > 0 ? openJobs.totalDocs : openTopics.totalDocs) > 0 && (
             <div className="join-banner-stat">
-              <b>{openTopics.totalDocs}</b>
-              <span>{t.home.joinStatLabel}</span>
+              <b>{openJobs.totalDocs > 0 ? openJobs.totalDocs : openTopics.totalDocs}</b>
+              <span>{openJobs.totalDocs > 0 ? t.home.joinStatJobs : t.home.joinStatLabel}</span>
             </div>
           )}
         </div>

@@ -12,7 +12,7 @@ const initials = (name: string) =>
     .toUpperCase()
 
 // Small overlapping avatar row — used wherever a set of members should read
-// as "these people", not a wall of comma-separated names (e.g. /research).
+// as "these people", not a wall of comma-separated names (e.g. /projects).
 export function MemberAvatarStack({ members, max = 6 }: { members: Member[]; max?: number }) {
   if (members.length === 0) return null
   const shown = members.slice(0, max)
@@ -26,7 +26,7 @@ export function MemberAvatarStack({ members, max = 6 }: { members: Member[]; max
         return (
           <Link
             key={m.id}
-            href={m.slug ? `/people#${m.slug}` : '/people'}
+            href={m.slug ? `/people/${m.slug}` : '/people'}
             className="avatar-stack-item"
             title={m.name}
           >

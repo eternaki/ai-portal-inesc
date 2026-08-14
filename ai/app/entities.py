@@ -56,7 +56,7 @@ def _project_text(d: dict) -> str:
     return _join(d.get("title") or "", lexical_to_text(d.get("description")))
 
 
-def _thesis_text(d: dict) -> str:
+def _dissertation_text(d: dict) -> str:
     return _join(d.get("title") or "", lexical_to_text(d.get("description")))
 
 
@@ -72,20 +72,15 @@ def _event_text(d: dict) -> str:
     return _join(d.get("title") or "", d.get("speaker") or "", d.get("location") or "", lexical_to_text(d.get("description")))
 
 
-def _reading_group_text(d: dict) -> str:
-    return _join(d.get("title") or "", d.get("presenter") or "", d.get("paperTitle") or "", lexical_to_text(d.get("description")))
-
-
 # Keyed by Payload collection slug (also used as the entity_type in the DB).
 ENTITY_ADAPTERS: dict[str, Callable[[dict], str]] = {
     "publications": _publication_text,
     "members": _member_text,
     "projects": _project_text,
-    "thesis-topics": _thesis_text,
+    "dissertations": _dissertation_text,
     "software": _software_text,
     "news": _news_text,
     "events": _event_text,
-    "reading-groups": _reading_group_text,
 }
 
 # Publications are the only type gated by the editorial workflow; the rest are

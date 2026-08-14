@@ -9,6 +9,13 @@ import * as migration_20260721_140000_member_toggle_column_names from './2026072
 import * as migration_20260722_100000_member_status_contact_review from './20260722_100000_member_status_contact_review';
 import * as migration_20260723_100000_reading_groups from './20260723_100000_reading_groups';
 import * as migration_20260810_100000_member_known_publication_count from './20260810_100000_member_known_publication_count';
+import * as migration_20260811_100000_rename_thesis_topics_to_dissertations from './20260811_100000_rename_thesis_topics_to_dissertations';
+import * as migration_20260811_110000_dissertation_fields from './20260811_110000_dissertation_fields';
+import * as migration_20260811_120000_research_theme_fields from './20260811_120000_research_theme_fields';
+import * as migration_20260811_130000_open_positions from './20260811_130000_open_positions';
+
+import * as migration_20260813_100000_drop_suspended_membership from './20260813_100000_drop_suspended_membership';
+import * as migration_20260813_120000_drop_reading_groups from './20260813_120000_drop_reading_groups';
 
 export const migrations = [
   {
@@ -65,5 +72,35 @@ export const migrations = [
     up: migration_20260810_100000_member_known_publication_count.up,
     down: migration_20260810_100000_member_known_publication_count.down,
     name: '20260810_100000_member_known_publication_count'
+  },
+  {
+    up: migration_20260811_100000_rename_thesis_topics_to_dissertations.up,
+    down: migration_20260811_100000_rename_thesis_topics_to_dissertations.down,
+    name: '20260811_100000_rename_thesis_topics_to_dissertations'
+  },
+  {
+    up: migration_20260811_110000_dissertation_fields.up,
+    down: migration_20260811_110000_dissertation_fields.down,
+    name: '20260811_110000_dissertation_fields'
+  },
+  {
+    up: migration_20260811_120000_research_theme_fields.up,
+    down: migration_20260811_120000_research_theme_fields.down,
+    name: '20260811_120000_research_theme_fields'
+  },
+  {
+    up: migration_20260811_130000_open_positions.up,
+    down: migration_20260811_130000_open_positions.down,
+    name: '20260811_130000_open_positions'
+  },
+  {
+    up: migration_20260813_100000_drop_suspended_membership.up,
+    down: migration_20260813_100000_drop_suspended_membership.down,
+    name: '20260813_100000_drop_suspended_membership'
+  },
+  {
+    up: migration_20260813_120000_drop_reading_groups.up,
+    down: migration_20260813_120000_drop_reading_groups.down,
+    name: '20260813_120000_drop_reading_groups'
   },
 ];

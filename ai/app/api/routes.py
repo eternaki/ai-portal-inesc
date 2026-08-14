@@ -249,7 +249,7 @@ def _entity_result_doc(entity_type: str, doc: dict, lexical_to_text) -> dict | N
         description = ", ".join(interests) if isinstance(interests, list) else str(interests or "")
     elif entity_type == "projects":
         description = lexical_to_text(doc.get("description"))
-    elif entity_type == "thesis-topics":
+    elif entity_type == "dissertations":
         description = lexical_to_text(doc.get("description"))
     elif entity_type == "software":
         description = doc.get("description") or doc.get("kind") or ""
@@ -257,8 +257,6 @@ def _entity_result_doc(entity_type: str, doc: dict, lexical_to_text) -> dict | N
         description = lexical_to_text(doc.get("body")) or doc.get("socialSnippet") or ""
     elif entity_type == "events":
         description = lexical_to_text(doc.get("description")) or doc.get("speaker") or doc.get("location") or ""
-    elif entity_type == "reading-groups":
-        description = lexical_to_text(doc.get("description")) or doc.get("paperTitle") or doc.get("presenter") or ""
     return {
         "entity_type": entity_type,
         "id": doc["id"],

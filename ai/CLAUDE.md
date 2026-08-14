@@ -12,10 +12,11 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 - `app/llm/client.py` — **the only place that calls an LLM.** Public helpers:
   `complete`, `complete_json`, `load_prompt`.
 - `app/llm/prompts/*.md` — prompt templates (files, reviewed like code).
-- `app/pipelines/` — batch jobs: `ingest`, `embed`, `embed_entities` (multi-entity
-  vectors), `summarize`, `cluster`, `bios`, `maintenance` (data-health report),
-  `benchmark` (search metrics: labelled P@5/Recall@10/MRR, plus label-free ANN
-  recall via `python -m app.pipelines.benchmark --ann`), `coverage` (per-member
+- `app/pipelines/` — batch jobs: `ingest`, `backfill_links` (re-read OpenAlex to
+  fill `originalUrl`/`pdfUrl` on already-ingested papers), `embed`, `embed_entities`
+  (multi-entity vectors), `summarize`, `cluster`, `bios`, `maintenance` (data-health
+  report), `benchmark` (search metrics: labelled P@5/Recall@10/MRR, plus label-free
+  ANN recall via `python -m app.pipelines.benchmark --ann`), `coverage` (per-member
   publications on site vs the `knownPublicationCount` baseline vs OpenAlex
   `works_count` — "how many papers did the platform actually add"; read-only,
   `--openalex` opts into the network lookup).
@@ -51,6 +52,9 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
   is `generated` or `edited`.
 - **Treat external text as untrusted** (OpenAlex abstracts, LLM output): store as
   plain text and cap length before saving.
+- **Link to the readable copy.** `originalUrl` prefers the OpenAlex open-access URL
+  over the landing page and the DOI — doi.org resolves to the publisher, which is a
+  paywall more often than not (`ingest._original_url`).
 - Mutating endpoints (`/process/*`, `/generate/*`) require the `X-Service-Token`
   header; without `AI_SERVICE_TOKEN` configured they are disabled.
 

@@ -72,10 +72,10 @@ export interface Config {
     'research-themes': ResearchTheme;
     projects: Project;
     software: Software;
-    'thesis-topics': ThesisTopic;
+    dissertations: Dissertation;
+    'open-positions': OpenPosition;
     news: News;
     events: Event;
-    'reading-groups': ReadingGroup;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -90,10 +90,10 @@ export interface Config {
     'research-themes': ResearchThemesSelect<false> | ResearchThemesSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     software: SoftwareSelect<false> | SoftwareSelect<true>;
-    'thesis-topics': ThesisTopicsSelect<false> | ThesisTopicsSelect<true>;
+    dissertations: DissertationsSelect<false> | DissertationsSelect<true>;
+    'open-positions': OpenPositionsSelect<false> | OpenPositionsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
-    'reading-groups': ReadingGroupsSelect<false> | ReadingGroupsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -158,7 +158,7 @@ export interface Member {
   /**
    * Current relationship with the MLKD group or project.
    */
-  membershipStatus: 'active' | 'suspended' | 'completed';
+  membershipStatus: 'active' | 'completed';
   photo?: (number | null) | Media;
   bio?: {
     root: {
@@ -474,8 +474,6 @@ export interface ResearchTheme {
     };
     [k: string]: unknown;
   } | null;
-  members?: (number | Member)[] | null;
-  keyPublications?: (number | Publication)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -542,9 +540,9 @@ export interface Software {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "thesis-topics".
+ * via the `definition` "dissertations".
  */
-export interface ThesisTopic {
+export interface Dissertation {
   id: number;
   title: string;
   /**
@@ -552,8 +550,21 @@ export interface ThesisTopic {
    */
   slug?: string | null;
   level: 'msc' | 'phd';
-  status: 'open' | 'assigned' | 'completed';
-  advisors?: (number | Member)[] | null;
+  status: 'open' | 'ongoing' | 'finished';
+  supervisors?:
+    | {
+        name: string;
+        member?: (number | null) | Member;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The student writing or having written the thesis. Empty while the topic is open.
+   */
+  author?: {
+    name?: string | null;
+    member?: (number | null) | Member;
+  };
   description?: {
     root: {
       type: string;
@@ -569,7 +580,79 @@ export interface ThesisTopic {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * What a student needs to apply. Shown as its own block on the page.
+   */
+  requisites?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Link to the defended thesis in the Fenix repository.
+   */
+  fenixUrl?: string | null;
+  /**
+   * Legacy page this record was imported from. Set by the importer.
+   */
+  sourceUrl?: string | null;
   themes?: (number | ResearchTheme)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "open-positions".
+ */
+export interface OpenPosition {
+  id: number;
+  title: string;
+  /**
+   * URL identifier; created automatically, can be edited by hand
+   */
+  slug?: string | null;
+  kind: 'phd' | 'postdoc' | 'researcher' | 'internship';
+  /**
+   * Only open positions are shown on the site; closed ones stay for the record.
+   */
+  status: 'open' | 'closed';
+  /**
+   * Application deadline, if the call has one.
+   */
+  deadline?: string | null;
+  /**
+   * Where to apply — usually the Euraxess posting.
+   */
+  applyUrl?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Shown on the position when there is no application link.
+   */
+  contactEmail?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -650,55 +733,6 @@ export interface Event {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "reading-groups".
- */
-export interface ReadingGroup {
-  id: number;
-  title: string;
-  /**
-   * URL identifier; created automatically, can be edited by hand
-   */
-  slug?: string | null;
-  date: string;
-  presenter?: string | null;
-  /**
-   * Paper or topic discussed
-   */
-  paperTitle?: string | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * Slides, papers, notes or supporting files uploaded manually.
-   */
-  materials?:
-    | {
-        label: string;
-        file: number | Media;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Optional MLKD publications related to this session.
-   */
-  relatedPublications?: (number | Publication)[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -742,8 +776,12 @@ export interface PayloadLockedDocument {
         value: number | Software;
       } | null)
     | ({
-        relationTo: 'thesis-topics';
-        value: number | ThesisTopic;
+        relationTo: 'dissertations';
+        value: number | Dissertation;
+      } | null)
+    | ({
+        relationTo: 'open-positions';
+        value: number | OpenPosition;
       } | null)
     | ({
         relationTo: 'news';
@@ -752,10 +790,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'events';
         value: number | Event;
-      } | null)
-    | ({
-        relationTo: 'reading-groups';
-        value: number | ReadingGroup;
       } | null)
     | ({
         relationTo: 'media';
@@ -934,8 +968,6 @@ export interface ResearchThemesSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
   description?: T;
-  members?: T;
-  keyPublications?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -974,16 +1006,47 @@ export interface SoftwareSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "thesis-topics_select".
+ * via the `definition` "dissertations_select".
  */
-export interface ThesisTopicsSelect<T extends boolean = true> {
+export interface DissertationsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   level?: T;
   status?: T;
-  advisors?: T;
+  supervisors?:
+    | T
+    | {
+        name?: T;
+        member?: T;
+        id?: T;
+      };
+  author?:
+    | T
+    | {
+        name?: T;
+        member?: T;
+      };
   description?: T;
+  requisites?: T;
+  fenixUrl?: T;
+  sourceUrl?: T;
   themes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "open-positions_select".
+ */
+export interface OpenPositionsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  kind?: T;
+  status?: T;
+  deadline?: T;
+  applyUrl?: T;
+  description?: T;
+  contactEmail?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1014,28 +1077,6 @@ export interface EventsSelect<T extends boolean = true> {
   speaker?: T;
   description?: T;
   link?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "reading-groups_select".
- */
-export interface ReadingGroupsSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  date?: T;
-  presenter?: T;
-  paperTitle?: T;
-  description?: T;
-  materials?:
-    | T
-    | {
-        label?: T;
-        file?: T;
-        id?: T;
-      };
-  relatedPublications?: T;
   updatedAt?: T;
   createdAt?: T;
 }

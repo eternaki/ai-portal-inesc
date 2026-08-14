@@ -29,7 +29,10 @@ yarn-debug.log*
 yarn-error.log*
 .next-dev.log
 .next-dev.*.log
-reports/members-import-db-*.json
+# Run artifacts. Every importer writes a dry-run/apply report here; they are
+# evidence for one run, they go stale the moment the next one changes the data,
+# and a committed dry-run report describes a state that no longer exists.
+reports/
 
 # local env files
 .env*.local

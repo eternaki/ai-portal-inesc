@@ -46,8 +46,16 @@ export default async function ProjectsPage() {
         {projects.docs.map((p) => {
           const members = (p.members ?? []).filter((m): m is Member => typeof m === 'object')
           return (
-            <div key={p.id} className="card">
-              <h3>{p.url ? <a href={p.url}>{p.title}</a> : p.title}</h3>
+            <div key={p.id} id={p.slug ?? undefined} className="card">
+              <h3>
+                {p.url ? (
+                  <a href={p.url} target="_blank" rel="noreferrer">
+                    {p.title}
+                  </a>
+                ) : (
+                  p.title
+                )}
+              </h3>
               <div className="pub-meta">
                 <span className="badge badge-open badge-icon">
                   <KindIcon kind={p.kind} /> {p.kind}

@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getPayload({ config })
 
-  const [pubs, news] = await Promise.all([
+  const [pubs, news, dissertations, members, projects, software] = await Promise.all([
     payload.find({
       collection: 'publications',
       where: PUBLISHED,
@@ -24,19 +24,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       depth: 0,
       select: { slug: true, updatedAt: true },
     }),
+    payload.find({
+      collection: 'dissertations',
+      limit: 500,
+      depth: 0,
+      select: { slug: true, updatedAt: true },
+    }),
+    payload.find({
+      collection: 'members',
+      limit: 1000,
+      depth: 0,
+      select: { slug: true, updatedAt: true },
+    }),
+    payload.count({ collection: 'projects' }),
+    payload.count({ collection: 'software' }),
   ])
 
+  // Sections that exist as routes but hold no content yet are left out: submitting
+  // an empty page to a search engine earns a thin-content result, not a visitor.
   const statics: MetadataRoute.Sitemap = [
     '',
     '/publications',
     '/people',
-    '/research',
-    '/projects',
-    '/software',
-    '/opportunities',
-    '/reading-groups',
+    '/map',
+    '/dissertations',
     '/news',
+    '/events',
+    '/open-positions',
     '/search',
+    ...(projects.totalDocs > 0 ? ['/projects'] : []),
+    ...(software.totalDocs > 0 ? ['/software'] : []),
   ].map((path) => ({ url: `${SITE_URL}${path}`, changeFrequency: 'weekly' as const }))
 
   return [
@@ -54,6 +71,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${SITE_URL}/news/${d.slug}`,
         lastModified: d.updatedAt ? new Date(d.updatedAt) : undefined,
         changeFrequency: 'yearly' as const,
+      })),
+    ...dissertations.docs
+      .filter((d) => d.slug)
+      .map((d) => ({
+        url: `${SITE_URL}/dissertations/${d.slug}`,
+        lastModified: d.updatedAt ? new Date(d.updatedAt) : undefined,
+        changeFrequency: 'monthly' as const,
+      })),
+    ...members.docs
+      .filter((d) => d.slug)
+      .map((d) => ({
+        url: `${SITE_URL}/people/${d.slug}`,
+        lastModified: d.updatedAt ? new Date(d.updatedAt) : undefined,
+        changeFrequency: 'monthly' as const,
       })),
   ]
 }

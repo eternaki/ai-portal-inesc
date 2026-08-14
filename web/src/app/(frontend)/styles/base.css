@@ -1,0 +1,221 @@
+/* ── MLKD design tokens ──────────────────────────────────────────
+   Concept: a "map of knowledge" — publications as points in vector
+   space. Cobalt (azulejo) = navigation and the human; amber =
+   AI-generated. Serif = STIX (the typeface of scientific journals);
+   mono = metadata ("data as data"). */
+
+:root {
+  --ink: #1b2a41;
+  --ink-70: rgba(27, 42, 65, 0.72);
+  --ink-40: rgba(27, 42, 65, 0.38);
+  --ink-12: rgba(27, 42, 65, 0.12);
+  --ink-6: rgba(27, 42, 65, 0.06);
+  --paper: #f6f7f4;
+  --card: #ffffff;
+  --cobalt: #2553a5;
+  --cobalt-dark: #1c3f80;
+  --cobalt-bright: #3d6bd0;
+  --cobalt-wash: #e8eef8;
+  --amber: #b97a10;
+  --amber-bright: #d99a2b;
+  --amber-wash: #faf3e3;
+  /* Amber as *text*. The display amber reads 3.2:1 on its own wash, so the AI
+     badge gets a deeper one; the wash and the dot keep the brighter value. */
+  --amber-text: #8f5c06;
+
+  /* Text on a filled --cobalt or --ink surface. Both of those invert between the
+     themes — cobalt is a dark blue on light and a pale one on dark — so a literal
+     #fff reads at 2.4:1 once the theme flips, which is how the primary button,
+     the chat launcher and the language switch all became unreadable in the dark.
+     --paper inverts the same way, so this one value is right on both. */
+  --on-fill: var(--paper);
+
+  --max: 1120px;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  --shadow-sm: 0 1px 2px rgba(27, 42, 65, 0.05), 0 1px 1px rgba(27, 42, 65, 0.04);
+  --shadow-md: 0 8px 24px -8px rgba(27, 42, 65, 0.16), 0 2px 6px rgba(27, 42, 65, 0.05);
+  --shadow-lg: 0 20px 48px -16px rgba(27, 42, 65, 0.24), 0 4px 12px rgba(27, 42, 65, 0.06);
+  --shadow-cobalt: 0 10px 28px -10px rgba(37, 83, 165, 0.45);
+
+  --header-h: 68px;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --ink: #e7e9f0;
+  --ink-70: rgba(231, 233, 240, 0.72);
+  --ink-40: rgba(231, 233, 240, 0.42);
+  --ink-12: rgba(231, 233, 240, 0.16);
+  --ink-6: rgba(231, 233, 240, 0.08);
+  --paper: #10131a;
+  --card: #191d27;
+  --cobalt: #7fa6f2;
+  --cobalt-dark: #a8c4f5;
+  --cobalt-bright: #6f93e0;
+  --cobalt-wash: rgba(127, 166, 242, 0.16);
+  --amber: #e6ab48;
+  --amber-bright: #f2bd63;
+  --amber-wash: rgba(230, 171, 72, 0.16);
+  --amber-text: var(--amber);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 1px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 48px -16px rgba(0, 0, 0, 0.65), 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-cobalt: 0 10px 28px -10px rgba(127, 166, 242, 0.35);
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Sticky footer: pages with little content (an empty collection, a short news
+   item) would otherwise leave the footer floating mid-screen with dead space
+   below it. The column keeps <main> growing to fill whatever is left. */
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans, -apple-system, sans-serif);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif, georgia, serif);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5em;
+}
+
+h1 {
+  font-size: clamp(2.1rem, 4.8vw, 3.4rem);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 1.55rem;
+  margin-top: 3em;
+  position: relative;
+  padding-left: 0.85rem;
+}
+
+h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 4px;
+  border-radius: 4px;
+  background: var(--cobalt);
+}
+
+.summary-card h2::before {
+  display: none;
+}
+
+.summary-card h2 {
+  padding-left: 0;
+}
+
+/* The 3em above an h2 separates it from the section before it. The first section
+   on a page has none — it follows the page title — so that margin was landing as
+   a ~75px hole between "Events" and "Upcoming". */
+h1 + section > h2:first-child,
+h1 + section > .section-head:first-child h2 {
+  margin-top: 1.1em;
+}
+
+h3 {
+  font-size: 1.15rem;
+  margin-top: 2.2em;
+}
+
+p {
+  margin: 0.4em 0 1em;
+}
+
+/* Body/content links read as text, not "blue link" chrome — colour is reserved
+   for genuine navigation/CTAs (.site-nav, .section-head a, .btn, badges). */
+a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--cobalt);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.section-head a,
+.card-foot a,
+.attach-action {
+  color: var(--cobalt);
+}
+
+.section-head a:hover,
+.card-foot a:hover {
+  color: var(--cobalt-dark);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--cobalt);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+main {
+  flex: 1 0 auto; /* takes the slack so the footer sits at the bottom — see body */
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 5rem;
+}
+
+main > h1:first-child {
+  padding-bottom: 0.7rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 2px solid transparent;
+  background-image: linear-gradient(0deg, var(--cobalt), var(--cobalt));
+  background-size: 64px 2px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+}
+
+@media (max-width: 640px) {
+  main {
+    padding: 1.75rem 1rem 3.5rem;
+  }
+}

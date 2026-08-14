@@ -62,6 +62,20 @@ def _short_doi(work: dict[str, Any]) -> str | None:
     return doi.removeprefix("https://doi.org/")
 
 
+def _original_url(work: dict[str, Any]) -> str | None:
+    """Best link to the actual paper, open access first.
+
+    A DOI resolves to the publisher, which is a paywall more often than not. An
+    OpenAlex `oa_url` (arXiv, a repository, the publisher's free copy) is a page
+    the reader can actually read, so it wins; the landing page and the DOI are
+    fallbacks for works with no open copy.
+    """
+    oa_url = (work.get("open_access") or {}).get("oa_url")
+    landing = (work.get("primary_location") or {}).get("landing_page_url")
+    doi = _short_doi(work)
+    return oa_url or landing or (f"https://doi.org/{doi}" if doi else None)
+
+
 def work_to_publication(work: dict[str, Any], member_by_author_id: dict[str, int]) -> dict:
     authors = []
     for authorship in work.get("authorships", []):
@@ -82,10 +96,7 @@ def work_to_publication(work: dict[str, Any], member_by_author_id: dict[str, int
         "abstract": _reconstruct_abstract(work.get("abstract_inverted_index")),
         "citationCount": work.get("cited_by_count"),
         "pdfUrl": (work.get("open_access") or {}).get("oa_url"),
-        "originalUrl": (
-            (work.get("primary_location") or {}).get("landing_page_url")
-            or (f"https://doi.org/{_short_doi(work)}" if _short_doi(work) else None)
-        ),
+        "originalUrl": _original_url(work),
         "authors": authors,
         "referencedWorks": [
             ref.rsplit("/", 1)[-1] for ref in (work.get("referenced_works") or [])
