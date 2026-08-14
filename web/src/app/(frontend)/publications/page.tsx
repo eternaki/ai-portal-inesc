@@ -117,12 +117,11 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
 
       {result.docs.length === 0 && <div className="empty">{t.publications.empty}</div>}
 
-      {result.docs.map((pub, index) => (
+      {result.docs.map((pub) => (
         <PubRow
           key={pub.id}
           pub={pub}
           clusterColor={clusters.has(pub.id) ? clusterColor(clusters.get(pub.id)!) : null}
-          showYear={index === 0 || result.docs[index - 1].year !== pub.year}
         />
       ))}
 

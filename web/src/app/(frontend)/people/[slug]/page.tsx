@@ -146,12 +146,8 @@ export default async function PersonPage(props: { params: Params; searchParams: 
       {publications.totalDocs > 0 && (
         <section>
           <h2>{t.people.publicationsHead}</h2>
-          {publications.docs.map((pub, index) => (
-            <PubRow
-              key={pub.id}
-              pub={pub}
-              showYear={index === 0 || publications.docs[index - 1].year !== pub.year}
-            />
+          {publications.docs.map((pub) => (
+            <PubRow key={pub.id} pub={pub} />
           ))}
           <Pager
             currentPage={currentPage}
