@@ -1,6 +1,26 @@
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
+/**
+ * Import the curated member dataset into Payload.
+ *
+ * Run:  pnpm members:import                       (dry run, writes a report)
+ *       MEMBERS_APPLY=1 pnpm members:import:apply
+ *       pnpm members:import -- --data=data/other.json
+ *
+ * There used to be two of these. One went through the REST API and needed a
+ * PAYLOAD_API_KEY that is not set; the other opened its own Postgres connection
+ * and ran `INSERT INTO members`, which CLAUDE.md §3 forbids — content belongs to
+ * Payload, and writing round it skips validation, hooks and access control. Half
+ * of that script was code for translating documents into columns and back.
+ *
+ * Through the Local API neither is needed: no key, no SQL, and the matching and
+ * payload-building rules stay where they were, in the tested lib module.
+ */
+
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import process from 'node:process'
+import { fileURLToPath } from 'node:url'
+
+import { getPayload } from 'payload'
+import config from '@payload-config'
 
 import {
   buildCreatePayload,
@@ -10,170 +30,111 @@ import {
   validateDataset,
 } from './lib/member-importer.mjs'
 
-const args = new Set(process.argv.slice(2))
-const apply = args.has('--apply')
-const offline = args.has('--offline')
-const dryRun = args.has('--dry-run') || !apply
+const dirname = path.dirname(fileURLToPath(import.meta.url))
+const repoRoot = path.resolve(dirname, '..')
+
+const apply = process.env.MEMBERS_APPLY === '1'
+
 const dataArg = process.argv.find((arg) => arg.startsWith('--data='))
-const reportArg = process.argv.find((arg) => arg.startsWith('--report='))
+const dataPath = path.resolve(
+  repoRoot,
+  dataArg ? dataArg.slice('--data='.length) : 'data/mlkd-members-update.json',
+)
 
-const repoRoot = path.resolve(import.meta.dirname, '..')
-const dataPath = dataArg ? dataArg.slice('--data='.length) : path.join(repoRoot, 'data', 'mlkd-members-update.json')
-const reportPath = reportArg
-  ? reportArg.slice('--report='.length)
-  : path.join(repoRoot, 'reports', `members-import-${dryRun ? 'dry-run' : 'apply'}.json`)
+async function run() {
+  const payload = await getPayload({ config })
+  const dataset = JSON.parse(await readFile(dataPath, 'utf8'))
 
-const payloadUrl = (process.env.PAYLOAD_URL ?? 'http://localhost:3000').replace(/\/+$/, '')
-const apiKey = process.env.PAYLOAD_API_KEY
-const payloadEmail = process.env.PAYLOAD_EMAIL
-const payloadPassword = process.env.PAYLOAD_PASSWORD
-let sessionCookie = ''
+  const invalidValues = validateDataset(dataset)
 
-function headers() {
-  const headers = {
-    'Content-Type': 'application/json',
-    'X-Skip-Autoprocess': '1',
-  }
-  if (apiKey) headers.Authorization = `users API-Key ${apiKey}`
-  if (sessionCookie) headers.Cookie = sessionCookie
-  return headers
-}
-
-async function payloadRequest(pathname, options = {}) {
-  const response = await fetch(`${payloadUrl}/api${pathname}`, {
-    ...options,
-    headers: { ...headers(), ...(options.headers ?? {}) },
-  })
-  if (!response.ok) {
-    const text = await response.text()
-    throw new Error(`${options.method ?? 'GET'} ${pathname} failed: ${response.status} ${text}`)
-  }
-  return response.json()
-}
-
-async function loginIfConfigured() {
-  if (!payloadEmail || !payloadPassword) return
-  const response = await fetch(`${payloadUrl}/api/users/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: payloadEmail, password: payloadPassword }),
-  })
-  if (!response.ok) {
-    const text = await response.text()
-    throw new Error(`POST /users/login failed: ${response.status} ${text}`)
-  }
-
-  const getSetCookie = response.headers.getSetCookie?.() ?? []
-  const cookies = getSetCookie.length ? getSetCookie : [response.headers.get('set-cookie')].filter(Boolean)
-  sessionCookie = cookies.map((cookie) => cookie.split(';')[0]).join('; ')
-  if (!sessionCookie) throw new Error('Payload login succeeded but no session cookie was returned.')
-}
-
-async function fetchAllMembers() {
-  const docs = []
-  let page = 1
-  while (true) {
-    const data = await payloadRequest(`/members?limit=100&page=${page}&depth=0`)
-    docs.push(...data.docs)
-    if (!data.hasNextPage) return docs
-    page += 1
-  }
-}
-
-async function createMember(data) {
-  const response = await payloadRequest('/members', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
-  return response.doc
-}
-
-async function updateMember(id, data) {
-  const response = await payloadRequest(`/members/${id}`, {
-    method: 'PATCH',
-    body: JSON.stringify(data),
-  })
-  return response.doc
-}
-
-function compactCreateFields(data) {
-  return Object.keys(data).filter((key) => !['name', 'role', 'bioAiDraft'].includes(key))
-}
-
-const dataset = JSON.parse(await readFile(dataPath, 'utf8'))
-const invalidValues = validateDataset(dataset)
-if (invalidValues.length) {
-  const report = { updated: [], created: [], unchanged: [], unmatched: [], conflicts: [], invalidValues }
-  await mkdir(path.dirname(reportPath), { recursive: true })
-  await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`)
-  console.error(`Invalid dataset values. Report written to ${reportPath}`)
-  process.exitCode = 1
-} else {
-  await loginIfConfigured()
-  const existingMembers = offline ? [] : await fetchAllMembers()
-  const indexes = buildIndexes(existingMembers)
-  const now = new Date().toISOString()
   const report = {
-    mode: dryRun ? 'dry-run' : 'apply',
-    payloadUrl: offline ? null : payloadUrl,
-    offline,
-    totalInputMembers: dataset.members.length,
-    existingMembers: existingMembers.length,
+    generatedAt: new Date().toISOString(),
+    mode: apply ? 'apply' : 'dry-run',
+    dataset: path.relative(repoRoot, dataPath),
+    datasetMembers: dataset.members.length,
+    existingMembers: 0,
     created: [],
     updated: [],
     unchanged: [],
     ambiguous: [],
     conflicts: [],
-    invalidValues: [],
+    invalidValues,
     identifiersSkipped: [],
-    privateFieldsStored: [],
+    errors: [],
   }
 
-  for (const member of dataset.members) {
-    const match = matchMember(member, indexes)
-    const idStatus = member.identifiers?.status
-    if (idStatus === 'ambiguous' || idStatus === 'not_found') {
-      report.identifiersSkipped.push({ name: member.name, status: idStatus })
-    }
+  // A dataset that fails validation is not half-imported: nothing is written.
+  if (invalidValues.length === 0) {
+    const existing = (await payload.find({ collection: 'members', limit: 1000, depth: 0 })).docs
+    report.existingMembers = existing.length
 
-    if (match.status === 'ambiguous') {
-      report.ambiguous.push({ name: member.name, reason: match.reason })
-      continue
-    }
+    const indexes = buildIndexes(existing)
+    const now = new Date().toISOString()
 
-    if (match.status === 'new') {
-      const data = buildCreatePayload(member, now, dataset.rules.defaultBio)
-      if (apply) {
-        const doc = await createMember(data)
-        indexes.byName.set(member.name, [doc])
-        report.created.push({ name: member.name, memberId: doc.id, fields: compactCreateFields(data) })
-      } else {
-        report.created.push({ name: member.name, fields: compactCreateFields(data) })
+    for (const member of dataset.members) {
+      const idStatus = member.identifiers?.status
+      if (idStatus === 'ambiguous' || idStatus === 'not_found') {
+        report.identifiersSkipped.push({ name: member.name, status: idStatus })
       }
-      if (data.email) report.privateFieldsStored.push({ name: member.name, field: 'email', public: data.showEmail === true })
-      continue
-    }
 
-    const { patch, fieldUpdates, conflicts } = buildUpdatePayload(match.doc, member, now)
-    report.conflicts.push(...conflicts)
-    if (fieldUpdates.length === 0) {
-      report.unchanged.push(member.name)
-      continue
+      const match = matchMember(member, indexes)
+      if (match.status === 'ambiguous') {
+        report.ambiguous.push({ name: member.name, reason: match.reason })
+        continue
+      }
+
+      try {
+        if (match.status === 'new') {
+          const data = buildCreatePayload(member, now, dataset.rules.defaultBio)
+          if (apply) {
+            const created = await payload.create({ collection: 'members', data })
+            report.created.push({ name: member.name, memberId: created.id })
+          } else {
+            report.created.push({ name: member.name })
+          }
+          continue
+        }
+
+        const { patch, fieldUpdates, conflicts } = buildUpdatePayload(match.doc, member, now)
+        report.conflicts.push(...conflicts)
+        if (fieldUpdates.length === 0) {
+          report.unchanged.push(member.name)
+          continue
+        }
+        // A conflict means the dataset and the record disagree about a field a
+        // human may have edited; it is reported and left for a person to settle.
+        if (apply && conflicts.length === 0) {
+          await payload.update({ collection: 'members', id: match.doc.id, data: patch })
+        }
+        report.updated.push({
+          name: member.name,
+          memberId: match.doc.id,
+          matchedBy: match.reason,
+          fields: fieldUpdates,
+        })
+      } catch (err) {
+        report.errors.push({ name: member.name, message: String(err?.message ?? err) })
+      }
     }
-    if (apply && conflicts.length === 0) {
-      await updateMember(match.doc.id, patch)
-    }
-    report.updated.push({
-      name: member.name,
-      memberId: match.doc.id,
-      matchedBy: match.reason,
-      fields: fieldUpdates,
-      skippedApplyDueToConflicts: conflicts.length > 0,
-    })
-    if (patch.email) report.privateFieldsStored.push({ name: member.name, field: 'email', public: patch.showEmail === true })
   }
 
+  const reportPath = path.join(repoRoot, 'reports', `members-import-${apply ? 'apply' : 'dry-run'}.json`)
   await mkdir(path.dirname(reportPath), { recursive: true })
-  await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`)
-  console.log(`Members import ${dryRun ? 'dry-run' : 'apply'} report written to ${reportPath}`)
+  await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
+
+  console.log(
+    `${report.mode}: ${report.datasetMembers} in dataset, ${report.existingMembers} on record — ` +
+      `${report.created.length} created, ${report.updated.length} updated, ` +
+      `${report.unchanged.length} unchanged, ${report.ambiguous.length} ambiguous, ` +
+      `${report.conflicts.length} conflicts, ${report.errors.length} errors`,
+  )
+  console.log(`report → ${reportPath}`)
+
+  // Loud failure: an invalid dataset or an unresolved conflict must not pass for
+  // a successful run in a setup script.
+  if (invalidValues.length > 0 || report.conflicts.length > 0 || report.errors.length > 0) {
+    process.exitCode = 1
+  }
 }
+
+await run()
