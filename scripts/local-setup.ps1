@@ -202,7 +202,7 @@ try {
     Fail 'Member roster DB import failed.'
   }
   Info 'Linking publication authors to member profiles...'
-  node scripts/link-publication-members-db.mjs --apply
+  pnpm publications:link-members:apply
   if ($LASTEXITCODE -ne 0) {
     Fail 'Publication/member link backfill failed.'
   }
