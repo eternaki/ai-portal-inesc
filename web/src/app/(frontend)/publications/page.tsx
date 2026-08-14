@@ -5,6 +5,7 @@ import config from '@payload-config'
 import { PubRow } from '@/components/PubRow'
 import { YearHistogram } from '@/components/YearHistogram'
 import { published, PUBLISHED } from '@/lib/queries'
+import { Pager } from '@/components/Pager'
 import { getDictionary } from '@/i18n/server'
 import { clusterColor, fetchPublicationClusters } from '@/lib/clusterColors'
 
@@ -83,8 +84,6 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
     return query ? `/publications?${query}` : '/publications'
   }
 
-  const firstShown = result.totalDocs === 0 ? 0 : (currentPage - 1) * PER_PAGE + 1
-  const lastShown = Math.min(currentPage * PER_PAGE, result.totalDocs)
 
   return (
     <div>
@@ -127,27 +126,19 @@ export default async function PublicationsPage(props: { searchParams: SearchPara
         />
       ))}
 
-      {result.totalPages > 1 && (
-        <nav className="pager" aria-label={t.publications.title}>
-          {result.hasPrevPage ? (
-            <Link className="btn btn-quiet" href={hrefWith({ page: currentPage - 1 })}>
-              {t.publications.prevPage}
-            </Link>
-          ) : (
-            <span />
-          )}
-          <span className="mono pager-status">
-            {firstShown}–{lastShown} {t.publications.rangeOf} {result.totalDocs}
-          </span>
-          {result.hasNextPage ? (
-            <Link className="btn btn-quiet" href={hrefWith({ page: currentPage + 1 })}>
-              {t.publications.nextPage}
-            </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
-      )}
+      <Pager
+        currentPage={currentPage}
+        totalPages={result.totalPages}
+        totalDocs={result.totalDocs}
+        perPage={PER_PAGE}
+        hrefFor={(page) => hrefWith({ page })}
+        labels={{
+          previous: t.publications.prevPage,
+          next: t.publications.nextPage,
+          rangeOf: t.publications.rangeOf,
+          aria: t.publications.title,
+        }}
+      />
     </div>
   )
 }

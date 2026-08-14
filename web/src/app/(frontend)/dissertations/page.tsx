@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getPayload, type Where } from 'payload'
 import config from '@payload-config'
 import { DissertationRow } from '@/components/DissertationRow'
+import { Pager } from '@/components/Pager'
 import { getDictionary } from '@/i18n/server'
 
 // Data comes from the CMS — render on each request, not at build time
@@ -52,8 +53,6 @@ export default async function DissertationsPage(props: { searchParams: SearchPar
     return query ? `/dissertations?${query}` : '/dissertations'
   }
 
-  const firstShown = result.totalDocs === 0 ? 0 : (currentPage - 1) * PER_PAGE + 1
-  const lastShown = Math.min(currentPage * PER_PAGE, result.totalDocs)
 
   return (
     <div>
@@ -98,27 +97,19 @@ export default async function DissertationsPage(props: { searchParams: SearchPar
         <DissertationRow key={item.id} item={item} />
       ))}
 
-      {result.totalPages > 1 && (
-        <nav className="pager" aria-label={t.dissertations.title}>
-          {result.hasPrevPage ? (
-            <Link className="btn btn-quiet" href={hrefWith({ page: currentPage - 1 })}>
-              {t.dissertations.prevPage}
-            </Link>
-          ) : (
-            <span />
-          )}
-          <span className="mono pager-status">
-            {firstShown}–{lastShown} {t.dissertations.rangeOf} {result.totalDocs}
-          </span>
-          {result.hasNextPage ? (
-            <Link className="btn btn-quiet" href={hrefWith({ page: currentPage + 1 })}>
-              {t.dissertations.nextPage}
-            </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
-      )}
+      <Pager
+        currentPage={currentPage}
+        totalPages={result.totalPages}
+        totalDocs={result.totalDocs}
+        perPage={PER_PAGE}
+        hrefFor={(page) => hrefWith({ page })}
+        labels={{
+          previous: t.dissertations.prevPage,
+          next: t.dissertations.nextPage,
+          rangeOf: t.dissertations.rangeOf,
+          aria: t.dissertations.title,
+        }}
+      />
     </div>
   )
 }

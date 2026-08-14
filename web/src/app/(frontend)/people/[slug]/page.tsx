@@ -13,6 +13,7 @@ import { DissertationRow } from '@/components/DissertationRow'
 import { initials, memberPhotoAlt, memberPhotoUrl, memberSameAs } from '@/lib/member'
 import { published } from '@/lib/queries'
 import { SITE_URL } from '@/lib/site'
+import { Pager } from '@/components/Pager'
 import { getDictionary } from '@/i18n/server'
 
 // Data comes from the CMS — render on each request, not at build time
@@ -152,27 +153,19 @@ export default async function PersonPage(props: { params: Params; searchParams: 
               showYear={index === 0 || publications.docs[index - 1].year !== pub.year}
             />
           ))}
-          {publications.totalPages > 1 && (
-            <nav className="pager" aria-label={t.people.publicationsHead}>
-              {publications.hasPrevPage ? (
-                <Link className="btn btn-quiet" href={pageHref(currentPage - 1)}>
-                  {t.people.prevPage}
-                </Link>
-              ) : (
-                <span />
-              )}
-              <span className="mono pager-status">
-                {t.people.pageLabel} {currentPage} {t.people.pageOf} {publications.totalPages}
-              </span>
-              {publications.hasNextPage ? (
-                <Link className="btn btn-quiet" href={pageHref(currentPage + 1)}>
-                  {t.people.nextPage}
-                </Link>
-              ) : (
-                <span />
-              )}
-            </nav>
-          )}
+          <Pager
+            currentPage={currentPage}
+            totalPages={publications.totalPages}
+            totalDocs={publications.totalDocs}
+            perPage={PER_PAGE}
+            hrefFor={pageHref}
+            labels={{
+              previous: t.people.prevPage,
+              next: t.people.nextPage,
+              rangeOf: t.people.pageOf,
+              aria: t.people.publicationsHead,
+            }}
+          />
         </section>
       )}
 
