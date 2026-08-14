@@ -19,6 +19,14 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
+    -- Carry the data step the rebuild depends on. Any row still on 'alumni' would
+    -- make the USING cast below fail (the value is absent from the new type), which
+    -- is exactly what happened when this ran against a seed that still held those
+    -- twelve records. Move them to phd + completed first, so the migration is
+    -- self-contained instead of assuming a hand-run cleanup already happened.
+    UPDATE "members" SET "role" = 'phd', "membership_status" = 'completed'
+      WHERE "role" = 'alumni';
+
     ALTER TYPE "public"."enum_members_role" RENAME TO "enum_members_role_old";
 
     CREATE TYPE "public"."enum_members_role" AS ENUM('faculty', 'researcher', 'phd', 'msc');
