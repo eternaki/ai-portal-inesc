@@ -1,12 +1,10 @@
 /* ── publications ── */
 
-/* A metadata rail, then the work. The year is the anchor: the list is sorted by
-   it, so the rail reads as a timeline as you scan — which a stack of
-   title/authors/"2026 · venue · badge" never did. */
+/* One column: the work. The year used to sit in a side rail on every row, which
+   made a row with both a year and a real OpenAlex date wider than its own text.
+   The year is now a heading above each group of rows (see .year-heading) — the
+   same pattern /people uses for role groups — so a row is just the row. */
 .pub-item {
-  display: grid;
-  grid-template-columns: 4.25rem 1fr;
-  gap: 0 1.1rem;
   padding: 1rem 0.75rem;
   margin: 0 -0.75rem;
   border-bottom: 1px solid var(--ink-12);
@@ -22,19 +20,38 @@
   border-bottom: none;
 }
 
-.pub-rail {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  padding-top: 0.1rem;
+/* Groups rows by year, mirroring /people's h3 role headings. Smaller and
+   tighter than the page's default h2 — a publication list can have a couple
+   dozen of these, and the full page heading rhythm (3em top margin) piled up
+   fast. */
+.year-heading {
+  font-family: var(--font-mono, Menlo, monospace);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-70);
+  letter-spacing: 0.02em;
+  margin: 1.8em 0 0.4em;
+  padding-left: 0;
 }
 
-.pub-year {
+.year-heading::before {
+  display: none;
+}
+
+.year-heading:first-of-type {
+  margin-top: 0;
+}
+
+/* Its own line under the title, shown only when OpenAlex supplied a real
+   day/month (not its Jan-1 default for year-only precision — see
+   lib/publicationDate.ts). Was buried at the end of the venue line, after a
+   long venue name, where it read as an afterthought instead of information. */
+.pub-day {
   font-family: var(--font-mono, Menlo, monospace);
-  font-size: 0.95rem;
+  font-size: 0.78rem;
+  color: var(--ink-70);
   font-variant-numeric: tabular-nums;
-  color: var(--ink);
-  line-height: 1.2;
+  margin-top: 0.2rem;
 }
 
 .pub-kind {
@@ -103,19 +120,6 @@
 
 .pub-meta .mono {
   font-size: 0.76rem;
-}
-
-@media (max-width: 560px) {
-  .pub-item {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
-  }
-
-  .pub-rail {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 0.5rem;
-  }
 }
 
 .filters {

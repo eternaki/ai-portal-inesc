@@ -147,11 +147,12 @@ export default async function PersonPage(props: { params: Params; searchParams: 
         <section>
           <h2>{t.people.publicationsHead}</h2>
           {publications.docs.map((pub, index) => (
-            <PubRow
-              key={pub.id}
-              pub={pub}
-              showYear={index === 0 || publications.docs[index - 1].year !== pub.year}
-            />
+            <React.Fragment key={pub.id}>
+              {(index === 0 || publications.docs[index - 1].year !== pub.year) && (
+                <h3 className="year-heading">{pub.year}</h3>
+              )}
+              <PubRow pub={pub} />
+            </React.Fragment>
           ))}
           <Pager
             currentPage={currentPage}

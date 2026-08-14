@@ -10,7 +10,9 @@ import { Attachments } from '@/components/Attachments'
 import { PublicationMiniMap } from '@/components/PublicationMiniMap'
 import { SITE_URL } from '@/lib/site'
 import { published } from '@/lib/queries'
-import { getDictionary } from '@/i18n/server'
+import { getDictionary, getLocale } from '@/i18n/server'
+import { dateLocale } from '@/i18n/config'
+import { preciseDayMonth } from '@/lib/publicationDate'
 import { renderSciText, sciTextToPlain } from '@/lib/sciText'
 
 // Data comes from the CMS — render on each request, not at build time
@@ -89,9 +91,20 @@ export default async function PublicationPage(props: { params: Params }) {
   const { slug } = await props.params
   const payload = await getPayload({ config })
   const t = await getDictionary()
+  const locale = await getLocale()
 
   const pub = await findPublication(slug)
   if (!pub) notFound()
+
+  const preciseDate = preciseDayMonth(pub.publicationDate)
+  const publicationDateLabel = preciseDate
+    ? preciseDate.toLocaleDateString(dateLocale[locale], {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        timeZone: 'UTC',
+      })
+    : pub.year
 
   const summary = pub.aiSummary
   const hasSummary =
@@ -139,7 +152,7 @@ export default async function PublicationPage(props: { params: Params }) {
     '@context': 'https://schema.org',
     '@type': 'ScholarlyArticle',
     headline: sciTextToPlain(pub.title),
-    datePublished: pub.year ? String(pub.year) : undefined,
+    datePublished: preciseDate ? pub.publicationDate!.slice(0, 10) : pub.year ? String(pub.year) : undefined,
     author: (pub.authors ?? []).map((a) => ({ '@type': 'Person', name: a.name })),
     ...(pub.doi ? { sameAs: `https://doi.org/${pub.doi}` } : {}),
     ...(pub.venue ? { isPartOf: { '@type': 'Periodical', name: pub.venue } } : {}),
@@ -152,7 +165,7 @@ export default async function PublicationPage(props: { params: Params }) {
       <div className="article-head">
         <div className="pub-eyebrow">
           {pub.type}
-          {pub.venue ? ` · ${pub.venue}` : ''} · {pub.year}
+          {pub.venue ? ` · ${pub.venue}` : ''} · {publicationDateLabel}
         </div>
         <h1>{renderSciText(pub.title)}</h1>
         <p className="pub-meta">

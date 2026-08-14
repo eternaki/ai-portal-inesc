@@ -59,6 +59,14 @@ export const Publications: CollectionConfig = {
       ],
     },
     {
+      // Full date from OpenAlex `publication_date`, when it supplies one — `year`
+      // stays the required/reliable field since OpenAlex doesn't always give a
+      // day-level date; this is shown alongside it, not instead of it.
+      name: 'publicationDate',
+      type: 'date',
+      admin: { date: { pickerAppearance: 'dayOnly' }, width: '25%' },
+    },
+    {
       // Author order matters; external co-authors are just a string, unlinked
       name: 'authors',
       type: 'array',
