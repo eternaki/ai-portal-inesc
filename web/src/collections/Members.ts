@@ -69,6 +69,16 @@ export const Members: CollectionConfig = {
       relationTo: 'media',
     },
     {
+      // Most profiles here show initials because a photo has to be found, cropped
+      // and uploaded by hand. This button asks the member's own LinkedIn account
+      // for it instead — one click, with their consent (Sign In with LinkedIn).
+      name: 'linkedinImport',
+      type: 'ui',
+      admin: {
+        components: { Field: '/components/admin/ConnectLinkedInButton#ConnectLinkedInButton' },
+      },
+    },
+    {
       name: 'bio',
       type: 'richText',
     },
