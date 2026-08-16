@@ -48,7 +48,17 @@ architecture, global rules). This file covers only the `web/` specifics.
   by `path#Export`): `ImportPublicationPanel` (DOI/URL/title import, on the
   Publications list), `MaintenancePanel` (data-health, on the dashboard) and
   `CoveragePanel` (publications per member vs the `knownPublicationCount` baseline
-  and OpenAlex, on the dashboard). After adding one, run `pnpm generate:importmap`.
+  and OpenAlex, on the dashboard) and `ConnectLinkedInButton` (on a member profile;
+  imports that person's photo/name/email via Sign In with LinkedIn — see below).
+  After adding one, run `pnpm generate:importmap`.
+- **Member photos come from the person, not from scraping.** LinkedIn profiles are
+  auth-walled (anonymous fetch → HTTP 999) and scraping breaks their terms, so the
+  only automated route is Sign In with LinkedIn (OIDC): the member consents once
+  and `/api/linkedin/{start,callback}` copies their photo, name and email in,
+  filling empty fields only. Needs `LINKEDIN_CLIENT_ID`/`_SECRET`; without them the
+  button says so. Bulk photos for people who never consent are not obtainable —
+  `pnpm photos:import` covers the group's own legacy team page, and the rest is
+  manual upload or the initials avatar.
 - **On `members`, `role` is the degree and `membershipStatus` is whether they are
   still here.** Do not express "has left" by setting `role: alumni` — that erases
   which degree the person did, and `/people` groups by `membershipStatus` anyway
