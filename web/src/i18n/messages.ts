@@ -10,6 +10,7 @@ import type { Locale } from './config'
 const en = {
   nav: {
     publications: 'Publications',
+    projects: 'Projects',
     dissertations: 'Dissertations',
     people: 'People',
     news: 'News',
@@ -272,6 +273,7 @@ export type Dictionary = typeof en
 const pt: Dictionary = {
   nav: {
     publications: 'Publicações',
+    projects: 'Projetos',
     dissertations: 'Dissertações',
     people: 'Pessoas',
     news: 'Notícias',

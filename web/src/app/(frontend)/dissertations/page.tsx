@@ -36,7 +36,10 @@ export default async function DissertationsPage(props: { searchParams: SearchPar
     collection: 'dissertations',
     where: filter,
     // Open topics first, then ongoing, then the archive; newest within each.
-    sort: ['status', '-createdAt'],
+    // Descending is deliberate: the status values sort alphabetically as
+    // finished < ongoing < open, so reversing them yields exactly the order the
+    // page wants — what a visitor can still apply to comes before the archive.
+    sort: ['-status', '-createdAt'],
     limit: PER_PAGE,
     page: currentPage,
     depth: 1,
