@@ -16,13 +16,14 @@ from typing import Any
 
 from app import payload_api
 from app.llm.client import complete_response, load_prompt, parse_json_response, resolve_model
+from app.pipelines.extractive import EXTRACTIVE_MODEL, EXTRACTIVE_VERSION, extractive_summary
 
 logger = logging.getLogger(__name__)
 
 # Pause between LLM calls to avoid hitting free-tier rate limits.
 # Configurable via SUMMARIZE_DELAY_SEC (default 4s ≈ 15 requests/min).
 _DELAY = float(os.environ.get("SUMMARIZE_DELAY_SEC", "4"))
-PROMPT_VERSION = "summary-v2"
+PROMPT_VERSION = "summary-refine-v1"
 _NOT_SPECIFIED = "Not specified in the abstract."
 
 SUMMARY_KEYS = (
@@ -45,24 +46,54 @@ def summarize_publication(pub: dict) -> dict:
     return result["aiSummary"]
 
 
-def summarize_publication_result(pub: dict) -> dict:
+def summarize_publication_result(pub: dict, *, refine: bool = True) -> dict:
+    """Hybrid summary: a deterministic extractive draft, optionally LLM-refined.
+
+    The extractive layer (extractive.py) always produces a full draft from the
+    abstract/metadata alone — no API key, no quota. When refine=True and an LLM is
+    reachable, the model only rewrites that draft into cleaner prose; if the model
+    is unconfigured or fails, we keep the draft. So summaries never hard-depend on
+    a paid or rate-limited provider — the whole point of this pipeline.
+    """
+    draft = extractive_summary(pub)
+    generated_at = datetime.now(timezone.utc).isoformat()
+
+    if not refine:
+        return _result(draft, EXTRACTIVE_MODEL, EXTRACTIVE_VERSION, generated_at)
+
+    try:
+        refined = _llm_refine(pub, draft)
+    except Exception as exc:  # noqa: BLE001 - refinement is optional; the draft stands
+        logger.info("summary refine skipped (%s); using extractive draft", exc)
+        return _result(draft, EXTRACTIVE_MODEL, EXTRACTIVE_VERSION, generated_at)
+    return _result(refined["summary"], refined["model"], PROMPT_VERSION, generated_at)
+
+
+def _result(summary: dict, model: str, version: str, generated_at: str) -> dict:
+    return {
+        "aiSummary": normalize_summary(summary),
+        "aiSummaryModel": model,
+        "aiSummaryPromptVersion": version,
+        "aiSummaryGeneratedAt": generated_at,
+    }
+
+
+def _llm_refine(pub: dict, draft: dict[str, str]) -> dict:
+    """Ask the LLM to polish the extractive draft. Raises if no model is available."""
+    import json
+
     prompt = load_prompt(
-        "summary",
+        "summary_refine",
         title=pub.get("title") or "",
         venue=pub.get("venue") or "unknown venue",
         year=str(pub.get("year") or ""),
         abstract=pub.get("abstract") or "",
+        draft=json.dumps(draft, ensure_ascii=False),
     )
     model = resolve_model()
     response = complete_response(prompt, model=model)
     raw = response.choices[0].message.content or ""
-    data = parse_json_response(raw)
-    return {
-        "aiSummary": normalize_summary(data),
-        "aiSummaryModel": model,
-        "aiSummaryPromptVersion": PROMPT_VERSION,
-        "aiSummaryGeneratedAt": datetime.now(timezone.utc).isoformat(),
-    }
+    return {"summary": parse_json_response(raw), "model": model}
 
 
 def normalize_summary(data: dict[str, Any]) -> dict[str, str]:
@@ -77,7 +108,7 @@ def normalize_summary(data: dict[str, Any]) -> dict[str, str]:
     return summary
 
 
-def run(limit: int | None = None) -> None:
+def run(limit: int | None = None, *, refine: bool = True) -> None:
     result = payload_api.find(
         "publications",
         where={
@@ -89,14 +120,14 @@ def run(limit: int | None = None) -> None:
         limit=limit or 100,
     )
     pubs = result["docs"]
-    logger.info("publications to summarize: %s", len(pubs))
+    logger.info("publications to summarize: %s (refine=%s)", len(pubs), refine)
 
     done = failed = 0
     for pub in pubs:
         if not (pub.get("abstract") or "").strip():
             continue
         try:
-            update_data = summarize_publication_result(pub)
+            update_data = summarize_publication_result(pub, refine=refine)
             payload_api.update(
                 "publications",
                 pub["id"],
@@ -104,10 +135,13 @@ def run(limit: int | None = None) -> None:
             )
             done += 1
             logger.info("summarized: %s", pub["title"][:80])
+            # Only pace the loop when we actually called the LLM — the extractive
+            # path is local and free, so it doesn't need rate-limiting.
+            if update_data["aiSummaryModel"] != EXTRACTIVE_MODEL:
+                time.sleep(_DELAY)
         except Exception:
             failed += 1
             logger.exception("failed on publication id=%s", pub["id"])
-        time.sleep(_DELAY)
 
     logger.info("done: %s summarized, %s failed", done, failed)
 
@@ -116,5 +150,10 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     parser = argparse.ArgumentParser()
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument(
+        "--extractive",
+        action="store_true",
+        help="Skip the LLM refine step — deterministic summaries only (no key/quota).",
+    )
     args = parser.parse_args()
-    run(args.limit)
+    run(args.limit, refine=not args.extractive)

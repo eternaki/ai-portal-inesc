@@ -111,6 +111,7 @@ regenerated on every commit (see section 7).
 - `coverage.py`
 - `embed.py`
 - `embed_entities.py`
+- `extractive.py`
 - `ingest.py`
 - `maintenance.py`
 - `summarize.py`
