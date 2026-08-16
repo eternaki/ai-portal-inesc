@@ -341,32 +341,25 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
         raise HTTPException(503, "the chatbot is currently disabled")
     check_chat_rate_limit(x_client_ip or "unknown")
 
-    from app import embeddings  # lazy import: pulls in torch
+    from app import chat as chat_mod
 
-    hits = embeddings.search_publications(req.message, limit=6)
-    ids = [pub_id for pub_id, _ in hits]
-    # Ground the chatbot only in published papers (never leak drafts/imported).
-    docs = (
-        payload_api.find(
-            "publications",
-            where={"and": [{"id": {"in": ids}}, {"status": {"equals": "published"}}]},
-            limit=len(ids),
-        )["docs"]
-        if ids
-        else []
-    )
-    by_id = {d["id"]: d for d in docs}
-    sources = []
-    context_lines = []
-    for n, (pub_id, _score) in enumerate(hits, start=1):
-        pub = by_id.get(pub_id)
-        if not pub:
-            continue
-        summary = (pub.get("aiSummary") or {}).get("tldr") or (pub.get("abstract") or "")[:400]
-        context_lines.append(f"[{n}] {pub.get('title')} ({pub.get('year')}). {summary}")
-        sources.append(
-            {"n": n, "title": pub.get("title"), "slug": pub.get("slug"), "year": pub.get("year")}
-        )
+    sources, warnings = chat_mod.gather_sources(req.message)
+
+    # Refuse before spending an LLM call. Previously the model was asked to answer
+    # even with nothing retrieved and trusted to decline — a prompt-level promise
+    # for something the code can simply enforce.
+    if not chat_mod.has_enough_evidence(sources):
+        return {
+            "answer": (
+                "I could not find anything in the group's published material that "
+                "answers that. Try rephrasing, or browse the publications and people "
+                "pages directly."
+            ),
+            "sources": [],
+            "insufficientEvidence": True,
+            "warnings": warnings,
+            "requestId": request_id,
+        }
 
     history_text = "\n".join(
         f"{'Visitor' if t.role == 'user' else 'Assistant'}: {t.content[:300]}"
@@ -377,7 +370,7 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
         answer = complete(
             load_prompt(
                 "chat",
-                context="\n".join(context_lines) or "(no relevant publications found)",
+                context=chat_mod.context_block(sources),
                 history=history_text,
                 question=req.message,
             ),
@@ -386,8 +379,17 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
     except LLMError as err:
         err.request_id = err.request_id or request_id
         return llm_error_response(err)
-    # LLM output over untrusted inputs — plain text, capped
-    return {"answer": str(answer)[:3000], "sources": sources, "requestId": request_id}
+    # LLM output over untrusted inputs — plain text, capped. `text` is prompt-only
+    # context, so it is dropped from the response the browser receives.
+    public_sources = [
+        {k: v for k, v in s.items() if k not in ("text", "score")} for s in sources
+    ]
+    return {
+        "answer": str(answer)[:3000],
+        "sources": public_sources,
+        "warnings": warnings,
+        "requestId": request_id,
+    }
 
 
 class ProcessRequest(BaseModel):

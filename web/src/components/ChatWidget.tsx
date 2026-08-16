@@ -8,7 +8,17 @@ import type { Dictionary } from '@/i18n/messages'
 // the server layout (client components can't read the locale cookie dictionary).
 type ChatStrings = Dictionary['chat']
 
-type Source = { n: number; title: string; slug?: string | null; year?: number | null }
+type Source = {
+  n: number
+  title: string
+  slug?: string | null
+  year?: number | null
+  // Which section the citation belongs to, and where it points. Sent by the AI
+  // service because it knows the entity type; `url` is optional so an older
+  // response still renders (falling back to the publications route).
+  entity_type?: string
+  url?: string
+}
 type Msg = { role: 'user' | 'assistant'; content: string; sources?: Source[] }
 type ApiError = { code?: string; message?: string; hint?: string; requestId?: string }
 
@@ -106,8 +116,11 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
                 {m.sources && m.sources.length > 0 && (
                   <div className="chat-sources">
                     {t.sources}:{' '}
+                    {/* The service sends the public URL per source: the chat now
+                        cites people, projects and dissertations too, so the widget
+                        can no longer assume every citation is a publication. */}
                     {m.sources.map((s) => (
-                      <a key={s.n} href={s.slug ? `/publications/${s.slug}` : '#'}>
+                      <a key={s.n} href={s.url ?? (s.slug ? `/publications/${s.slug}` : '#')}>
                         [{s.n}]
                       </a>
                     ))}
