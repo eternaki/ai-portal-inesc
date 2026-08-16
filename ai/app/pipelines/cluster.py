@@ -4,7 +4,8 @@ Run:  python -m app.pipelines.cluster
 
 From the brief (sections A/E): "visual summaries (research areas map, topic
 clusters)" + "AI-powered algorithm to periodically re-generate the visuals". The
-pipeline is deterministic (random_state) and re-runs after each ingest/embed.
+pipeline is deterministic (random_state) and is re-run by app.pipelines.embed
+whenever embeddings change, so the map cannot quietly describe an older corpus.
 Cluster labels are top TF-IDF terms over titles and abstracts (no LLM calls).
 """
 
@@ -17,22 +18,65 @@ from app import db, payload_api
 logger = logging.getLogger(__name__)
 
 
+# Words that score well on scientific abstracts while saying nothing about the
+# topic. Without these a cluster gets named "using · based · results".
+_PAPER_STOPWORDS = (
+    "using", "based", "used", "propose", "proposed", "present", "presented",
+    "results", "result", "method", "methods", "approach", "paper", "study",
+    "studies", "novel", "new", "show", "shows", "shown", "performance",
+    "state art", "experimental results", "data", "model", "models",
+)
+
+# Bigrams read as topics ("deep learning"); single words rarely do ("deep").
+_BIGRAM_BOOST = 1.6
+
+
 def _cluster_labels(texts_by_cluster: dict[int, list[str]]) -> dict[int, str]:
-    """Top-3 TF-IDF terms per cluster — fast, free labels."""
-    from sklearn.feature_extraction.text import TfidfVectorizer
+    """Up to 3 distinct TF-IDF terms per cluster — fast, free, no LLM.
+
+    Plain top-3 TF-IDF produced labels like "learning · deep · neural": three
+    fragments of one phrase, and generic paper vocabulary crowding out the topic.
+    So bigrams are boosted, boilerplate is filtered, and a term sharing a word with
+    an already-picked one is skipped — three *different* ideas instead of one idea
+    three times.
+    """
+    from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, TfidfVectorizer
 
     cluster_ids = sorted(texts_by_cluster)
     corpus = [" ".join(texts_by_cluster[c]) for c in cluster_ids]
     if not corpus:
         return {}
-    vec = TfidfVectorizer(stop_words="english", max_features=4000, ngram_range=(1, 2))
+
+    stop_words = list(ENGLISH_STOP_WORDS.union(w for w in _PAPER_STOPWORDS if " " not in w))
+    vec = TfidfVectorizer(stop_words=stop_words, max_features=4000, ngram_range=(1, 2))
     matrix = vec.fit_transform(corpus)
     terms = np.array(vec.get_feature_names_out())
+
     labels: dict[int, str] = {}
     for row, cluster_id in enumerate(cluster_ids):
-        weights = matrix[row].toarray().ravel()
-        top = terms[np.argsort(weights)[::-1][:3]]
-        labels[cluster_id] = " · ".join(top)
+        weights = matrix[row].toarray().ravel().copy()
+        for i, term in enumerate(terms):
+            if term in _PAPER_STOPWORDS:
+                weights[i] = 0.0
+            elif " " in term:
+                weights[i] *= _BIGRAM_BOOST
+
+        picked: list[str] = []
+        used_words: set[str] = set()
+        for i in np.argsort(weights)[::-1]:
+            if weights[i] <= 0:
+                break
+            term = str(terms[i])
+            # Compare on a crude singular so "motif" can't follow "motifs" — TF-IDF
+            # happily ranks both, and "motifs · sequences · motif" is not a label.
+            words = {w[:-1] if len(w) > 3 and w.endswith("s") else w for w in term.split()}
+            if words & used_words:  # same idea, reworded — skip it
+                continue
+            picked.append(term)
+            used_words |= words
+            if len(picked) == 3:
+                break
+        labels[cluster_id] = " · ".join(picked)
     return labels
 
 
