@@ -4,7 +4,28 @@ import test from 'node:test'
 // The lib is TypeScript; node:test runs the compiled-free subset we care about by
 // importing through the same path alias the app uses. Keep these tests to pure
 // functions so no transpile step or network is needed.
-const { authorizationUrl, profilePatch, SCOPES } = await import('../../src/lib/linkedin.ts')
+const { authorizationUrl, namesPlausiblyMatch, profilePatch, SCOPES } = await import(
+  '../../src/lib/linkedin.ts'
+)
+
+test('refuses a LinkedIn account belonging to somebody else', () => {
+  // The bug this guards: no member has a login account, so an admin runs the
+  // import — and without the check their own face lands on that member's profile.
+  assert.equal(namesPlausiblyMatch('Admin User', 'Ana Casimiro'), false)
+  assert.equal(namesPlausiblyMatch('Ana Silva', 'Ana Casimiro'), false)
+  assert.equal(namesPlausiblyMatch('João Silva', 'João Lourenço Silva'), true)
+})
+
+test('tolerates middle names, initials and accents on the same person', () => {
+  assert.equal(namesPlausiblyMatch('Arlindo Oliveira', 'Arlindo L. Oliveira'), true)
+  assert.equal(namesPlausiblyMatch('Vitoria Cruz', 'Vitória Cruz'), true)
+  assert.equal(namesPlausiblyMatch('Ana Casimiro', 'Ana Casimiro'), true)
+})
+
+test('refuses when either name is missing rather than defaulting to allow', () => {
+  assert.equal(namesPlausiblyMatch('', 'Ana Casimiro'), false)
+  assert.equal(namesPlausiblyMatch('Ana Casimiro', ''), false)
+})
 
 test('authorization URL carries the scopes that return a picture and email', () => {
   const url = new URL(

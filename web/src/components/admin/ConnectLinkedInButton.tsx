@@ -13,6 +13,11 @@ import { Button, useDocumentInfo } from '@payloadcms/ui'
 const MESSAGES: Record<string, { text: string; tone: 'ok' | 'warn' | 'error' }> = {
   ok: { text: 'Imported from LinkedIn. Reload the document to see the photo.', tone: 'ok' },
   nothing: { text: 'Nothing to import — this profile already has a photo and details.', tone: 'warn' },
+  mismatch: {
+    text:
+      'That LinkedIn account is a different person — nothing was changed. Each member must run this from their own LinkedIn login.',
+    tone: 'error',
+  },
   denied: { text: 'LinkedIn access was declined.', tone: 'warn' },
   expired: { text: 'The request timed out. Try again.', tone: 'warn' },
   badstate: { text: 'Security check failed. Start again from this page.', tone: 'error' },

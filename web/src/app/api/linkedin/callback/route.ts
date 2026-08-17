@@ -7,6 +7,7 @@ import {
   exchangeCodeForToken,
   fetchProfile,
   linkedinConfig,
+  namesPlausiblyMatch,
   profilePatch,
 } from '@/lib/linkedin'
 
@@ -68,6 +69,18 @@ export async function GET(req: NextRequest) {
     const profile = await fetchProfile(token)
 
     const member = await payload.findByID({ collection: 'members', id: memberId, depth: 0 })
+
+    // Refuse unless the account that authorised is plausibly this member. LinkedIn
+    // returns whoever signed in, and no member here has a login account yet, so in
+    // practice an admin runs this — without the check, their own face and email
+    // would be published under someone else's name.
+    if (!namesPlausiblyMatch(profile.name || '', member.name || '')) {
+      console.warn(
+        `[linkedin] refused: signed in as "${profile.name}" while importing "${member.name}"`,
+      )
+      return backToMember(req, memberId, 'mismatch')
+    }
+
     const patch = profilePatch(profile, { name: member.name, email: member.email })
 
     // Only upload a photo if the profile has none: a picture someone chose here

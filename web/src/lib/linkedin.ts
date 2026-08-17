@@ -122,6 +122,39 @@ export async function downloadPhoto(
   }
 }
 
+function normalizeName(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // strip accents: "Vitória" === "Vitoria"
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ') // drop the "L." style initials and punctuation
+    .split(/\s+/)
+    .filter(Boolean)
+    .join(' ')
+}
+
+/**
+ * Does the LinkedIn account that just authorised plausibly belong to this member?
+ *
+ * This is the safety gate on the whole flow. LinkedIn returns the profile of
+ * *whoever signed in*, and nothing in the OAuth response says which member record
+ * was being edited — so without this check an admin clicking "Import" on somebody
+ * else's profile would publish their own face and email under that person's name.
+ *
+ * Matching is deliberately loose on middle names and initials ("Arlindo Oliveira"
+ * vs "Arlindo L. Oliveira") but strict on the first and last name, because those
+ * are what distinguish two different people.
+ */
+export function namesPlausiblyMatch(linkedinName: string, memberName: string): boolean {
+  const a = normalizeName(linkedinName || '').split(' ')
+  const b = normalizeName(memberName || '').split(' ')
+  if (!a[0] || !b[0]) return false
+  if (a.join(' ') === b.join(' ')) return true
+  const sameFirst = a[0] === b[0]
+  const sameLast = a[a.length - 1] === b[b.length - 1]
+  return sameFirst && sameLast
+}
+
 /**
  * The fields we are willing to copy onto a member profile.
  *
