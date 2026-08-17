@@ -25,10 +25,13 @@ def run(*, recluster: bool = True) -> None:
             items.append((pub["id"], text))
     logger.info("embedding %s publications", len(items))
     written = embeddings.upsert_publication_embeddings(items)
+    # Deleting a publication does not delete its vector, so merged duplicates and
+    # records removed in the admin would stay in the map and in search forever.
+    removed = embeddings.prune_publication_embeddings([pub["id"] for pub in pubs])
 
     if not recluster:
         return
-    if not written:
+    if not written and not removed:
         logger.info("no embeddings changed — topic map left as is")
         return
     # Clustering is CPU-only and takes seconds at this corpus size, so it is

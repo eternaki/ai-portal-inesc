@@ -37,6 +37,14 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 - `app/embeddings.py` — sentence-transformers (multilingual, 384-dim) + pgvector
   ANN search over an HNSW index (cosine). Sets `hnsw.ef_search` per query. Tracks a
   `content_hash` so re-embedding is skipped when content is unchanged.
+  `prune_*_embeddings` deletes vectors whose content is gone (merged duplicate,
+  record deleted, publication back to draft) — the upsert path only ever adds, and
+  an orphaned vector is retrieved, ranked, and then silently dropped when Payload
+  cannot resolve it, so it costs a retrieval slot invisibly. **Both pruners take the
+  full live set and delete everything else of that kind**, which is safe only
+  because callers pass `payload_api.find_all(...)` — it paginates to completion or
+  raises, never returning a short list because a request failed. The `embed` and
+  `embed_entities` pipelines call them; nothing else needs to.
 - `app/metrics.py` — in-process metric registry (request/LLM latency, cost, errors)
   scraped at `GET /metrics` (Prometheus text or `?format=json`). Best-effort:
   instrumentation never breaks a request.

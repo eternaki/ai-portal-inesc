@@ -193,6 +193,45 @@ def upsert_entity_embeddings(
     return len(todo)
 
 
+# Content can be deleted — a duplicate merged away, a record removed in the admin,
+# a publication returned to draft — but nothing above ever removes its vector: the
+# upsert path only adds. An orphaned vector is still retrieved and ranked, and is
+# only dropped at the end, when Payload cannot resolve it. That failure is
+# invisible in the results while having already cost a retrieval slot, so search
+# quietly gets worse and nothing reports it.
+#
+# Both pruners take the FULL live set and delete everything else of that kind.
+# That is only safe because callers pass `payload_api.find_all(...)`, which
+# paginates to completion or raises — it never returns a short list because a
+# request failed. Do not call these with a filtered or partial set.
+
+
+def prune_entity_embeddings(entity_type: str, live_ids: list[int]) -> int:
+    """Drop `entity_type` vectors whose entity is no longer live. Returns rows deleted."""
+    with db.connect() as conn:
+        cur = conn.execute(
+            "DELETE FROM entity_embeddings WHERE entity_type = %s AND NOT (entity_id = ANY(%s))",
+            (entity_type, list(live_ids)),
+        )
+        removed = cur.rowcount
+    if removed:
+        logger.info("entity_embeddings[%s]: %s orphaned vector(s) removed", entity_type, removed)
+    return removed
+
+
+def prune_publication_embeddings(live_ids: list[int]) -> int:
+    """Same, for the per-publication table that backs the topic map."""
+    with db.connect() as conn:
+        cur = conn.execute(
+            "DELETE FROM publication_embeddings WHERE NOT (publication_id = ANY(%s))",
+            (list(live_ids),),
+        )
+        removed = cur.rowcount
+    if removed:
+        logger.info("publication_embeddings: %s orphaned vector(s) removed", removed)
+    return removed
+
+
 def search_entities(
     query: str, *, types: list[str] | None = None, limit: int = 10
 ) -> list[tuple[str, int, float]]:
