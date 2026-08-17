@@ -251,7 +251,14 @@ const en = {
     rateLimited: 'Too many messages — please wait a minute.',
     sources: 'Sources',
     aiNote: 'AI-generated answers, may contain mistakes',
+    // Replaces aiNote once an answer came from somewhere other than a model —
+    // the header disclaimer has to describe the answer actually on screen.
+    noAiNote: 'No AI — retrieved from the site',
     close: 'Close chat',
+    // The refusal, when nothing in the group's material is close enough to the
+    // question. Produced by code, not by a model, so it lives here.
+    noMatch:
+      'I could not find anything in the group’s published material that answers that. Try rephrasing, or browse the publications and people pages directly.',
     // Shown in place of a written answer when no language model was available.
     // Retrieval is local and never needed one, so the chat still has real
     // entries to show — saying that beats "something went wrong".
@@ -525,7 +532,10 @@ const pt: Dictionary = {
     rateLimited: 'Demasiadas mensagens — aguarde um minuto.',
     sources: 'Fontes',
     aiNote: 'Respostas geradas por IA, podem conter erros',
+    noAiNote: 'Sem IA — obtido do site',
     close: 'Fechar chat',
+    noMatch:
+      'Não encontrei nada no material publicado do grupo que responda a isso. Tente reformular, ou consulte diretamente as páginas de publicações e de pessoas.',
     noModelNote: 'Sem resposta de IA neste momento — mas eis o que corresponde à sua pergunta no material do grupo.',
     kinds: {
       publications: 'Publicação',

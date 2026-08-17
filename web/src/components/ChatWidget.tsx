@@ -69,6 +69,12 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
   const [busy, setBusy] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
 
+  // The header disclaimer has to describe the answer actually on screen. Left
+  // static, it announced "AI-generated answers" directly above a message saying
+  // no model had answered — the two modes contradicting each other in one panel.
+  const lastAnswer = messages.filter((m) => m.role === 'assistant').at(-1)
+  const cameFromAI = lastAnswer?.mode !== 'extractive' && lastAnswer?.mode !== 'none'
+
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight })
   }, [messages, busy])
@@ -118,7 +124,9 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
         <div className="chat-panel" role="dialog" aria-label={t.title}>
           <div className="chat-head">
             <strong>{t.title}</strong>
-            <span className="badge badge-ai">{t.aiNote}</span>
+            <span className={`badge ${cameFromAI ? 'badge-ai' : ''}`}>
+              {cameFromAI ? t.aiNote : t.noAiNote}
+            </span>
             <button
               type="button"
               className="chat-close"
@@ -142,7 +150,10 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
                   </div>
                 ) : (
                   <>
-                    <div>{m.content}</div>
+                    {/* The refusal is written by the service in English for
+                        direct API callers; on screen it comes from the
+                        dictionary, same rule as the extractive note above. */}
+                    <div>{m.mode === 'none' ? t.noMatch : m.content}</div>
                     {m.sources && m.sources.length > 0 && (
                       <div className="chat-sources">
                         {t.sources}:{' '}
