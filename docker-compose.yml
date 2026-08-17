@@ -4,6 +4,13 @@
 #   docker compose up -d db
 # and run web (pnpm dev) and ai (uvicorn) on the host — see README.
 
+# Pinned, because Compose otherwise names the project after the directory it is
+# run from. Working on a branch in a second checkout then silently builds a
+# *second* stack with its own empty database volume, which presents as "all the
+# data is gone" rather than as a new stack. One name means one stack and one
+# database, wherever you run this from.
+name: mlkdapp
+
 services:
   db:
     image: pgvector/pgvector:pg16
