@@ -7,6 +7,77 @@
   margin-top: 1rem;
 }
 
+/* The same people without the avatar, for a group the portraits have not reached.
+   Denser columns than the card grid, because a name needs far less room than a
+   face — and reading as a list is the point: a deliberate roster instead of rows
+   of empty circles. Structure mirrors .person-card (positioned block + overlay
+   link) so LinkedIn can stay a real anchor on top. */
+.people-namelist {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.25rem 1rem;
+}
+
+.person-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: var(--radius);
+  transition: background 160ms var(--ease);
+}
+
+.person-row:hover {
+  background: var(--ink-6);
+}
+
+.person-row-link {
+  font-family: var(--font-serif, georgia, serif);
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.person-row-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+}
+
+.person-row-link:hover {
+  color: var(--cobalt);
+  text-decoration: none;
+}
+
+.person-row-external {
+  position: relative;
+  z-index: 1;
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  color: var(--ink-70);
+  background: var(--ink-6);
+  flex-shrink: 0;
+  transition: color 160ms var(--ease), background 160ms var(--ease);
+}
+
+.person-row:hover .person-row-external {
+  background: var(--ink-12);
+}
+
+.person-row-external:hover {
+  color: var(--on-fill);
+  background: var(--cobalt);
+}
+
 /* Photo beside the name rather than above it: at a glance the eye wants the face
    and the name together, and the row shape lets more people fit on a screen. The
    card is a positioned block, not a link — the whole surface is clickable through
