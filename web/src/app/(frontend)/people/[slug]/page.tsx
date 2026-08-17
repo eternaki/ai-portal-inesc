@@ -10,6 +10,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { PersonLinks } from '@/components/PersonLinks'
 import { PubRow } from '@/components/PubRow'
 import { DissertationRow } from '@/components/DissertationRow'
+import { avatarTone } from '@/lib/avatar-tone.mjs'
 import { initials, memberPhotoAlt, memberPhotoUrl, memberSameAs } from '@/lib/member'
 import { published } from '@/lib/queries'
 import { SITE_URL } from '@/lib/site'
@@ -118,7 +119,12 @@ export default async function PersonPage(props: { params: Params; searchParams: 
             priority
           />
         ) : (
-          <div className="person-photo person-photo--initials">{initials(member.name)}</div>
+          <div
+            className="person-photo person-photo--initials avatar-tone"
+            data-tone={avatarTone(member.name)}
+          >
+            {initials(member.name)}
+          </div>
         )}
         <div>
           <h1>{member.name}</h1>

@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Member } from '@/payload-types'
+import { avatarTone } from '@/lib/avatar-tone.mjs'
 import { initials, memberPhotoAlt, memberPhotoUrl, visibleLinks } from '@/lib/member'
 
 // Identification, plus the one shortcut worth duplicating. The card used to carry
@@ -29,7 +30,9 @@ export function PersonCard({ member }: { member: Member }) {
           loading="lazy"
         />
       ) : (
-        <div className="person-avatar">{initials(member.name)}</div>
+        <div className="person-avatar avatar-tone" data-tone={avatarTone(member.name)}>
+          {initials(member.name)}
+        </div>
       )}
 
       <div className="person-card-body">

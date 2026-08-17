@@ -53,8 +53,14 @@ architecture, global rules). This file covers only the `web/` specifics.
   over from the group's own legacy team page; LinkedIn is not a source (profiles are
   auth-walled — an anonymous fetch returns HTTP 999 — and scraping breaks their
   terms). People that page never listed have no photo anywhere we can reach, so they
-  keep the initials avatar until someone uploads one. `/people` lists a role group by
-  name instead of avatars when fewer than a third of it has a photo.
+  keep the initials avatar until someone uploads one — 55 of 114 currently do.
+- **The initials avatar is coloured per person** (`src/lib/avatar-tone.mjs`, tones in
+  `people.css`). One flat wash for everybody made a group read as the same broken
+  image repeated, which is why `/people` used to drop low-coverage groups to a plain
+  name list; with a stable colour each that fallback is gone and all 114 render as
+  cards. The tone set is fixed rather than a hue hashed from the name so that
+  `pnpm design:contrast` can check every pair in both themes — keep new tones in the
+  stylesheet as explicit `color`/`background` pairs or the audit cannot see them.
 - **On `members`, `role` is the degree and `membershipStatus` is whether they are
   still here.** Do not express "has left" by setting `role: alumni` — that erases
   which degree the person did, and `/people` groups by `membershipStatus` anyway

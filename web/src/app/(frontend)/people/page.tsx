@@ -4,7 +4,6 @@ import config from '@payload-config'
 import { JsonLd } from '@/components/JsonLd'
 import type { Member } from '@/payload-types'
 import { PersonCard } from '@/components/PersonCard'
-import { PersonNameRow } from '@/components/PersonNameRow'
 import { getDictionary } from '@/i18n/server'
 import { memberSameAs } from '@/lib/member'
 
@@ -24,41 +23,24 @@ const ROLE_ORDER = [
 // it meant, so it was removed rather than left for a reader to guess at.
 const SECONDARY_STATUSES = [{ value: 'completed', key: 'statusCompleted' }] as const
 
-// Below this share of portraits, a group is listed by name instead of shown as
-// avatar cards.
+// Every group renders as avatar cards, including the ones with almost no
+// photographs.
 //
-// Photo coverage is uneven for a reason no visitor can see: the only source of
-// portraits is the group's old team page, a snapshot of whoever was here when it
-// was last edited. Faculty, current PhDs and past MSc students are at 98-100%;
-// the current MSc intake, who arrived after it, is at 7%. Three portraits beside
-// forty-two initials reads as a page that failed to load — the same forty-five
-// names in a list reads as a deliberate list. A threshold rather than a hardcoded
-// role, so a group flips back to portraits on its own once the photos exist.
-const PORTRAIT_THRESHOLD = 1 / 3
-
-function showPortraits(group: { photo?: unknown }[]): boolean {
-  if (group.length === 0) return true
-  const withPhoto = group.filter((member) => Boolean(member.photo)).length
-  return withPhoto / group.length >= PORTRAIT_THRESHOLD
-}
-
-/** One group of people: avatar cards, or a plain name list when portraits are scarce. */
+// This used to fall back to a plain list of names below a third coverage, because
+// the placeholder was one flat wash for everybody and three portraits beside
+// forty-two identical circles read as a page that had failed to load. The
+// placeholder now gives each person their own colour (src/lib/avatar-tone.mjs),
+// so that group reads as forty-five people rather than one repeated broken image
+// — and the reason for hiding them is gone. Photo coverage is a fact about the
+// group's old team page, not something a visitor should be shown two different
+// page layouts over.
 function PeopleGroup({ members }: { members: Member[] }) {
-  if (showPortraits(members)) {
-    return (
-      <div className="people-grid">
-        {members.map((member) => (
-          <PersonCard key={member.id} member={member} />
-        ))}
-      </div>
-    )
-  }
   return (
-    <ul className="people-namelist">
+    <div className="people-grid">
       {members.map((member) => (
-        <PersonNameRow key={member.id} member={member} />
+        <PersonCard key={member.id} member={member} />
       ))}
-    </ul>
+    </div>
   )
 }
 
