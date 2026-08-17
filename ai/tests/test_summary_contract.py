@@ -2,6 +2,7 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
 
+from app.llm.errors import LLMError
 from app.pipelines.summarize import (
     SUMMARY_KEYS,
     normalize_summary,
@@ -66,13 +67,19 @@ class SummaryContractTest(unittest.TestCase):
         # No provider configured → resolve_model raises → we must still return a
         # full extractive summary, never propagate the error. This is the whole
         # point of the hybrid: summaries never hard-depend on a paid/quota model.
+        #
+        # Raises the error the real code raises. This used to stand in a plain
+        # RuntimeError, which no path here can actually produce — so it passed
+        # against a bare `except Exception` and would have kept passing if the
+        # fallback caught everything, including this repository's own bugs.
         pub = {
             "title": "Deep learning for ECG diagnosis",
             "venue": "ExampleConf",
             "year": 2026,
             "abstract": "We propose a model. Our results show 92% accuracy.",
         }
-        with patch("app.pipelines.summarize.resolve_model", side_effect=RuntimeError("no provider")):
+        not_configured = LLMError("LLM_NOT_CONFIGURED", "No language model provider is configured.")
+        with patch("app.pipelines.summarize.resolve_model", side_effect=not_configured):
             result = summarize_publication_result(pub)
 
         self.assertEqual(result["aiSummaryModel"], "extractive")

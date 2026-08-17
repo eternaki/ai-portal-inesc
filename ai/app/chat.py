@@ -17,6 +17,7 @@ from typing import Any
 
 from app import payload_api
 from app.config import get_settings
+from app.llm.fallback import MODE_EXTRACTIVE, MODE_LLM  # noqa: F401 - re-exported for callers
 from app.rag.safety import detect_prompt_injection, sanitize_text
 
 logger = logging.getLogger(__name__)
@@ -147,9 +148,10 @@ def has_enough_evidence(sources: list[dict]) -> bool:
 
 
 # How the answer was produced, reported to the caller so the UI can label it
-# honestly. "none" is the refusal — no evidence, so nothing was produced at all.
-MODE_LLM = "llm"
-MODE_EXTRACTIVE = "extractive"
+# honestly. The two working modes come from llm.fallback so that a pipeline's
+# provenance stamp and this endpoint's `mode` field cannot drift apart; "none" is
+# local to the chat — the refusal, where there was no evidence to answer from and
+# so nothing was produced by either layer.
 MODE_NONE = "none"
 
 # Retrieval never needed a model: embeddings run locally, so by the time the chat

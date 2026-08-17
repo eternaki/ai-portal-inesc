@@ -16,6 +16,10 @@ ERROR_STATUS = {
     "OLLAMA_UNAVAILABLE": 503,
     "OLLAMA_MODEL_NOT_FOUND": 503,
     "LLM_EMPTY_RESPONSE": 502,
+    "LLM_BAD_OUTPUT": 502,
+    # Never reaches HTTP: the chat catches it and degrades. Listed so the code
+    # is not an unmapped stranger if some future caller lets it through.
+    "LOCAL_RATE_LIMIT": 429,
     "LLM_INTERNAL_ERROR": 500,
 }
 
@@ -45,6 +49,26 @@ class LLMError(Exception):
         if self.model:
             error["model"] = self.model
         return {"error": error}
+
+
+class LLMOutputError(LLMError):
+    """The provider answered, but not with something the caller can use.
+
+    A subclass rather than a separate exception so that every `except LLMError`
+    already written keeps working: to a feature deciding whether to fall back,
+    "no model replied" and "the model replied with prose where JSON was required"
+    are the same event — the deterministic path has to run either way.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        hint: str = "",
+        request_id: str | None = None,
+        provider: str | None = None,
+        model: str | None = None,
+    ) -> None:
+        super().__init__("LLM_BAD_OUTPUT", message, hint, request_id, provider, model)
 
 
 def redact_secret(value: str) -> str:

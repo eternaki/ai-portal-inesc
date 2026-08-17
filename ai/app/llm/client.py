@@ -10,6 +10,7 @@ import logging
 import re
 from pathlib import Path
 
+from app.llm.errors import LLMOutputError
 from app.llm.service import ChatMessage, llm_service
 
 logger = logging.getLogger(__name__)
@@ -48,16 +49,33 @@ def complete_response(
 
 
 def parse_json_response(raw: str) -> dict:
-    """Parse JSON returned by an LLM, tolerating markdown fences."""
+    """Parse JSON returned by an LLM, tolerating markdown fences.
+
+    Raises LLMOutputError, which is an LLMError: to a caller deciding whether to
+    fall back, a model that answers in prose where JSON was required is the same
+    event as a model that does not answer at all, and both must take the offline
+    path rather than one degrading and the other raising a 500.
+    """
     text = raw.strip()
     fence = re.search(r"```(?:json)?\s*(.*?)```", text, flags=re.DOTALL)
     if fence:
         text = fence.group(1).strip()
     try:
-        return json.loads(text)
+        parsed = json.loads(text)
     except json.JSONDecodeError as err:
         logger.error("LLM returned non-JSON: %s", raw[:500])
-        raise ValueError("LLM response is not valid JSON") from err
+        raise LLMOutputError(
+            "The language model did not return valid JSON.",
+            "Check the prompt's output contract, or try another model.",
+        ) from err
+    if not isinstance(parsed, dict):
+        # A bare list or string parses cleanly and then fails later, at a
+        # .get() far from here with nothing pointing back at the model.
+        raise LLMOutputError(
+            f"The language model returned {type(parsed).__name__}, not a JSON object.",
+            "Check the prompt's output contract, or try another model.",
+        )
+    return parsed
 
 
 def complete(

@@ -190,6 +190,19 @@ def record_llm(provider: str, model: str, status: str, ms: float, *, cost_usd: f
     registry.observe_latency("ai_llm_latency", ms, labels={"provider": provider, "model": model})
 
 
+def record_degradation(surface: str, reason: str, ms: float) -> None:
+    """One AI feature answered from its offline path instead of the model.
+
+    Counted separately from ai_llm_errors_total: an error is a call that failed,
+    this is a *visitor* who got the lesser answer. The two diverge — a provider
+    with no credentials never makes a call to fail, and one failing call can
+    degrade several surfaces — and it is this number that says how much of the
+    site is currently running without AI.
+    """
+    registry.incr("ai_degraded_answers_total", labels={"surface": surface, "reason": reason})
+    registry.observe_latency("ai_degraded_answer_latency", ms, labels={"surface": surface})
+
+
 def record_pipeline(name: str, status: str, ms: float) -> None:
     registry.incr("ai_pipeline_runs_total", labels={"pipeline": name, "status": status})
     registry.observe_latency("ai_pipeline_latency", ms, labels={"pipeline": name})

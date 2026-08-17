@@ -111,7 +111,8 @@ def test_a_long_snippet_is_cut_at_a_word_boundary():
 @pytest.fixture(autouse=True)
 def _allow_chat():
     """Enable the feature flag and clear the per-IP rate limiter between tests."""
-    routes._chat_hits.clear()
+    routes._abuse_budget.clear()
+    routes._model_budget.clear()
     with patch("app.settings_cache.feature_enabled", return_value=True):
         yield
 
@@ -167,3 +168,32 @@ def test_too_little_evidence_is_still_refused_rather_than_degraded():
     assert result["insufficientEvidence"] is True
     assert result["sources"] == []
     assert result["mode"] == "none"
+
+
+# --- rate limiting ---------------------------------------------------------
+
+
+def test_a_heavy_visitor_loses_the_phrasing_not_the_answer():
+    # The per-IP budget exists to protect a metered model quota, so spending it
+    # should cost what it protects and nothing else. It used to return 429 —
+    # cutting a visitor off from retrieval, which costs nothing to serve.
+    with (
+        patch("app.chat.gather_sources", return_value=(SOURCES, [])),
+        patch("app.api.routes.complete", return_value="a written answer"),
+    ):
+        modes = [_ask(f"question {i}")["mode"] for i in range(12)]
+
+    assert modes[0] == "llm"
+    assert modes[-1] == "extractive", "past the model budget the visitor should still get entries"
+    assert all(m in ("llm", "extractive") for m in modes)
+    assert modes.count("llm") == 8, f"the model budget is 8 per minute, spent {modes.count('llm')}"
+
+
+def test_genuine_hammering_is_still_refused():
+    from fastapi import HTTPException
+
+    with patch("app.chat.gather_sources", return_value=(SOURCES, [])):
+        with pytest.raises(HTTPException) as excinfo:
+            for i in range(40):
+                _ask(f"flood {i}")
+    assert excinfo.value.status_code == 429
