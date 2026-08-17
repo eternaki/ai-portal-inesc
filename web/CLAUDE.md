@@ -92,6 +92,13 @@ architecture, global rules). This file covers only the `web/` specifics.
 - **Feature flags** are in the `ai-settings` global (`features` group):
   `enableChatbot`, `enableSemanticSearch`, `enableSummaries`. The layout hides the
   chat widget when off; the AI service enforces the rest.
+- **The chat answers without a language model.** `/chat` returns `mode:
+  'llm' | 'extractive' | 'none'`; `extractive` means no model was available and the
+  service sent the retrieved entries instead (see `ai/CLAUDE.md`). `ChatWidget`
+  renders those as a list of things to open, under a note from the dictionary —
+  **not** `data.answer`, which is the service's English plain-text rendering for
+  direct API callers and would bypass i18n. Provider failures therefore no longer
+  reach the widget as errors; don't reintroduce per-error-code copy for them.
 - Public pages are **Server Components** by default (SSR/SEO). Emit structured data
   via `src/components/JsonLd.tsx`.
 - Keep collection files focused; a growing file is a signal to split.

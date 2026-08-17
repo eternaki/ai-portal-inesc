@@ -252,6 +252,19 @@ const en = {
     sources: 'Sources',
     aiNote: 'AI-generated answers, may contain mistakes',
     close: 'Close chat',
+    // Shown in place of a written answer when no language model was available.
+    // Retrieval is local and never needed one, so the chat still has real
+    // entries to show — saying that beats "something went wrong".
+    noModelNote: 'No AI answer right now — but here is what your question matches in the group’s own material.',
+    kinds: {
+      publications: 'Publication',
+      dissertations: 'Dissertation',
+      members: 'Person',
+      projects: 'Project',
+      software: 'Software',
+      news: 'News',
+      events: 'Event',
+    },
   },
   notFound: {
     eyebrow: '404',
@@ -513,6 +526,16 @@ const pt: Dictionary = {
     sources: 'Fontes',
     aiNote: 'Respostas geradas por IA, podem conter erros',
     close: 'Fechar chat',
+    noModelNote: 'Sem resposta de IA neste momento — mas eis o que corresponde à sua pergunta no material do grupo.',
+    kinds: {
+      publications: 'Publicação',
+      dissertations: 'Dissertação',
+      members: 'Pessoa',
+      projects: 'Projeto',
+      software: 'Software',
+      news: 'Notícia',
+      events: 'Evento',
+    },
   },
   notFound: {
     eyebrow: '404',

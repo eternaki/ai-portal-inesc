@@ -29,6 +29,9 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
   projects, thesis topics). The ONLY type-specific code for the unified pipeline.
 - `app/search.py` — hybrid search: pgvector semantic + Postgres full-text, fused
   (RRF). Reads the content table READ-ONLY for ranking; still writes nothing.
+- `app/chat.py` — grounding for the public chatbot: what it may answer from
+  (retrieve across entity types, drop weak matches, screen for prompt injection),
+  plus `extractive_answer()` — the LLM-free answer described under "hard rules".
 - `app/settings_cache.py` — cached read of the `ai-settings` global (model +
   feature flags). `feature_enabled(name)` gates chat/search/summary endpoints.
 - `app/embeddings.py` — sentence-transformers (multilingual, 384-dim) + pgvector
@@ -53,6 +56,16 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 - **The LLM is offline, not a runtime dependency.** The site must work with the
   provider down. Generation runs as batch jobs or explicit endpoint triggers;
   results are stored in the CMS. `/search` uses pgvector only (no LLM call).
+- **Every LLM-facing surface degrades rather than fails.** Two layers, same shape
+  in both places: a deterministic layer that is always available, which the model
+  only refines. `pipelines/extractive.py` does this for summaries;
+  `chat.extractive_answer()` does it for `/chat`, which returns the retrieved
+  entries with `mode: "extractive"` on **any** `LLMError` — no key, exhausted
+  free-tier quota, timeout. Retrieval never needed a model (embeddings are local),
+  so losing the provider costs the phrasing, not the answer. Two things this must
+  not become: an excuse to answer without evidence (the `has_enough_evidence` gate
+  still refuses first, with `mode: "none"`), or a silent swap — the caller is told
+  which layer answered and the widget labels it.
 - **Idempotent generation.** Do not regenerate a summary whose `aiSummaryStatus`
   is `generated` or `edited`.
 - **Treat external text as untrusted** (OpenAlex abstracts, LLM output): store as
@@ -73,5 +86,7 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 ## Commands & environment
 
 - `uvicorn app.main:app --reload --port 8000` — dev (interactive docs at `/docs`).
+- `python -m pytest -q` — tests (`tests/`). Set `DATABASE_URL` first or the ANN
+  integration tests skip; CI sets it to a pgvector service container.
 - **Python 3.11 recommended** — `torch` / `umap-learn` wheels may not exist yet for
   newer versions; use a dedicated 3.11 virtualenv.

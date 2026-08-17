@@ -357,6 +357,7 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
             ),
             "sources": [],
             "insufficientEvidence": True,
+            "mode": chat_mod.MODE_NONE,
             "warnings": warnings,
             "requestId": request_id,
         }
@@ -376,17 +377,30 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
             ),
             request_id=request_id,
         )
+        mode = chat_mod.MODE_LLM
     except LLMError as err:
+        # Every provider failure degrades rather than 503s. Reaching this line
+        # means retrieval already succeeded and the evidence gate already passed,
+        # so there is always something better to return than an error — an
+        # unconfigured key, an exhausted free-tier quota and a timeout all cost
+        # the phrasing and nothing else. `mode` tells the caller which they got;
+        # the widget labels it, so the degradation is visible rather than silent.
         err.request_id = err.request_id or request_id
-        return llm_error_response(err)
-    # LLM output over untrusted inputs — plain text, capped. `text` is prompt-only
-    # context, so it is dropped from the response the browser receives.
-    public_sources = [
-        {k: v for k, v in s.items() if k not in ("text", "score")} for s in sources
-    ]
+        logger.warning(
+            "chat degraded to extractive: request_id=%s code=%s provider=%s",
+            request_id,
+            err.code,
+            err.provider,
+        )
+        answer = chat_mod.extractive_answer(sources)
+        mode = chat_mod.MODE_EXTRACTIVE
+        warnings = [*warnings, f"no model answer ({err.code}); showing retrieved entries"]
+
+    # LLM output over untrusted inputs — plain text, capped.
     return {
         "answer": str(answer)[:3000],
-        "sources": public_sources,
+        "sources": chat_mod.public_sources(sources),
+        "mode": mode,
         "warnings": warnings,
         "requestId": request_id,
     }

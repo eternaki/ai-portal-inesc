@@ -146,6 +146,75 @@ def has_enough_evidence(sources: list[dict]) -> bool:
     return len(sources) >= get_settings().chat_min_evidence_sources
 
 
+# How the answer was produced, reported to the caller so the UI can label it
+# honestly. "none" is the refusal — no evidence, so nothing was produced at all.
+MODE_LLM = "llm"
+MODE_EXTRACTIVE = "extractive"
+MODE_NONE = "none"
+
+# Retrieval never needed a model: embeddings run locally, so by the time the chat
+# reaches the LLM it already holds grounded, screened, ranked entries. Losing the
+# provider should therefore cost the phrasing, not the answer — the same two-layer
+# shape pipelines/extractive.py gives summaries, where the deterministic draft is
+# always available and the LLM only refines it.
+EXTRACTIVE_PREAMBLE = (
+    "No language model is available right now, so this is what the group's own "
+    "material matched — the entries themselves, closest first, rather than a "
+    "written answer:"
+)
+
+SNIPPET_CHARS = 240
+
+
+def _snippet(text: str, limit: int = SNIPPET_CHARS) -> str:
+    """The leading `limit` characters, cut at a word boundary."""
+    text = " ".join((text or "").split())
+    if len(text) <= limit:
+        return text
+    return f"{text[:limit].rsplit(' ', 1)[0].rstrip(' ,;:.')}…"
+
+
+def extractive_answer(sources: list[dict]) -> str:
+    """Assemble an answer from the retrieved entries alone, with no model.
+
+    Deliberately does not join two entries into a statement: relating sources to
+    each other is the part that needs a model, and the part that invents things.
+    So this lists what matched and quotes it, and the preamble says plainly that
+    it is a match list — presenting it as a reasoned answer would be the one
+    dishonest outcome available here.
+    """
+    if not sources:
+        return ""
+
+    lines = [EXTRACTIVE_PREAMBLE, ""]
+    for source in sources:
+        year = f" ({source['year']})" if source.get("year") else ""
+        snippet = _snippet(source.get("text") or "")
+        lines.append(
+            f"[{source['n']}] {_kind(source['entity_type'])}{year} — "
+            f"{source['title']}.{f' {snippet}' if snippet else ''}"
+        )
+    return "\n".join(lines)
+
+
+def public_sources(sources: list[dict]) -> list[dict]:
+    """The citation list as the browser may see it.
+
+    `text` is prompt-only context and `score` is an internal ranking number, so
+    both are dropped. A capped `snippet` takes their place because in extractive
+    mode that line *is* the answer — and it is safe to expose: gather_sources has
+    already sanitised it and screened it for injection, and it comes from pages
+    the visitor can open anyway.
+    """
+    return [
+        {
+            **{k: v for k, v in source.items() if k not in ("text", "score")},
+            "snippet": _snippet(source.get("text") or ""),
+        }
+        for source in sources
+    ]
+
+
 def _kind(entity_type: str) -> str:
     """"publications" -> "publication", so the prompt reads naturally."""
     return entity_type[:-1] if entity_type.endswith("s") else entity_type
