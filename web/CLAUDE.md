@@ -118,5 +118,9 @@ The public UI is bilingual **English + Português** (no Russian, ever). Approach
 - `pnpm dev` — dev server (http://localhost:3000, admin `/admin`)
 - `pnpm generate:types` — regenerate `payload-types.ts` after collection changes
 - `pnpm generate:importmap` — after adding custom admin components
-- `pnpm lint` · `pnpm typecheck`
+- `pnpm lint` · `pnpm typecheck` · `pnpm scripts:test`
+- **Tests live in `scripts/tests/*.test.mjs`** (`node --test`, no runner to
+  configure) and cover the importers, matchers and parsers under `scripts/`, plus
+  guards over source files that must agree with each other — see
+  `scripts/lib/dissertation-order.mjs`. All three commands run in CI.
 - `pnpm claude:map` — regenerate the Project map in the root CLAUDE.md
