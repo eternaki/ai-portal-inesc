@@ -100,8 +100,6 @@ regenerated on every commit (see section 7).
 - `/api/coverage`
 - `/api/health/admin`
 - `/api/ingest`
-- `/api/linkedin/callback`
-- `/api/linkedin/start`
 - `/api/maintenance`
 - `/api/rag`
 
