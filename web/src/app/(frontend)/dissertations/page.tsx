@@ -36,10 +36,13 @@ export default async function DissertationsPage(props: { searchParams: SearchPar
     collection: 'dissertations',
     where: filter,
     // Open topics first, then ongoing, then the archive; newest within each.
-    // Descending is deliberate: the status values sort alphabetically as
-    // finished < ongoing < open, so reversing them yields exactly the order the
-    // page wants — what a visitor can still apply to comes before the archive.
-    sort: ['-status', '-createdAt'],
+    //
+    // Ascending is correct even though "finished" < "ongoing" < "open"
+    // alphabetically: `status` is a Postgres enum, and enums sort by the order
+    // their values were declared (open=1, ongoing=2, finished=3), not by text.
+    // Reversing this to '-status' looks right on paper and puts the archive first
+    // — verify against real rows, not an empty table, before touching it.
+    sort: ['status', '-createdAt'],
     limit: PER_PAGE,
     page: currentPage,
     depth: 1,
