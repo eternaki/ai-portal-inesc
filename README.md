@@ -165,8 +165,8 @@ cd web && pnpm data:setup
 
 That chains the import steps in the order they have to run — curated member data,
 photos from the group's legacy team page, the reconciliations that correct the
-names, projects, publication↔member links, then pruning the seed's development
-fixtures. Every step is idempotent, so re-running is safe, and each writes a
+names, projects, dissertations, the reading-group archive, publication↔member
+links, then pruning the seed's development fixtures. Every step is idempotent, so re-running is safe, and each writes a
 report under `web/reports/` naming exactly what it changed.
 
 Photos must be imported *before* the name reconciliations: those expand short

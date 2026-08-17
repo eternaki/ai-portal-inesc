@@ -35,7 +35,7 @@
     "members:names:apply": "cross-env ROSTER_NAMES_APPLY=1 NODE_OPTIONS=--no-deprecation payload run scripts/apply-roster-names.mjs",
     "events:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/import-events.mjs",
     "events:import:apply": "cross-env EVENTS_APPLY=1 NODE_OPTIONS=--no-deprecation payload run scripts/import-events.mjs",
-    "data:setup": "pnpm members:import:apply && pnpm members:import:apply --data=data/mlkd-members-roster-update.json && pnpm photos:import:apply && pnpm members:names:apply && pnpm members:status:apply && pnpm members:phd:apply && pnpm projects:import:apply && pnpm publications:link-members:apply && pnpm authors:link-aliases:apply && pnpm seed:prune:apply",
+    "data:setup": "pnpm members:import:apply && pnpm members:import:apply --data=data/mlkd-members-roster-update.json && pnpm photos:import:apply && pnpm members:names:apply && pnpm members:status:apply && pnpm members:phd:apply && pnpm projects:import:apply && pnpm dissertations:import:apply && pnpm events:import:apply && pnpm publications:link-members:apply && pnpm authors:link-aliases:apply && pnpm seed:prune:apply",
     "projects:import": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/import-projects.mjs",
     "projects:import:apply": "cross-env PROJECTS_APPLY=1 NODE_OPTIONS=--no-deprecation payload run scripts/import-projects.mjs",
     "projects:import:test": "node --test scripts/tests/legacy-projects-parser.test.mjs",
