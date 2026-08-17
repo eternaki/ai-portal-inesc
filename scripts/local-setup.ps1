@@ -193,42 +193,17 @@ Info 'Importing curated member data into local database...'
 Push-Location $WebDir
 try {
   $env:DATABASE_URL = $DatabaseUrl
-  pnpm members:import:apply
+  # One command, defined in web/package.json as `data:setup`, so this script and
+  # the macOS/Linux instructions in the README cannot drift into running different
+  # steps. Order matters there and is documented alongside it: the curated import
+  # first, then the reconciliations that correct it, then linking, then pruning
+  # the seed's development fixtures. Every step is idempotent and writes its own
+  # report under web/reports/, which is where to look when one fails.
+  Info 'Importing curated member data, photos, projects and links...'
+  pnpm data:setup
   if ($LASTEXITCODE -ne 0) {
-    Fail 'Member import failed.'
+    Fail 'Data setup failed. See the reports under web/reports/ for the failing step.'
   }
-  pnpm members:import:apply -- --data=data/mlkd-members-roster-update.json
-  if ($LASTEXITCODE -ne 0) {
-    Fail 'Member roster import failed.'
-  }
-
-  # Order matters. The two datasets above are the original curated import, and
-  # they still carry the truncated names and the "active" status everyone was
-  # given before the group's own pages were checked. Left there, a fresh setup
-  # reproduces the site as it was, not as it is: 89 MSc students instead of 44,
-  # and a second "Joao Meneses" beside "Joao Meneses Santos". These four put the
-  # corrections back, each one idempotent and each reporting what it changed.
-  Info 'Reconciling members against the rosters and the group site...'
-  pnpm members:names:apply
-  if ($LASTEXITCODE -ne 0) { Fail 'Member name reconciliation failed.' }
-  pnpm members:status:apply
-  if ($LASTEXITCODE -ne 0) { Fail 'Member status reconciliation failed.' }
-  pnpm members:phd:apply
-  if ($LASTEXITCODE -ne 0) { Fail 'PhD roster reconciliation failed.' }
-  pnpm photos:import:apply
-  if ($LASTEXITCODE -ne 0) { Fail 'Member photo import failed.' }
-
-  Info 'Linking publication authors to member profiles...'
-  pnpm publications:link-members:apply
-  if ($LASTEXITCODE -ne 0) {
-    Fail 'Publication/member link backfill failed.'
-  }
-  pnpm authors:link-aliases:apply
-  if ($LASTEXITCODE -ne 0) { Fail 'Author alias linking failed.' }
-
-  Info 'Removing the development fixtures that ship in the seed...'
-  pnpm seed:prune:apply
-  if ($LASTEXITCODE -ne 0) { Fail 'Seed prune failed.' }
 } finally {
   Pop-Location
 }

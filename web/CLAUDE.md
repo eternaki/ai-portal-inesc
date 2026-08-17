@@ -49,6 +49,12 @@ architecture, global rules). This file covers only the `web/` specifics.
   Publications list), `MaintenancePanel` (data-health, on the dashboard) and
   `CoveragePanel` (publications per member vs the `knownPublicationCount` baseline
   and OpenAlex, on the dashboard). After adding one, run `pnpm generate:importmap`.
+- **Member photos are imported, never scraped.** `pnpm photos:import` carries them
+  over from the group's own legacy team page; LinkedIn is not a source (profiles are
+  auth-walled — an anonymous fetch returns HTTP 999 — and scraping breaks their
+  terms). People that page never listed have no photo anywhere we can reach, so they
+  keep the initials avatar until someone uploads one. `/people` lists a role group by
+  name instead of avatars when fewer than a third of it has a photo.
 - **On `members`, `role` is the degree and `membershipStatus` is whether they are
   still here.** Do not express "has left" by setting `role: alumni` — that erases
   which degree the person did, and `/people` groups by `membershipStatus` anyway

@@ -1,11 +1,16 @@
-// Four people on the legacy team page carry a name no matching rule can resolve,
+// Five people on the legacy team page carry a name no matching rule can resolve,
 // so each is pinned by hand to a member — keyed on the photo filename, which is
 // the one part of a card that is unique.
 //
 // An explicit allowlist rather than a looser rule, for the same reason as
-// `author-aliases.mjs`: a rule tolerant enough to catch these three is tolerant
-// enough to put the wrong face on a profile.
+// `author-aliases.mjs`: a rule tolerant enough to catch these is tolerant enough
+// to put the wrong face on a profile.
 //
+//   ArlindoOliveira.jpeg   their card says "Arlindo Oliveira", the profile here is
+//                          "Arlindo L. Oliveira". The middle initial makes it a
+//                          weak match, so the group's own lead — the most visible
+//                          profile on the site — was the one person left without a
+//                          picture while his photo sat on the legacy page.
 //   VincenteSilvestre.png  their page misspells "Vicente" as "Vincente"
 //   OleksanderS.jpeg       the surname is abbreviated to an initial, and the given
 //                          name is spelled "Oleksander" there, "Oleksandr" here
@@ -16,14 +21,21 @@
 //                          matched the first Gonçalo, who already had a photo, and
 //                          was silently counted as "already had one" — leaving the
 //                          second Gonçalo with no picture and no warning.
-//   JoaoMeneses.jpg        their card says "João Meneses", our member is "João
-//                          Meneses Santos", so the surname pass compares Meneses
-//                          against Santos and finds nothing. He has this photo
-//                          already — it was imported while his name was still the
-//                          truncated one — so the pin changes nothing today and
-//                          keeps the import correct against an empty database.
+//   JoaoMeneses.jpg        their card says "João Meneses", and so does the seed;
+//                          the roster reconciliation later renames him to "João
+//                          Meneses Santos", after which the surname pass compares
+//                          Meneses against Santos and finds nothing. The pin names
+//                          him as he is *when photos are imported* — `data:setup`
+//                          runs the photo import before the reconciliations, for
+//                          exactly this reason: the legacy cards use short names,
+//                          so matching them after the renames loses ten people.
+//                          Re-running the import by hand on an already-reconciled
+//                          database therefore reports this pin as an error telling
+//                          you to fix this file. Do not: he already has his photo,
+//                          and renaming the pin would break the fresh-install path.
 
 export const PHOTO_ALIASES = [
+  { file: 'ArlindoOliveira.jpeg', member: 'Arlindo L. Oliveira' },
   { file: 'VincenteSilvestre.png', member: 'Vicente Silvestre' },
   { file: 'OleksanderS.jpeg', member: 'Oleksandr Stopchak' },
   { file: 'gravo.jpeg', member: 'Gonçalo Goulart Oliveira' },

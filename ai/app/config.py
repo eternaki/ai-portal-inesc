@@ -56,6 +56,17 @@ class Settings(BaseSettings):
     rag_min_source_score: float = 0.05
     rag_min_semantic_score: float = 0.25
 
+    # Public chatbot grounding. Mirrors the admin RAG's thresholds: the chat used
+    # to answer from whatever retrieval returned, however weak, so a low score
+    # floor and a minimum number of sources are what keep it honest.
+    # 0.40, not the RAG's 0.25: measured on this corpus, real questions score
+    # 0.51-0.68 while off-topic ones top out at 0.36 — sparse member bios ("Member
+    # of the MLKD research group") embed generically and match almost anything
+    # weakly, so the lower floor let nonsense through with people as "evidence".
+    chat_max_sources: int = 6
+    chat_min_semantic_score: float = 0.40
+    chat_min_evidence_sources: int = 1
+
     # Local embedding model (sentence-transformers). Multilingual by default so
     # semantic search works on the group's Portuguese content as well as English.
     # This model is 384-dim — the same size as the older all-MiniLM-L6-v2 — so the

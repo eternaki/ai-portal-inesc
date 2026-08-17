@@ -62,6 +62,7 @@ export const metadata = {
 const NAV = [
   { href: '/people', key: 'people' },
   { href: '/publications', key: 'publications' },
+  { href: '/projects', key: 'projects' },
   { href: '/dissertations', key: 'dissertations' },
   { href: '/map', key: 'map' },
   { href: '/news', key: 'news' },

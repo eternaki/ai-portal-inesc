@@ -152,7 +152,40 @@ topic-map data, and local users. Postgres applies this seed only when the databa
 volume is created for the first time. If an old Docker volume already exists, the
 site may come up empty.
 
-On Windows, the recommended one-command setup is:
+The seed carries the publications, but **not** the member photos, the curated
+member corrections, the projects or the author→member links: photos are files
+rather than rows, and `web/media` is gitignored. Without the step below the site
+comes up with everyone on initials avatars and an empty Projects page.
+
+On macOS/Linux, run it once after the database is up:
+
+```bash
+cd web && pnpm data:setup
+```
+
+That chains the import steps in the order they have to run — curated member data,
+photos from the group's legacy team page, the reconciliations that correct the
+names, projects, publication↔member links, then pruning the seed's development
+fixtures. Every step is idempotent, so re-running is safe, and each writes a
+report under `web/reports/` naming exactly what it changed.
+
+Photos must be imported *before* the name reconciliations: those expand short
+names to full ones ("Arlindo Oliveira" → "Arlindo L. Oliveira") while the legacy
+team page uses the short spellings, so running them first makes the photo matcher
+refuse ten people as ambiguous — 48 photos instead of 58.
+
+Running the whole stack in Docker? Run this **inside the web container**, so the
+uploaded files land on the same volume the site serves them from:
+
+```bash
+docker compose exec web pnpm data:setup
+```
+
+Run on the host while web is containerised, the database rows are created but the
+image files are written to your machine instead, and every avatar 404s.
+
+On Windows, the recommended one-command setup does the same thing plus the
+database bring-up:
 
 ```powershell
 scripts\local-setup.bat
