@@ -2,7 +2,11 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from app.pipelines.summarize import normalize_summary, summarize_publication_result
+from app.pipelines.summarize import (
+    SUMMARY_KEYS,
+    normalize_summary,
+    summarize_publication_result,
+)
 
 
 class SummaryContractTest(unittest.TestCase):
@@ -53,8 +57,37 @@ class SummaryContractTest(unittest.TestCase):
         self.assertEqual(result["aiSummary"]["contributions"], "The contribution.")
         self.assertEqual(result["aiSummary"]["topics"], "semantic search")
         self.assertEqual(result["aiSummaryModel"], "gemini/test")
-        self.assertEqual(result["aiSummaryPromptVersion"], "summary-v2")
+        # The LLM path now refines the extractive draft, so it carries the refine
+        # prompt's version. The extractive-only fallback stamps "extractive" instead.
+        self.assertEqual(result["aiSummaryPromptVersion"], "summary-refine-v1")
         self.assertIn("aiSummaryGeneratedAt", result)
+
+    def test_falls_back_to_extractive_when_llm_unavailable(self):
+        # No provider configured → resolve_model raises → we must still return a
+        # full extractive summary, never propagate the error. This is the whole
+        # point of the hybrid: summaries never hard-depend on a paid/quota model.
+        pub = {
+            "title": "Deep learning for ECG diagnosis",
+            "venue": "ExampleConf",
+            "year": 2026,
+            "abstract": "We propose a model. Our results show 92% accuracy.",
+        }
+        with patch("app.pipelines.summarize.resolve_model", side_effect=RuntimeError("no provider")):
+            result = summarize_publication_result(pub)
+
+        self.assertEqual(result["aiSummaryModel"], "extractive")
+        self.assertEqual(result["aiSummaryPromptVersion"], "extractive-v1")
+        self.assertTrue(result["aiSummary"]["tldr"])
+        self.assertEqual(set(result["aiSummary"].keys()), set(SUMMARY_KEYS))
+
+    def test_refine_false_skips_the_llm_entirely(self):
+        # extractive-only mode must not touch the LLM even when one is configured.
+        with patch("app.pipelines.summarize.complete_response", side_effect=AssertionError("LLM called")):
+            result = summarize_publication_result(
+                {"title": "X", "abstract": "We present a method. Results are strong."},
+                refine=False,
+            )
+        self.assertEqual(result["aiSummaryModel"], "extractive")
 
 
 if __name__ == "__main__":

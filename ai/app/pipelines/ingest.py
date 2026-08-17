@@ -11,12 +11,18 @@ import json
 import logging
 import sys
 import time
+from datetime import datetime, timezone
 from typing import Any
 
 import httpx
 
 from app import payload_api
 from app.config import get_settings
+from app.pipelines.extractive import (
+    EXTRACTIVE_MODEL,
+    EXTRACTIVE_VERSION,
+    extractive_summary,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -218,6 +224,16 @@ def run(authors_file: str) -> None:
                 continue
             seen.add(openalex_id)
             pub = work_to_publication(work, member_by_author_id)
+            # Attach a deterministic extractive summary so a freshly ingested paper
+            # arrives with a readable draft — no LLM, no quota, works during bulk
+            # ingest. upsert_publication applies this only on CREATE; on update it
+            # is dropped, so an existing (possibly human-edited) summary is safe.
+            if (pub.get("abstract") or "").strip():
+                pub["aiSummary"] = extractive_summary(pub)
+                pub["aiSummaryStatus"] = "generated"
+                pub["aiSummaryModel"] = EXTRACTIVE_MODEL
+                pub["aiSummaryPromptVersion"] = EXTRACTIVE_VERSION
+                pub["aiSummaryGeneratedAt"] = datetime.now(timezone.utc).isoformat()
             _, was_created = payload_api.upsert_publication(pub)
             created += was_created
             updated += not was_created

@@ -14,12 +14,17 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
 - `app/llm/prompts/*.md` — prompt templates (files, reviewed like code).
 - `app/pipelines/` — batch jobs: `ingest`, `backfill_links` (re-read OpenAlex to
   fill `originalUrl`/`pdfUrl` on already-ingested papers), `embed`, `embed_entities`
-  (multi-entity vectors), `summarize`, `cluster`, `bios`, `maintenance` (data-health
-  report), `benchmark` (search metrics: labelled P@5/Recall@10/MRR, plus label-free
-  ANN recall via `python -m app.pipelines.benchmark --ann`), `coverage` (per-member
-  publications on site vs the `knownPublicationCount` baseline vs OpenAlex
-  `works_count` — "how many papers did the platform actually add"; read-only,
-  `--openalex` opts into the network lookup).
+  (multi-entity vectors), `extractive` (deterministic, LLM-free summary drafts from
+  the abstract/metadata — the baseline layer), `summarize` (hybrid: extractive draft
+  → optional LLM refine; degrades to the draft when no provider is configured, so
+  summaries never hard-depend on a paid/quota model; `--extractive` forces draft-only),
+  `cluster`, `bios`, `maintenance` (data-health report), `benchmark` (search metrics:
+  labelled P@5/Recall@10/MRR, plus label-free ANN recall via
+  `python -m app.pipelines.benchmark --ann`), `coverage` (per-member publications on
+  site vs the `knownPublicationCount` baseline vs OpenAlex `works_count` — "how many
+  papers did the platform actually add"; read-only, `--openalex` opts into the network
+  lookup). Ingest attaches an extractive summary to newly created papers, so a bulk
+  import arrives with readable drafts and no LLM calls.
 - `app/entities.py` — entity → embedding-text adapters (publications, members,
   projects, thesis topics). The ONLY type-specific code for the unified pipeline.
 - `app/search.py` — hybrid search: pgvector semantic + Postgres full-text, fused
