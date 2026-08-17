@@ -7,7 +7,10 @@ test('resolves a pinned photo file to its member', () => {
   assert.equal(aliasedMemberName('public/playground_assets/gravo.jpeg'), 'Gonçalo Goulart Oliveira')
   assert.equal(aliasedMemberName('public/playground_assets/VincenteSilvestre.png'), 'Vicente Silvestre')
   assert.equal(aliasedMemberName('public/playground_assets/OleksanderS.jpeg'), 'Oleksandr Stopchak')
-  assert.equal(aliasedMemberName('public/playground_assets/JoaoMeneses.jpg'), 'João Meneses Santos')
+  // The name he has when photos are imported — before the roster reconciliation
+  // renames him to "João Meneses Santos". Asserting the post-rename name made this
+  // test fail against the shipped alias and hid a real import error.
+  assert.equal(aliasedMemberName('public/playground_assets/JoaoMeneses.jpg'), 'João Meneses')
 })
 
 test('returns null for a file that is not pinned', () => {

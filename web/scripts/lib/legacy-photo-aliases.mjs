@@ -16,12 +16,14 @@
 //                          matched the first Gonçalo, who already had a photo, and
 //                          was silently counted as "already had one" — leaving the
 //                          second Gonçalo with no picture and no warning.
-//   JoaoMeneses.jpg        their card says "João Meneses", our member is "João
-//                          Meneses Santos", so the surname pass compares Meneses
-//                          against Santos and finds nothing. He has this photo
-//                          already — it was imported while his name was still the
-//                          truncated one — so the pin changes nothing today and
-//                          keeps the import correct against an empty database.
+//   JoaoMeneses.jpg        their card says "João Meneses", and so does the seed;
+//                          the roster reconciliation later renames him to "João
+//                          Meneses Santos", after which the surname pass compares
+//                          Meneses against Santos and finds nothing. The pin names
+//                          him as he is *when photos are imported* — `data:setup`
+//                          runs the photo import before the reconciliations, for
+//                          exactly this reason: the legacy cards use short names,
+//                          so matching them after the renames loses ten people.
 
 export const PHOTO_ALIASES = [
   { file: 'VincenteSilvestre.png', member: 'Vicente Silvestre' },
