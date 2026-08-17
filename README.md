@@ -316,6 +316,39 @@ structured errors such as `LLM_NOT_CONFIGURED`, `PROVIDER_QUOTA_EXCEEDED`,
 `PROVIDER_RATE_LIMITED`, and `MODEL_NOT_FOUND` instead of leaking provider stack
 traces.
 
+**Nothing here is required.** With no provider the site is fully usable: search,
+the topic map and the chat's retrieval never touch an LLM, and every AI feature
+falls back to a deterministic layer (see `ai/CLAUDE.md`). A key buys prose, not
+function.
+
+### Running a model locally (Ollama)
+
+No key, no quota, no network — worth it for batch jobs over the whole corpus, and
+for a demo that cannot depend on someone's free tier still having credit.
+
+```bash
+brew install ollama
+# 0.0.0.0, not the default loopback: the ai service runs in a container and
+# reaches the host through host.docker.internal.
+OLLAMA_HOST=0.0.0.0:11434 ollama serve &
+ollama pull llama3.2:3b
+```
+
+```env
+LLM_PROVIDER=ollama
+OLLAMA_MODEL=llama3.2:3b
+OLLAMA_BASE_URL=http://host.docker.internal:11434
+```
+
+Then `docker compose up -d ai` and check `GET /health/llm` reports `ready`.
+
+**Use an instruct model, not a reasoning one.** Every job here hands the model the
+facts and asks it to phrase them, so thinking tokens buy nothing — and a reasoning
+model spends the whole `LLM_MAX_TOKENS` budget on them and returns empty content,
+which arrives as `LLM_EMPTY_RESPONSE` and degrades every surface to its offline
+layer. `qwen3:8b` was the default here and failed exactly this way; `llama3.2:3b`
+answers the chat in about six seconds on an M-series laptop.
+
 ## Working agreements
 
 - Branches `feat/...`, PR + review by one teammate.

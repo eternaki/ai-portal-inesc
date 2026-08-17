@@ -41,7 +41,13 @@ class Settings(BaseSettings):
     gemini_model: str = "gemini-3.5-flash-lite"
 
     ollama_base_url: str = "http://localhost:11434"
-    ollama_model: str = "qwen3:8b"
+    # Not a reasoning model, deliberately. Every job here hands the model the
+    # facts and asks it to phrase them, so thinking tokens buy nothing — and
+    # qwen3:8b, the previous default, spent the whole llm_max_tokens budget
+    # reasoning and returned empty content, which arrives as LLM_EMPTY_RESPONSE
+    # and degrades every surface to its offline layer. Small also matters: this
+    # runs on a laptop CPU/GPU beside the site, and 3B answers the chat in ~6s.
+    ollama_model: str = "llama3.2:3b"
 
     openai_api_key: str = ""
     openai_model: str = ""
