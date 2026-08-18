@@ -57,11 +57,26 @@ def unsupported_counts(answer: str) -> list[str]:
     return [m.group(0).strip() for m in _UNSUPPORTED_COUNT.finditer(answer or "")]
 
 
-# Scaffolding from our own prompt, echoed back into the answer. A small model
-# does this when the prompt is long: it continues the document instead of
-# replying to it, and the visitor sees "Visitor's question: ..." above the text.
+# Our own prompt showing through the answer. A small model given a long prompt
+# narrates the document instead of replying to it, and the visitor is told about
+# their own question before being told anything else.
+#
+# Two shapes, because catching only the first missed the real ones. The literal
+# label — "Visitor's question:" — and the model *describing* the framing in prose:
+# "A visitor has asked about...", "A questão do visitante é...". The paraphrase is
+# what actually reached a tester, and it slipped through in English entirely; the
+# Portuguese one was caught only because it also happened to be the wrong
+# language, which is luck, not a check.
 _ECHOED_PROMPT = re.compile(
-    r"^\s*(?:visitor'?s question|relevant entries|conversation so far|answer)\s*:",
+    r"^\s*(?:visitor'?s question|relevant entries|conversation so far|answer)\s*:"
+    # Opening by talking about the visitor at all, whatever the verb: enumerating
+    # verbs was losing to "a visitor inquiring about...". An answer that starts by
+    # describing who is asking has not started answering.
+    r"|^\s*(?:the|a|o|os|as)\s+(?:visitor|user|visitante|utilizador|usuário)\b"
+    r"|\b(?:the|a)\s+(?:visitor|user)\s+(?:has\s+)?(?:asked|asks|wants to know|is asking)\b"
+    r"|\b(?:the|a)\s+(?:visitor|user)'?s?\s+question\b"
+    r"|\ba\s+(?:questão|pergunta)\s+do\s+(?:visitante|utilizador|usuário)\b"
+    r"|\bo\s+(?:visitante|utilizador)\s+(?:perguntou|pergunta|quer saber)\b",
     re.IGNORECASE | re.MULTILINE,
 )
 
