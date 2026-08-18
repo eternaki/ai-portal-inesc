@@ -259,6 +259,10 @@ const en = {
     // question. Produced by code, not by a model, so it lives here.
     noMatch:
       'I could not find anything in the group’s published material that answers that. Try rephrasing, or browse the publications and people pages directly.',
+    // Shown when the question carried an instruction aimed at the assistant. Says
+    // what it will answer rather than what it caught — naming the filter would
+    // only tell someone what to type next.
+    refused: 'I can only answer questions about the group’s research, people and publications.',
     // Shown in place of a written answer when no language model was available.
     // Retrieval is local and never needed one, so the chat still has real
     // entries to show — saying that beats "something went wrong".
@@ -536,6 +540,7 @@ const pt: Dictionary = {
     close: 'Fechar chat',
     noMatch:
       'Não encontrei nada no material publicado do grupo que responda a isso. Tente reformular, ou consulte diretamente as páginas de publicações e de pessoas.',
+    refused: 'Só posso responder a perguntas sobre a investigação, as pessoas e as publicações do grupo.',
     noModelNote: 'Sem resposta de IA neste momento — mas eis o que corresponde à sua pergunta no material do grupo.',
     kinds: {
       publications: 'Publicação',

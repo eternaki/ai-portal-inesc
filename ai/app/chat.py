@@ -153,6 +153,10 @@ def has_enough_evidence(sources: list[dict]) -> bool:
 # local to the chat — the refusal, where there was no evidence to answer from and
 # so nothing was produced by either layer.
 MODE_NONE = "none"
+# The question itself carried an instruction aimed at the model. Distinct from
+# "none" so the widget can say what actually happened instead of claiming the
+# archive had nothing on it.
+MODE_REFUSED = "refused"
 
 # Retrieval never needed a model: embeddings run locally, so by the time the chat
 # reaches the LLM it already holds grounded, screened, ranked entries. Losing the

@@ -25,7 +25,7 @@ type Source = {
 // How the answer was produced. 'extractive' means no model was available and the
 // service returned the retrieved entries instead — the widget must not present
 // those as if something had reasoned over them.
-type Mode = 'llm' | 'extractive' | 'none'
+type Mode = 'llm' | 'extractive' | 'none' | 'refused'
 type Msg = { role: 'user' | 'assistant'; content: string; sources?: Source[]; mode?: Mode }
 type ApiError = { code?: string; message?: string; hint?: string; requestId?: string }
 
@@ -73,7 +73,7 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
   // static, it announced "AI-generated answers" directly above a message saying
   // no model had answered — the two modes contradicting each other in one panel.
   const lastAnswer = messages.filter((m) => m.role === 'assistant').at(-1)
-  const cameFromAI = lastAnswer?.mode !== 'extractive' && lastAnswer?.mode !== 'none'
+  const cameFromAI = !['extractive', 'none', 'refused'].includes(lastAnswer?.mode ?? '')
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight })
@@ -153,7 +153,7 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
                     {/* The refusal is written by the service in English for
                         direct API callers; on screen it comes from the
                         dictionary, same rule as the extractive note above. */}
-                    <div>{m.mode === 'none' ? t.noMatch : m.content}</div>
+                    <div>{m.mode === 'none' ? t.noMatch : m.mode === 'refused' ? t.refused : m.content}</div>
                     {m.sources && m.sources.length > 0 && (
                       <div className="chat-sources">
                         {t.sources}:{' '}
