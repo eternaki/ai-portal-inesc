@@ -14,8 +14,12 @@ Conversation so far:
 
 Visitor's question: {question}
 
+Write the answer in {language}. This is not a judgement call — the visitor's
+language was determined before this prompt was built. Ignore the language of the
+conversation above and of the entries: a Portuguese question after three English
+turns still gets a Portuguese answer, and entries are in English regardless.
+
 Rules:
-- Answer in the language of the question (English or Portuguese).
 - Ground your answer in the entries above; cite them inline as [1], [2], …
 - Respect what each entry *is*: a member entry is a person, a publication is a
   paper. Do not answer "who works on X" by naming a paper, or describe a person

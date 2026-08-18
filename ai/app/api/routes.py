@@ -17,6 +17,7 @@ from pydantic import BaseModel, Field
 
 from app import metrics, payload_api
 from app.config import get_settings
+from app.language import detect_language, language_name
 from app.llm.errors import LLMError
 from app.llm.client import complete, complete_json, load_prompt
 from app.llm.fallback import with_fallback
@@ -369,6 +370,10 @@ class ChatTurn(BaseModel):
 class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=500)
     history: list[ChatTurn] = Field(default_factory=list, max_length=6)
+    # Which of the site's two languages the visitor is reading. Only decides the
+    # cases the message itself cannot — a bare name, or an English technical term
+    # typed on the Portuguese site.
+    locale: str = Field(default="en", pattern="^(en|pt)$")
 
 
 @router.post("/chat")
@@ -420,6 +425,7 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
                 context=chat_mod.context_block(sources),
                 history=history_text,
                 question=req.message,
+                language=language_name(detect_language(req.message, default=req.locale)),
             ),
             request_id=request_id,
         )
