@@ -41,12 +41,27 @@ def _publication_text(d: dict) -> str:
 
 
 def _member_text(d: dict) -> str:
+    """Name, role, and whatever the site actually knows about their work.
+
+    `bioAiDraft` is included, not just the human `bio`, because `bio` is empty for
+    every member and this text is all the vector has. Without it a person embeds
+    as a name and a degree — around twenty characters — which is why "who works on
+    quantum computing" matched people the group has no quantum work from, and why
+    "Who is Arlindo Oliveira?" retrieved six other Oliveiras and Pereiras instead
+    of him: with nothing but names to compare, the nearest match is whoever's name
+    looks most like the question.
+
+    The draft is not a nicety here. It carries the person's real record — how many
+    publications the site holds, the span, the venues they return to, their newest
+    title — so it is the only research signal a member vector has. The human field
+    still wins when someone fills it in.
+    """
     interests = d.get("researchInterests") or []
     interests_s = ", ".join(interests) if isinstance(interests, list) else str(interests or "")
     return _join(
         d.get("name") or "",
         d.get("role") or "",
-        lexical_to_text(d.get("bio")),
+        lexical_to_text(d.get("bio")) or (d.get("bioAiDraft") or ""),
         interests_s,
         d.get("careerTrajectory") or "",
     )
