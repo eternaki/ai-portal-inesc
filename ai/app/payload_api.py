@@ -27,10 +27,20 @@ def _client() -> httpx.Client:
     )
 
 
-def find(collection: str, where: dict[str, Any] | None = None, *, limit: int = 100, page: int = 1, depth: int = 0) -> dict:
+def find(
+    collection: str,
+    where: dict[str, Any] | None = None,
+    *,
+    limit: int = 100,
+    page: int = 1,
+    depth: int = 0,
+    sort: str | None = None,
+) -> dict:
     params: dict[str, Any] = {"limit": limit, "page": page, "depth": depth}
     if where:
         params["where"] = json.dumps(where)
+    if sort:
+        params["sort"] = sort
     with _client() as client:
         resp = client.get(f"/{collection}", params=params)
         resp.raise_for_status()

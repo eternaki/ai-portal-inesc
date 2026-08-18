@@ -121,3 +121,62 @@ def test_context_block_labels_the_kind_of_each_entry():
     )
     assert "[1] member: Ana. Vision." in block
     assert "[2] publication: P (2025). Graphs." in block
+
+
+# --- questions about a period ----------------------------------------------
+
+
+def test_a_year_filters_rather_than_ranks():
+    # The failure this fixes: a vector cannot tell 2019 from 2024, so similarity
+    # alone answered "in 2024" with whatever was nearest, whenever it happened.
+    docs = {
+        "publications": [
+            {"id": 1, "title": "Old paper", "slug": "old", "year": 2019, "abstract": "graphs"},
+            {"id": 2, "title": "New paper", "slug": "new", "year": 2024, "abstract": "graphs"},
+        ]
+    }
+    with (
+        patch(
+            "app.embeddings.search_entities",
+            return_value=_hits(("publications", 1, 0.9), ("publications", 2, 0.8)),
+        ),
+        patch("app.payload_api.find", _docs(docs)),
+    ):
+        sources, _ = chat.gather_sources("graph papers in 2024")
+
+    assert [s["title"] for s in sources] == ["New paper"]
+
+
+def test_the_period_is_removed_from_the_text_that_is_searched():
+    # Otherwise the date words drag the vector away from the actual subject.
+    seen = {}
+
+    def _search(text, **kwargs):
+        seen["text"] = text
+        return []
+
+    with patch("app.embeddings.search_entities", _search):
+        chat.gather_sources("reading group in March 2024")
+    assert seen["text"] == "reading group"
+
+
+def test_undated_entries_cannot_answer_a_question_about_a_year():
+    # A member has no year; returning one as evidence for "in 2024" would be
+    # presenting something that cannot support the claim.
+    docs = {"members": [{"id": 7, "name": "Ana", "slug": "ana", "bio": "graphs"}]}
+    with (
+        patch("app.embeddings.search_entities", return_value=_hits(("members", 7, 0.9))),
+        patch("app.payload_api.find", _docs(docs)),
+    ):
+        sources, _ = chat.gather_sources("who worked on graphs in 2024")
+    assert sources == []
+
+
+def test_a_question_with_no_period_keeps_every_entry():
+    docs = {"members": [{"id": 7, "name": "Ana", "slug": "ana", "bio": "graphs"}]}
+    with (
+        patch("app.embeddings.search_entities", return_value=_hits(("members", 7, 0.9))),
+        patch("app.payload_api.find", _docs(docs)),
+    ):
+        sources, _ = chat.gather_sources("who works on graphs")
+    assert [s["title"] for s in sources] == ["Ana"]

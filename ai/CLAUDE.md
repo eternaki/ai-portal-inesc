@@ -41,6 +41,11 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
   projects, thesis topics). The ONLY type-specific code for the unified pipeline.
 - `app/search.py` — hybrid search: pgvector semantic + Postgres full-text, fused
   (RRF). Reads the content table READ-ONLY for ranking; still writes nothing.
+- `app/timeframe.py` — pulls a period out of a question and returns the question
+  without it. Dates are a *filter*, never a similarity: a vector cannot tell 2019
+  from 2024, and the date words drag it away from the subject besides. When the
+  question is only a period, `chat._find_by_timeframe` lists the window straight
+  from the CMS — there is no topic to rank by.
 - `app/chat.py` — grounding for the public chatbot: what it may answer from
   (retrieve across entity types, drop weak matches, screen for prompt injection),
   plus `extractive_answer()` — the LLM-free answer described under "hard rules".
