@@ -17,8 +17,9 @@ from pydantic import BaseModel, Field
 
 from app import metrics, payload_api
 from app.config import get_settings
+from app import answer_check
 from app.language import detect_language, language_name
-from app.llm.errors import LLMError
+from app.llm.errors import LLMError, LLMOutputError
 from app.llm.client import complete, complete_json, load_prompt
 from app.llm.fallback import with_fallback
 from app.pipelines.extractive_snippet import extractive_snippet
@@ -441,18 +442,37 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
     # key, an exhausted free-tier quota and a timeout all cost the phrasing and
     # nothing else. `mode` tells the caller which layer answered, and the widget
     # labels it, so the degradation is visible rather than silent.
+    language = detect_language(req.message, default=req.locale)
+
     def ask_the_model() -> str:
         claim_model_budget(x_client_ip or "unknown")
-        return complete(
-            load_prompt(
-                "chat",
-                context=chat_mod.context_block(sources),
-                history=history_text,
-                question=req.message,
-                language=language_name(detect_language(req.message, default=req.locale)),
-            ),
-            request_id=request_id,
+        prompt = load_prompt(
+            "chat",
+            context=chat_mod.context_block(sources),
+            history=history_text,
+            question=req.message,
+            language=language_name(language),
         )
+        answer = complete(prompt, request_id=request_id)
+
+        # The prompt asks for the answer's language and forbids inflating a count
+        # into a claim about someone's career. A small model honours both some of
+        # the time — measured here at three runs in six for the language. So the
+        # answer is checked, and one retry names the specific defect rather than
+        # repeating the rule that already failed.
+        found = answer_check.problems(answer, language=language)
+        if not found:
+            return answer
+        logger.info("chat answer rejected, retrying: %s", "; ".join(found))
+        retried = complete(prompt + answer_check.correction(found), request_id=request_id)
+        if answer_check.problems(retried, language=language):
+            # Still wrong. The extractive layer says only what the entries say, so
+            # it cannot get either of these wrong — raising hands it that path.
+            raise LLMOutputError(
+                "The model's answer did not meet the answer rules after a retry.",
+                "; ".join(found),
+            )
+        return retried
 
     answer = with_fallback(
         "chat",

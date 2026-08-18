@@ -19,6 +19,7 @@ from app import payload_api
 from app.config import get_settings
 from app.llm.fallback import MODE_EXTRACTIVE, MODE_LLM  # noqa: F401 - re-exported for callers
 from app.rag.safety import detect_prompt_injection, sanitize_text
+from app.timeframe import extract_timeframe
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +69,66 @@ def _describe(entity_type: str, doc: dict) -> str:
     return sanitize_text(text, max_chars=400)
 
 
+# Where each kind of entry keeps its date. Anything absent here is undated: a
+# member or a dissertation is not an event in a year, so a question about a period
+# cannot be answered with one.
+_DATE_FIELDS = {
+    "publications": ("publicationDate", "year"),
+    "events": ("date",),
+    "news": ("date",),
+}
+
+
+def _entry_year(entity_type: str, doc: dict) -> int | None:
+    for field in _DATE_FIELDS.get(entity_type, ()):
+        value = doc.get(field)
+        if isinstance(value, int):
+            return value
+        if isinstance(value, str) and len(value) >= 4 and value[:4].isdigit():
+            return int(value[:4])
+    return None
+
+
+def _find_by_timeframe(timeframe, max_sources: int) -> list[tuple[str, dict]]:
+    """Entries from the period itself, newest first, ignoring similarity.
+
+    For a question that is *only* a period — "what did the group publish in
+    2024?", "papers between 2020 and 2022" — there is no topic to rank by. With
+    the date removed the text is "what did the group publish?", which resembles
+    nothing in particular and scores 0.37; the period is the whole query, so it
+    has to be the thing we query on.
+
+    Used only when the semantic path returns nothing inside the window, so a
+    question that *does* name a topic still gets ranked by that topic.
+    """
+    found: list[tuple[str, dict]] = []
+    for etype in ("publications", "events", "news"):
+        if etype == "publications":
+            where: dict[str, Any] = {
+                "and": [
+                    {"year": {"greater_than_equal": timeframe.start}},
+                    {"year": {"less_than_equal": timeframe.end}},
+                    {"status": {"equals": "published"}},
+                ]
+            }
+            sort = "-year"
+        else:
+            where = {
+                "and": [
+                    {"date": {"greater_than_equal": f"{timeframe.start}-01-01"}},
+                    {"date": {"less_than_equal": f"{timeframe.end}-12-31"}},
+                ]
+            }
+            sort = "-date"
+        try:
+            docs = payload_api.find(etype, where=where, limit=max_sources, sort=sort)["docs"]
+        except Exception as err:  # noqa: BLE001 - one collection must not kill the answer
+            logger.warning("chat could not list %s for the period: %s", etype, err)
+            continue
+        found.extend((etype, doc) for doc in docs)
+    return found[: max_sources * 2]
+
+
 def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict], list[str]]:
     """Retrieve grounded, visible, injection-screened sources for a question.
 
@@ -81,9 +142,18 @@ def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict],
     max_sources = limit or settings.chat_max_sources
     warnings: list[str] = []
 
+    # A period is a filter, never a similarity: "2019" and "2024" look alike to a
+    # vector, so asking about one year would happily return the other. Taking it
+    # out of the text first is also what makes the rest of the question findable —
+    # "reading group in March 2024" embeds as neither a reading group nor a date,
+    # and used to score 0.37 against a 0.40 floor with 83 dated events in the CMS.
+    search_text, timeframe = extract_timeframe(query)
+    # Over-fetch harder when filtering by date, or the window eats the whole page.
+    over_fetch = max_sources * (12 if timeframe else 4)
+
     try:
         hits = embeddings.search_entities(
-            query, types=list(CHAT_ENTITY_TYPES), limit=max_sources * 4
+            search_text, types=list(CHAT_ENTITY_TYPES), limit=over_fetch
         )
     except Exception as err:  # noqa: BLE001 - retrieval failure must not 500 the chat
         logger.warning("chat retrieval failed: %s", err)
@@ -92,8 +162,10 @@ def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict],
     # Drop weak matches before spending an LLM call on them. Without this the
     # chatbot cites whatever came back, however unrelated.
     strong = [(t, i, s) for t, i, s in hits if s >= settings.chat_min_semantic_score]
-    if not strong:
+    if not strong and not timeframe:
         return [], warnings
+    # With a period, an empty semantic result is not the end: the question may be
+    # *only* a period, in which case the date listing below is the answer.
 
     by_type: dict[str, list[int]] = {}
     for etype, eid, _ in strong:
@@ -118,6 +190,10 @@ def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict],
         doc = resolved.get((etype, eid))
         if not doc:
             continue  # unpublished or unresolvable — never cite it
+        if timeframe and not timeframe.contains_year(_entry_year(etype, doc)):
+            # Undated entries fall out here too, and should: a member has no year,
+            # so nothing about them answers "what happened in 2024".
+            continue
         text = _describe(etype, doc)
         # Retrieved text is untrusted: an abstract could carry instructions aimed
         # at the model. The admin RAG already screens for this; so does chat now.
@@ -132,13 +208,36 @@ def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict],
                 "title": doc.get("title") or doc.get("name"),
                 "slug": doc.get("slug"),
                 "url": source_url(etype, doc),
-                "year": doc.get("year"),
+                # _entry_year, not doc["year"]: events and news date themselves
+                # with `date`, so reading `year` left their citations undated.
+                "year": _entry_year(etype, doc),
                 "score": round(float(score), 4),
                 "text": text,
             }
         )
         if len(sources) >= max_sources:
             break
+
+    # A question that is only a period found nothing by meaning — so answer it by
+    # date instead of refusing, which is what "publish in 2024" deserves.
+    if timeframe and not sources:
+        for etype, doc in _find_by_timeframe(timeframe, max_sources):
+            text = _describe(etype, doc)
+            if detect_prompt_injection(text):
+                continue
+            sources.append({
+                "n": len(sources) + 1,
+                "entity_type": etype,
+                "id": doc["id"],
+                "title": doc.get("title") or doc.get("name"),
+                "slug": doc.get("slug"),
+                "url": source_url(etype, doc),
+                "year": _entry_year(etype, doc),
+                "score": 0.0,
+                "text": text,
+            })
+            if len(sources) >= max_sources:
+                break
 
     return sources, warnings
 
