@@ -56,6 +56,13 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
   locale settling only what the text cannot. The prompt states it as a fact;
   leaving it to the model meant an English conversation dragged Portuguese
   questions into English answers.
+- `app/collection_intent.py` — recognises a question that names a *section*
+  ("what projects is the group involved in?") rather than a subject. Similarity
+  has no vector for "all of them", so such a question scored 0.39 against the
+  0.40 floor and was refused with nine projects in the CMS. Answered by listing
+  the collection — but only when semantic retrieval found nothing, so a question
+  that does name a subject is still ranked by it. Lowering the floor is not the
+  alternative: "tell me about blockchain" scores 0.37.
 - `app/chat.py` — grounding for the public chatbot: what it may answer from
   (retrieve across entity types, drop weak matches, screen for prompt injection),
   plus `extractive_answer()` — the LLM-free answer described under "hard rules".

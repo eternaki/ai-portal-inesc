@@ -19,6 +19,7 @@ from app import payload_api
 from app.config import get_settings
 from app.llm.fallback import MODE_EXTRACTIVE, MODE_LLM  # noqa: F401 - re-exported for callers
 from app.rag.safety import detect_prompt_injection, sanitize_text
+from app.collection_intent import LIST_SORT, named_collection
 from app.timeframe import extract_timeframe
 
 logger = logging.getLogger(__name__)
@@ -129,6 +130,42 @@ def _find_by_timeframe(timeframe, max_sources: int) -> list[tuple[str, dict]]:
     return found[: max_sources * 2]
 
 
+def _list_collection(entity_type: str, max_sources: int) -> list[tuple[str, dict]]:
+    """A section of the site, in its own order, for a question that asks to see it.
+
+    "What projects is the group involved in?" names a section and asks for its
+    contents. Similarity has nothing to rank that by — there is no vector for "all
+    of them" — so it scored 0.39 and was refused with nine projects in the CMS.
+    """
+    where = {"status": {"equals": "published"}} if entity_type in _PUBLISHED_ONLY else None
+    try:
+        docs = payload_api.find(
+            entity_type, where=where, limit=max_sources, sort=LIST_SORT.get(entity_type)
+        )["docs"]
+    except Exception as err:  # noqa: BLE001 - listing must not 500 the chat
+        logger.warning("chat could not list %s: %s", entity_type, err)
+        return []
+    return [(entity_type, doc) for doc in docs]
+
+
+def _as_source(entity_type: str, doc: dict, position: int, score: float = 0.0) -> dict | None:
+    """One citation, or None when its text carries instructions aimed at the model."""
+    text = _describe(entity_type, doc)
+    if detect_prompt_injection(text):
+        return None
+    return {
+        "n": position,
+        "entity_type": entity_type,
+        "id": doc["id"],
+        "title": doc.get("title") or doc.get("name"),
+        "slug": doc.get("slug"),
+        "url": source_url(entity_type, doc),
+        "year": _entry_year(entity_type, doc),
+        "score": round(float(score), 4),
+        "text": text,
+    }
+
+
 def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict], list[str]]:
     """Retrieve grounded, visible, injection-screened sources for a question.
 
@@ -148,6 +185,10 @@ def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict],
     # "reading group in March 2024" embeds as neither a reading group nor a date,
     # and used to score 0.37 against a 0.40 floor with 83 dated events in the CMS.
     search_text, timeframe = extract_timeframe(query)
+    # Both are structured answers the CMS can give when similarity cannot, so both
+    # have to be known before the early return below — otherwise a question with
+    # no semantic match is refused before either gets a chance.
+    listable = named_collection(query)
     # Over-fetch harder when filtering by date, or the window eats the whole page.
     over_fetch = max_sources * (12 if timeframe else 4)
 
@@ -162,10 +203,11 @@ def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict],
     # Drop weak matches before spending an LLM call on them. Without this the
     # chatbot cites whatever came back, however unrelated.
     strong = [(t, i, s) for t, i, s in hits if s >= settings.chat_min_semantic_score]
-    if not strong and not timeframe:
+    if not strong and not timeframe and not listable:
         return [], warnings
-    # With a period, an empty semantic result is not the end: the question may be
-    # *only* a period, in which case the date listing below is the answer.
+    # An empty semantic result is not the end when the question named a period or a
+    # section: it may never have been about a subject at all, and the CMS can answer
+    # it directly. See the fallback at the end.
 
     by_type: dict[str, list[int]] = {}
     for etype, eid, _ in strong:
@@ -218,24 +260,21 @@ def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict],
         if len(sources) >= max_sources:
             break
 
-    # A question that is only a period found nothing by meaning — so answer it by
-    # date instead of refusing, which is what "publish in 2024" deserves.
-    if timeframe and not sources:
-        for etype, doc in _find_by_timeframe(timeframe, max_sources):
-            text = _describe(etype, doc)
-            if detect_prompt_injection(text):
-                continue
-            sources.append({
-                "n": len(sources) + 1,
-                "entity_type": etype,
-                "id": doc["id"],
-                "title": doc.get("title") or doc.get("name"),
-                "slug": doc.get("slug"),
-                "url": source_url(etype, doc),
-                "year": _entry_year(etype, doc),
-                "score": 0.0,
-                "text": text,
-            })
+    # Nothing matched by meaning. Before refusing, check whether the question was
+    # never about a subject at all: a period ("what did they publish in 2024?") or
+    # a section ("what projects is the group involved in?"). Both are answerable
+    # from the CMS directly, and both used to be refused with the answer sitting
+    # in the database. Only when similarity found nothing, so a question that does
+    # name a subject is still ranked by that subject.
+    if not sources:
+        if timeframe:
+            fallback = _find_by_timeframe(timeframe, max_sources)
+        else:
+            fallback = _list_collection(listable, max_sources) if listable else []
+        for etype, doc in fallback:
+            source = _as_source(etype, doc, len(sources) + 1)
+            if source:
+                sources.append(source)
             if len(sources) >= max_sources:
                 break
 
