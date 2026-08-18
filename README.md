@@ -79,7 +79,7 @@ Admin -> /api/ingest -> FastAPI -> OpenAlex -> Payload REST -> PostgreSQL
 Publication processing:
 
 ```text
-Admin/batch -> FastAPI -> LLM resolver -> LiteLLM -> Gemini/OpenRouter/Ollama
+Admin/batch -> FastAPI -> LLM resolver -> LiteLLM -> Gemini/OpenRouter (Ollama: batch opt-in)
                          -> sentence-transformers -> Payload REST + pgvector
 ```
 
@@ -290,13 +290,13 @@ workbench.
 ## Chatbot LLM configuration
 
 The chatbot, admin RAG, summaries, and snippets all use one server-side LiteLLM
-layer. The recommended free cloud order is Gemini first, OpenRouter second, and
-optional local Ollama for development:
+layer. The recommended order is Gemini first, OpenRouter second — both free tiers,
+both fast enough to sit behind a request someone is waiting on:
 
 ```env
 LLM_PROVIDER=auto
 LLM_FALLBACK_ENABLED=true
-LLM_FALLBACK_PROVIDERS=gemini,openrouter,ollama
+LLM_FALLBACK_PROVIDERS=gemini,openrouter
 
 GEMINI_API_KEY=...
 GEMINI_MODEL=gemini-3.5-flash-lite
@@ -321,10 +321,26 @@ the topic map and the chat's retrieval never touch an LLM, and every AI feature
 falls back to a deterministic layer (see `ai/CLAUDE.md`). A key buys prose, not
 function.
 
-### Running a model locally (Ollama)
+### Running a model locally (Ollama) — batch jobs, not the live chain
 
-No key, no quota, no network — worth it for batch jobs over the whole corpus, and
+No key, no quota, no network: worth it for batch jobs over the whole corpus, and
 for a demo that cannot depend on someone's free tier still having credit.
+
+**Not in `LLM_FALLBACK_PROVIDERS` by default, on purpose.** A local model behind a
+request the visitor is waiting on has to beat the deterministic offline layer to
+justify its wait, and measured on this project's own questions it did not: asked
+in English about 2024, `llama3.2:3b` answered in Portuguese on eight runs out of
+eight. `answer_check` rejected every one, so nothing wrong reached the page — but
+each attempt cost ~30s before the visitor got the offline answer that was ready
+immediately.
+
+Batch work is the opposite trade: nobody is waiting, and it is free against a
+metered quota. So opt in per run rather than globally:
+
+```bash
+LLM_FALLBACK_PROVIDERS=ollama python -m app.pipelines.summarize
+LLM_FALLBACK_PROVIDERS=ollama python -m app.pipelines.bios
+```
 
 ```bash
 brew install ollama

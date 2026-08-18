@@ -17,6 +17,31 @@ logger = logging.getLogger(__name__)
 
 ProviderName = Literal["gemini", "openrouter", "ollama", "openai", "legacy"]
 
+# A provider that just refused for quota will refuse again seconds later, so
+# trying it on the next request spends the visitor's time to learn what we already
+# know: with a rate-limited free tier at the head of the chain, the median chat
+# answer took 35 seconds, nearly all of it in a doomed first call.
+#
+# Short on purpose. A free tier's window is usually a minute or less, and the cost
+# of guessing wrong is one degraded answer, not an outage.
+_COOLDOWN_SECONDS = 45.0
+_COOLDOWN_CODES = {"PROVIDER_RATE_LIMITED", "PROVIDER_QUOTA_EXCEEDED"}
+_cooling: dict[str, float] = {}
+
+
+def _is_cooling(provider: str) -> bool:
+    until = _cooling.get(provider)
+    if until is None:
+        return False
+    if time.monotonic() >= until:
+        del _cooling[provider]
+        return False
+    return True
+
+
+def _start_cooldown(provider: str) -> None:
+    _cooling[provider] = time.monotonic() + _COOLDOWN_SECONDS
+
 
 @dataclass
 class ChatMessage:
@@ -71,6 +96,8 @@ class LLMService:
                 )
             except LLMError as err:
                 errors.append(err)
+                if err.code in _COOLDOWN_CODES:
+                    _start_cooldown(config.provider)
                 logger.warning(
                     "llm call failed: request_id=%s provider=%s model=%s code=%s",
                     request_id,
@@ -235,6 +262,7 @@ class LLMService:
 
         order = _provider_order(provider, settings.llm_fallback_providers)
         configs: list[ProviderConfig] = []
+        cooling: list[str] = []
         for item in order:
             try:
                 config = _provider_config(item, runtime_model)
@@ -242,12 +270,26 @@ class LLMService:
                 err.request_id = err.request_id or request_id
                 raise err
             if config:
+                # Skip a provider still cooling off after a quota refusal: asking
+                # again costs the visitor a full wait to be told what we know.
+                if _is_cooling(config.provider) and not for_health:
+                    cooling.append(config.provider)
+                    continue
                 configs.append(config)
                 if provider != "auto" and not settings.llm_fallback_enabled:
                     break
                 if for_health:
                     break
         if not configs:
+            if cooling:
+                # Configured, just refusing. "Not configured" would send someone
+                # to check credentials that are perfectly fine.
+                raise LLMError(
+                    "PROVIDER_RATE_LIMITED",
+                    "Every configured provider is rate-limited right now.",
+                    f"Cooling off: {', '.join(cooling)}. Retried automatically within a minute.",
+                    request_id,
+                )
             raise LLMError(
                 "LLM_NOT_CONFIGURED",
                 "No language model provider is configured.",

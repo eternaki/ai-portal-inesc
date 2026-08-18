@@ -112,3 +112,80 @@ def test_the_same_words_inside_a_sentence_are_fine():
     # are ordinary English a real answer may well use.
     answer = "The answer to your question about the reading group is in entry [1] below."
     assert not any("echoed" in p for p in problems(answer, language="en"))
+
+
+@pytest.mark.parametrize(
+    "answer",
+    [
+        "A visitor has asked about the publications of the group in 2024.",
+        "The visitor asks which projects the group runs.",
+        "The user wants to know about medical imaging research here.",
+        "A questão do visitante é sobre publicações do grupo em 2024.",
+        "O visitante perguntou sobre imagem médica no grupo.",
+        "The visitor's question concerns the reading group archive.",
+    ],
+)
+def test_the_model_narrating_our_prompt_is_caught_too(answer):
+    # Catching only the literal "Visitor's question:" label missed the shape that
+    # actually reached a tester — the model describing the framing in prose. In
+    # English it slipped through entirely; the Portuguese one was caught only
+    # because it was also the wrong language, which is luck rather than a check.
+    assert any("echoed" in p for p in problems(answer, language="en")), answer
+    assert any("echoed" in p for p in problems(answer, language="pt")), answer
+
+
+def test_an_answer_that_merely_mentions_visitors_is_fine():
+    # The group studies people; "visitors" and "users" are ordinary research words
+    # and must not be mistaken for the model narrating its instructions.
+    for answer in (
+        "The system was evaluated with hospital users over six months of clinical use.",
+        "Site visitors to the portal can browse every publication by year.",
+    ):
+        assert not any("echoed" in p for p in problems(answer, language="en")), answer
+
+
+@pytest.mark.parametrize(
+    "answer",
+    [
+        "A visitor inquiring about our group's publications in 2024. We published five papers.",
+        "The visitor curious about medical imaging will find several dissertations here.",
+        "O visitante interessado em imagem médica encontra várias dissertações.",
+    ],
+)
+def test_opening_by_describing_who_is_asking_is_narration_whatever_the_verb(answer):
+    # Enumerating verbs lost to "a visitor inquiring about...". The rule is the
+    # position: an answer that opens by describing the asker has not begun to
+    # answer, no matter which verb follows.
+    assert any("echoed" in p for p in problems(answer, language="en")), answer
+
+
+# --- language is judged on the answer, not on what it quotes -----------------
+
+
+def test_english_titles_do_not_make_a_portuguese_answer_look_english():
+    # The failure this fixes: bibliographic titles are English whatever language
+    # the answer is in, and six of them outvote the two sentences around them.
+    answer = (
+        "Pelo que encontramos, o grupo MLKD publicou os seguintes artigos em 2024:\n"
+        "[1] publication: The Role of Recurrency in Image Segmentation for Noisy Settings (2024).\n"
+        "[2] publication: Explicitly Modeling Pre-Cortical Vision with a Neuro-Inspired Front-End (2024).\n"
+        "[3] publication: Contribution of V1 Receptive Field Properties to Corruption Robustness (2024)."
+    )
+    assert any("wrong language" in p for p in problems(answer, language="en"))
+    assert problems(answer, language="pt") == []
+
+
+def test_an_english_answer_listing_english_titles_is_still_fine():
+    answer = (
+        "In 2024 the site lists three papers on segmentation and robustness.\n"
+        "[1] publication: The Role of Recurrency in Image Segmentation (2024).\n"
+        "[2] publication: Contribution of V1 Receptive Field Properties (2024)."
+    )
+    assert problems(answer, language="en") == []
+
+
+def test_an_answer_that_is_only_a_list_is_not_judged_for_language():
+    # Nothing of the model's own to judge; rejecting it would degrade a correct
+    # listing over titles it did not choose.
+    answer = "[1] publication: The Role of Recurrency in Image Segmentation (2024)."
+    assert problems(answer, language="pt") == []

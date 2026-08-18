@@ -27,7 +27,18 @@ class Settings(BaseSettings):
     llm_temperature: float = 0.2
     llm_max_tokens: int = 1200
     llm_fallback_enabled: bool = True
-    llm_fallback_providers: str = "gemini,openrouter,ollama"
+    # Ollama is deliberately absent. It is a *local* model behind a request the
+    # visitor is waiting on, and measured on this project's own questions it lost
+    # to the layer it was supposed to improve on: asked in English about 2024, it
+    # answered in Portuguese on eight runs out of eight. answer_check caught every
+    # one, so nothing wrong reached the page — but each attempt spent ~30s of the
+    # visitor's time before they got the offline answer that was ready instantly.
+    #
+    # A slow local model is worth its wait only when it beats the deterministic
+    # layer, and this one does not. Batch work is the opposite trade — nobody is
+    # waiting, and it is free against a metered quota — so pipelines opt back in
+    # per run: LLM_FALLBACK_PROVIDERS=ollama python -m app.pipelines.summarize
+    llm_fallback_providers: str = "gemini,openrouter"
 
     # Cloud/local provider settings. Keys must stay server-side.
     openrouter_api_key: str = ""

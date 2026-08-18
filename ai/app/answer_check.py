@@ -57,13 +57,46 @@ def unsupported_counts(answer: str) -> list[str]:
     return [m.group(0).strip() for m in _UNSUPPORTED_COUNT.finditer(answer or "")]
 
 
-# Scaffolding from our own prompt, echoed back into the answer. A small model
-# does this when the prompt is long: it continues the document instead of
-# replying to it, and the visitor sees "Visitor's question: ..." above the text.
+# Our own prompt showing through the answer. A small model given a long prompt
+# narrates the document instead of replying to it, and the visitor is told about
+# their own question before being told anything else.
+#
+# Two shapes, because catching only the first missed the real ones. The literal
+# label — "Visitor's question:" — and the model *describing* the framing in prose:
+# "A visitor has asked about...", "A questão do visitante é...". The paraphrase is
+# what actually reached a tester, and it slipped through in English entirely; the
+# Portuguese one was caught only because it also happened to be the wrong
+# language, which is luck, not a check.
 _ECHOED_PROMPT = re.compile(
-    r"^\s*(?:visitor'?s question|relevant entries|conversation so far|answer)\s*:",
+    r"^\s*(?:visitor'?s question|relevant entries|conversation so far|answer)\s*:"
+    # Opening by talking about the visitor at all, whatever the verb: enumerating
+    # verbs was losing to "a visitor inquiring about...". An answer that starts by
+    # describing who is asking has not started answering.
+    r"|^\s*(?:the|a|o|os|as)\s+(?:visitor|user|visitante|utilizador|usuário)\b"
+    r"|\b(?:the|a)\s+(?:visitor|user)\s+(?:has\s+)?(?:asked|asks|wants to know|is asking)\b"
+    r"|\b(?:the|a)\s+(?:visitor|user)'?s?\s+question\b"
+    r"|\ba\s+(?:questão|pergunta)\s+do\s+(?:visitante|utilizador|usuário)\b"
+    r"|\bo\s+(?:visitante|utilizador)\s+(?:perguntou|pergunta|quer saber)\b",
     re.IGNORECASE | re.MULTILINE,
 )
+
+
+# A listed entry: our own context format, which the model often copies verbatim.
+# Its titles are bibliographic and almost always English, whatever language the
+# answer is written in.
+_ENTRY_LINE = re.compile(r"^\s*\[\d+\][^\n]*$", re.MULTILINE)
+
+
+def prose_only(answer: str) -> str:
+    """The answer's own words, with listed entries removed.
+
+    Language has to be judged on what the model wrote, not on what it quoted. A
+    Portuguese answer that lists six English paper titles reads as English by word
+    count — measured: the whole text detected "en" while its own two sentences
+    detected "pt" — so the wrong-language check passed something a Portuguese
+    reader would still find written in the wrong language.
+    """
+    return _ENTRY_LINE.sub("", answer or "").strip()
 
 
 def problems(answer: str, *, language: str) -> list[str]:
@@ -78,7 +111,8 @@ def problems(answer: str, *, language: str) -> list[str]:
 
     # Long enough to judge: a two-word answer has no reliable language, and
     # flagging it would degrade a perfectly good short reply.
-    if len(text.split()) >= 12 and detect_language(text, default=language) != language:
+    prose = prose_only(text)
+    if len(prose.split()) >= 12 and detect_language(prose, default=language) != language:
         found.append(f"answered in the wrong language (expected {language})")
 
     if _ECHOED_PROMPT.search(text):

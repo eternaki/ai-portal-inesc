@@ -174,5 +174,37 @@ class LLMServiceTest(unittest.TestCase):
         completion.assert_not_called()
 
 
+class DefaultProviderChainTest(unittest.TestCase):
+    """The shipped default, not a hand-built one — these guard a decision."""
+
+    def test_ollama_is_not_in_the_default_runtime_chain(self):
+        # A local model behind a request someone is waiting on has to beat the
+        # deterministic offline layer to be worth its ~30s, and measured on this
+        # project's questions llama3.2:3b did not: asked in English about 2024 it
+        # answered in Portuguese on eight runs out of eight. Re-adding it here
+        # gives every visitor that wait back — do it knowingly, not by tidying.
+        #
+        # Read off the field rather than Settings(): an instance picks up whoever's
+        # .env is on the machine, and this asserts what the project ships.
+        from app.config import Settings
+
+        shipped = Settings.model_fields["llm_fallback_providers"].default
+        self.assertNotIn("ollama", shipped)
+        self.assertEqual("gemini,openrouter", shipped)
+
+    def test_a_batch_run_can_still_opt_back_in(self):
+        # Nobody waits on a pipeline and it is free against a metered quota, so
+        # the local model stays reachable per run rather than being deleted.
+        service = LLMService()
+        with patch(
+            "app.llm.service.get_settings",
+            return_value=settings(
+                llm_fallback_providers="ollama", ollama_base_url="http://x:11434"
+            ),
+        ):
+            configs = service._candidate_configs(request_id="test")
+        self.assertEqual(["ollama"], [c.provider for c in configs])
+
+
 if __name__ == "__main__":
     unittest.main()
