@@ -116,6 +116,7 @@ regenerated on every commit (see section 7).
 - `extractive_snippet.py`
 - `ingest.py`
 - `maintenance.py`
+- `smoke_chat.py`
 - `summarize.py`
 
 ### AI HTTP endpoints — `ai/app/api/routes.py`

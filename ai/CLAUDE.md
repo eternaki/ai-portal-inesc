@@ -30,6 +30,13 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
   lands in `bioAiDraft` and never touches `bio`, so nothing reaches the public page
   until an editor accepts it), `extractive_bio` and `extractive_snippet` (the
   deterministic layers for people and for social posts),
+  `smoke_chat` (end-to-end check of the public chat against a *running* service —
+  `python -m app.pipelines.smoke_chat`; every case is a behaviour that was broken
+  once, exits non-zero so it can gate a deploy. Asserts the answer is grounded,
+  never that a model produced it: a rate-limited free tier degrading to the
+  offline layer is the system working, and asserting `mode="llm"` made the check
+  fail for it. The language case runs four times — the defect it guards passed a
+  single-run check twice before a repeated one caught it),
   `maintenance` (data-health report), `benchmark` (search metrics:
   labelled P@5/Recall@10/MRR, plus label-free ANN recall via
   `python -m app.pipelines.benchmark --ann`), `coverage` (per-member publications on
