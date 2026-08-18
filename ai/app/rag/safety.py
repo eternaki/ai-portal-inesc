@@ -1,13 +1,26 @@
 import re
 
 
+# Screened in two directions, because the text reaching a prompt comes from two
+# places: retrieved content (an OpenAlex abstract someone poisoned) and the
+# visitor's own message. Only the first was ever checked, which left the obvious
+# route open — typing it into the chat box.
+#
+# Portuguese as well as English: the site is bilingual, so a filter that only
+# reads English is a filter with a documented way around it.
 INJECTION_PATTERNS = (
-    r"ignore (all )?(previous|above) instructions",
-    r"disregard (all )?(previous|above) instructions",
+    r"ignore (all )?(previous|above|prior) instructions",
+    r"disregard (all )?(previous|above|prior) instructions",
+    r"forget (all )?(previous|above|your) instructions",
     r"system prompt",
     r"developer message",
     r"you are now",
     r"act as",
+    r"pretend (to be|you are)",
+    r"esquec[ea] (as |todas as )?instruç(ões|oes)",
+    r"ignor[ea] (as |todas as )?instruç(ões|oes)",
+    r"a partir de agora (tu |você )?és",
+    r"finge (que |ser )",
 )
 
 

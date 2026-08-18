@@ -53,8 +53,14 @@ architecture, global rules). This file covers only the `web/` specifics.
   over from the group's own legacy team page; LinkedIn is not a source (profiles are
   auth-walled — an anonymous fetch returns HTTP 999 — and scraping breaks their
   terms). People that page never listed have no photo anywhere we can reach, so they
-  keep the initials avatar until someone uploads one. `/people` lists a role group by
-  name instead of avatars when fewer than a third of it has a photo.
+  keep the initials avatar until someone uploads one — 55 of 114 currently do.
+- **The initials avatar is coloured per person** (`src/lib/avatar-tone.mjs`, tones in
+  `people.css`). One flat wash for everybody made a group read as the same broken
+  image repeated, which is why `/people` used to drop low-coverage groups to a plain
+  name list; with a stable colour each that fallback is gone and all 114 render as
+  cards. The tone set is fixed rather than a hue hashed from the name so that
+  `pnpm design:contrast` can check every pair in both themes — keep new tones in the
+  stylesheet as explicit `color`/`background` pairs or the audit cannot see them.
 - **On `members`, `role` is the degree and `membershipStatus` is whether they are
   still here.** Do not express "has left" by setting `role: alumni` — that erases
   which degree the person did, and `/people` groups by `membershipStatus` anyway
@@ -92,6 +98,13 @@ architecture, global rules). This file covers only the `web/` specifics.
 - **Feature flags** are in the `ai-settings` global (`features` group):
   `enableChatbot`, `enableSemanticSearch`, `enableSummaries`. The layout hides the
   chat widget when off; the AI service enforces the rest.
+- **The chat answers without a language model.** `/chat` returns `mode:
+  'llm' | 'extractive' | 'none'`; `extractive` means no model was available and the
+  service sent the retrieved entries instead (see `ai/CLAUDE.md`). `ChatWidget`
+  renders those as a list of things to open, under a note from the dictionary —
+  **not** `data.answer`, which is the service's English plain-text rendering for
+  direct API callers and would bypass i18n. Provider failures therefore no longer
+  reach the widget as errors; don't reintroduce per-error-code copy for them.
 - Public pages are **Server Components** by default (SSR/SEO). Emit structured data
   via `src/components/JsonLd.tsx`.
 - Keep collection files focused; a growing file is a signal to split.
@@ -118,5 +131,9 @@ The public UI is bilingual **English + Português** (no Russian, ever). Approach
 - `pnpm dev` — dev server (http://localhost:3000, admin `/admin`)
 - `pnpm generate:types` — regenerate `payload-types.ts` after collection changes
 - `pnpm generate:importmap` — after adding custom admin components
-- `pnpm lint` · `pnpm typecheck`
+- `pnpm lint` · `pnpm typecheck` · `pnpm scripts:test`
+- **Tests live in `scripts/tests/*.test.mjs`** (`node --test`, no runner to
+  configure) and cover the importers, matchers and parsers under `scripts/`, plus
+  guards over source files that must agree with each other — see
+  `scripts/lib/dissertation-order.mjs`. All three commands run in CI.
 - `pnpm claude:map` — regenerate the Project map in the root CLAUDE.md

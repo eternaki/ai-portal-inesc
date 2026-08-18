@@ -4,6 +4,13 @@
 #   docker compose up -d db
 # and run web (pnpm dev) and ai (uvicorn) on the host — see README.
 
+# Pinned, because Compose otherwise names the project after the directory it is
+# run from. Working on a branch in a second checkout then silently builds a
+# *second* stack with its own empty database volume, which presents as "all the
+# data is gone" rather than as a new stack. One name means one stack and one
+# database, wherever you run this from.
+name: mlkdapp
+
 services:
   db:
     image: pgvector/pgvector:pg16
@@ -69,11 +76,11 @@ services:
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash-lite}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       OPENROUTER_BASE_URL: ${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
-      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openrouter/free}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-google/gemma-4-26b-a4b-it:free}
       OPENROUTER_SITE_URL: ${OPENROUTER_SITE_URL:-}
       OPENROUTER_APP_NAME: ${OPENROUTER_APP_NAME:-MLKD Intelligent Research Platform}
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:8b}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:3b}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-}
       RAG_ENABLED: ${RAG_ENABLED:-false}

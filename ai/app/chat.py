@@ -17,6 +17,7 @@ from typing import Any
 
 from app import payload_api
 from app.config import get_settings
+from app.llm.fallback import MODE_EXTRACTIVE, MODE_LLM  # noqa: F401 - re-exported for callers
 from app.rag.safety import detect_prompt_injection, sanitize_text
 
 logger = logging.getLogger(__name__)
@@ -144,6 +145,80 @@ def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict],
 
 def has_enough_evidence(sources: list[dict]) -> bool:
     return len(sources) >= get_settings().chat_min_evidence_sources
+
+
+# How the answer was produced, reported to the caller so the UI can label it
+# honestly. The two working modes come from llm.fallback so that a pipeline's
+# provenance stamp and this endpoint's `mode` field cannot drift apart; "none" is
+# local to the chat — the refusal, where there was no evidence to answer from and
+# so nothing was produced by either layer.
+MODE_NONE = "none"
+# The question itself carried an instruction aimed at the model. Distinct from
+# "none" so the widget can say what actually happened instead of claiming the
+# archive had nothing on it.
+MODE_REFUSED = "refused"
+
+# Retrieval never needed a model: embeddings run locally, so by the time the chat
+# reaches the LLM it already holds grounded, screened, ranked entries. Losing the
+# provider should therefore cost the phrasing, not the answer — the same two-layer
+# shape pipelines/extractive.py gives summaries, where the deterministic draft is
+# always available and the LLM only refines it.
+EXTRACTIVE_PREAMBLE = (
+    "No language model is available right now, so this is what the group's own "
+    "material matched — the entries themselves, closest first, rather than a "
+    "written answer:"
+)
+
+SNIPPET_CHARS = 240
+
+
+def _snippet(text: str, limit: int = SNIPPET_CHARS) -> str:
+    """The leading `limit` characters, cut at a word boundary."""
+    text = " ".join((text or "").split())
+    if len(text) <= limit:
+        return text
+    return f"{text[:limit].rsplit(' ', 1)[0].rstrip(' ,;:.')}…"
+
+
+def extractive_answer(sources: list[dict]) -> str:
+    """Assemble an answer from the retrieved entries alone, with no model.
+
+    Deliberately does not join two entries into a statement: relating sources to
+    each other is the part that needs a model, and the part that invents things.
+    So this lists what matched and quotes it, and the preamble says plainly that
+    it is a match list — presenting it as a reasoned answer would be the one
+    dishonest outcome available here.
+    """
+    if not sources:
+        return ""
+
+    lines = [EXTRACTIVE_PREAMBLE, ""]
+    for source in sources:
+        year = f" ({source['year']})" if source.get("year") else ""
+        snippet = _snippet(source.get("text") or "")
+        lines.append(
+            f"[{source['n']}] {_kind(source['entity_type'])}{year} — "
+            f"{source['title']}.{f' {snippet}' if snippet else ''}"
+        )
+    return "\n".join(lines)
+
+
+def public_sources(sources: list[dict]) -> list[dict]:
+    """The citation list as the browser may see it.
+
+    `text` is prompt-only context and `score` is an internal ranking number, so
+    both are dropped. A capped `snippet` takes their place because in extractive
+    mode that line *is* the answer — and it is safe to expose: gather_sources has
+    already sanitised it and screened it for injection, and it comes from pages
+    the visitor can open anyway.
+    """
+    return [
+        {
+            **{k: v for k, v in source.items() if k not in ("text", "score")},
+            "snippet": _snippet(source.get("text") or ""),
+        }
+        for source in sources
+    ]
 
 
 def _kind(entity_type: str) -> str:

@@ -3,8 +3,10 @@ import logging
 import time
 from typing import Any
 
+from app import metrics
 from app.config import get_settings
 from app.llm.client import complete_response, parse_json_response, resolve_model
+from app.llm.errors import LLMError
 from app.rag.models import RagAnswer, RagGroundedEvidence, RagMetadata, RagModelComparison, RagRequest, RagResponse, RagSource
 from app.rag.retriever import retrieve_sources
 
@@ -37,8 +39,18 @@ def answer_question(request: RagRequest) -> RagResponse:
             source_count=len(sources),
         )
 
-    selected_model = resolve_model()
-    answer, metadata = _run_model(question, sources, selected_model, start)
+    # Unlike the chat, a summary or a bio, this has no offline counterpart — the
+    # whole output *is* the model's reasoning over the sources. So it degrades by
+    # handing back what it did find and saying plainly why there is no answer,
+    # rather than raising a 503 at an admin who would have to read the logs to
+    # learn that the sources were fine.
+    try:
+        selected_model = resolve_model()
+        answer, metadata = _run_model(question, sources, selected_model, start)
+    except LLMError as err:
+        metrics.record_degradation("rag", err.code, (time.monotonic() - start) * 1000)
+        logger.warning("rag has no usable model: code=%s provider=%s", err.code, err.provider)
+        return _no_model(err, sources, start, warnings)
     if not answer.evidence:
         return _insufficient(
             "The model did not return source-backed evidence for this question.",
@@ -201,6 +213,30 @@ def _clean_suggested_readings(value: Any, valid_urls: set[str]) -> list[dict[str
         if item.get("title") and item.get("url") in valid_urls:
             readings.append(item)
     return readings
+
+
+def _no_model(err: LLMError, sources: list[RagSource], start: float, warnings: list[str]) -> RagResponse:
+    """Evidence was found; there is no model to reason over it.
+
+    The citations still go back: knowing which sources matched is most of what
+    the workbench is for, and it is the part that never needed a model.
+    """
+    metadata = RagMetadata(
+        provider=err.provider,
+        model=err.model,
+        promptVersion=PROMPT_VERSION,
+        sourceCount=len(sources),
+        latencyMs=int((time.monotonic() - start) * 1000),
+        tokens=None,
+        cost=None,
+    )
+    return RagResponse(
+        status="no_model",
+        answer=None,
+        citations=[source.citation() for source in sources],
+        metadata=metadata,
+        warnings=[*warnings, f"{err.message} {err.hint}".strip()],
+    )
 
 
 def _insufficient(message: str, start: float, warnings: list[str], source_count: int = 0) -> RagResponse:

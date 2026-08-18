@@ -32,7 +32,11 @@ class Settings(BaseSettings):
     # Cloud/local provider settings. Keys must stay server-side.
     openrouter_api_key: str = ""
     openrouter_base_url: str = "https://openrouter.ai/api/v1"
-    openrouter_model: str = "openrouter/free"
+    # A real model id, not a placeholder: "openrouter/free" resolves to nothing and
+    # fails as MODEL_NOT_FOUND. Instruction-tuned (-it) for the same reason as the
+    # Ollama default, and picked by testing the free list on this project's actual
+    # requirement — return JSON, answer in European Portuguese when asked in it.
+    openrouter_model: str = "google/gemma-4-26b-a4b-it:free"
     openrouter_site_url: str = ""
     openrouter_app_name: str = "MLKD Intelligent Research Platform"
 
@@ -41,7 +45,13 @@ class Settings(BaseSettings):
     gemini_model: str = "gemini-3.5-flash-lite"
 
     ollama_base_url: str = "http://localhost:11434"
-    ollama_model: str = "qwen3:8b"
+    # Not a reasoning model, deliberately. Every job here hands the model the
+    # facts and asks it to phrase them, so thinking tokens buy nothing — and
+    # qwen3:8b, the previous default, spent the whole llm_max_tokens budget
+    # reasoning and returned empty content, which arrives as LLM_EMPTY_RESPONSE
+    # and degrades every surface to its offline layer. Small also matters: this
+    # runs on a laptop CPU/GPU beside the site, and 3B answers the chat in ~6s.
+    ollama_model: str = "llama3.2:3b"
 
     openai_api_key: str = ""
     openai_model: str = ""

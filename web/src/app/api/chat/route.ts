@@ -18,11 +18,17 @@ export async function POST(req: NextRequest) {
   const clientIp =
     req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'local'
 
+  // Read here rather than take it from the widget: this runs server-side, the
+  // cookie is the same one every page renders from, and the client cannot spoof
+  // it. The AI service only falls back to this when the message itself is not
+  // decidable — a bare name, or an English technical term typed on the PT site.
+  const locale = req.cookies.get('NEXT_LOCALE')?.value === 'pt' ? 'pt' : 'en'
+
   try {
     const res = await fetch(`${aiUrl}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Client-IP': clientIp },
-      body: JSON.stringify({ message, history }),
+      body: JSON.stringify({ message, history, locale }),
       signal: AbortSignal.timeout(60000),
     })
     const data = await res.json().catch(() => ({}))

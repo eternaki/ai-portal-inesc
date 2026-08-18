@@ -18,33 +18,48 @@ type Source = {
   // response still renders (falling back to the publications route).
   entity_type?: string
   url?: string
+  // First couple of lines of the entry. Only rendered in extractive mode, where
+  // the entries are the answer rather than a footnote to one.
+  snippet?: string
 }
-type Msg = { role: 'user' | 'assistant'; content: string; sources?: Source[] }
+// How the answer was produced. 'extractive' means no model was available and the
+// service returned the retrieved entries instead — the widget must not present
+// those as if something had reasoned over them.
+type Mode = 'llm' | 'extractive' | 'none' | 'refused'
+type Msg = { role: 'user' | 'assistant'; content: string; sources?: Source[]; mode?: Mode }
 type ApiError = { code?: string; message?: string; hint?: string; requestId?: string }
 
-const errorText = (error: ApiError | string | undefined, fallback: string) => {
-  if (typeof error === 'string') return error
-  switch (error?.code) {
-    case 'LLM_NOT_CONFIGURED':
-      return 'The chatbot is not configured yet. Add Gemini or OpenRouter credentials on the server.'
-    case 'MODEL_NOT_CONFIGURED':
-      return 'The chatbot model is not configured. Check the server model setting.'
-    case 'INVALID_API_KEY':
-      return 'The configured language-model credential was rejected.'
-    case 'PROVIDER_RATE_LIMITED':
-      return 'The language-model provider is temporarily rate-limited. Try again later.'
-    case 'PROVIDER_QUOTA_EXCEEDED':
-      return 'The free language-model quota was exceeded. Try again later.'
-    case 'OLLAMA_UNAVAILABLE':
-      return 'The local Ollama service is not running or cannot be reached.'
-    case 'OLLAMA_MODEL_NOT_FOUND':
-    case 'MODEL_NOT_FOUND':
-      return 'The configured model is unavailable. Check the model name.'
-    case 'LLM_TIMEOUT':
-      return 'The language-model request timed out. Try again.'
-    default:
-      return error?.message || fallback
-  }
+// Provider failures no longer surface here: /chat degrades to the extractive
+// answer for every LLMError, because by then it already holds grounded sources.
+// What is left is the chat being switched off, the AI service being unreachable,
+// or a malformed request — none of which have a friendlier phrasing than their own.
+const errorText = (error: ApiError | string | undefined, fallback: string) =>
+  typeof error === 'string' ? error : error?.message || fallback
+
+// The service sends the collection slug ("publications"). Fall back to it if a
+// new collection reaches the chat before its label does — "software" is still
+// more use to a visitor than nothing.
+const kindLabel = (entityType: string | undefined, t: ChatStrings) =>
+  t.kinds[entityType as keyof ChatStrings['kinds']] ?? entityType ?? ''
+
+// Extractive mode has no prose to cite from, so the entries stop being footnote
+// markers and become the answer: title, what kind of thing it is, and the opening
+// of the entry itself.
+function Matches({ sources, t }: { sources: Source[]; t: ChatStrings }) {
+  return (
+    <ol className="chat-matches">
+      {sources.map((s) => (
+        <li key={s.n}>
+          <a href={s.url ?? (s.slug ? `/publications/${s.slug}` : '#')}>{s.title}</a>
+          <span className="chat-match-kind">
+            {kindLabel(s.entity_type, t)}
+            {s.year ? ` · ${s.year}` : ''}
+          </span>
+          {s.snippet && <p className="chat-match-snippet">{s.snippet}</p>}
+        </li>
+      ))}
+    </ol>
+  )
 }
 
 export function ChatWidget({ t }: { t: ChatStrings }) {
@@ -53,6 +68,12 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
+
+  // The header disclaimer has to describe the answer actually on screen. Left
+  // static, it announced "AI-generated answers" directly above a message saying
+  // no model had answered — the two modes contradicting each other in one panel.
+  const lastAnswer = messages.filter((m) => m.role === 'assistant').at(-1)
+  const cameFromAI = !['extractive', 'none', 'refused'].includes(lastAnswer?.mode ?? '')
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight })
@@ -82,7 +103,12 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
       } else {
         setMessages((m) => [
           ...m,
-          { role: 'assistant', content: data.answer ?? '', sources: data.sources ?? [] },
+          {
+            role: 'assistant',
+            content: data.answer ?? '',
+            sources: data.sources ?? [],
+            mode: data.mode ?? 'llm',
+          },
         ])
       }
     } catch {
@@ -98,7 +124,9 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
         <div className="chat-panel" role="dialog" aria-label={t.title}>
           <div className="chat-head">
             <strong>{t.title}</strong>
-            <span className="badge badge-ai">{t.aiNote}</span>
+            <span className={`badge ${cameFromAI ? 'badge-ai' : ''}`}>
+              {cameFromAI ? t.aiNote : t.noAiNote}
+            </span>
             <button
               type="button"
               className="chat-close"
@@ -112,19 +140,34 @@ export function ChatWidget({ t }: { t: ChatStrings }) {
             {messages.length === 0 && <p className="chat-intro">{t.intro}</p>}
             {messages.map((m, i) => (
               <div key={i} className={`chat-msg chat-msg-${m.role}`}>
-                <div>{m.content}</div>
-                {m.sources && m.sources.length > 0 && (
-                  <div className="chat-sources">
-                    {t.sources}:{' '}
-                    {/* The service sends the public URL per source: the chat now
-                        cites people, projects and dissertations too, so the widget
-                        can no longer assume every citation is a publication. */}
-                    {m.sources.map((s) => (
-                      <a key={s.n} href={s.url ?? (s.slug ? `/publications/${s.slug}` : '#')}>
-                        [{s.n}]
-                      </a>
-                    ))}
+                {m.mode === 'extractive' && m.sources?.length ? (
+                  // Deliberately not `m.content`: the service composes an English
+                  // plain-text version for direct API callers, but visible copy
+                  // here has to come from the dictionary to stay bilingual.
+                  <div className="chat-nomodel">
+                    <p>{t.noModelNote}</p>
+                    <Matches sources={m.sources} t={t} />
                   </div>
+                ) : (
+                  <>
+                    {/* The refusal is written by the service in English for
+                        direct API callers; on screen it comes from the
+                        dictionary, same rule as the extractive note above. */}
+                    <div>{m.mode === 'none' ? t.noMatch : m.mode === 'refused' ? t.refused : m.content}</div>
+                    {m.sources && m.sources.length > 0 && (
+                      <div className="chat-sources">
+                        {t.sources}:{' '}
+                        {/* The service sends the public URL per source: the chat now
+                            cites people, projects and dissertations too, so the widget
+                            can no longer assume every citation is a publication. */}
+                        {m.sources.map((s) => (
+                          <a key={s.n} href={s.url ?? (s.slug ? `/publications/${s.slug}` : '#')}>
+                            [{s.n}]
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             ))}

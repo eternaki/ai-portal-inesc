@@ -31,7 +31,19 @@ def run(types: list[str] | None = None, *, force: bool = False) -> dict[str, int
         items = [(d["id"], adapter(d)) for d in docs]
         items = [(eid, text) for eid, text in items if text.strip()]
         written[entity_type] = embeddings.upsert_entity_embeddings(entity_type, items, force=force)
-        logger.info("%s: %s docs with text, %s embedded", entity_type, len(items), written[entity_type])
+        # `docs` is the complete live set for this type (find_all paginates to the
+        # end or raises), so any other vector stored under it belongs to content
+        # that is gone — or, for publications, no longer published and therefore
+        # no longer public. Pruned against `docs` rather than `items` so a document
+        # that merely has no embeddable text keeps whatever it had.
+        removed = embeddings.prune_entity_embeddings(entity_type, [d["id"] for d in docs])
+        logger.info(
+            "%s: %s docs with text, %s embedded, %s orphaned removed",
+            entity_type,
+            len(items),
+            written[entity_type],
+            removed,
+        )
     return written
 
 

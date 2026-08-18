@@ -4,7 +4,10 @@ import React, { useState } from 'react'
 import { Button } from '@payloadcms/ui'
 
 type RagResponse = {
-  status: 'answered' | 'insufficient_evidence'
+  // 'no_model' is not a data problem: the sources were found and were enough,
+  // there was no model to reason over them. Reporting it as missing evidence
+  // sends an editor hunting for content that is already in the CMS.
+  status: 'answered' | 'insufficient_evidence' | 'no_model'
   answer: null | {
     executiveSummary: string
     evidence: string[]
@@ -128,6 +131,11 @@ const ResultView: React.FC<{ result: RagResponse }> = ({ result }) => (
         <h3>Limitations</h3>
         <ul>{result.answer.limitations.map((item) => <li key={item}>{item}</li>)}</ul>
       </>
+    ) : result.status === 'no_model' ? (
+      <p>
+        No language model is configured, so there is no written answer — but the sources below
+        were retrieved and are what an answer would have been built from.
+      </p>
     ) : (
       <p>Not enough evidence to answer from the selected CMS content.</p>
     )}

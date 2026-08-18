@@ -1,15 +1,9 @@
 import React from 'react'
 import Link from 'next/link'
 import type { Member } from '@/payload-types'
-
-const initials = (name: string) =>
-  name
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((w) => w[0])
-    .filter((_, i, arr) => i === 0 || i === arr.length - 1)
-    .join('')
-    .toUpperCase()
+import { avatarTone } from '@/lib/avatar-tone.mjs'
+// Was a second copy of lib/member's initials(); one of the two would have drifted.
+import { initials } from '@/lib/member'
 
 // Small overlapping avatar row — used wherever a set of members should read
 // as "these people", not a wall of comma-separated names (e.g. /projects).
@@ -34,7 +28,9 @@ export function MemberAvatarStack({ members, max = 6 }: { members: Member[]; max
               // eslint-disable-next-line @next/next/no-img-element
               <img src={photoUrl} alt="" />
             ) : (
-              <span>{initials(m.name)}</span>
+              <span className="avatar-tone" data-tone={avatarTone(m.name)}>
+                {initials(m.name)}
+              </span>
             )}
           </Link>
         )

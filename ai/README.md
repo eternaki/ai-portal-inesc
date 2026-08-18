@@ -37,7 +37,7 @@ uvicorn app.main:app --reload --port 8000   # docs at http://localhost:8000/docs
 | `GEMINI_API_KEY` / `GOOGLE_API_KEY` | Gemini key; first free cloud provider |
 | `GEMINI_MODEL` | Default `gemini-3.5-flash-lite` |
 | `OPENROUTER_API_KEY` | OpenRouter key; fallback cloud provider |
-| `OPENROUTER_MODEL` | Default `openrouter/free`; free availability and quotas can change |
+| `OPENROUTER_MODEL` | Default `google/gemma-4-26b-a4b-it:free`; ids ending `:free` are free, and that list changes |
 | `OLLAMA_BASE_URL` / `OLLAMA_MODEL` | Optional local fallback for development |
 | `OPENALEX_MAILTO` | Email for the OpenAlex polite pool |
 | `EMBEDDING_DEVICE` | `cpu` (default) — Spaces are CPU-only |

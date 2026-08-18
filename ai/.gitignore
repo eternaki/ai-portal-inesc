@@ -3,3 +3,8 @@ __pycache__/
 .venv/
 .env
 data/authors.json
+
+# The image sets HF_HOME=/srv/.hf_cache, so bind-mounting this directory over
+# /srv (handy for running the tests against your working tree) drops ~470 MB of
+# downloaded model weights right here.
+.hf_cache/

@@ -3,7 +3,11 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 
-RagStatus = Literal["answered", "insufficient_evidence"]
+# "no_model" is deliberately not folded into "insufficient_evidence": the sources
+# were found and were enough: what is missing is a model to reason over them.
+# Reporting a configuration problem as a gap in the CMS would send whoever reads
+# it looking for content that is already there.
+RagStatus = Literal["answered", "insufficient_evidence", "no_model"]
 SourceType = Literal["publication", "member", "project", "news", "software", "thesisTopic"]
 
 

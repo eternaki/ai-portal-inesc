@@ -16,6 +16,7 @@ from typing import Any
 
 from app import payload_api
 from app.llm.client import complete_response, load_prompt, parse_json_response, resolve_model
+from app.llm.fallback import model_available, with_fallback
 from app.pipelines.extractive import EXTRACTIVE_MODEL, EXTRACTIVE_VERSION, extractive_summary
 
 logger = logging.getLogger(__name__)
@@ -61,12 +62,14 @@ def summarize_publication_result(pub: dict, *, refine: bool = True) -> dict:
     if not refine:
         return _result(draft, EXTRACTIVE_MODEL, EXTRACTIVE_VERSION, generated_at)
 
-    try:
-        refined = _llm_refine(pub, draft)
-    except Exception as exc:  # noqa: BLE001 - refinement is optional; the draft stands
-        logger.info("summary refine skipped (%s); using extractive draft", exc)
+    answer = with_fallback(
+        "summary",
+        lambda: _llm_refine(pub, draft),
+        lambda: {"summary": draft, "model": EXTRACTIVE_MODEL},
+    )
+    if answer.degraded:
         return _result(draft, EXTRACTIVE_MODEL, EXTRACTIVE_VERSION, generated_at)
-    return _result(refined["summary"], refined["model"], PROMPT_VERSION, generated_at)
+    return _result(answer.value["summary"], answer.value["model"], PROMPT_VERSION, generated_at)
 
 
 def _result(summary: dict, model: str, version: str, generated_at: str) -> dict:
@@ -120,6 +123,12 @@ def run(limit: int | None = None, *, refine: bool = True) -> None:
         limit=limit or 100,
     )
     pubs = result["docs"]
+    # Asked once, not once per paper: with no provider every refine attempt fails
+    # identically, and the run would wait out a hundred of them to write the same
+    # drafts. Also skips the per-call delay below, which exists to pace a provider.
+    if refine and not model_available():
+        logger.info("no language model configured — writing extractive drafts only")
+        refine = False
     logger.info("publications to summarize: %s (refine=%s)", len(pubs), refine)
 
     done = failed = 0

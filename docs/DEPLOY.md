@@ -26,7 +26,7 @@ openssl rand -hex 32     # PAYLOAD_SECRET  (keep it)
 openssl rand -hex 24     # AI_SERVICE_TOKEN (shared web ↔ ai secret; keep it)
 ```
 Get a Gemini API key from Google AI Studio for the first free cloud provider. For
-fallback, create an OpenRouter API key and use `OPENROUTER_MODEL=openrouter/free`.
+fallback, create an OpenRouter API key and use a real free model id, e.g. `OPENROUTER_MODEL=google/gemma-4-26b-a4b-it:free` (ids ending `:free`; the list changes).
 
 ---
 
@@ -71,7 +71,7 @@ fallback, create an OpenRouter API key and use `OPENROUTER_MODEL=openrouter/free
    | `GEMINI_API_KEY` | your Gemini key |
    | `GEMINI_MODEL` | `gemini-3.5-flash-lite` |
    | `OPENROUTER_API_KEY` | your OpenRouter key, optional but recommended |
-   | `OPENROUTER_MODEL` | `openrouter/free` |
+   | `OPENROUTER_MODEL` | `google/gemma-4-26b-a4b-it:free` |
    | `OPENALEX_MAILTO` | your email |
 4. The Space builds and serves at `https://<user>-<space>.hf.space`. That is your
    `AI_SERVICE_URL`.
