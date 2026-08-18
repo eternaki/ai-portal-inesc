@@ -10,15 +10,24 @@ def _hits(*triples):
 
 
 def _docs(mapping):
-    """Stub payload_api.find: returns the docs whose ids were asked for."""
+    """Stub payload_api.find, matching the real signature.
 
-    def _find(collection, where=None, limit=None):
-        ids = []
+    Accepts every keyword the real client takes — a stub that raises TypeError on
+    one of them looks like an empty collection, because the caller catches the
+    failure and carries on. Returns the whole collection when no id filter is
+    given, as the real API does.
+    """
+
+    def _find(collection, where=None, *, limit=None, page=1, depth=0, sort=None):
+        ids = None
         cond = where or {}
         for clause in cond.get("and", [cond]):
             if "id" in clause:
                 ids = clause["id"]["in"]
-        return {"docs": [d for d in mapping.get(collection, []) if d["id"] in ids]}
+        docs = mapping.get(collection, [])
+        if ids is not None:
+            docs = [d for d in docs if d["id"] in ids]
+        return {"docs": docs[:limit] if limit else docs}
 
     return _find
 
@@ -180,3 +189,40 @@ def test_a_question_with_no_period_keeps_every_entry():
     ):
         sources, _ = chat.gather_sources("who works on graphs")
     assert [s["title"] for s in sources] == ["Ana"]
+
+
+# --- questions that ask to see a section ------------------------------------
+
+
+def test_a_section_is_listed_when_nothing_matched_by_meaning():
+    # "What projects…" scored 0.39 against a 0.40 floor with nine projects in the
+    # CMS: the question names a section, and similarity has no vector for "all".
+    docs = {"projects": [{"id": 1, "title": "OLISSIPO", "slug": "olissipo", "description": "Computational biology."}]}
+    with (
+        patch("app.embeddings.search_entities", return_value=[]),
+        patch("app.payload_api.find", _docs(docs)),
+    ):
+        sources, _ = chat.gather_sources("What projects is the group involved in?")
+    assert [s["title"] for s in sources] == ["OLISSIPO"]
+    assert sources[0]["entity_type"] == "projects"
+
+
+def test_listing_never_overrides_a_real_match():
+    # A question that does name a subject stays ranked by that subject; the
+    # listing is a fallback, not a shortcut past retrieval.
+    docs = {"projects": [{"id": 2, "title": "Matched by meaning", "slug": "m", "description": "x"}]}
+    with (
+        patch("app.embeddings.search_entities", return_value=_hits(("projects", 2, 0.8))),
+        patch("app.payload_api.find", _docs(docs)),
+    ):
+        sources, _ = chat.gather_sources("computational biology projects")
+    assert [s["title"] for s in sources] == ["Matched by meaning"]
+    assert sources[0]["score"] > 0
+
+
+def test_a_question_naming_no_section_is_still_refused():
+    # The listing must not become a way to answer anything: "capital of France"
+    # names nothing to list and has to stay a refusal.
+    with patch("app.embeddings.search_entities", return_value=[]):
+        sources, _ = chat.gather_sources("what is the capital of France")
+    assert sources == []
