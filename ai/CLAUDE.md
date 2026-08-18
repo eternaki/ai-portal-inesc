@@ -46,6 +46,16 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
   from 2024, and the date words drag it away from the subject besides. When the
   question is only a period, `chat._find_by_timeframe` lists the window straight
   from the CMS — there is no topic to rank by.
+- `app/answer_check.py` — checks the model's answer against what the prompt asked
+  for: its language, no prompt scaffolding echoed back, and no count attributed to
+  a person's career when the evidence only says the site lists it. A rule in a
+  prompt is a request a small model honours some of the time (measured: three runs
+  in six for the language), so `/chat` retries once naming the specific defect and
+  then degrades — the offline layer cannot get any of them wrong.
+- `app/language.py` — decides the answer's language from the question, with the
+  locale settling only what the text cannot. The prompt states it as a fact;
+  leaving it to the model meant an English conversation dragged Portuguese
+  questions into English answers.
 - `app/chat.py` — grounding for the public chatbot: what it may answer from
   (retrieve across entity types, drop weak matches, screen for prompt injection),
   plus `extractive_answer()` — the LLM-free answer described under "hard rules".
