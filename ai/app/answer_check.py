@@ -81,6 +81,24 @@ _ECHOED_PROMPT = re.compile(
 )
 
 
+# A listed entry: our own context format, which the model often copies verbatim.
+# Its titles are bibliographic and almost always English, whatever language the
+# answer is written in.
+_ENTRY_LINE = re.compile(r"^\s*\[\d+\][^\n]*$", re.MULTILINE)
+
+
+def prose_only(answer: str) -> str:
+    """The answer's own words, with listed entries removed.
+
+    Language has to be judged on what the model wrote, not on what it quoted. A
+    Portuguese answer that lists six English paper titles reads as English by word
+    count — measured: the whole text detected "en" while its own two sentences
+    detected "pt" — so the wrong-language check passed something a Portuguese
+    reader would still find written in the wrong language.
+    """
+    return _ENTRY_LINE.sub("", answer or "").strip()
+
+
 def problems(answer: str, *, language: str) -> list[str]:
     """What is wrong with this answer. Empty list means nothing checkable is.
 
@@ -93,7 +111,8 @@ def problems(answer: str, *, language: str) -> list[str]:
 
     # Long enough to judge: a two-word answer has no reliable language, and
     # flagging it would degrade a perfectly good short reply.
-    if len(text.split()) >= 12 and detect_language(text, default=language) != language:
+    prose = prose_only(text)
+    if len(prose.split()) >= 12 and detect_language(prose, default=language) != language:
         found.append(f"answered in the wrong language (expected {language})")
 
     if _ECHOED_PROMPT.search(text):

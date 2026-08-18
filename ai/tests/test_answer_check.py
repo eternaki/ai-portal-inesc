@@ -157,3 +157,35 @@ def test_opening_by_describing_who_is_asking_is_narration_whatever_the_verb(answ
     # position: an answer that opens by describing the asker has not begun to
     # answer, no matter which verb follows.
     assert any("echoed" in p for p in problems(answer, language="en")), answer
+
+
+# --- language is judged on the answer, not on what it quotes -----------------
+
+
+def test_english_titles_do_not_make_a_portuguese_answer_look_english():
+    # The failure this fixes: bibliographic titles are English whatever language
+    # the answer is in, and six of them outvote the two sentences around them.
+    answer = (
+        "Pelo que encontramos, o grupo MLKD publicou os seguintes artigos em 2024:\n"
+        "[1] publication: The Role of Recurrency in Image Segmentation for Noisy Settings (2024).\n"
+        "[2] publication: Explicitly Modeling Pre-Cortical Vision with a Neuro-Inspired Front-End (2024).\n"
+        "[3] publication: Contribution of V1 Receptive Field Properties to Corruption Robustness (2024)."
+    )
+    assert any("wrong language" in p for p in problems(answer, language="en"))
+    assert problems(answer, language="pt") == []
+
+
+def test_an_english_answer_listing_english_titles_is_still_fine():
+    answer = (
+        "In 2024 the site lists three papers on segmentation and robustness.\n"
+        "[1] publication: The Role of Recurrency in Image Segmentation (2024).\n"
+        "[2] publication: Contribution of V1 Receptive Field Properties (2024)."
+    )
+    assert problems(answer, language="en") == []
+
+
+def test_an_answer_that_is_only_a_list_is_not_judged_for_language():
+    # Nothing of the model's own to judge; rejecting it would degrade a correct
+    # listing over titles it did not choose.
+    answer = "[1] publication: The Role of Recurrency in Image Segmentation (2024)."
+    assert problems(answer, language="pt") == []

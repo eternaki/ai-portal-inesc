@@ -64,6 +64,13 @@ class _SlidingWindow:
 _abuse_budget = _SlidingWindow(limit=30)
 _model_budget = _SlidingWindow(limit=8)
 
+# How long the first model call may take before a rejected answer is degraded
+# rather than retried. A retry is a second full call, and when the first was
+# already slow — a rate-limited free tier falling through to a local model —
+# it doubles a wait the visitor is already feeling, for phrasing the offline
+# layer provides instantly and correctly.
+RETRY_BUDGET_SECONDS = 12.0
+
 
 def check_chat_rate_limit(client_ip: str) -> None:
     """Refuse only genuine hammering. Exceeding the *model* budget is not that."""
@@ -446,6 +453,7 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
 
     def ask_the_model() -> str:
         claim_model_budget(x_client_ip or "unknown")
+        started = time.monotonic()
         prompt = load_prompt(
             "chat",
             context=chat_mod.context_block(sources),
@@ -463,6 +471,21 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
         found = answer_check.problems(answer, language=language)
         if not found:
             return answer
+        # A retry is a second full model call. When the first was already slow —
+        # a rate-limited free tier falling through to a local model — a second
+        # doubles a wait the visitor is already feeling, for an answer the offline
+        # layer can give instantly and correctly. Past the budget, don't.
+        elapsed = time.monotonic() - started
+        if elapsed > RETRY_BUDGET_SECONDS:
+            logger.info(
+                "chat answer rejected after %.1fs, degrading rather than retrying: %s",
+                elapsed,
+                "; ".join(found),
+            )
+            raise LLMOutputError(
+                "The model's answer did not meet the answer rules.",
+                f"rejected after {elapsed:.1f}s, too slow to retry: " + "; ".join(found),
+            )
         logger.info("chat answer rejected, retrying: %s", "; ".join(found))
         retried = complete(prompt + answer_check.correction(found), request_id=request_id)
         if answer_check.problems(retried, language=language):
