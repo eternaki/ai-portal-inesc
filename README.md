@@ -302,7 +302,7 @@ GEMINI_API_KEY=...
 GEMINI_MODEL=gemini-3.5-flash-lite
 
 OPENROUTER_API_KEY=...
-OPENROUTER_MODEL=openrouter/free
+OPENROUTER_MODEL=google/gemma-4-26b-a4b-it:free
 ```
 
 Check readiness without spending tokens:

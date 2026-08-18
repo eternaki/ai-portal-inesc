@@ -32,7 +32,11 @@ class Settings(BaseSettings):
     # Cloud/local provider settings. Keys must stay server-side.
     openrouter_api_key: str = ""
     openrouter_base_url: str = "https://openrouter.ai/api/v1"
-    openrouter_model: str = "openrouter/free"
+    # A real model id, not a placeholder: "openrouter/free" resolves to nothing and
+    # fails as MODEL_NOT_FOUND. Instruction-tuned (-it) for the same reason as the
+    # Ollama default, and picked by testing the free list on this project's actual
+    # requirement — return JSON, answer in European Portuguese when asked in it.
+    openrouter_model: str = "google/gemma-4-26b-a4b-it:free"
     openrouter_site_url: str = ""
     openrouter_app_name: str = "MLKD Intelligent Research Platform"
 
