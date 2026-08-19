@@ -16,12 +16,14 @@
  * — CORDIS for the EU grants, the infrastructure's own site, the group's own
  * project page — and `source` names it. Nothing here is inferred from the acronym.
  *
- * Five projects are deliberately absent: ILU, INTAKE, NEURONREDUCE, PRECISE and
- * DeepPathCOVIDx are FCT/ANI grants with no public record I could find, and the
- * group's own pages carry no text about them. Writing a plausible summary of a
- * research project nobody can check is exactly what this codebase refuses to let
- * the language model do; it would be no better done by hand. They need a sentence
- * from someone who worked on them — then add them here.
+ * The five FCT/ANI grants that were missing — ILU, INTAKE, NEURONREDUCE, PRECISE
+ * and DeepPathCOVIDx — do have public records; they are just not in a search
+ * engine. INESC-ID's own site search carries a registry entry for each, with the
+ * funder, the dates and in three cases a news item describing the work. Where the
+ * registry gives only a title, the entry below says only what the title says.
+ *
+ * Beware two different PRECISEs: this is the FCT grant that ran 2016-2019, not the
+ * pan-European cancer-vulnerability initiative INESC-ID joined in 2026.
  */
 
 import { mkdir, writeFile } from 'node:fs/promises'
@@ -29,6 +31,8 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { getPayload } from 'payload'
+
+import { DESCRIPTIONS } from './lib/project-descriptions.mjs'
 import config from '@payload-config'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -56,54 +60,6 @@ const paragraph = (text) => ({
   },
 })
 
-const DESCRIPTIONS = [
-  {
-    title: 'OLISSIPO',
-    source: 'https://cordis.europa.eu/project/id/951970',
-    text:
-      'OLISSIPO — Fostering Computational Biology Research and Innovation in Lisbon. ' +
-      'A Horizon 2020 Twinning action coordinated by INESC-ID with EMBL Heidelberg, ' +
-      'INRIA Lyon and ETH Zurich, aimed at building a critical mass at the interface ' +
-      'of computer science and health research. Work was organised around single-cell ' +
-      'data analysis and simulation, mathematical modelling of interactions between ' +
-      'cells and communities, phylogenetic inference by Bayesian and combinatorial ' +
-      'methods, and translational bioinformatics with data management and software ' +
-      'development.',
-  },
-  {
-    title: 'EXCELERATE',
-    source: 'https://cordis.europa.eu/project/id/676559',
-    text:
-      'ELIXIR-EXCELERATE — Fast-track ELIXIR implementation and drive early user ' +
-      'exploitation across the life sciences. A Horizon 2020 research-infrastructure ' +
-      'project coordinated by EMBL across 53 partners, accelerating the early ' +
-      'implementation of ELIXIR, Europe’s distributed infrastructure for biological ' +
-      'information. It consolidated data services for academia and industry, built ' +
-      'bioinformatics capacity and training across Europe, and put in place the ' +
-      'management processes a large distributed infrastructure needs — so that ' +
-      'life-science data becomes findable, accessible, interoperable and reusable.',
-  },
-  {
-    title: 'BioData',
-    source: 'https://biodata.pt/',
-    text:
-      'BioData.pt — the Portuguese distributed research infrastructure for life and ' +
-      'health data, and the national node of ELIXIR. It brings together life-science ' +
-      'research and innovation organisations across Portugal, providing data-management ' +
-      'practice, computing facilities, training and consulting, and connecting academic ' +
-      'research with the agrofood, forestry, sea and health sectors.',
-  },
-  {
-    title: 'PRELUNA',
-    source: 'https://mlkd.idss.inesc-id.pt/preluna-home.html',
-    text:
-      'PRELUNA — Precise and Efficient Learning using Attention Mechanisms. The project ' +
-      'works on attention-based machine learning, with medical imaging as its main ' +
-      'application: raising the quality of care where medical specialists are scarce. ' +
-      'The same methods carry over to fire surveillance, Earth imaging and ' +
-      'environmental monitoring.',
-  },
-]
 
 async function run() {
   const payload = await getPayload({ config })
