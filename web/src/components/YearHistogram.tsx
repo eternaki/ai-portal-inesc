@@ -86,6 +86,12 @@ export function YearHistogram({
             )
           }
 
+          // Hover label ("2019 · 12"), Google-Scholar style. Pure CSS (opacity on
+          // a:hover), so the chart stays server-rendered with no client JS. Near
+          // the edges the label is anchored inward so it never leaves the viewBox.
+          const anchor = index < 2 ? 'start' : index > years.length - 3 ? 'end' : 'middle'
+          const tipX = anchor === 'start' ? x + 2 : anchor === 'end' ? x + CELL - 2 : x + CELL / 2
+
           return (
             <Link key={year} href={hrefForYear(String(year))} aria-label={`${year}: ${count}`}>
               {/* The hit area spans the whole cell, not the bar: a one-publication
@@ -99,6 +105,9 @@ export function YearHistogram({
                 rx={Math.min(RADIUS, barHeight)}
                 className={`year-histogram-bar${selected ? ' is-selected' : ''}`}
               />
+              <text x={tipX} y={12} textAnchor={anchor} className="year-histogram-tip">
+                {year} · {count}
+              </text>
             </Link>
           )
         })}
