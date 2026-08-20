@@ -45,6 +45,7 @@ export const Members: CollectionConfig = {
       options: [
         { label: 'Faculty', value: 'faculty' },
         { label: 'Researcher', value: 'researcher' },
+        { label: 'PostDoc', value: 'postdoc' },
         { label: 'PhD student', value: 'phd' },
         { label: 'MSc student', value: 'msc' },
       ],

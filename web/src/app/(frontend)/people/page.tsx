@@ -11,17 +11,18 @@ export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'People' }
 
+// The exact taxonomy Prof. Arlindo asked for: Faculty, then each cohort split
+// into current and past members. Faculty keeps a single heading (a professor
+// who leaves is a rarity, and "Current Faculty" would read oddly); every other
+// role renders as two sections. Empty sections disappear rather than showing
+// an empty heading — "Current PostDocs" exists in the taxonomy but is empty today.
 const ROLE_ORDER = [
-  { value: 'faculty', key: 'roleFaculty' },
-  { value: 'researcher', key: 'roleResearchers' },
-  { value: 'phd', key: 'rolePhd' },
-  { value: 'msc', key: 'roleMsc' },
+  { value: 'faculty', currentKey: 'roleFaculty', pastKey: 'rolePastFaculty' },
+  { value: 'researcher', currentKey: 'roleResearchers', pastKey: 'rolePastResearchers' },
+  { value: 'postdoc', currentKey: 'rolePostdoc', pastKey: 'rolePastPostdoc' },
+  { value: 'phd', currentKey: 'rolePhd', pastKey: 'rolePastPhd' },
+  { value: 'msc', currentKey: 'roleMsc', pastKey: 'rolePastMsc' },
 ] as const
-
-// Membership is binary here, as it is on the group's own site: you are with the
-// group or you have been. A third state existed briefly but nobody could say what
-// it meant, so it was removed rather than left for a reader to guess at.
-const SECONDARY_STATUSES = [{ value: 'completed', key: 'statusCompleted' }] as const
 
 // Every group renders as avatar cards, including the ones with almost no
 // photographs.
@@ -73,30 +74,29 @@ export default async function PeoplePage() {
       <JsonLd data={peopleJsonLd} />
       <h1>{t.people.title}</h1>
 
-      <section>
-        <h2>{t.people.statusActive}</h2>
-        {ROLE_ORDER.map(({ value, key }) => {
-          const group = result.docs.filter(
-            (member) => (member.membershipStatus ?? 'active') === 'active' && member.role === value,
-          )
-          if (group.length === 0) return null
-          return (
-            <section key={value}>
-              <h3>{t.people[key]}</h3>
-              <PeopleGroup members={group} />
-            </section>
-          )
-        })}
-      </section>
-
-      {SECONDARY_STATUSES.map(({ value, key }) => {
-        const group = result.docs.filter((member) => member.membershipStatus === value)
-        if (group.length === 0) return null
+      {ROLE_ORDER.map(({ value, currentKey, pastKey }) => {
+        const current = result.docs.filter(
+          (member) => member.role === value && (member.membershipStatus ?? 'active') === 'active',
+        )
+        const past = result.docs.filter(
+          (member) => member.role === value && member.membershipStatus === 'completed',
+        )
+        if (current.length === 0 && past.length === 0) return null
         return (
-          <section key={value}>
-            <h2>{t.people[key]}</h2>
-            <PeopleGroup members={group} />
-          </section>
+          <React.Fragment key={value}>
+            {current.length > 0 && (
+              <section>
+                <h2>{t.people[currentKey]}</h2>
+                <PeopleGroup members={current} />
+              </section>
+            )}
+            {past.length > 0 && (
+              <section>
+                <h2>{t.people[pastKey]}</h2>
+                <PeopleGroup members={past} />
+              </section>
+            )}
+          </React.Fragment>
         )
       })}
 
