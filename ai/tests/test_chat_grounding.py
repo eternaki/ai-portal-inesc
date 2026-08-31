@@ -268,3 +268,29 @@ def test_follow_up_history_is_ignored_when_the_message_stands_on_its_own():
 
     assert len(calls) == 1  # no second retrieval pass
     assert [s["title"] for s in sources] == ["Paper A"]
+
+
+def test_follow_up_after_a_section_question_inherits_the_section():
+    # "what topic do you have" answers from the CMS (dissertations), so a blend of
+    # the two topicless texts embeds nothing — the follow-up must inherit the
+    # section and answer through the same CMS fallback.
+    docs = {
+        "dissertations": [
+            {"id": 3, "title": "Deep learning for ECG", "slug": "ecg", "status": "open"},
+        ]
+    }
+
+    def _find_all(collection, where=None, *, depth=0, sort=None, limit=None):
+        return docs.get(collection, [])
+
+    with (
+        patch("app.embeddings.search_entities", return_value=[]),
+        patch("app.payload_api.find", _docs(docs)),
+        patch("app.payload_api.find_all", _find_all),
+    ):
+        sources, _ = chat.gather_sources(
+            "can you give me more information",
+            history_queries=["what topic do you have"],
+        )
+
+    assert [s["entity_type"] for s in sources] == ["dissertations"]

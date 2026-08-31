@@ -214,22 +214,30 @@ def gather_sources(
     strong = [(t, i, s) for t, i, s in hits if s >= settings.chat_min_semantic_score]
 
     # Topicless follow-up: retry with the conversation's earlier questions, newest
-    # first, stopping at the first that retrieves something.
+    # first, stopping at the first that retrieves something. The previous turn may
+    # itself have been structural rather than topical ("what dissertation topics
+    # are there?") — then no blend of the two texts embeds anything, and what the
+    # follow-up should inherit is the section (or period), so the CMS fallback at
+    # the end can answer it the same way it answered the original question.
     if not strong and not timeframe and not listable and history_queries:
         for prev in reversed(history_queries):
-            prev_text, _ = extract_timeframe(prev)
+            prev_text, prev_frame = extract_timeframe(prev)
             combined = f"{prev_text} {search_text}".strip()
-            if not combined or combined == search_text:
-                continue
-            try:
-                hits = embeddings.search_entities(
-                    combined, types=list(CHAT_ENTITY_TYPES), limit=over_fetch
-                )
-            except Exception as err:  # noqa: BLE001 - same contract as above
-                logger.warning("chat follow-up retrieval failed: %s", err)
-                break
-            strong = [(t, i, s) for t, i, s in hits if s >= settings.chat_min_semantic_score]
-            if strong:
+            if combined and combined != search_text:
+                try:
+                    hits = embeddings.search_entities(
+                        combined, types=list(CHAT_ENTITY_TYPES), limit=over_fetch
+                    )
+                except Exception as err:  # noqa: BLE001 - same contract as above
+                    logger.warning("chat follow-up retrieval failed: %s", err)
+                    break
+                strong = [(t, i, s) for t, i, s in hits if s >= settings.chat_min_semantic_score]
+                if strong:
+                    break
+            inherited = named_collection(prev)
+            if inherited or prev_frame:
+                listable = listable or inherited
+                timeframe = timeframe or prev_frame
                 break
 
     if not strong and not timeframe and not listable:
