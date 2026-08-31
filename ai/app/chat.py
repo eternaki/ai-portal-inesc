@@ -166,12 +166,21 @@ def _as_source(entity_type: str, doc: dict, position: int, score: float = 0.0) -
     }
 
 
-def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict], list[str]]:
+def gather_sources(
+    query: str, *, limit: int | None = None, history_queries: list[str] | None = None
+) -> tuple[list[dict], list[str]]:
     """Retrieve grounded, visible, injection-screened sources for a question.
 
     Returns (sources, warnings). Each source carries the citation number it will
     be cited by — numbering happens *after* filtering, so a dropped hit can't
     leave a gap like "[1] [3]" in the answer.
+
+    `history_queries` are the visitor's earlier questions in this conversation.
+    They are only consulted when the current message finds nothing on its own:
+    a follow-up like "can you give me more information" carries no topic, so its
+    vector matches nothing and the bot refused mid-conversation. Retrying with
+    the previous question's text restores the topic without polluting retrieval
+    for messages that stand on their own.
     """
     from app import embeddings  # lazy: pulls in torch
 
@@ -203,6 +212,26 @@ def gather_sources(query: str, *, limit: int | None = None) -> tuple[list[dict],
     # Drop weak matches before spending an LLM call on them. Without this the
     # chatbot cites whatever came back, however unrelated.
     strong = [(t, i, s) for t, i, s in hits if s >= settings.chat_min_semantic_score]
+
+    # Topicless follow-up: retry with the conversation's earlier questions, newest
+    # first, stopping at the first that retrieves something.
+    if not strong and not timeframe and not listable and history_queries:
+        for prev in reversed(history_queries):
+            prev_text, _ = extract_timeframe(prev)
+            combined = f"{prev_text} {search_text}".strip()
+            if not combined or combined == search_text:
+                continue
+            try:
+                hits = embeddings.search_entities(
+                    combined, types=list(CHAT_ENTITY_TYPES), limit=over_fetch
+                )
+            except Exception as err:  # noqa: BLE001 - same contract as above
+                logger.warning("chat follow-up retrieval failed: %s", err)
+                break
+            strong = [(t, i, s) for t, i, s in hits if s >= settings.chat_min_semantic_score]
+            if strong:
+                break
+
     if not strong and not timeframe and not listable:
         return [], warnings
     # An empty semantic result is not the end when the question named a period or a

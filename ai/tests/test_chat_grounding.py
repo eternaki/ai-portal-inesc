@@ -226,3 +226,45 @@ def test_a_question_naming_no_section_is_still_refused():
     with patch("app.embeddings.search_entities", return_value=[]):
         sources, _ = chat.gather_sources("what is the capital of France")
     assert sources == []
+
+
+def test_topicless_follow_up_inherits_the_previous_questions_topic():
+    # "Tell me more" matches nothing by itself; with the previous question's text
+    # blended in, retrieval works again.
+    docs = {"publications": [{"id": 1, "title": "Paper A", "slug": "paper-a", "year": 2025}]}
+
+    def _search(text, *, types=None, limit=None):
+        return _hits(("publications", 1, 0.8)) if "vision" in text else []
+
+    with (
+        patch("app.embeddings.search_entities", side_effect=_search),
+        patch("app.payload_api.find", _docs(docs)),
+    ):
+        alone, _ = chat.gather_sources("can you give me more information")
+        with_history, _ = chat.gather_sources(
+            "can you give me more information",
+            history_queries=["What research is done on vision?"],
+        )
+
+    assert alone == []
+    assert [s["title"] for s in with_history] == ["Paper A"]
+
+
+def test_follow_up_history_is_ignored_when_the_message_stands_on_its_own():
+    # A message that retrieves by itself must not have its results reshuffled by
+    # older questions.
+    docs = {"publications": [{"id": 1, "title": "Paper A", "slug": "paper-a", "year": 2025}]}
+    calls = []
+
+    def _search(text, *, types=None, limit=None):
+        calls.append(text)
+        return _hits(("publications", 1, 0.8))
+
+    with (
+        patch("app.embeddings.search_entities", side_effect=_search),
+        patch("app.payload_api.find", _docs(docs)),
+    ):
+        sources, _ = chat.gather_sources("vision", history_queries=["something else entirely"])
+
+    assert len(calls) == 1  # no second retrieval pass
+    assert [s["title"] for s in sources] == ["Paper A"]
