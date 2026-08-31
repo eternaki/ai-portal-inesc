@@ -81,6 +81,18 @@ CASES = [
         history=_ENGLISH_HISTORY,
         runs=4,
     ),
+    # A follow-up with no topic of its own inherits it from the previous turn.
+    # This used to refuse mid-conversation ("could not find anything") because
+    # retrieval only saw the topicless message.
+    Case(
+        "follow-up without a topic",
+        "Can you give me more information?",
+        min_sources=1,
+        history=[
+            {"role": "user", "content": "What research is done on medical imaging?"},
+            {"role": "assistant", "content": "The group works on medical imaging [1]."},
+        ],
+    ),
     # Nothing to answer from: refuse rather than reach.
     Case("off-topic: geography", "what is the capital of France", modes=("none",)),
     Case("off-topic: cooking", "how do I bake bread", modes=("none",)),

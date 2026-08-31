@@ -172,7 +172,8 @@
 .year-histogram-svg {
   display: block;
   width: 100%;
-  height: 90px;
+  /* viewBox grew a 16-unit strip above the bars for the hover label */
+  height: 106px;
 }
 
 /* Single series, single hue — validated against the page surface in both themes. */

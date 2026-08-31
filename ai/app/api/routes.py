@@ -420,7 +420,14 @@ def chat(req: ChatRequest, x_client_ip: str | None = Header(None)) -> dict:
             "requestId": request_id,
         }
 
-    sources, warnings = chat_mod.gather_sources(req.message)
+    # Earlier user questions give a topicless follow-up ("tell me more") its
+    # topic back — gather_sources only consults them when the message alone
+    # retrieves nothing. Injection-screened turns don't get this far, and the
+    # history itself is screened again inside the retrieval text.
+    history_queries = [
+        t.content for t in req.history if t.role == "user" and not detect_prompt_injection(t.content)
+    ][-3:]
+    sources, warnings = chat_mod.gather_sources(req.message, history_queries=history_queries)
 
     # Refuse before spending an LLM call. Previously the model was asked to answer
     # even with nothing retrieved and trusted to decline — a prompt-level promise

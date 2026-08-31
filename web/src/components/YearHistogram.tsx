@@ -17,6 +17,10 @@ const HEIGHT = 72
 const CELL = 30
 const BAR = 16
 const RADIUS = 4
+// Reserved strip above the bars for the hover label. Bars start below it, so the
+// label can never overlap even the tallest bar (it used to be drawn at a fixed y
+// inside the bar area, which collided with peak years).
+const TIP_STRIP = 16
 
 export type YearCount = { year: number; count: number }
 
@@ -62,7 +66,7 @@ export function YearHistogram({
 
       <svg
         className="year-histogram-svg"
-        viewBox={`0 0 ${width} ${HEIGHT + 18}`}
+        viewBox={`0 0 ${width} ${TIP_STRIP + HEIGHT + 18}`}
         role="group"
         aria-label={labels.aria}
         preserveAspectRatio="none"
@@ -78,7 +82,7 @@ export function YearHistogram({
               <rect
                 key={year}
                 x={x + (CELL - BAR) / 2}
-                y={HEIGHT - 1}
+                y={TIP_STRIP + HEIGHT - 1}
                 width={BAR}
                 height={1}
                 className="year-histogram-empty"
@@ -87,8 +91,9 @@ export function YearHistogram({
           }
 
           // Hover label ("2019 · 12"), Google-Scholar style. Pure CSS (opacity on
-          // a:hover), so the chart stays server-rendered with no client JS. Near
-          // the edges the label is anchored inward so it never leaves the viewBox.
+          // a:hover), so the chart stays server-rendered with no client JS. It
+          // lives in TIP_STRIP, above where any bar can reach. Near the edges the
+          // label is anchored inward so it never leaves the viewBox.
           const anchor = index < 2 ? 'start' : index > years.length - 3 ? 'end' : 'middle'
           const tipX = anchor === 'start' ? x + 2 : anchor === 'end' ? x + CELL - 2 : x + CELL / 2
 
@@ -96,16 +101,22 @@ export function YearHistogram({
             <Link key={year} href={hrefForYear(String(year))} aria-label={`${year}: ${count}`}>
               {/* The hit area spans the whole cell, not the bar: a one-publication
                   year is a 3px sliver nobody can click. */}
-              <rect x={x} y={0} width={CELL} height={HEIGHT + 18} className="year-histogram-hit" />
+              <rect
+                x={x}
+                y={0}
+                width={CELL}
+                height={TIP_STRIP + HEIGHT + 18}
+                className="year-histogram-hit"
+              />
               <rect
                 x={x + (CELL - BAR) / 2}
-                y={HEIGHT - barHeight}
+                y={TIP_STRIP + HEIGHT - barHeight}
                 width={BAR}
                 height={barHeight}
                 rx={Math.min(RADIUS, barHeight)}
                 className={`year-histogram-bar${selected ? ' is-selected' : ''}`}
               />
-              <text x={tipX} y={12} textAnchor={anchor} className="year-histogram-tip">
+              <text x={tipX} y={11} textAnchor={anchor} className="year-histogram-tip">
                 {year} · {count}
               </text>
             </Link>
@@ -114,10 +125,10 @@ export function YearHistogram({
 
         {/* Only the ends of the scale are labelled; a number under every bar is
             noise, and the selected year is already named above the chart. */}
-        <text x={0} y={HEIGHT + 14} className="year-histogram-tick">
+        <text x={0} y={TIP_STRIP + HEIGHT + 14} className="year-histogram-tick">
           {first}
         </text>
-        <text x={width} y={HEIGHT + 14} textAnchor="end" className="year-histogram-tick">
+        <text x={width} y={TIP_STRIP + HEIGHT + 14} textAnchor="end" className="year-histogram-tick">
           {last}
         </text>
       </svg>
