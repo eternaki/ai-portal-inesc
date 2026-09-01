@@ -8,3 +8,4 @@ __pycache__/
 .superpowers/
 .localdb/
 docker-compose.override.yml
+.lavish/
