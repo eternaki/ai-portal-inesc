@@ -15,7 +15,8 @@ def test_a_quota_refusal_puts_that_provider_aside_briefly():
     # answer took 35 seconds, nearly all of it there.
     svc._start_cooldown("openrouter")
     assert svc._is_cooling("openrouter") is True
-    assert svc._is_cooling("ollama") is False
+    # Per provider, not global: one free tier refusing must not sideline the other.
+    assert svc._is_cooling("gemini") is False
 
 
 def test_the_cooldown_expires_on_its_own():

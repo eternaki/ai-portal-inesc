@@ -10,11 +10,11 @@ def setup_function():
 def test_counter_accumulates_per_label_series():
     metrics.registry.incr("ai_llm_calls_total", labels={"provider": "gemini", "status": "ok"})
     metrics.registry.incr("ai_llm_calls_total", labels={"provider": "gemini", "status": "ok"})
-    metrics.registry.incr("ai_llm_calls_total", labels={"provider": "ollama", "status": "ok"})
+    metrics.registry.incr("ai_llm_calls_total", labels={"provider": "openrouter", "status": "ok"})
 
     snap = metrics.registry.snapshot()["counters"]
     assert snap['ai_llm_calls_total{provider="gemini",status="ok"}'] == 2
-    assert snap['ai_llm_calls_total{provider="ollama",status="ok"}'] == 1
+    assert snap['ai_llm_calls_total{provider="openrouter",status="ok"}'] == 1
 
 
 def test_latency_tracks_sum_count_and_avg():

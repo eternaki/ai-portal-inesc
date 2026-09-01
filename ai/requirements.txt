@@ -2,7 +2,7 @@
 fastapi>=0.115
 uvicorn[standard]>=0.32
 
-# LLM-обёртка: один интерфейс к OpenAI/Anthropic/Gemini/Ollama (модель задаётся в .env)
+# One interface to every LLM provider; the model is an env var, never a code change.
 litellm>=1.55
 # нужен litellm для retry-логики (num_retries)
 tenacity>=8.0

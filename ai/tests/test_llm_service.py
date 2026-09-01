@@ -15,7 +15,7 @@ def settings(**overrides):
         "llm_temperature": 0.2,
         "llm_max_tokens": 1200,
         "llm_fallback_enabled": True,
-        "llm_fallback_providers": "gemini,openrouter,ollama",
+        "llm_fallback_providers": "gemini,openrouter",
         "gemini_api_key": "",
         "google_api_key": "",
         "gemini_model": "gemini-3.5-flash-lite",
@@ -24,8 +24,6 @@ def settings(**overrides):
         "openrouter_model": "openrouter/free",
         "openrouter_site_url": "",
         "openrouter_app_name": "MLKD Intelligent Research Platform",
-        "ollama_base_url": "http://localhost:11434",
-        "ollama_model": "qwen3:8b",
         "openai_api_key": "",
         "openai_model": "",
     }
@@ -65,18 +63,6 @@ class LLMServiceTest(unittest.TestCase):
         self.assertEqual(config.model, "openrouter/free")
         self.assertEqual(config.litellm_model, "openrouter/openrouter/free")
 
-    def test_explicit_ollama_resolution(self):
-        svc = LLMService()
-        with (
-            patch("app.llm.service.get_settings", return_value=settings(llm_provider="ollama", ollama_model="qwen3:8b")),
-            patch("app.llm.service._runtime_model_override", return_value=""),
-        ):
-            config = svc._candidate_configs(request_id="test")[0]
-
-        self.assertEqual(config.provider, "ollama")
-        self.assertEqual(config.model, "qwen3:8b")
-        self.assertEqual(config.litellm_model, "ollama/qwen3:8b")
-
     def test_explicit_openai_resolution(self):
         svc = LLMService()
         with (
@@ -92,7 +78,7 @@ class LLMServiceTest(unittest.TestCase):
         self.assertEqual(config.model, "gpt-4.1-mini")
         self.assertEqual(config.litellm_model, "gpt-4.1-mini")
 
-    def test_auto_mode_prefers_gemini_then_openrouter_then_ollama(self):
+    def test_auto_mode_prefers_gemini_then_openrouter(self):
         svc = LLMService()
         with (
             patch(
@@ -103,12 +89,12 @@ class LLMServiceTest(unittest.TestCase):
         ):
             configs = svc._candidate_configs(request_id="test")
 
-        self.assertEqual([item.provider for item in configs[:3]], ["gemini", "openrouter", "ollama"])
+        self.assertEqual([item.provider for item in configs], ["gemini", "openrouter"])
 
     def test_no_provider_configured(self):
         svc = LLMService()
         with (
-            patch("app.llm.service.get_settings", return_value=settings(ollama_base_url="", ollama_model="")),
+            patch("app.llm.service.get_settings", return_value=settings()),
             patch("app.llm.service._runtime_model_override", return_value=""),
         ):
             with self.assertRaises(LLMError) as ctx:
@@ -177,33 +163,19 @@ class LLMServiceTest(unittest.TestCase):
 class DefaultProviderChainTest(unittest.TestCase):
     """The shipped default, not a hand-built one — these guard a decision."""
 
-    def test_ollama_is_not_in_the_default_runtime_chain(self):
-        # A local model behind a request someone is waiting on has to beat the
-        # deterministic offline layer to be worth its ~30s, and measured on this
-        # project's questions llama3.2:3b did not: asked in English about 2024 it
-        # answered in Portuguese on eight runs out of eight. Re-adding it here
-        # gives every visitor that wait back — do it knowingly, not by tidying.
+    def test_the_default_chain_is_cloud_free_tiers_only(self):
+        # A local model was tried here and removed outright: behind a request a
+        # visitor waits on it has to beat the deterministic offline layer, and
+        # measured on this project's questions it did not — asked in English about
+        # 2024 it answered in Portuguese on eight runs out of eight, each after
+        # ~30s. Adding a local provider back means re-arguing that, not tidying.
         #
         # Read off the field rather than Settings(): an instance picks up whoever's
         # .env is on the machine, and this asserts what the project ships.
         from app.config import Settings
 
         shipped = Settings.model_fields["llm_fallback_providers"].default
-        self.assertNotIn("ollama", shipped)
         self.assertEqual("gemini,openrouter", shipped)
-
-    def test_a_batch_run_can_still_opt_back_in(self):
-        # Nobody waits on a pipeline and it is free against a metered quota, so
-        # the local model stays reachable per run rather than being deleted.
-        service = LLMService()
-        with patch(
-            "app.llm.service.get_settings",
-            return_value=settings(
-                llm_fallback_providers="ollama", ollama_base_url="http://x:11434"
-            ),
-        ):
-            configs = service._candidate_configs(request_id="test")
-        self.assertEqual(["ollama"], [c.provider for c in configs])
 
 
 if __name__ == "__main__":
