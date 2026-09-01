@@ -13,8 +13,6 @@ ERROR_STATUS = {
     "PROVIDER_RATE_LIMITED": 429,
     "PROVIDER_QUOTA_EXCEEDED": 429,
     "LLM_TIMEOUT": 504,
-    "OLLAMA_UNAVAILABLE": 503,
-    "OLLAMA_MODEL_NOT_FOUND": 503,
     "LLM_EMPTY_RESPONSE": 502,
     "LLM_BAD_OUTPUT": 502,
     # Never reaches HTTP: the chat catches it and degrades. Listed so the code
@@ -97,10 +95,8 @@ def map_provider_error(err: Exception, *, provider: str, model: str, request_id:
     if "quota" in message or "resource_exhausted" in message or "insufficient credits" in message:
         return LLMError("PROVIDER_QUOTA_EXCEEDED", "The language-model provider quota was exceeded.", "Use another configured provider or wait for quota reset.", request_id, provider, model)
     if "notfound" in name or "not found" in message or "model_not_found" in message:
-        code = "OLLAMA_MODEL_NOT_FOUND" if provider == "ollama" else "MODEL_NOT_FOUND"
+        code = "MODEL_NOT_FOUND"
         return LLMError(code, "The configured model is unavailable.", "Check the configured model name.", request_id, provider, model)
-    if provider == "ollama" and ("connection" in name or "connect" in message or "refused" in message):
-        return LLMError("OLLAMA_UNAVAILABLE", "The local Ollama service is not running or cannot be reached.", "Start Ollama or choose a cloud provider.", request_id, provider, model)
     if "connection" in name or "serviceunavailable" in name or "unavailable" in message:
         return LLMError("PROVIDER_UNAVAILABLE", "The language-model provider is unavailable.", "Try again later or use a fallback provider.", request_id, provider, model)
 

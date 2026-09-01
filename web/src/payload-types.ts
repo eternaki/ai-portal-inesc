@@ -154,7 +154,7 @@ export interface Member {
    * Account for profile self-editing
    */
   user?: (number | null) | User;
-  role: 'faculty' | 'researcher' | 'phd' | 'msc';
+  role: 'faculty' | 'researcher' | 'postdoc' | 'phd' | 'msc';
   /**
    * Current relationship with the MLKD group or project.
    */
@@ -1212,7 +1212,7 @@ export interface AiSetting {
       )
     | null;
   /**
-   * Optional. Any LiteLLM model id (provider/model), overrides the dropdown. Example: ollama/llama3.1
+   * Optional. Any LiteLLM model id (provider/model), overrides the dropdown. Example: gemini/gemini-flash-latest
    */
   customModel?: string | null;
   /**

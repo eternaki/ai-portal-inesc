@@ -79,7 +79,7 @@ Admin -> /api/ingest -> FastAPI -> OpenAlex -> Payload REST -> PostgreSQL
 Publication processing:
 
 ```text
-Admin/batch -> FastAPI -> LLM resolver -> LiteLLM -> Gemini/OpenRouter (Ollama: batch opt-in)
+Admin/batch -> FastAPI -> LLM resolver -> LiteLLM -> Gemini/OpenRouter
                          -> sentence-transformers -> Payload REST + pgvector
 ```
 
@@ -320,50 +320,6 @@ traces.
 the topic map and the chat's retrieval never touch an LLM, and every AI feature
 falls back to a deterministic layer (see `ai/CLAUDE.md`). A key buys prose, not
 function.
-
-### Running a model locally (Ollama) — batch jobs, not the live chain
-
-No key, no quota, no network: worth it for batch jobs over the whole corpus, and
-for a demo that cannot depend on someone's free tier still having credit.
-
-**Not in `LLM_FALLBACK_PROVIDERS` by default, on purpose.** A local model behind a
-request the visitor is waiting on has to beat the deterministic offline layer to
-justify its wait, and measured on this project's own questions it did not: asked
-in English about 2024, `llama3.2:3b` answered in Portuguese on eight runs out of
-eight. `answer_check` rejected every one, so nothing wrong reached the page — but
-each attempt cost ~30s before the visitor got the offline answer that was ready
-immediately.
-
-Batch work is the opposite trade: nobody is waiting, and it is free against a
-metered quota. So opt in per run rather than globally:
-
-```bash
-LLM_FALLBACK_PROVIDERS=ollama python -m app.pipelines.summarize
-LLM_FALLBACK_PROVIDERS=ollama python -m app.pipelines.bios
-```
-
-```bash
-brew install ollama
-# 0.0.0.0, not the default loopback: the ai service runs in a container and
-# reaches the host through host.docker.internal.
-OLLAMA_HOST=0.0.0.0:11434 ollama serve &
-ollama pull llama3.2:3b
-```
-
-```env
-LLM_PROVIDER=ollama
-OLLAMA_MODEL=llama3.2:3b
-OLLAMA_BASE_URL=http://host.docker.internal:11434
-```
-
-Then `docker compose up -d ai` and check `GET /health/llm` reports `ready`.
-
-**Use an instruct model, not a reasoning one.** Every job here hands the model the
-facts and asks it to phrase them, so thinking tokens buy nothing — and a reasoning
-model spends the whole `LLM_MAX_TOKENS` budget on them and returns empty content,
-which arrives as `LLM_EMPTY_RESPONSE` and degrades every surface to its offline
-layer. `qwen3:8b` was the default here and failed exactly this way; `llama3.2:3b`
-answers the chat in about six seconds on an M-series laptop.
 
 ## Working agreements
 

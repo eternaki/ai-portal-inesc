@@ -27,6 +27,7 @@ const PER_PAGE = 25
 const ROLE_KEY = {
   faculty: 'roleFaculty',
   researcher: 'roleResearchers',
+  postdoc: 'rolePostdoc',
   phd: 'rolePhd',
   msc: 'roleMsc',
 } as const

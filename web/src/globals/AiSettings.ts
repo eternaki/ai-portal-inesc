@@ -41,7 +41,7 @@ export const AiSettings: GlobalConfig = {
       type: 'text',
       admin: {
         description:
-          'Optional. Any LiteLLM model id (provider/model), overrides the dropdown. Example: ollama/llama3.1',
+          'Optional. Any LiteLLM model id (provider/model), overrides the dropdown. Example: gemini/gemini-flash-latest',
       },
     },
     {

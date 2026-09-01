@@ -15,7 +15,7 @@ from app.llm.errors import LLMError, map_provider_error
 
 logger = logging.getLogger(__name__)
 
-ProviderName = Literal["gemini", "openrouter", "ollama", "openai", "legacy"]
+ProviderName = Literal["gemini", "openrouter", "openai", "legacy"]
 
 # A provider that just refused for quota will refuse again seconds later, so
 # trying it on the next request spends the visitor's time to learn what we already
@@ -114,7 +114,7 @@ class LLMService:
         raise LLMError(
             "LLM_NOT_CONFIGURED",
             "No language model provider is configured.",
-            "Set GEMINI_API_KEY, OPENROUTER_API_KEY or OLLAMA_BASE_URL.",
+            "Set GEMINI_API_KEY or OPENROUTER_API_KEY.",
             request_id,
         )
 
@@ -133,36 +133,11 @@ class LLMService:
             )
             return {"status": "not_configured", **err.to_response()}
 
-        if config.provider == "ollama":
-            try:
-                models = httpx.get(f"{config.api_base.rstrip('/')}/api/tags", timeout=3.0).json().get("models", [])
-                names = {item.get("name") for item in models}
-                if config.model not in names:
-                    err = LLMError(
-                        "OLLAMA_MODEL_NOT_FOUND",
-                        "The configured Ollama model is not available.",
-                        f"Run: ollama pull {config.model}",
-                        request_id,
-                        config.provider,
-                        config.model,
-                    )
-                    return {"status": "not_configured", **err.to_response()}
-            except Exception:
-                err = LLMError(
-                    "OLLAMA_UNAVAILABLE",
-                    "The local Ollama service is not running or cannot be reached.",
-                    "Start Ollama or choose Gemini/OpenRouter.",
-                    request_id,
-                    config.provider,
-                    config.model,
-                )
-                return {"status": "not_configured", **err.to_response()}
-
         return {
             "status": "ready",
             "provider": config.provider,
             "model": config.model,
-            "credentialsConfigured": bool(config.api_key or config.provider == "ollama"),
+            "credentialsConfigured": bool(config.api_key),
         }
 
     def _call_provider(
@@ -293,7 +268,7 @@ class LLMService:
             raise LLMError(
                 "LLM_NOT_CONFIGURED",
                 "No language model provider is configured.",
-                "Set GEMINI_API_KEY, OPENROUTER_API_KEY or OLLAMA_BASE_URL.",
+                "Set GEMINI_API_KEY or OPENROUTER_API_KEY.",
                 request_id,
             )
         return configs
@@ -316,8 +291,8 @@ def _runtime_model_override() -> str:
 def _provider_order(provider: str, fallback_providers: str) -> list[str]:
     if provider == "auto":
         providers = [item.strip().lower() for item in fallback_providers.split(",") if item.strip()]
-        return providers or ["gemini", "openrouter", "ollama"]
-    valid = {"gemini", "openrouter", "ollama", "openai"}
+        return providers or ["gemini", "openrouter"]
+    valid = {"gemini", "openrouter", "openai"}
     if provider not in valid:
         return []
     providers = [provider]
@@ -352,13 +327,6 @@ def _provider_config(provider: str, runtime_model: str) -> ProviderConfig | None
         if settings.openrouter_app_name:
             headers["X-Title"] = settings.openrouter_app_name
         return ProviderConfig("openrouter", model, f"openrouter/{model}", api_key=settings.openrouter_api_key, api_base=settings.openrouter_base_url, extra_headers=headers or None)
-    if provider == "ollama":
-        if not settings.ollama_base_url:
-            return None
-        model = selected or settings.ollama_model
-        if not model:
-            raise LLMError("MODEL_NOT_CONFIGURED", "No Ollama model is configured.", "Set OLLAMA_MODEL or LLM_MODEL.")
-        return ProviderConfig("ollama", _strip_prefix(model, "ollama/"), f"ollama/{_strip_prefix(model, 'ollama/')}", api_base=settings.ollama_base_url)
     if provider == "openai":
         if not settings.openai_api_key:
             return None

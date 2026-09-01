@@ -36,9 +36,6 @@ const errorText = (error: ApiError | string | undefined) => {
       return 'The provider is temporarily rate-limited. Try again later.'
     case 'PROVIDER_QUOTA_EXCEEDED':
       return 'The free provider quota was exceeded. Try again later or change provider.'
-    case 'OLLAMA_UNAVAILABLE':
-      return 'Ollama is not running or cannot be reached.'
-    case 'OLLAMA_MODEL_NOT_FOUND':
     case 'MODEL_NOT_FOUND':
       return 'The configured model is unavailable. Check the model name.'
     case 'LLM_TIMEOUT':

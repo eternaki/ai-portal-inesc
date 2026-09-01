@@ -27,26 +27,22 @@ class Settings(BaseSettings):
     llm_temperature: float = 0.2
     llm_max_tokens: int = 1200
     llm_fallback_enabled: bool = True
-    # Ollama is deliberately absent. It is a *local* model behind a request the
-    # visitor is waiting on, and measured on this project's own questions it lost
-    # to the layer it was supposed to improve on: asked in English about 2024, it
-    # answered in Portuguese on eight runs out of eight. answer_check caught every
-    # one, so nothing wrong reached the page — but each attempt spent ~30s of the
-    # visitor's time before they got the offline answer that was ready instantly.
-    #
-    # A slow local model is worth its wait only when it beats the deterministic
-    # layer, and this one does not. Batch work is the opposite trade — nobody is
-    # waiting, and it is free against a metered quota — so pipelines opt back in
-    # per run: LLM_FALLBACK_PROVIDERS=ollama python -m app.pipelines.summarize
+    # Cloud free tiers only. A local model was tried and removed: behind a request
+    # a visitor is waiting on, it has to beat the deterministic offline layer to be
+    # worth its wait, and measured on this project's questions it did not — asked in
+    # English about 2024 it answered in Portuguese on eight runs out of eight, each
+    # after ~30s on CPU, before the visitor got the offline answer anyway.
     llm_fallback_providers: str = "gemini,openrouter"
 
-    # Cloud/local provider settings. Keys must stay server-side.
+    # Provider settings. Keys must stay server-side.
     openrouter_api_key: str = ""
     openrouter_base_url: str = "https://openrouter.ai/api/v1"
     # A real model id, not a placeholder: "openrouter/free" resolves to nothing and
-    # fails as MODEL_NOT_FOUND. Instruction-tuned (-it) for the same reason as the
-    # Ollama default, and picked by testing the free list on this project's actual
-    # requirement — return JSON, answer in European Portuguese when asked in it.
+    # fails as MODEL_NOT_FOUND. Instruction-tuned (-it), not a reasoning model: every
+    # job here hands the model the facts and asks it to phrase them, so thinking
+    # tokens buy nothing and can eat the whole output budget. Picked by testing the
+    # free list against this project's actual requirement — return JSON, and answer
+    # in European Portuguese when asked in it.
     openrouter_model: str = "google/gemma-4-26b-a4b-it:free"
     openrouter_site_url: str = ""
     openrouter_app_name: str = "MLKD Intelligent Research Platform"
@@ -54,15 +50,6 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     google_api_key: str = ""
     gemini_model: str = "gemini-3.5-flash-lite"
-
-    ollama_base_url: str = "http://localhost:11434"
-    # Not a reasoning model, deliberately. Every job here hands the model the
-    # facts and asks it to phrase them, so thinking tokens buy nothing — and
-    # qwen3:8b, the previous default, spent the whole llm_max_tokens budget
-    # reasoning and returned empty content, which arrives as LLM_EMPTY_RESPONSE
-    # and degrades every surface to its offline layer. Small also matters: this
-    # runs on a laptop CPU/GPU beside the site, and 3B answers the chat in ~6s.
-    ollama_model: str = "llama3.2:3b"
 
     openai_api_key: str = ""
     openai_model: str = ""
