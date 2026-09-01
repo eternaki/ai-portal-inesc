@@ -1198,21 +1198,18 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface AiSetting {
   id: number;
   /**
-   * Model used by all AI features (summaries, chat, snippets). The provider API key must be set in the AI service .env (GROQ_API_KEY, GEMINI_API_KEY, …).
+   * Model used by all AI features (summaries, chat, snippets). It applies to the provider it names; the others in LLM_FALLBACK_PROVIDERS stay available as backup. The provider API key must be set in the AI service .env.
    */
   llmModel?:
     | (
         | ''
-        | 'groq/llama-3.3-70b-versatile'
-        | 'groq/llama-3.1-8b-instant'
         | 'gemini/gemini-flash-lite-latest'
         | 'gemini/gemini-flash-latest'
-        | 'mistral/mistral-small-latest'
-        | 'cerebras/gpt-oss-120b'
+        | 'openrouter/google/gemma-4-26b-a4b-it:free'
       )
     | null;
   /**
-   * Optional. Any LiteLLM model id (provider/model), overrides the dropdown. Example: gemini/gemini-flash-latest
+   * Optional. Any LiteLLM model id (provider/model), used instead of the dropdown. A provider this service does not implement is passed to LiteLLM on its own, without the fallback chain.
    */
   customModel?: string | null;
   /**

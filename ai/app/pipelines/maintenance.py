@@ -42,7 +42,13 @@ def _missing_embeddings() -> list[dict]:
 
 
 def _duplicates() -> list[dict]:
-    """Papers sharing a normalized title or a DOI — likely double-ingested."""
+    """Papers sharing a normalized title or a DOI — likely double-ingested.
+
+    Records parked by the dedupe script are excluded. They are duplicates by
+    construction — that is why they were parked — and counting them would leave
+    every merged pair standing in the admin's health panel forever, teaching
+    whoever reads it to ignore the number.
+    """
     out: list[dict] = []
     try:
         with db.connect() as conn:
@@ -50,12 +56,14 @@ def _duplicates() -> list[dict]:
                 (
                     "title",
                     "SELECT lower(trim(title)) k, array_agg(id) ids FROM publications "
+                    "WHERE status <> 'rejected' "
                     "GROUP BY lower(trim(title)) HAVING count(*) > 1",
                 ),
                 (
                     "doi",
                     "SELECT doi k, array_agg(id) ids FROM publications "
-                    "WHERE doi IS NOT NULL AND doi <> '' GROUP BY doi HAVING count(*) > 1",
+                    "WHERE doi IS NOT NULL AND doi <> '' AND status <> 'rejected' "
+                    "GROUP BY doi HAVING count(*) > 1",
                 ),
             ):
                 for row in conn.execute(sql).fetchall():

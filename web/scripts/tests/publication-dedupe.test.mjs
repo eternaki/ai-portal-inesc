@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import {
+  isDedupeCandidate,
+  MERGED_AWAY_STATUS,
   isSameWork,
   looksLikeIndexerChrome,
   mergeAuthorLinks,
@@ -143,4 +145,36 @@ test('mergeFields keeps a real abstract even when the duplicate has one too', ()
   const winner = { abstract: 'A genuine abstract about motifs in DNA.' }
   const loser = { abstract: 'A different genuine abstract.' }
   assert.equal(mergeFields(winner, loser).abstract, undefined)
+})
+
+
+// --- parking, not deleting -------------------------------------------------
+
+test('a parked duplicate is not a candidate again', () => {
+  // The whole point of parking rather than deleting: ingest still finds the row
+  // by openalexId and skips it. But a second dedupe run must then leave it
+  // alone, or pickWinner re-decides a settled pair on a tie-break and can hide
+  // the record it kept last time.
+  assert.equal(isDedupeCandidate({ id: 1, status: 'published' }), true)
+  assert.equal(isDedupeCandidate({ id: 2, status: MERGED_AWAY_STATUS }), false)
+})
+
+test('a re-run over already-merged records finds nothing to do', () => {
+  // The regression this guards is silent: no error, no crash, just a winner
+  // quietly swapped for the record it replaced.
+  const winner = { id: 9, status: 'published', title: 'A paper', type: 'article' }
+  const parked = { id: 3, status: MERGED_AWAY_STATUS, title: 'A paper', type: 'preprint' }
+  const survivors = [winner, parked].filter(isDedupeCandidate)
+  assert.deepEqual(survivors, [winner])
+})
+
+test('the DOI stays with the record that keeps its row', () => {
+  // doi is unique in the database. While the loser was deleted this copy was
+  // fine; now that it keeps its row, copying would be a constraint violation no
+  // ordering can resolve.
+  const patch = mergeFields(
+    { id: 1, doi: null, abstract: 'kept' },
+    { id: 2, doi: '10.1000/xyz', abstract: 'other' },
+  )
+  assert.equal('doi' in patch, false)
 })

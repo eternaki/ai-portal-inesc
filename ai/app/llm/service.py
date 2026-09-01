@@ -17,6 +17,10 @@ logger = logging.getLogger(__name__)
 
 ProviderName = Literal["gemini", "openrouter", "openai", "legacy"]
 
+# Providers this service knows how to build a config for. A model naming anything
+# else is passed through to litellm untouched rather than silently ignored.
+_KNOWN_PROVIDERS = {"gemini", "openrouter", "openai"}
+
 # A provider that just refused for quota will refuse again seconds later, so
 # trying it on the next request spends the visitor's time to learn what we already
 # know: with a rate-limited free tier at the head of the chain, the median chat
@@ -225,14 +229,20 @@ class LLMService:
         for_health: bool = False,
     ) -> list[ProviderConfig]:
         settings = get_settings()
-        override_model = _runtime_model_override()
-        explicit_model = bool(model) or bool(override_model and "/" in override_model)
-        runtime_model = model or override_model
-        if explicit_model and runtime_model and "/" in runtime_model and not settings.llm_provider.strip():
-            return [_legacy_config(runtime_model)]
-
+        runtime_model = model or _runtime_model_override()
         provider = settings.llm_provider.strip().lower() or "auto"
-        if explicit_model and runtime_model and "/" in runtime_model and provider == "auto":
+
+        # A chosen model names a provider ("gemini/gemini-flash-latest"). It used
+        # to short-circuit to that one provider and discard the chain — losing the
+        # fallback and the quota cooldown with it, so picking a model in the admin
+        # quietly made the service less reliable. Now it selects the model *for
+        # that provider*; the others keep their own defaults and stay as backup.
+        # Only a prefixed model names a provider. A bare one ("gpt-4.1-mini")
+        # applies to every provider in the chain, as an env-set LLM_MODEL always has.
+        hinted_provider = runtime_model.split("/", 1)[0].lower() if "/" in (runtime_model or "") else ""
+        if hinted_provider and hinted_provider not in _KNOWN_PROVIDERS:
+            # A provider we do not implement — the escape hatch stays an escape
+            # hatch: hand it to litellm as-is and let it succeed or fail alone.
             return [_legacy_config(runtime_model)]
 
         order = _provider_order(provider, settings.llm_fallback_providers)
@@ -240,7 +250,10 @@ class LLMService:
         cooling: list[str] = []
         for item in order:
             try:
-                config = _provider_config(item, runtime_model)
+                # Prefixed model → only the provider it names. Handing
+                # "gemini/…" to openrouter would build "openrouter/gemini/…".
+                for_item = runtime_model if not hinted_provider or hinted_provider == item else ""
+                config = _provider_config(item, for_item)
             except LLMError as err:
                 err.request_id = err.request_id or request_id
                 raise err
@@ -275,6 +288,13 @@ class LLMService:
 
 
 def _runtime_model_override() -> str:
+    """The model an editor picked in the admin, or "" if they picked none.
+
+    Values that name a provider ("gemini/gemini-flash-latest") used to be dropped
+    here — the filter kept only bare model ids, and every option in the dropdown
+    carries a prefix, so the control did nothing at all. Selecting a model in the
+    admin changed no behaviour whatsoever.
+    """
     try:
         from app.settings_cache import ai_settings
 
@@ -282,8 +302,7 @@ def _runtime_model_override() -> str:
         custom_model = str(data.get("customModel") or "").strip()
         if custom_model:
             return custom_model
-        dropdown_model = str(data.get("llmModel") or "").strip()
-        return dropdown_model if dropdown_model and "/" not in dropdown_model else ""
+        return str(data.get("llmModel") or "").strip()
     except Exception:
         return ""
 
@@ -318,7 +337,10 @@ def _provider_config(provider: str, runtime_model: str) -> ProviderConfig | None
     if provider == "openrouter":
         if not settings.openrouter_api_key:
             return None
-        model = selected or settings.openrouter_model
+        # Strip our own prefix before adding it back: an admin-chosen id arrives
+        # as "openrouter/google/gemma-…", and OpenRouter model ids contain a slash
+        # of their own, so a naive concat yields "openrouter/openrouter/google/…".
+        model = _strip_prefix(selected or settings.openrouter_model, "openrouter/")
         if not model:
             raise LLMError("MODEL_NOT_CONFIGURED", "No OpenRouter model is configured.", "Set OPENROUTER_MODEL or LLM_MODEL.")
         headers = {}
@@ -330,7 +352,8 @@ def _provider_config(provider: str, runtime_model: str) -> ProviderConfig | None
     if provider == "openai":
         if not settings.openai_api_key:
             return None
-        model = selected or settings.openai_model
+        # litellm takes OpenAI ids bare, so the prefix is stripped and not re-added.
+        model = _strip_prefix(selected or settings.openai_model, "openai/")
         if not model:
             raise LLMError("MODEL_NOT_CONFIGURED", "No OpenAI model is configured.", "Set OPENAI_MODEL or LLM_MODEL.")
         return ProviderConfig("openai", model, model, api_key=settings.openai_api_key)

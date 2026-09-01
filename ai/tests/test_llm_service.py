@@ -21,7 +21,7 @@ def settings(**overrides):
         "gemini_model": "gemini-3.5-flash-lite",
         "openrouter_api_key": "",
         "openrouter_base_url": "https://openrouter.ai/api/v1",
-        "openrouter_model": "openrouter/free",
+        "openrouter_model": "google/gemma-4-26b-a4b-it:free",
         "openrouter_site_url": "",
         "openrouter_app_name": "MLKD Intelligent Research Platform",
         "openai_api_key": "",
@@ -60,8 +60,12 @@ class LLMServiceTest(unittest.TestCase):
             config = svc._candidate_configs(request_id="test")[0]
 
         self.assertEqual(config.provider, "openrouter")
-        self.assertEqual(config.model, "openrouter/free")
-        self.assertEqual(config.litellm_model, "openrouter/openrouter/free")
+        # The prefix is added exactly once. The old fixture was "openrouter/free",
+        # which built "openrouter/openrouter/free" — a model id that resolves to
+        # nothing, which is precisely why that placeholder failed as
+        # MODEL_NOT_FOUND until someone replaced it with a real one.
+        self.assertEqual(config.model, "google/gemma-4-26b-a4b-it:free")
+        self.assertEqual(config.litellm_model, "openrouter/google/gemma-4-26b-a4b-it:free")
 
     def test_explicit_openai_resolution(self):
         svc = LLMService()
@@ -176,6 +180,53 @@ class DefaultProviderChainTest(unittest.TestCase):
 
         shipped = Settings.model_fields["llm_fallback_providers"].default
         self.assertEqual("gemini,openrouter", shipped)
+
+
+class ChosenModelAppliesToTheChainTest(unittest.TestCase):
+    """Picking a model in the admin must not cost the fallback chain."""
+
+    def _configs(self, override, **over):
+        svc = LLMService()
+        base = dict(gemini_api_key="gemini-key", openrouter_api_key="or-key")
+        base.update(over)
+        with (
+            patch("app.llm.service.get_settings", return_value=settings(**base)),
+            patch("app.llm.service._runtime_model_override", return_value=override),
+        ):
+            return svc._candidate_configs(request_id="test")
+
+    def test_a_prefixed_model_keeps_the_rest_of_the_chain_as_backup(self):
+        # The regression: this used to return one config and drop the chain, so
+        # choosing a model in the admin silently removed the fallback and the
+        # quota cooldown with it.
+        configs = self._configs("gemini/gemini-flash-latest")
+        self.assertEqual(["gemini", "openrouter"], [c.provider for c in configs])
+
+    def test_the_chosen_model_reaches_only_the_provider_it_names(self):
+        # Handing "gemini/…" to openrouter would build "openrouter/gemini/…",
+        # which resolves to nothing.
+        configs = self._configs("gemini/gemini-flash-latest")
+        by = {c.provider: c for c in configs}
+        self.assertEqual("gemini/gemini-flash-latest", by["gemini"].litellm_model)
+        self.assertNotIn("gemini", by["openrouter"].model)
+
+    def test_an_openrouter_model_with_its_own_slash_survives_the_split(self):
+        # "openrouter/google/gemma-…" — the provider is the first segment only.
+        configs = self._configs("openrouter/google/gemma-4-26b-a4b-it:free")
+        by = {c.provider: c for c in configs}
+        self.assertEqual("openrouter/google/gemma-4-26b-a4b-it:free", by["openrouter"].litellm_model)
+
+    def test_a_bare_model_still_applies_to_every_provider(self):
+        # Unprefixed ids behave as LLM_MODEL always has.
+        configs = self._configs("some-model")
+        self.assertTrue(all(c.model == "some-model" for c in configs))
+
+    def test_an_unimplemented_provider_stays_a_single_escape_hatch(self):
+        # customModel is where someone reaches for a provider we do not build a
+        # config for; that one goes to litellm alone rather than being ignored.
+        configs = self._configs("anthropic/claude-x")
+        self.assertEqual(1, len(configs))
+        self.assertEqual("legacy", configs[0].provider)
 
 
 if __name__ == "__main__":

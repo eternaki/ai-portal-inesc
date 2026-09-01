@@ -9,7 +9,7 @@
     "authors:link-aliases:apply": "cross-env AUTHOR_ALIASES_APPLY=1 NODE_OPTIONS=--no-deprecation payload run scripts/link-author-aliases.mjs",
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
     "claude:map": "node ../scripts/gen-claude-map.mjs",
-    "data:setup": "pnpm members:import:apply && pnpm members:import:apply --data=data/mlkd-members-roster-update.json && pnpm photos:import:apply && pnpm members:names:apply && pnpm members:status:apply && pnpm members:phd:apply && pnpm projects:import:apply && pnpm dissertations:import:apply && pnpm events:import:apply && pnpm publications:link-members:apply && pnpm authors:link-aliases:apply && pnpm seed:prune:apply",
+    "data:setup": "pnpm members:import:apply && pnpm members:import:apply --data=data/mlkd-members-roster-update.json && pnpm photos:import:apply && pnpm members:names:apply && pnpm members:status:apply && pnpm members:phd:apply && pnpm projects:import:apply && pnpm projects:descriptions:apply && pnpm dissertations:import:apply && pnpm events:import:apply && pnpm publications:link-members:apply && pnpm authors:link-aliases:apply && pnpm seed:prune:apply && pnpm publications:dedupe:apply",
     "design:contrast": "node scripts/audit-contrast.mjs",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
