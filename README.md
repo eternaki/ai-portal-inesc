@@ -165,9 +165,17 @@ cd web && pnpm data:setup
 
 That chains the import steps in the order they have to run — curated member data,
 photos from the group's legacy team page, the reconciliations that correct the
-names, projects, dissertations, the reading-group archive, publication↔member
-links, then pruning the seed's development fixtures. Every step is idempotent, so re-running is safe, and each writes a
-report under `web/reports/` naming exactly what it changed.
+names, projects and their descriptions, dissertations, the reading-group archive,
+publication↔member links, pruning the seed's development fixtures, and finally
+merging the duplicates OpenAlex indexes twice. Every step is idempotent, so
+re-running is safe, and each writes a report under `web/reports/` naming exactly
+what it changed.
+
+The dedupe runs last because it can only judge what is already there: run before
+the publications are in, it merges half a corpus against itself. It parks the
+losing record as `rejected` rather than deleting it — a deleted row is one the
+ingest no longer recognises, so the next run re-creates it, which is how the
+twenty-six merged in August were back within the month.
 
 Photos must be imported *before* the name reconciliations: those expand short
 names to full ones ("Arlindo Oliveira" → "Arlindo L. Oliveira") while the legacy

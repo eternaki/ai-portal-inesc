@@ -17,7 +17,10 @@ logger = logging.getLogger(__name__)
 
 
 def run(*, recluster: bool = True) -> None:
-    pubs = payload_api.find_all("publications")
+    # Published only. A duplicate parked by the dedupe script keeps its row, and
+    # embedding it would put a second point for the same paper on the map and a
+    # second candidate in search — the duplication the parking exists to end.
+    pubs = payload_api.find_all("publications", {"status": {"equals": "published"}})
     items: list[tuple[int, str]] = []
     for pub in pubs:
         text = f"{pub.get('title') or ''}\n\n{pub.get('abstract') or ''}".strip()
@@ -25,8 +28,9 @@ def run(*, recluster: bool = True) -> None:
             items.append((pub["id"], text))
     logger.info("embedding %s publications", len(items))
     written = embeddings.upsert_publication_embeddings(items)
-    # Deleting a publication does not delete its vector, so merged duplicates and
-    # records removed in the admin would stay in the map and in search forever.
+    # A vector outlives the record it came from — a publication deleted in the
+    # admin, or one parked as a merged duplicate, would otherwise stay in the map
+    # and in search forever.
     removed = embeddings.prune_publication_embeddings([pub["id"] for pub in pubs])
 
     if not recluster:

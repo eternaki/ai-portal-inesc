@@ -110,10 +110,15 @@ export function looksLikeIndexerChrome(text) {
  * the winner is missing, plus the higher citation count. Never overwrites a value
  * the winner already has — least of all a summary somebody edited by hand. The
  * one exception is an abstract that turned out to be index-page furniture.
+ *
+ * `doi` is deliberately absent from the list. It is `unique: true` with a real
+ * index behind it, and the loser is no longer deleted — it is hidden and keeps
+ * its own row, so copying its DOI onto the winner is a constraint violation that
+ * no ordering can resolve. The loser keeps the DOI; the winner keeps its own.
  */
 export function mergeFields(winner, loser) {
   const patch = {}
-  for (const field of ['abstract', 'doi', 'venue', 'originalUrl', 'pdfUrl']) {
+  for (const field of ['abstract', 'venue', 'originalUrl', 'pdfUrl']) {
     if (!winner[field] && loser[field]) patch[field] = loser[field]
   }
 
@@ -164,4 +169,24 @@ export function mergeAuthorLinks(winnerAuthors, loserAuthors) {
   })
 
   return { authors: changed > 0 ? authors : winnerAuthors, changed }
+}
+
+
+/** The editorial status a merged-away duplicate is parked in. */
+export const MERGED_AWAY_STATUS = 'rejected'
+
+/**
+ * Is this record still a candidate for deduping?
+ *
+ * A merged-away record keeps its row so the ingest can still find it by
+ * openalexId and skip it — deleting it is what made the August cleanup undo
+ * itself on the next ingest run. But keeping it means the next dedupe run sees
+ * the pair again, and `pickWinner` can then reverse itself: the winner has
+ * absorbed the loser's citations, abstract and venue, so the first tests tie and
+ * the decision falls through to the lower id. If the loser held the lower id,
+ * that run hides the winner instead. Excluding parked records is what makes a
+ * re-run a no-op rather than a coin flip.
+ */
+export function isDedupeCandidate(pub) {
+  return pub?.status !== MERGED_AWAY_STATUS
 }
