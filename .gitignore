@@ -13,3 +13,5 @@ docker-compose.override.yml
 # Database dumps and the backups prod-restore.sh takes before it writes.
 backup-*.sql.gz
 mlkd-*.sql.gz
+# …except the hand-over snapshots, which are meant to be shared.
+!db/dumps/*.sql.gz

@@ -63,11 +63,11 @@ if [[ "$APPLY" != "1" ]]; then
   exit 0
 fi
 
-echo "==> 1/4  Backing up production"
+echo "==> 1/5  Backing up production"
 docker compose exec -T "$DB_SERVICE" pg_dump -U "$DB_USER" "$DB_NAME" | gzip > "backup-$STAMP.sql.gz"
 echo "    backup-$STAMP.sql.gz ($(du -h "backup-$STAMP.sql.gz" | cut -f1))"
 
-echo "==> 2/4  Stashing what only production has"
+echo "==> 2/5  Stashing what only production has"
 # The summary column list is read from the catalogue rather than written out, so
 # this keeps working when the schema gains or loses one.
 psql_f <<'SQL'
@@ -120,7 +120,7 @@ SQL
 echo "    users:     $(psql_q 'SELECT count(*) FROM carryover.users')"
 echo "    summaries: $(psql_q 'SELECT count(*) FROM carryover.summaries')"
 
-echo "==> 3/4  Restoring the dump"
+echo "==> 3/5  Restoring the dump"
 psql_f <<'SQL'
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
@@ -128,7 +128,7 @@ SQL
 gunzip -c "$DUMP" | docker compose exec -T "$DB_SERVICE" psql -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -q
 echo "    restored"
 
-echo "==> 4/4  Putting production's own data back"
+echo "==> 4/5  Putting production's own data back"
 psql_f <<'SQL'
 -- Summaries first: match on openalex_id, then on doi for the rows that lack one.
 DO $$
@@ -193,6 +193,18 @@ END $$;
 SELECT setval(pg_get_serial_sequence('public.users', 'id'),
               GREATEST((SELECT max(id) FROM public.users), 1));
 SQL
+
+echo "==> 5/5  Bringing the schema up to the running code"
+# A dump is only as new as the database it came from. Restoring one taken before
+# the last few migrations leaves the schema behind the code, and Payload queries
+# a column that does not exist — which is how every page on this server returned
+# 500 once already. Additive, so it is safe when there is nothing to apply.
+if docker compose ps --services --filter status=running | grep -qx web; then
+  docker compose exec -T web npx payload migrate 2>&1 | grep -E 'Migrating:|Migrated:|Done' || true
+else
+  echo "    web is not running — run this before serving traffic:"
+  echo "      docker compose exec web npx payload migrate"
+fi
 
 echo "==> Result"
 printf '    publications      %s\n' "$(psql_q 'SELECT count(*) FROM publications')"
