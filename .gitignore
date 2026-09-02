@@ -9,3 +9,7 @@ __pycache__/
 .localdb/
 docker-compose.override.yml
 .lavish/
+
+# Database dumps and the backups prod-restore.sh takes before it writes.
+backup-*.sql.gz
+mlkd-*.sql.gz
