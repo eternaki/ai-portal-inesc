@@ -26,8 +26,33 @@ accounts and its AI summaries:
 PROD_RESTORE_APPLY=1 ./scripts/prod-restore.sh db/dumps/mlkd-2026-09-02-corrected.sql.gz
 ```
 
-Media is not in here — uploads are files. Copy `/app/media` separately, or every
-avatar 404s.
+## The photos
+
+Uploads are files, not rows, so no database dump contains them. There are two
+ways to get them onto a server, and the first needs no transfer at all.
+
+**Re-fetch them.** All 59 member photographs came from the group's own team page
+in the first place, and `photos:import:apply` — already a step in `data:setup` —
+downloads them again:
+
+```bash
+docker compose exec web pnpm photos:import:apply
+```
+
+**Or copy the archive.** `media-2026-09-02.tar.gz` holds the 59 photographs plus
+the resized copies Payload generates:
+
+```bash
+docker compose exec -T web tar xzf - -C /app/media < db/dumps/media-2026-09-02.tar.gz
+```
+
+Keep the archive even if you re-fetch. This portal replaces the site the photos
+are fetched from; the day that host is retired, the import has nowhere to read
+from and the archive is the only copy left.
+
+Two rows, `fig.png` and `model.py`, are seed fixtures whose files have never
+existed anywhere — attachments on a demo publication. They are not in the archive
+and nothing is missing because of it.
 
 ## The alternative, which needs no dump at all
 
