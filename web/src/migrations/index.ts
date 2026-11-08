@@ -19,6 +19,7 @@ import * as migration_20260813_120000_drop_reading_groups from './20260813_12000
 import * as migration_20260814_100000_publication_date from './20260814_100000_publication_date';
 import * as migration_20260814_100000_drop_alumni_role from './20260814_100000_drop_alumni_role';
 import * as migration_20260820_170000_postdoc_role from './20260820_170000_postdoc_role';
+import * as migration_20261108_120000_assocfaculty_role from './20261108_120000_assocfaculty_role';
 
 export const migrations = [
   {
@@ -120,5 +121,10 @@ export const migrations = [
     up: migration_20260820_170000_postdoc_role.up,
     down: migration_20260820_170000_postdoc_role.down,
     name: '20260820_170000_postdoc_role'
+  },
+  {
+    up: migration_20261108_120000_assocfaculty_role.up,
+    down: migration_20261108_120000_assocfaculty_role.down,
+    name: '20261108_120000_assocfaculty_role'
   },
 ];
