@@ -154,7 +154,7 @@ export interface Member {
    * Account for profile self-editing
    */
   user?: (number | null) | User;
-  role: 'faculty' | 'researcher' | 'postdoc' | 'phd' | 'msc';
+  role: 'faculty' | 'assocfaculty' | 'researcher' | 'postdoc' | 'phd' | 'msc';
   /**
    * Current relationship with the MLKD group or project.
    */

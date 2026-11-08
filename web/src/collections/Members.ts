@@ -44,6 +44,7 @@ export const Members: CollectionConfig = {
       index: true,
       options: [
         { label: 'Faculty', value: 'faculty' },
+        { label: 'Associated Faculty', value: 'assocfaculty' },
         { label: 'Researcher', value: 'researcher' },
         { label: 'PostDoc', value: 'postdoc' },
         { label: 'PhD student', value: 'phd' },

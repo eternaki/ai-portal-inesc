@@ -26,6 +26,7 @@ const PER_PAGE = 25
 // extend) than a nested ternary chain over the same five values.
 const ROLE_KEY = {
   faculty: 'roleFaculty',
+  assocfaculty: 'roleAssocFaculty',
   researcher: 'roleResearchers',
   postdoc: 'rolePostdoc',
   phd: 'rolePhd',

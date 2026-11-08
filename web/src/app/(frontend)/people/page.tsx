@@ -18,6 +18,7 @@ export const metadata = { title: 'People' }
 // an empty heading — "Current PostDocs" exists in the taxonomy but is empty today.
 const ROLE_ORDER = [
   { value: 'faculty', currentKey: 'roleFaculty', pastKey: 'rolePastFaculty' },
+  { value: 'assocfaculty', currentKey: 'roleAssocFaculty', pastKey: 'rolePastAssocFaculty' },
   { value: 'researcher', currentKey: 'roleResearchers', pastKey: 'rolePastResearchers' },
   { value: 'postdoc', currentKey: 'rolePostdoc', pastKey: 'rolePastPostdoc' },
   { value: 'phd', currentKey: 'rolePhd', pastKey: 'rolePastPhd' },

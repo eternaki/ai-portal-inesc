@@ -28,6 +28,7 @@ GROUP = "the Machine Learning and Knowledge Discovery group at INESC-ID"
 # No rule over letters gets both right.
 ROLE_LABELS = {
     "faculty": "a faculty member",
+    "assocfaculty": "an associated faculty member",
     "researcher": "a researcher",
     "phd": "a PhD student",
     "msc": "an MSc student",
