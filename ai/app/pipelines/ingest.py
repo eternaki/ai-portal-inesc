@@ -1,7 +1,10 @@
 """Ingest publications from OpenAlex into Payload.
 
 Run:  python -m app.pipelines.ingest                    # authors = active members
+      python -m app.pipelines.ingest --dry-run          # report only, write nothing
       python -m app.pipelines.ingest data/authors.json  # authors = a file
+
+Full runbook (before / during / after a bulk import): docs/PUBLICATION-SYNC.md.
 
 With no argument the authors are the active members whose profile has an OpenAlex
 ID (see ingest_authors.py) — the list editors maintain in the admin. The file form
@@ -11,9 +14,11 @@ memberId (the Payload members document id) is optional; when set, publication
 authors are linked to profiles.
 
 New papers arrive as pending_review drafts; re-runs only refresh citation counts,
-abstracts and links on papers already there (payload_api.upsert_publication).
+abstracts, venue and links on papers already there — never status, summary or the
+author list (payload_api._REFRESHABLE).
 """
 
+import argparse
 import json
 import logging
 import sys
@@ -218,7 +223,10 @@ def load_authors_file(authors_file: str) -> list[dict]:
         return json.load(f)
 
 
-def run(authors: list[dict]) -> None:
+def run(authors: list[dict], *, apply: bool = True) -> None:
+    """Import every work of these authors. With apply=False nothing is written:
+    the run only reports how many papers would be created and how many refreshed.
+    """
     member_by_author_id = {
         a["openalexId"]: a["memberId"] for a in authors if a.get("memberId") is not None
     }
@@ -243,16 +251,43 @@ def run(authors: list[dict]) -> None:
                 pub["aiSummaryModel"] = EXTRACTIVE_MODEL
                 pub["aiSummaryPromptVersion"] = EXTRACTIVE_VERSION
                 pub["aiSummaryGeneratedAt"] = datetime.now(timezone.utc).isoformat()
-            _, was_created = payload_api.upsert_publication(pub)
+            if apply:
+                _, was_created = payload_api.upsert_publication(pub)
+            else:
+                was_created = payload_api.find_existing_publication(pub) is None
+                if was_created:
+                    logger.info("would create: %s (%s)", pub["title"][:90], pub.get("year"))
             created += was_created
             updated += not was_created
 
-    logger.info("done: %s created, %s updated, %s unique works", created, updated, len(seen))
+    verb = ("created", "updated") if apply else ("would be created", "would be refreshed")
+    logger.info(
+        "done: %s %s, %s %s, %s unique works", created, verb[0], updated, verb[1], len(seen)
+    )
 
 
 def main(argv: list[str]) -> int:
-    if argv:
-        authors = load_authors_file(argv[0])
+    parser = argparse.ArgumentParser(prog="python -m app.pipelines.ingest")
+    parser.add_argument("authors_file", nargs="?", help="JSON list of authors (default: members)")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Report what would change; write nothing."
+    )
+    args = parser.parse_args(argv)
+
+    # Refuse before touching anything: without an authenticated key Payload shows
+    # only published rows, so every draft and every parked duplicate looks new and
+    # gets created again — a site-wide duplication that takes a day to undo.
+    try:
+        user = payload_api.whoami()
+    except httpx.HTTPError as err:
+        logger.error("cannot reach Payload at %s: %s", get_settings().payload_url, err)
+        return 2
+    if not user:
+        logger.error("PAYLOAD_API_KEY is missing or not accepted by Payload; refusing to run")
+        return 2
+
+    if args.authors_file:
+        authors = load_authors_file(args.authors_file)
     else:
         from app.pipelines.ingest_authors import load_member_authors
 
@@ -270,7 +305,7 @@ def main(argv: list[str]) -> int:
             "no authors to follow: fill in the OpenAlex ID on active members in the admin"
         )
         return 1
-    run(authors)
+    run(authors, apply=not args.dry_run)
     return 0
 
 

@@ -110,31 +110,14 @@ docker compose exec ai python -m compileall app tests
 
 ## Publication Sync
 
-New papers are pulled from OpenAlex by `scripts/sync-publications.sh` (ingest →
-embeddings → topic map). It follows every **active** member whose profile has an
-**OpenAlex ID**, so adding an author means filling that field in
-`/admin/collections/members` — no file, no commit. Find the ID on
-<https://openalex.org> (author page, the `A...` in the URL; the full URL is accepted).
+Bulk import of the group's publications from OpenAlex:
+`./scripts/sync-publications.sh` (`--dry-run` first). It follows every **active**
+member whose profile has an **OpenAlex ID**, creates new papers as drafts and never
+changes a paper's status, summary or author list.
 
-New papers arrive as `pending_review` drafts; an editor publishes them. Re-runs only
-refresh citation counts, abstracts and links on papers already there, and never
-change a paper's status or an edited summary.
-
-Run it by hand on the server, from the repository directory:
-
-```bash
-./scripts/sync-publications.sh
-```
-
-Or weekly from cron (`crontab -e`; `-T` in the script is what lets it run without a
-terminal). Create the log folder once with `mkdir -p logs`:
-
-```cron
-0 3 * * 1  cd ~/mlkd-portal && ./scripts/sync-publications.sh >> logs/sync-publications.log 2>&1
-```
-
-It exits non-zero when no member has an OpenAlex ID, so a misconfigured sync shows
-up as a failed job rather than a quiet "0 created" every week.
+**Before running it on production, follow [PUBLICATION-SYNC.md](PUBLICATION-SYNC.md)**
+— backup, prerequisites (`PAYLOAD_API_KEY`!), dry run, review, and what to check
+afterwards.
 
 ## Regular Maintenance
 

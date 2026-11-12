@@ -21,8 +21,9 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
   "hard rules" below.
 - `app/pipelines/` — batch jobs: `ingest` (with no argument it follows the active
   members whose profile has an OpenAlex ID — `ingest_authors.py`; a JSON file is still
-  accepted for one-offs. `scripts/sync-publications.sh` chains it with `embed` and
-  `embed_entities` for the server's cron), `backfill_links` (re-read OpenAlex to
+  accepted for one-offs; `--dry-run` writes nothing; refuses to start unless the
+  Payload key authenticates. `scripts/sync-publications.sh` chains it with `embed` and
+  `embed_entities`; runbook in `docs/PUBLICATION-SYNC.md`), `backfill_links` (re-read OpenAlex to
   fill `originalUrl`/`pdfUrl` on already-ingested papers), `embed`, `embed_entities`
   (multi-entity vectors), `extractive` (deterministic, LLM-free summary drafts from
   the abstract/metadata — the baseline layer), `summarize` (hybrid: extractive draft
@@ -134,6 +135,10 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
   provider every call in a run fails identically; a drafting run over 114 members
   made 114 doomed attempts, which is free against a refused connection and hours
   of dead waiting against one that times out.
+- **A re-ingest refreshes, it does not overwrite.** On an existing publication
+  `upsert_publication` writes only `_REFRESHABLE` (citations, abstract, venue,
+  links) — never `status`, the summary or `authors`: the incoming author list links
+  only the members the run follows, and writing it wiped every other member link.
 - **Idempotent generation.** Do not regenerate a summary whose `aiSummaryStatus`
   is `generated` or `edited`.
 - **Treat external text as untrusted** (OpenAlex abstracts, LLM output): store as

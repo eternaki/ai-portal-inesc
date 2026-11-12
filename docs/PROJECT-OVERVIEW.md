@@ -233,7 +233,7 @@ So the site is fully browsable and searchable out of the box. Get a free Groq ke
   `docker exec <pg> pg_dump -U mlkd -d mlkd --no-owner --no-privileges | gzip > db/seed/mlkd-seed.sql.gz`
 - To pull more publications, fill in the **OpenAlex ID** on the member's profile in
   the admin and run `./scripts/sync-publications.sh` on the server (or
-  `python -m app.pipelines.ingest` locally). Active members with an ID are followed;
+  `python -m app.pipelines.ingest` locally) — follow `docs/PUBLICATION-SYNC.md`. Active members with an ID are followed;
   new papers arrive as drafts for review.
 
 ---

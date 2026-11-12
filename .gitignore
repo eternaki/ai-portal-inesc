@@ -16,6 +16,3 @@ mlkd-*.sql.gz
 # …except the hand-over snapshots, which are meant to be shared.
 !db/dumps/*.sql.gz
 !db/dumps/*.tar.gz
-
-# Server-side job logs (scripts/sync-publications.sh from cron)
-logs/
