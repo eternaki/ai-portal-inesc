@@ -19,7 +19,10 @@ AI & automation service for the MLKD portal. **Read the root `CLAUDE.md` first**
   waiting for whoever first adds a key).
 - `app/llm/fallback.py` — the one path every optional LLM call goes through; see
   "hard rules" below.
-- `app/pipelines/` — batch jobs: `ingest`, `backfill_links` (re-read OpenAlex to
+- `app/pipelines/` — batch jobs: `ingest` (with no argument it follows the active
+  members whose profile has an OpenAlex ID — `ingest_authors.py`; a JSON file is still
+  accepted for one-offs. `scripts/sync-publications.sh` chains it with `embed` and
+  `embed_entities` for the server's cron), `backfill_links` (re-read OpenAlex to
   fill `originalUrl`/`pdfUrl` on already-ingested papers), `embed`, `embed_entities`
   (multi-entity vectors), `extractive` (deterministic, LLM-free summary drafts from
   the abstract/metadata — the baseline layer), `summarize` (hybrid: extractive draft

@@ -91,7 +91,18 @@ export const Members: CollectionConfig = {
       fields: [
         { name: 'orcid', type: 'text', unique: true, index: true, admin: { width: '20%' } },
         { name: 'cienciaId', type: 'text', unique: true, index: true, admin: { width: '20%' } },
-        { name: 'openalexId', type: 'text', unique: true, index: true, admin: { width: '20%' } },
+        {
+          name: 'openalexId',
+          type: 'text',
+          unique: true,
+          index: true,
+          admin: {
+            width: '20%',
+            // The publication sync follows exactly these: an active member with an
+            // id here has their new papers imported as drafts on every sync run.
+            description: 'Author ID from openalex.org (A...). Active members with one get their new papers imported automatically.',
+          },
+        },
         { name: 'dblpKey', type: 'text', unique: true, index: true, admin: { width: '20%' } },
         { name: 'tecnicoId', type: 'text', unique: true, index: true, admin: { width: '20%' } },
       ],

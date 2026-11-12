@@ -1,10 +1,17 @@
 """Ingest publications from OpenAlex into Payload.
 
-Run:  python -m app.pipelines.ingest data/authors.json
+Run:  python -m app.pipelines.ingest                    # authors = active members
+      python -m app.pipelines.ingest data/authors.json  # authors = a file
 
-authors.json: [{"name": "...", "openalexId": "A5012345678", "memberId": 1}, ...]
+With no argument the authors are the active members whose profile has an OpenAlex
+ID (see ingest_authors.py) — the list editors maintain in the admin. The file form
+is kept for one-off imports of people who are not members:
+[{"name": "...", "openalexId": "A5012345678", "memberId": 1}, ...]
 memberId (the Payload members document id) is optional; when set, publication
 authors are linked to profiles.
+
+New papers arrive as pending_review drafts; re-runs only refresh citation counts,
+abstracts and links on papers already there (payload_api.upsert_publication).
 """
 
 import json
@@ -206,10 +213,12 @@ def fetch_author_works(author_id: str) -> list[dict]:
     return works
 
 
-def run(authors_file: str) -> None:
+def load_authors_file(authors_file: str) -> list[dict]:
     with open(authors_file, encoding="utf-8") as f:
-        authors = json.load(f)
+        return json.load(f)
 
+
+def run(authors: list[dict]) -> None:
     member_by_author_id = {
         a["openalexId"]: a["memberId"] for a in authors if a.get("memberId") is not None
     }
@@ -241,6 +250,30 @@ def run(authors_file: str) -> None:
     logger.info("done: %s created, %s updated, %s unique works", created, updated, len(seen))
 
 
+def main(argv: list[str]) -> int:
+    if argv:
+        authors = load_authors_file(argv[0])
+    else:
+        from app.pipelines.ingest_authors import load_member_authors
+
+        authors, invalid = load_member_authors()
+        for name in invalid:
+            logger.warning(
+                "skipped %s: the OpenAlex ID on their profile is not an author id (A...)", name
+            )
+        logger.info("following %s active member(s) with an OpenAlex ID", len(authors))
+
+    # An empty list is a configuration problem, not a quiet night: exit non-zero so
+    # a scheduled run shows up as failed instead of "0 created" forever.
+    if not authors:
+        logger.error(
+            "no authors to follow: fill in the OpenAlex ID on active members in the admin"
+        )
+        return 1
+    run(authors)
+    return 0
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
-    run(sys.argv[1] if len(sys.argv) > 1 else "data/authors.json")
+    sys.exit(main(sys.argv[1:]))

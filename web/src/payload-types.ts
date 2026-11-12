@@ -182,6 +182,9 @@ export interface Member {
   researchInterests?: string[] | null;
   orcid?: string | null;
   cienciaId?: string | null;
+  /**
+   * Author ID from openalex.org (A...). Active members with one get their new papers imported automatically.
+   */
   openalexId?: string | null;
   dblpKey?: string | null;
   tecnicoId?: string | null;
