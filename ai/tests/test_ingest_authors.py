@@ -40,3 +40,21 @@ def test_a_bad_id_is_reported_without_dropping_the_others():
     authors, invalid = authors_from_members(members)
     assert [a["memberId"] for a in authors] == [2]
     assert invalid == ["Typo"]
+
+
+def test_an_id_buried_in_another_url_is_not_read_out_of_it():
+    # Only the whole value counts: an unanchored match took the tail of anything.
+    for raw in ("https://example.com/a123", "https://openalex.org/works/A123", "xA123"):
+        assert normalize_author_id(raw) is None
+
+
+def test_one_id_on_two_members_is_reported_for_both_and_followed_for_neither():
+    # Payload's unique check compares raw text, so "A7" and "a7" both get saved.
+    members = [
+        {"id": 1, "name": "First", "membershipStatus": "active", "openalexId": "A7"},
+        {"id": 2, "name": "Second", "membershipStatus": "active", "openalexId": "a7"},
+        {"id": 3, "name": "Other", "membershipStatus": "active", "openalexId": "A8"},
+    ]
+    authors, invalid = authors_from_members(members)
+    assert [a["memberId"] for a in authors] == [3]
+    assert sorted(invalid) == ["First", "Second"]

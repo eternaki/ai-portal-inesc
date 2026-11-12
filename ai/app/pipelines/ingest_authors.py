@@ -17,12 +17,16 @@ from app import payload_api
 
 # OpenAlex author ids are "A" + digits. Editors paste whatever the browser shows,
 # so the profile URL and lower-case forms are accepted and reduced to the id.
-_AUTHOR_ID = re.compile(r"(?:openalex\.org/(?:authors/)?)?(a\d+)\s*/?$", re.IGNORECASE)
+# Matched against the whole value: an unanchored search would read an id out of
+# any string that happens to end in "a" + digits.
+_AUTHOR_ID = re.compile(
+    r"(?:https?://)?(?:www\.)?(?:api\.)?(?:openalex\.org/(?:authors/)?)?(a\d+)/?", re.IGNORECASE
+)
 
 
 def normalize_author_id(raw: str | None) -> str | None:
     """'https://openalex.org/A5041559313' -> 'A5041559313'; anything else -> None."""
-    match = _AUTHOR_ID.search((raw or "").strip())
+    match = _AUTHOR_ID.fullmatch((raw or "").strip())
     return match.group(1).upper() if match else None
 
 
@@ -30,10 +34,13 @@ def authors_from_members(members: list[dict[str, Any]]) -> tuple[list[dict], lis
     """Ingest authors from member documents, plus the names whose id is unusable.
 
     The second list is reported, not raised: one mistyped id should not stop the
-    other members' papers from arriving.
+    other members' papers from arriving. The same id on two members (Payload's
+    `unique` compares the raw text, so "A1" and "a1" both pass) is reported for
+    both rather than silently linking the papers to whichever came last.
     """
     authors: list[dict] = []
     invalid: list[str] = []
+    claimed: dict[str, list[str]] = {}
     for member in members:
         if member.get("membershipStatus") != "active":
             continue
@@ -41,13 +48,16 @@ def authors_from_members(members: list[dict[str, Any]]) -> tuple[list[dict], lis
         if not (raw or "").strip():
             continue
         author_id = normalize_author_id(raw)
+        name = member.get("name") or f"member {member.get('id')}"
         if author_id is None:
-            invalid.append(member.get("name") or f"member {member.get('id')}")
+            invalid.append(name)
             continue
-        authors.append(
-            {"name": member.get("name"), "openalexId": author_id, "memberId": member["id"]}
-        )
-    return authors, invalid
+        claimed.setdefault(author_id, []).append(name)
+        authors.append({"name": name, "openalexId": author_id, "memberId": member["id"]})
+
+    shared = {aid for aid, names in claimed.items() if len(names) > 1}
+    invalid.extend(n for aid in sorted(shared) for n in claimed[aid])
+    return [a for a in authors if a["openalexId"] not in shared], invalid
 
 
 def load_member_authors() -> tuple[list[dict], list[str]]:

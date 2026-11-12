@@ -259,7 +259,7 @@ def main(argv: list[str]) -> int:
         authors, invalid = load_member_authors()
         for name in invalid:
             logger.warning(
-                "skipped %s: the OpenAlex ID on their profile is not an author id (A...)", name
+                "skipped %s: OpenAlex ID is not an author id (A...) or another member has it", name
             )
         logger.info("following %s active member(s) with an OpenAlex ID", len(authors))
 
