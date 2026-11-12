@@ -108,6 +108,17 @@ docker compose exec ai python -m compileall app tests
 - Do not deploy public default admin credentials.
 - Use the admin health dashboard after deployment.
 
+## Publication Sync
+
+Bulk import of the group's publications from OpenAlex:
+`./scripts/sync-publications.sh` (`--dry-run` first). It follows every **active**
+member whose profile has an **OpenAlex ID**, creates new papers as drafts and never
+changes a paper's status, summary or author list.
+
+**Before running it on production, follow [PUBLICATION-SYNC.md](PUBLICATION-SYNC.md)**
+— backup, prerequisites (`PAYLOAD_API_KEY`!), dry run, review, and what to check
+afterwards.
+
 ## Regular Maintenance
 
 1. Pull latest `main`.

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { adminEditorOrSelf, adminOrEditor, anyone } from '../access'
+import { adminEditorOrSelf, adminOrEditor, adminOrEditorField, anyone } from '../access'
 import { slugField } from '../fields/slug'
 
 export const Members: CollectionConfig = {
@@ -63,6 +63,8 @@ export const Members: CollectionConfig = {
       admin: {
         description: 'Current relationship with the MLKD group or project.',
       },
+      // Decides whose papers the publication sync follows (active only).
+      access: { update: adminOrEditorField },
     },
     {
       name: 'photo',
@@ -91,7 +93,22 @@ export const Members: CollectionConfig = {
       fields: [
         { name: 'orcid', type: 'text', unique: true, index: true, admin: { width: '20%' } },
         { name: 'cienciaId', type: 'text', unique: true, index: true, admin: { width: '20%' } },
-        { name: 'openalexId', type: 'text', unique: true, index: true, admin: { width: '20%' } },
+        {
+          name: 'openalexId',
+          type: 'text',
+          unique: true,
+          index: true,
+          admin: {
+            width: '20%',
+            // The publication sync follows exactly these: an active member with an
+            // id here has their new papers imported as drafts on every sync run.
+            description: 'Author ID from openalex.org (A...). Active members with one get their new papers imported automatically.',
+          },
+          // Not self-editable: a member pointing this at someone else's id would
+          // link that person's papers, published ones included, to their profile
+          // on the next sync without an editor seeing it.
+          access: { update: adminOrEditorField },
+        },
         { name: 'dblpKey', type: 'text', unique: true, index: true, admin: { width: '20%' } },
         { name: 'tecnicoId', type: 'text', unique: true, index: true, admin: { width: '20%' } },
       ],

@@ -115,6 +115,7 @@ regenerated on every commit (see section 7).
 - `extractive_bio.py`
 - `extractive_snippet.py`
 - `ingest.py`
+- `ingest_authors.py`
 - `maintenance.py`
 - `smoke_chat.py`
 - `summarize.py`

@@ -249,8 +249,11 @@ Pipelines need an API key: in the admin, create a user `service@mlkd` with the
 ```bash
 cd ai && source .venv/bin/activate
 
-# 1. Publications from OpenAlex (input file: see data/authors.example.json)
-python -m app.pipelines.ingest data/authors.json
+# 1. Publications from OpenAlex, for every active member with an OpenAlex ID
+#    on their profile (or pass a file: see data/authors.example.json).
+#    On a server use scripts/sync-publications.sh — runbook: docs/PUBLICATION-SYNC.md
+python -m app.pipelines.ingest --dry-run
+python -m app.pipelines.ingest
 
 # 2. AI summaries for publications without one (needs an LLM provider key in .env)
 python -m app.pipelines.summarize --limit 10

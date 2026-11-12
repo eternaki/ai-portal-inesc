@@ -73,12 +73,21 @@ def update(collection: str, doc_id: int | str, data: dict) -> dict:
         return resp.json()["doc"]
 
 
-def upsert_publication(data: dict) -> tuple[dict, bool]:
-    """Create or update a publication. Matching: openalexId, then DOI.
+def whoami() -> dict | None:
+    """The user the service key authenticates as, or None when it does not.
 
-    Returns (document, created). Fields a human may have edited by hand
-    (aiSummary, verified, ...) are left untouched on update.
+    Asked before a bulk write: an anonymous client sees only *published* rows, so
+    an ingest without a working key cannot find the drafts and the parked
+    duplicates and would create them all over again.
     """
+    with _client() as client:
+        resp = client.get("/users/me")
+        resp.raise_for_status()
+        return resp.json().get("user")
+
+
+def find_existing_publication(data: dict) -> dict | None:
+    """The publication this record would update, matched on openalexId or DOI."""
     # Match on both openalexId and DOI: OpenAlex sometimes has two records
     # (preprint + published) sharing one DOI — for us that is one publication.
     conditions: list[dict[str, Any]] = []
@@ -86,19 +95,28 @@ def upsert_publication(data: dict) -> tuple[dict, bool]:
         conditions.append({"openalexId": {"equals": data["openalexId"]}})
     if data.get("doi"):
         conditions.append({"doi": {"equals": data["doi"]}})
-    where: dict[str, Any] | None = {"or": conditions} if conditions else None
+    if not conditions:
+        return None
+    docs = find("publications", {"or": conditions}, limit=1)["docs"]
+    return docs[0] if docs else None
 
-    existing = find("publications", where, limit=1)["docs"] if where else []
-    if existing:
-        doc = existing[0]
-        # Never touch the editorial `status` on update — a human owns that decision
-        # (approved/published papers must not silently revert to a draft on re-ingest).
-        safe_update = {
-            k: v
-            for k, v in data.items()
-            if k
-            in ("citationCount", "abstract", "pdfUrl", "originalUrl", "venue", "authors", "referencedWorks")
-        }
+
+# What a re-ingest may refresh on a publication that already exists. Not `status`
+# (an editor owns it: a published paper must not fall back to a draft), not the
+# summary, and not `authors`: the incoming list links only the members this run
+# follows, so writing it would wipe every member link the linking scripts and
+# editors added, and take those papers off people's profile pages.
+_REFRESHABLE = ("citationCount", "abstract", "pdfUrl", "originalUrl", "venue", "referencedWorks")
+
+
+def upsert_publication(data: dict) -> tuple[dict, bool]:
+    """Create or update a publication. Matching: openalexId, then DOI.
+
+    Returns (document, created). On update only _REFRESHABLE fields are written.
+    """
+    doc = find_existing_publication(data)
+    if doc:
+        safe_update = {k: v for k, v in data.items() if k in _REFRESHABLE}
         return update("publications", doc["id"], safe_update), False
 
     # New ingested paper enters the editorial queue as a draft — nothing an
